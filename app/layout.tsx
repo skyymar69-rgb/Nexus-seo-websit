@@ -76,12 +76,49 @@ const jsonLd = {
         lowPrice: '99',
         highPrice: '499',
         priceCurrency: 'EUR',
+        offerCount: '4',
       },
       aggregateRating: {
         '@type': 'AggregateRating',
         ratingValue: '4.9',
         reviewCount: '847',
+        bestRating: '5',
       },
+      featureList: 'GEO Audit, AEO Scoring, LLMO Analysis, Technical SEO, Keyword Tracking, Backlink Analysis',
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `${BASE_URL}/#breadcrumb`,
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Accueil', item: BASE_URL },
+        { '@type': 'ListItem', position: 2, name: 'Services', item: `${BASE_URL}/services` },
+        { '@type': 'ListItem', position: 3, name: 'Tarifs', item: `${BASE_URL}/#pricing` },
+        { '@type': 'ListItem', position: 4, name: 'Blog', item: `${BASE_URL}/blog` },
+      ],
+    },
+    {
+      '@type': 'Service',
+      name: 'GEO — Generative Engine Optimization',
+      description: 'Optimisez votre visibilité dans les réponses de ChatGPT, Claude, Gemini et Perplexity.',
+      provider: { '@id': `${BASE_URL}/#organization` },
+      areaServed: 'Worldwide',
+      serviceType: 'SEO Optimization',
+    },
+    {
+      '@type': 'Service',
+      name: 'AEO — Answer Engine Optimization',
+      description: 'Optimisez votre contenu pour les featured snippets, les réponses vocales et les People Also Ask.',
+      provider: { '@id': `${BASE_URL}/#organization` },
+      areaServed: 'Worldwide',
+      serviceType: 'SEO Optimization',
+    },
+    {
+      '@type': 'Service',
+      name: 'LLMO — LLM Optimization',
+      description: 'Mesurez et améliorez la probabilité que les LLMs recommandent votre marque.',
+      provider: { '@id': `${BASE_URL}/#organization` },
+      areaServed: 'Worldwide',
+      serviceType: 'SEO Optimization',
     },
   ],
 }
@@ -96,6 +133,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-screen bg-zinc-50 dark:bg-surface-950 text-surface-900 dark:text-surface-100 antialiased">
+        <a href="#main-content" className="skip-to-main">
+          Aller au contenu principal
+        </a>
         <Providers>{children}</Providers>
       </body>
     </html>

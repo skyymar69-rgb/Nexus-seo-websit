@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { corsHeaders, corsOptionsResponse } from '@/lib/cors';
 
 // French stopwords to exclude from analysis
 const FRENCH_STOPWORDS = new Set([
@@ -427,11 +428,9 @@ function generateMockCompetitors(keyword: string): Competitor[] {
 // Main handler
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
-    // Add CORS headers
+    // CORS headers
     const headers = {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
+      ...corsHeaders(),
       'Content-Type': 'application/json',
     };
 
@@ -534,13 +533,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 }
 
 // Handle OPTIONS requests for CORS
-export async function OPTIONS(request: NextRequest): Promise<NextResponse> {
-  return NextResponse.json(null, {
-    status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    },
-  });
+export async function OPTIONS(): Promise<NextResponse> {
+  return corsOptionsResponse();
 }

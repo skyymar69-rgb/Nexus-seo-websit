@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import {
   BarChart,
   Bar,
@@ -39,7 +39,12 @@ import {
   ArrowDownRight,
   BarChart3,
   Settings,
+  Loader2,
+  AlertOctagon,
 } from 'lucide-react'
+import { useWebsite } from '@/contexts/WebsiteContext'
+import { usePlan } from '@/hooks/usePlan'
+import { UpgradePrompt } from '@/components/shared/UpgradePrompt'
 
 // ============= TYPES =============
 
@@ -50,7 +55,9 @@ type Category =
   | 'contenu'
   | 'performance'
   | 'backlinks'
-  | 'ia-visibility'
+  | 'ai-visibility'
+  | 'securite'
+  | 'mobile'
   | 'ux'
 
 interface CategoryScore {
@@ -63,7 +70,7 @@ interface CategoryScore {
 
 interface Recommendation {
   id: string
-  category: Category
+  category: string
   priority: Priority
   title: string
   description: string
@@ -71,7 +78,9 @@ interface Recommendation {
   effort: Effort
   estimatedTime: string
   howTo: string
-  expanded?: boolean
+  actionSteps?: string[]
+  expectedImpact?: string
+  timelineWeeks?: number
 }
 
 interface ChecklistItem {
@@ -95,591 +104,135 @@ interface ActionItem {
   category: Category
 }
 
-// ============= DEMO DATA GENERATOR =============
-
-const generateDemoData = () => {
-  const overallScore = 72
-  const industryAverage = 68
-  const trend = 'improving' as const
-
-  const categoryScores: CategoryScore[] = [
-    {
-      id: 'technique',
-      label: 'Technique',
-      score: 78,
-      status: 'bon',
-      change: 5,
-    },
-    {
-      id: 'contenu',
-      label: 'Contenu',
-      score: 68,
-      status: 'correct',
-      change: 3,
-    },
-    {
-      id: 'performance',
-      label: 'Performance',
-      score: 62,
-      status: 'faible',
-      change: -2,
-    },
-    {
-      id: 'backlinks',
-      label: 'Backlinks',
-      score: 71,
-      status: 'bon',
-      change: 4,
-    },
-    {
-      id: 'ia-visibility',
-      label: 'IA Visibility',
-      score: 58,
-      status: 'critique',
-      change: -1,
-    },
-    {
-      id: 'ux',
-      label: 'UX',
-      score: 75,
-      status: 'bon',
-      change: 2,
-    },
-  ]
-
-  const recommendations: Recommendation[] = [
-    {
-      id: 'rec-1',
-      category: 'performance',
-      priority: 'critique',
-      title: 'Optimiser les Core Web Vitals - LCP et CLS',
-      description:
-        'Vos Core Web Vitals sont sous les seuils recommandés. LCP est à 3.2s (seuil: 2.5s) et CLS à 0.15 (seuil: 0.1). Cela pénalise votre classement Google et votre expérience utilisateur.',
-      impact: '+8-12 points',
-      effort: 'moyen',
-      estimatedTime: '2-3 semaines',
-      howTo:
-        '1. Lazy-load les images hors écran\n2. Minifier CSS/JS\n3. Utiliser le font-display: swap\n4. Réduire les layout shifts avec size attributes\n5. Optimiser les third-party scripts',
-    },
-    {
-      id: 'rec-2',
-      category: 'ia-visibility',
-      priority: 'critique',
-      title: 'Implémenter schema.org et structurer le contenu pour GEO',
-      description:
-        'ChatGPT, Perplexity et les moteurs génératifs préfèrent le contenu structuré. Vous manquez de markup schema.org et de structure sémantique.',
-      impact: '+6-10 points + mentions IA',
-      effort: 'moyen',
-      estimatedTime: '2-3 semaines',
-      howTo:
-        '1. Ajouter schema Article, FAQPage, Product selon le contenu\n2. Créer des FAQ structurées en H2/H3\n3. Ajouter Author, datePublished, dateModified\n4. Structurer avec listes et définitions\n5. Valider avec Schema.org validator',
-    },
-    {
-      id: 'rec-3',
-      category: 'technique',
-      priority: 'haute',
-      title: 'Mettre à jour vers Next.js 15+ avec App Router',
-      description:
-        'Version Next.js 14, possibilité de gains importants de performance avec App Router et Server Components.',
-      impact: '+3-5 points',
-      effort: 'eleve',
-      estimatedTime: '3-4 semaines',
-      howTo:
-        '1. Créer une branche migration\n2. Installer Next.js 15+\n3. Migrer le layout.tsx\n4. Convertir pages vers route handlers\n5. Tester à fond et déployer progressivement',
-    },
-    {
-      id: 'rec-4',
-      category: 'contenu',
-      priority: 'haute',
-      title: 'Créer 10 pillar pages de 3000+ mots',
-      description:
-        'Votre contenu est fragmenté. Consolidez en 10 pillar pages exhaustives par sujet principal avec clusters satellites.',
-      impact: '+10-15 points',
-      effort: 'eleve',
-      estimatedTime: '8-10 semaines',
-      howTo:
-        '1. Identifier 10 piliers de votre marché\n2. Créer une MindMap de sous-sujets pour chaque\n3. Écrire 3000+ mots par pilier\n4. Interlier avec pages satellites\n5. Optimiser avec LSI keywords et entity linking',
-    },
-    {
-      id: 'rec-5',
-      category: 'backlinks',
-      priority: 'haute',
-      title: 'Lancer une campagne de guest posting ciblée',
-      description:
-        'Vous avez 120 backlinks, la concurrence moyenne 350+. Lancez une campagne de guest posting dans vos top 20 sites de référence.',
-      impact: '+12-20 points',
-      effort: 'eleve',
-      estimatedTime: '10-12 semaines',
-      howTo:
-        '1. Scraper 100 sites avec backlink checker\n2. Identifier les 20 meilleurs par DA et relevance\n3. Créer 5 pitches d\'articles différentes\n4. Outreach personnalisé via email\n5. Tracker et rapporter les backlinks gagnés',
-    },
-    {
-      id: 'rec-6',
-      category: 'ux',
-      priority: 'moyenne',
-      title: 'Réduire les erreurs 404 et améliorer la navigation',
-      description:
-        'Vous avez 24 pages 404 crawlées. Cela gaspille le crawl budget et frustre les utilisateurs.',
-      impact: '+2-3 points',
-      effort: 'faible',
-      estimatedTime: '3-5 jours',
-      howTo:
-        '1. Exporter tous les 404 de Google Search Console\n2. Créer des redirects 301 vers la page la plus proche\n3. Ajouter les pages manquantes si pertinentes\n4. Optimiser le sitemap\n5. Ajouter une custom 404 page avec navigation',
-    },
-    {
-      id: 'rec-7',
-      category: 'performance',
-      priority: 'haute',
-      title: 'Implémenter une CDN globale et la mise en cache',
-      description:
-        'Pas de CDN détecté. Temps de réponse serveur: 840ms. Utilisez Cloudflare ou AWS CloudFront.',
-      impact: '+5-8 points',
-      effort: 'moyen',
-      estimatedTime: '1-2 semaines',
-      howTo:
-        '1. Configurer Cloudflare avec votre domaine\n2. Activer la mise en cache agressif\n3. Ajouter rules personnalisées par type de contenu\n4. Tester depuis différentes géographies\n5. Monitorer les métriques de performance',
-    },
-    {
-      id: 'rec-8',
-      category: 'ia-visibility',
-      priority: 'haute',
-      title: 'Enrichir le contenu avec données originales et recherche',
-      description:
-        'Les moteurs génératifs préfèrent les données primaires. Ajoutez des sondages, études, données exclusives.',
-      impact: '+5-8 points',
-      effort: 'moyen',
-      estimatedTime: '4-6 semaines',
-      howTo:
-        '1. Planifier 3-4 recherches/sondages originaux\n2. Collecte des données (formulaires, tools)\n3. Analyser les résultats\n4. Créer des infographiques et visualisations\n5. Publier avec métadonnées complètes',
-    },
-    {
-      id: 'rec-9',
-      category: 'technique',
-      priority: 'moyenne',
-      title: 'Implémenter Progressive Web App (PWA)',
-      description:
-        'Service workers et manifest.json peuvent améliorer engagement et performance perçue.',
-      impact: '+2-4 points',
-      effort: 'moyen',
-      estimatedTime: '2-3 semaines',
-      howTo:
-        '1. Créer manifest.json avec icons et metadata\n2. Implémenter service worker pour offline\n3. Ajouter install prompt\n4. Tester sur mobile avec devtools\n5. Monitorer les installations',
-    },
-    {
-      id: 'rec-10',
-      category: 'contenu',
-      priority: 'moyenne',
-      title: 'Optimiser les meta descriptions et title tags',
-      description:
-        '45% de vos pages manquent de meta descriptions uniques. CTR max à ~8%.',
-      impact: '+3-5 points (CTR)',
-      effort: 'faible',
-      estimatedTime: '1-2 semaines',
-      howTo:
-        '1. Exporter tout le site via Screaming Frog\n2. Identifier les pages sans ou duplicate descriptions\n3. Écrire des descriptions uniques 155-160 chars\n4. Inclure CTA naturelle\n5. Tester dans Google Search Console',
-    },
-    {
-      id: 'rec-11',
-      category: 'backlinks',
-      priority: 'moyenne',
-      title: 'Désavouer les backlinks toxiques de spam domains',
-      description:
-        'Détecté 28 backlinks de domaines avec DA < 20 et spam score > 60. Peuvent pénaliser.',
-      impact: '+1-3 points',
-      effort: 'faible',
-      estimatedTime: '2-3 jours',
-      howTo:
-        '1. Utiliser Moz Spam Score ou Semrush pour audit\n2. Créer une liste de domaines à désavouer\n3. Créer un fichier disavow.txt\n4. Upload via Google Search Console\n5. Monitorer après 2-3 mois',
-    },
-    {
-      id: 'rec-12',
-      category: 'performance',
-      priority: 'moyenne',
-      title: 'Compresser images et utiliser formats modernes (WebP)',
-      description:
-        'Images non optimisées: 3.2 MB. Passage à WebP + compression peut économiser 60-80%.',
-      impact: '+4-6 points',
-      effort: 'faible',
-      estimatedTime: '1-2 semaines',
-      howTo:
-        '1. Auditer tailles d\'images actuelles\n2. Utiliser TinyPNG ou ImageOptim\n3. Convertir vers WebP avec fallback\n4. Implémenter lazy-loading\n5. Tester les temps de chargement',
-    },
-    {
-      id: 'rec-13',
-      category: 'contenu',
-      priority: 'basse',
-      title: 'Créer une stratégie de content repurposing',
-      description:
-        'Maximiser le ROI du contenu. Un article peut devenir 5+ formats.',
-      impact: '+2-4 points',
-      effort: 'faible',
-      estimatedTime: '2-3 semaines',
-      howTo:
-        '1. Auditer top-10 articles par traffic\n2. Créer plans de repurposing (infos, vidéos, podcasts)\n3. Adapter pour chaque plateforme\n4. Ajouter backlinks entre formats\n5. Mesurer le multichannel impact',
-    },
-    {
-      id: 'rec-14',
-      category: 'ux',
-      priority: 'basse',
-      title: 'Implémenter une meilleure recherche interne',
-      description:
-        'Chercheurs internes abandonnent souvent. Une bonne recherche peut augmenter conversions de 10-20%.',
-      impact: '+1-2 points + conversion',
-      effort: 'moyen',
-      estimatedTime: '2-3 semaines',
-      howTo:
-        '1. Installer Algolia ou Elasticsearch\n2. Configurer avec vos données produit/contenu\n3. Ajouter facettes pertinentes (catégorie, prix, etc)\n4. Améliorer les typos avec stemming\n5. A/B tester le placement',
-    },
-    {
-      id: 'rec-15',
-      category: 'ia-visibility',
-      priority: 'basse',
-      title: 'Créer une page FAQ structurée pour Google Featured Snippets',
-      description:
-        'FAQPage schema peut gagner des positions 0. Actuellement absent.',
-      impact: '+2-4 positions 0',
-      effort: 'faible',
-      estimatedTime: '1-2 semaines',
-      howTo:
-        '1. Identifier 15-20 questions des users\n2. Créer FAQ page avec réponses courtes\n3. Ajouter FAQPage schema markup\n4. Interlier vers articles détaillés\n5. Monitorer positions 0',
-    },
-  ]
-
-  const checklistItems: ChecklistItem[] = [
-    // Technique
-    {
-      id: 'check-1',
-      category: 'technique',
-      title: 'Ajouter/mettre à jour robots.txt',
-      description: 'Assurer que les crawlers n\'indexent pas les pages sensibles',
-      priority: 'haute',
-      impact: 70,
-      estimatedTime: '30 min',
-      done: true,
-    },
-    {
-      id: 'check-2',
-      category: 'technique',
-      title: 'Configurer sitemap XML',
-      description: 'Créer et soumettre sitemap.xml à Google Search Console',
-      priority: 'critique',
-      impact: 85,
-      estimatedTime: '1 heure',
-      done: true,
-    },
-    {
-      id: 'check-3',
-      category: 'technique',
-      title: 'Implémenter HTTPS/SSL partout',
-      description: 'Forcer HTTPS sur toutes les pages, activer HSTS',
-      priority: 'critique',
-      impact: 90,
-      estimatedTime: '2 heures',
-      done: true,
-    },
-    {
-      id: 'check-4',
-      category: 'technique',
-      title: 'Configurer Canonical tags',
-      description: 'Éviter le contenu dupliqué avec canonical URL structure',
-      priority: 'haute',
-      impact: 75,
-      estimatedTime: '2 heures',
-      done: false,
-    },
-    {
-      id: 'check-5',
-      category: 'technique',
-      title: 'Implémenter Structured Data (JSON-LD)',
-      description: 'Ajouter schema.org markup pour Article, Product, etc',
-      priority: 'haute',
-      impact: 80,
-      estimatedTime: '4 heures',
-      done: false,
-    },
-    // Contenu
-    {
-      id: 'check-6',
-      category: 'contenu',
-      title: 'Ajouter H1 unique par page',
-      description: 'Une seule H1 bien optimisée par page',
-      priority: 'critique',
-      impact: 88,
-      estimatedTime: '30 min par page',
-      done: true,
-    },
-    {
-      id: 'check-7',
-      category: 'contenu',
-      title: 'Optimiser target keywords par page',
-      description: 'Chaque page doit viser 1-2 keywords principaux',
-      priority: 'haute',
-      impact: 82,
-      estimatedTime: '3 heures',
-      done: false,
-    },
-    {
-      id: 'check-8',
-      category: 'contenu',
-      title: 'Enrichir avec contenu de 2000+ mots (piliers)',
-      description: 'Au minimum 2000 mots pour le contenu principal',
-      priority: 'haute',
-      impact: 85,
-      estimatedTime: '1-2 jours par article',
-      done: false,
-    },
-    {
-      id: 'check-9',
-      category: 'contenu',
-      title: 'Créer liens internes logiques',
-      description: 'Interlier pages avec anchor text naturel et contextuel',
-      priority: 'moyenne',
-      impact: 70,
-      estimatedTime: '2 heures',
-      done: false,
-    },
-    // Performance
-    {
-      id: 'check-10',
-      category: 'performance',
-      title: 'Optimiser les images (compression + WebP)',
-      description: 'Réduire taille des images, utiliser WebP',
-      priority: 'haute',
-      impact: 78,
-      estimatedTime: '4 heures',
-      done: false,
-    },
-    {
-      id: 'check-11',
-      category: 'performance',
-      title: 'Minifier CSS/JS et activer la mise en cache',
-      description: 'Réduire taille des assets, configurer expires headers',
-      priority: 'haute',
-      impact: 80,
-      estimatedTime: '3 heures',
-      done: false,
-    },
-    {
-      id: 'check-12',
-      category: 'performance',
-      title: 'Lazy-loader les images hors écran',
-      description: 'Charger images seulement quand visibles',
-      priority: 'moyenne',
-      impact: 72,
-      estimatedTime: '2 heures',
-      done: false,
-    },
-    // Backlinks
-    {
-      id: 'check-13',
-      category: 'backlinks',
-      title: 'Audit des backlinks actuels',
-      description: 'Analyser profil avec Ahrefs, Semrush ou Moz',
-      priority: 'haute',
-      impact: 75,
-      estimatedTime: '3 heures',
-      done: true,
-    },
-    {
-      id: 'check-14',
-      category: 'backlinks',
-      title: 'Identificar opportunités de broken link building',
-      description: 'Trouver 404 links pointant vers competitors, créer alternative',
-      priority: 'moyenne',
-      impact: 65,
-      estimatedTime: '2 jours',
-      done: false,
-    },
-    // IA Visibility
-    {
-      id: 'check-15',
-      category: 'ia-visibility',
-      title: 'Ajouter FAQ schema markup',
-      description: 'FAQPage JSON-LD pour chances de featured snippets',
-      priority: 'haute',
-      impact: 78,
-      estimatedTime: '2 heures',
-      done: false,
-    },
-    {
-      id: 'check-16',
-      category: 'ia-visibility',
-      title: 'Structurer contenu avec definitions et listes',
-      description: 'Améliore interprétation par moteurs génératifs',
-      priority: 'moyenne',
-      impact: 68,
-      estimatedTime: '3 heures',
-      done: false,
-    },
-    // UX
-    {
-      id: 'check-17',
-      category: 'ux',
-      title: 'Améliorer mobile responsiveness',
-      description: 'Assurer design responsive sur tous appareils',
-      priority: 'critique',
-      impact: 92,
-      estimatedTime: '4 heures',
-      done: true,
-    },
-    {
-      id: 'check-18',
-      category: 'ux',
-      title: 'Réduire les pop-ups intrusifs',
-      description: 'Limiter interruptions utilisateur, respecter CLS',
-      priority: 'moyenne',
-      impact: 65,
-      estimatedTime: '1 heure',
-      done: false,
-    },
-  ]
-
-  const actionPlans: Record<string, ActionItem[]> = {
-    quickWins: [
-      {
-        id: 'qw-1',
-        title: 'Ajouter FAQPage schema à 10 pages principales',
-        priority: 'haute',
-        effort: 'faible',
-        impact: 78,
-        deadline: 'Cette semaine',
-        category: 'ia-visibility',
-      },
-      {
-        id: 'qw-2',
-        title: 'Créer disavow.txt pour spam backlinks',
-        priority: 'moyenne',
-        effort: 'faible',
-        impact: 60,
-        deadline: 'Cette semaine',
-        category: 'backlinks',
-      },
-      {
-        id: 'qw-3',
-        title: 'Optimiser 5 meta descriptions manquantes',
-        priority: 'moyenne',
-        effort: 'faible',
-        impact: 55,
-        deadline: '3-4 jours',
-        category: 'contenu',
-      },
-      {
-        id: 'qw-4',
-        title: 'Compresser images homepage (60% gain)',
-        priority: 'haute',
-        effort: 'faible',
-        impact: 75,
-        deadline: '1-2 jours',
-        category: 'performance',
-      },
-    ],
-    shortTerm: [
-      {
-        id: 'st-1',
-        title: 'Implémenter CDN Cloudflare + caching',
-        priority: 'haute',
-        effort: 'moyen',
-        impact: 80,
-        deadline: '1-2 semaines',
-        category: 'performance',
-      },
-      {
-        id: 'st-2',
-        title: 'Créer 3 pillar pages de 2500+ mots',
-        priority: 'haute',
-        effort: 'eleve',
-        impact: 85,
-        deadline: '2 semaines',
-        category: 'contenu',
-      },
-      {
-        id: 'st-3',
-        title: 'Auditer et réparer les 24 pages 404',
-        priority: 'moyenne',
-        effort: 'moyen',
-        impact: 65,
-        deadline: '1 semaine',
-        category: 'technique',
-      },
-    ],
-    mediumTerm: [
-      {
-        id: 'mt-1',
-        title: 'Lancer campagne de 20 guest posts',
-        priority: 'critique',
-        effort: 'eleve',
-        impact: 95,
-        deadline: '1-3 mois',
-        category: 'backlinks',
-      },
-      {
-        id: 'mt-2',
-        title: 'Créer 10 pillar pages complètes',
-        priority: 'haute',
-        effort: 'eleve',
-        impact: 90,
-        deadline: '6-8 semaines',
-        category: 'contenu',
-      },
-      {
-        id: 'mt-3',
-        title: 'Implémenter PWA avec service workers',
-        priority: 'moyenne',
-        effort: 'moyen',
-        impact: 70,
-        deadline: '2-3 mois',
-        category: 'technique',
-      },
-    ],
-    longTerm: [
-      {
-        id: 'lt-1',
-        title: 'Mettre à jour vers Next.js 15+ avec optimisations',
-        priority: 'moyenne',
-        effort: 'eleve',
-        impact: 75,
-        deadline: '2-3 mois',
-        category: 'technique',
-      },
-      {
-        id: 'lt-2',
-        title: 'Construire stratégie de content repurposing',
-        priority: 'basse',
-        effort: 'moyen',
-        impact: 65,
-        deadline: '3-6 mois',
-        category: 'contenu',
-      },
-      {
-        id: 'lt-3',
-        title: 'Implémenter recherche interne (Algolia)',
-        priority: 'moyenne',
-        effort: 'moyen',
-        impact: 70,
-        deadline: '3-4 mois',
-        category: 'ux',
-      },
-    ],
+interface AdvisorData {
+  empty: boolean
+  message?: string
+  scoreBreakdown?: {
+    totalScore: number
+    grade: string
+    trend: 'improving' | 'stable' | 'declining'
+    categoryScores: Record<string, number>
+    strengths: string[]
+    weaknesses: string[]
+    benchmarkPercentile: number
   }
+  recommendations?: any[]
+  checklist?: any[]
+  actionPlan?: {
+    quickWins: any[]
+    shortTerm: any[]
+    mediumTerm: any[]
+    longTerm: any[]
+    estimatedTotalTime: number
+    estimatedScoreGain: number
+  }
+  goals?: any[]
+  timeline?: {
+    weeksEstimate: number
+    monthsEstimate: number
+    expectedDate: string
+    quarterlyMilestones: any[]
+  }
+  benchmarks?: Record<string, any>
+  evolutionData?: any[]
+  lastAuditDate?: string
+  websiteDomain?: string
+}
 
-  const evolutionData = [
-    { month: 'Jan', actual: 58, goal: 65, industry: 65 },
-    { month: 'Fév', actual: 62, goal: 68, industry: 66 },
-    { month: 'Mar', actual: 65, goal: 71, industry: 67 },
-    { month: 'Avr', actual: 68, goal: 74, industry: 68 },
-    { month: 'Mai', actual: 70, goal: 77, industry: 68 },
-    { month: 'Jun', actual: 72, goal: 80, industry: 69 },
+// ============= HELPER: Transform API data to UI types =============
+
+const categoryLabelsMap: Record<string, string> = {
+  technique: 'Technique',
+  contenu: 'Contenu',
+  performance: 'Performance',
+  backlinks: 'Backlinks',
+  'ai-visibility': 'Visibilite IA',
+  securite: 'Securite',
+  mobile: 'Mobile',
+  ux: 'UX',
+}
+
+function getStatus(score: number): CategoryScore['status'] {
+  if (score >= 85) return 'excellent'
+  if (score >= 70) return 'bon'
+  if (score >= 60) return 'correct'
+  if (score >= 40) return 'faible'
+  return 'critique'
+}
+
+function transformCategoryScores(
+  categoryScores: Record<string, number>
+): CategoryScore[] {
+  const displayCategories: Category[] = [
+    'technique',
+    'contenu',
+    'performance',
+    'backlinks',
+    'ai-visibility',
+    'ux',
   ]
+  return displayCategories
+    .filter(cat => categoryScores[cat] !== undefined)
+    .map(cat => ({
+      id: cat,
+      label: categoryLabelsMap[cat] || cat,
+      score: Math.round(categoryScores[cat]),
+      status: getStatus(categoryScores[cat]),
+      change: 0,
+    }))
+}
+
+function transformRecommendations(recs: any[]): Recommendation[] {
+  return recs.map(r => ({
+    id: r.id,
+    category: r.category,
+    priority: r.priority,
+    title: r.title,
+    description: r.description,
+    impact: r.expectedImpact || '',
+    effort: r.effort,
+    estimatedTime: r.timelineWeeks ? `${r.timelineWeeks} semaines` : '',
+    howTo: r.actionSteps ? r.actionSteps.join('\n') : '',
+    actionSteps: r.actionSteps,
+    expectedImpact: r.expectedImpact,
+    timelineWeeks: r.timelineWeeks,
+  }))
+}
+
+function transformChecklist(items: any[]): ChecklistItem[] {
+  return items.map(item => ({
+    id: item.id,
+    category: item.category as Category,
+    title: item.title,
+    description: item.description,
+    priority: item.priority,
+    impact: item.impactScore || 0,
+    estimatedTime: item.estimatedTime || '',
+    done: item.status === 'termine',
+  }))
+}
+
+function transformActionPlan(
+  plan: AdvisorData['actionPlan']
+): Record<string, ActionItem[]> {
+  if (!plan) return { quickWins: [], shortTerm: [], mediumTerm: [], longTerm: [] }
+
+  const transform = (items: any[], deadlineLabel: string): ActionItem[] =>
+    items.map(item => ({
+      id: item.id,
+      title: item.title,
+      priority: item.priority,
+      effort: item.effort,
+      impact: item.impactScore || 0,
+      deadline: deadlineLabel,
+      category: item.category as Category,
+    }))
 
   return {
-    overallScore,
-    industryAverage,
-    trend,
-    categoryScores,
-    recommendations,
-    checklistItems,
-    actionPlans,
-    evolutionData,
+    quickWins: transform(plan.quickWins, 'Cette semaine'),
+    shortTerm: transform(plan.shortTerm, '1-2 semaines'),
+    mediumTerm: transform(plan.mediumTerm, '1-3 mois'),
+    longTerm: transform(plan.longTerm, '3-12 mois'),
   }
 }
 
@@ -724,7 +277,6 @@ const HealthGauge: React.FC<HealthGaugeProps> = ({
   return (
     <div className={`relative flex items-center justify-center ${sizeMap[size]}`}>
       <svg className="transform -rotate-90 w-full h-full" viewBox="0 0 120 120">
-        {/* Background circle */}
         <circle
           cx="60"
           cy="60"
@@ -734,7 +286,6 @@ const HealthGauge: React.FC<HealthGaugeProps> = ({
           strokeWidth="8"
           className="text-slate-700"
         />
-        {/* Progress circle with gradient */}
         <defs>
           <linearGradient id={`gradient-${score}`}>
             <stop
@@ -832,7 +383,6 @@ const CategoryScoreCard: React.FC<CategoryScoreCardProps> = ({ category }) => {
         ) : null}
       </div>
 
-      {/* Mini gauge */}
       <div className="w-full h-2 bg-slate-700 rounded-full overflow-hidden mb-3">
         <div
           className={`h-full transition-all duration-500 ${
@@ -911,7 +461,7 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
       case 'moyen':
         return 'Moyen'
       case 'eleve':
-        return 'Élevé'
+        return 'Eleve'
     }
   }
 
@@ -953,14 +503,14 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
         <div className="border-t border-slate-700 px-4 py-4 bg-slate-700/30 space-y-4">
           <div>
             <h4 className="text-xs font-semibold text-slate-300 uppercase tracking-wide mb-2">
-              Description détaillée
+              Description detaillee
             </h4>
             <p className="text-sm text-slate-300">{recommendation.description}</p>
           </div>
 
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <p className="text-xs text-slate-400 mb-1">Impact estimé</p>
+              <p className="text-xs text-slate-400 mb-1">Impact estime</p>
               <p className="font-semibold text-green-400">{recommendation.impact}</p>
             </div>
             <div>
@@ -970,24 +520,22 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
               </p>
             </div>
             <div>
-              <p className="text-xs text-slate-400 mb-1">Temps estimé</p>
+              <p className="text-xs text-slate-400 mb-1">Temps estime</p>
               <p className="font-semibold text-blue-400">{recommendation.estimatedTime}</p>
             </div>
           </div>
 
-          <div>
-            <h4 className="text-xs font-semibold text-slate-300 uppercase tracking-wide mb-2 flex items-center gap-2">
-              <Settings size={14} />
-              Comment faire
-            </h4>
-            <div className="bg-slate-900/50 rounded p-3 text-sm text-slate-300 space-y-1 whitespace-pre-line">
-              {recommendation.howTo}
+          {recommendation.howTo && (
+            <div>
+              <h4 className="text-xs font-semibold text-slate-300 uppercase tracking-wide mb-2 flex items-center gap-2">
+                <Settings size={14} />
+                Comment faire
+              </h4>
+              <div className="bg-slate-900/50 rounded p-3 text-sm text-slate-300 space-y-1 whitespace-pre-line">
+                {recommendation.howTo}
+              </div>
             </div>
-          </div>
-
-          <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded transition-colors">
-            Voir les détails
-          </button>
+          )}
         </div>
       )}
     </div>
@@ -1000,25 +548,12 @@ interface ChecklistSectionProps {
 }
 
 const ChecklistSection: React.FC<ChecklistSectionProps> = ({ items, onToggleDone }) => {
-  const [activeCategory, setActiveCategory] = useState<Category>('technique')
+  const [activeCategory, setActiveCategory] = useState<string>('technique')
 
-  const categories: Category[] = [
-    'technique',
-    'contenu',
-    'performance',
-    'backlinks',
-    'ia-visibility',
-    'ux',
-  ]
-
-  const categoryLabels: Record<Category, string> = {
-    technique: 'Technique',
-    contenu: 'Contenu',
-    performance: 'Performance',
-    backlinks: 'Backlinks',
-    'ia-visibility': 'IA Visibility',
-    ux: 'UX',
-  }
+  const availableCategories = useMemo(() => {
+    const cats = Array.from(new Set(items.map(i => i.category)))
+    return cats
+  }, [items])
 
   const filteredItems = items.filter(item => item.category === activeCategory)
   const completedItems = filteredItems.filter(item => item.done).length
@@ -1045,13 +580,13 @@ const ChecklistSection: React.FC<ChecklistSectionProps> = ({ items, onToggleDone
           />
         </div>
         <p className="text-xs text-slate-400 mt-2">
-          {Math.round(totalProgress)}% complété
+          {Math.round(totalProgress)}% complete
         </p>
       </div>
 
       {/* Category tabs */}
       <div className="flex gap-2 overflow-x-auto pb-2">
-        {categories.map(cat => (
+        {availableCategories.map(cat => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
@@ -1061,7 +596,7 @@ const ChecklistSection: React.FC<ChecklistSectionProps> = ({ items, onToggleDone
                 : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
             }`}
           >
-            {categoryLabels[cat]}
+            {categoryLabelsMap[cat] || cat}
           </button>
         ))}
       </div>
@@ -1070,7 +605,7 @@ const ChecklistSection: React.FC<ChecklistSectionProps> = ({ items, onToggleDone
       <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm font-medium text-slate-300">
-            {categoryLabels[activeCategory]}
+            {categoryLabelsMap[activeCategory] || activeCategory}
           </span>
           <span className="text-xs font-bold text-slate-400">
             {completedItems}/{filteredItems.length}
@@ -1145,7 +680,7 @@ const ChecklistSection: React.FC<ChecklistSectionProps> = ({ items, onToggleDone
                   </span>
                   <span className="flex items-center gap-1">
                     <Award size={14} />
-                    {item.impact} pts d'impact
+                    {item.impact} pts d&apos;impact
                   </span>
                 </div>
               </div>
@@ -1211,7 +746,7 @@ const ActionPlanTab: React.FC<ActionPlanTabProps> = ({ plans }) => {
       <div className="space-y-3">
         {currentPlan.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-slate-400">Aucune action pour cette période</p>
+            <p className="text-slate-400">Aucune action pour cette periode</p>
           </div>
         ) : (
           currentPlan.map(action => (
@@ -1227,8 +762,7 @@ const ActionPlanTab: React.FC<ActionPlanTabProps> = ({ plans }) => {
                       {action.title}
                     </h4>
                     <p className="text-xs text-slate-500 mt-1">
-                      {action.category.charAt(0).toUpperCase() +
-                        action.category.slice(1)}
+                      {categoryLabelsMap[action.category] || action.category}
                     </p>
                   </div>
                 </div>
@@ -1242,7 +776,7 @@ const ActionPlanTab: React.FC<ActionPlanTabProps> = ({ plans }) => {
                       ? 'Faible'
                       : action.effort === 'moyen'
                         ? 'Moyen'
-                        : 'Élevé'}
+                        : 'Eleve'}
                   </p>
                 </div>
                 <div>
@@ -1250,12 +784,12 @@ const ActionPlanTab: React.FC<ActionPlanTabProps> = ({ plans }) => {
                   <p className="font-medium text-green-400">{action.impact}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400 mb-1">Délai</p>
+                  <p className="text-xs text-slate-400 mb-1">Delai</p>
                   <p className="font-medium text-blue-400">{action.deadline}</p>
                 </div>
                 <div className="text-right">
                   <button className="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs font-medium text-slate-200 transition-colors">
-                    Détails
+                    Details
                   </button>
                 </div>
               </div>
@@ -1267,14 +801,144 @@ const ActionPlanTab: React.FC<ActionPlanTabProps> = ({ plans }) => {
   )
 }
 
+// ============= LOADING SKELETON =============
+
+function LoadingSkeleton() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      <div className="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 py-6">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-lg">
+              <Brain size={28} className="text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-white">Conseiller IA Nexus</h1>
+              <p className="text-sm text-slate-400 mt-1">Chargement de l&apos;analyse...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="flex items-center justify-center py-24">
+          <div className="text-center space-y-4">
+            <Loader2 size={48} className="text-blue-500 animate-spin mx-auto" />
+            <p className="text-slate-400 text-lg">Analyse en cours...</p>
+            <p className="text-slate-500 text-sm">
+              Generation des recommandations personnalisees
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ============= EMPTY STATE =============
+
+function EmptyState({ message }: { message: string }) {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      <div className="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 py-6">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-lg">
+              <Brain size={28} className="text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-white">Conseiller IA Nexus</h1>
+              <p className="text-sm text-slate-400 mt-1">
+                Optimisation SEO intelligente et recommandations personnalisees
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="flex items-center justify-center py-24">
+          <div className="text-center space-y-4 max-w-md">
+            <AlertOctagon size={48} className="text-slate-500 mx-auto" />
+            <h2 className="text-xl font-semibold text-slate-200">
+              Aucune donnee disponible
+            </h2>
+            <p className="text-slate-400">{message}</p>
+            <a
+              href="/dashboard"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+            >
+              Lancer un audit
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ============= MAIN PAGE COMPONENT =============
 
 export default function AIAdvisorPage() {
-  const data = useMemo(() => generateDemoData(), [])
-  const [expandedRecommendations, setExpandedRecommendations] = useState<
-    Set<string>
-  >(new Set())
-  const [checklist, setChecklist] = useState(data.checklistItems)
+  const { selectedWebsite, isLoading: websiteLoading } = useWebsite()
+  const { checkAccess } = usePlan()
+
+  const [data, setData] = useState<AdvisorData | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const [expandedRecommendations, setExpandedRecommendations] = useState<Set<string>>(new Set())
+  const [checklist, setChecklist] = useState<ChecklistItem[]>([])
+
+  // Fetch data from API
+  useEffect(() => {
+    if (!selectedWebsite?.id) {
+      setIsLoading(false)
+      return
+    }
+
+    const fetchData = async () => {
+      setIsLoading(true)
+      setError(null)
+      try {
+        const res = await fetch(`/api/ai-advisor?websiteId=${selectedWebsite.id}`)
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ error: 'Erreur inconnue' }))
+          throw new Error(err.error || `Erreur ${res.status}`)
+        }
+        const json = await res.json()
+        setData(json)
+
+        // Transform checklist for local state (toggle done)
+        if (json.checklist) {
+          setChecklist(transformChecklist(json.checklist))
+        }
+      } catch (err: any) {
+        setError(err.message || 'Erreur lors du chargement')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [selectedWebsite?.id])
+
+  const handleRefresh = async () => {
+    if (!selectedWebsite?.id) return
+    setIsLoading(true)
+    setError(null)
+    try {
+      const res = await fetch(`/api/ai-advisor?websiteId=${selectedWebsite.id}`)
+      if (!res.ok) throw new Error('Erreur lors du rafraichissement')
+      const json = await res.json()
+      setData(json)
+      if (json.checklist) {
+        setChecklist(transformChecklist(json.checklist))
+      }
+    } catch (err: any) {
+      setError(err.message)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const handleToggleExpand = (id: string) => {
     const newExpanded = new Set(expandedRecommendations)
@@ -1292,7 +956,74 @@ export default function AIAdvisorPage() {
     )
   }
 
-  const groupedRecommendations = data.recommendations.reduce(
+  // Plan gating - require at least explorer plan
+  if (!checkAccess('aiVisibility')) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+        <div className="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50">
+          <div className="max-w-7xl mx-auto px-6 py-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-lg">
+                <Brain size={28} className="text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-white">Conseiller IA Nexus</h1>
+                <p className="text-sm text-slate-400 mt-1">
+                  Optimisation SEO intelligente et recommandations personnalisees
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto px-6 py-12">
+          <UpgradePrompt feature="aiVisibility" requiredPlan="professionnel" />
+        </div>
+      </div>
+    )
+  }
+
+  // Loading states
+  if (websiteLoading || isLoading) {
+    return <LoadingSkeleton />
+  }
+
+  // No website selected
+  if (!selectedWebsite) {
+    return (
+      <EmptyState message="Selectionnez un site web dans le menu pour commencer l'analyse." />
+    )
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <EmptyState message={error} />
+    )
+  }
+
+  // No data / empty audit
+  if (!data || data.empty) {
+    return (
+      <EmptyState
+        message={
+          data?.message ||
+          'Aucun audit disponible. Lancez un audit pour obtenir des recommandations personnalisees.'
+        }
+      />
+    )
+  }
+
+  // Transform data for display
+  const scoreBreakdown = data.scoreBreakdown!
+  const overallScore = scoreBreakdown.totalScore
+  const industryAverage = 68 // default benchmark
+  const trend = scoreBreakdown.trend
+  const categoryScores = transformCategoryScores(scoreBreakdown.categoryScores)
+  const recommendations = transformRecommendations(data.recommendations || [])
+  const actionPlans = transformActionPlan(data.actionPlan)
+  const evolutionData = data.evolutionData || []
+
+  const groupedRecommendations = recommendations.reduce(
     (acc, rec) => {
       if (!acc[rec.category]) {
         acc[rec.category] = []
@@ -1303,14 +1034,16 @@ export default function AIAdvisorPage() {
     {} as Record<string, Recommendation[]>
   )
 
-  const categoryLabels: Record<Category, string> = {
-    technique: 'Technique',
-    contenu: 'Contenu',
-    performance: 'Performance',
-    backlinks: 'Backlinks',
-    'ia-visibility': 'IA Visibility',
-    ux: 'UX',
-  }
+  // Build benchmark comparison data
+  const benchmarkChartData = categoryScores.map(cat => ({
+    name: cat.label,
+    yours: cat.score,
+    industry: (data.benchmarks as any)?.saas
+      ? Math.round(
+          ((data.benchmarks as any).saas[`avg${cat.id.charAt(0).toUpperCase() + cat.id.slice(1)}Score`] || 68)
+        )
+      : 68,
+  }))
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
@@ -1327,13 +1060,19 @@ export default function AIAdvisorPage() {
                   Conseiller IA Nexus
                 </h1>
                 <p className="text-sm text-slate-400 mt-1">
-                  Optimisation SEO intelligente et recommandations personnalisées
+                  {data.websiteDomain
+                    ? `Analyse de ${data.websiteDomain}`
+                    : 'Optimisation SEO intelligente et recommandations personnalisees'}
                 </p>
               </div>
             </div>
-            <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
-              <RefreshCw size={16} />
-              Actualiser l'analyse
+            <button
+              onClick={handleRefresh}
+              disabled={isLoading}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-lg font-medium transition-colors"
+            >
+              <RefreshCw size={16} className={isLoading ? 'animate-spin' : ''} />
+              Actualiser l&apos;analyse
             </button>
           </div>
         </div>
@@ -1344,25 +1083,25 @@ export default function AIAdvisorPage() {
         <section className="space-y-6">
           <h2 className="text-2xl font-bold text-white flex items-center gap-3">
             <Gauge size={28} className="text-blue-400" />
-            État de santé SEO
+            Etat de sante SEO
           </h2>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main gauge */}
             <div className="bg-slate-800 border border-slate-700 rounded-lg p-8 flex flex-col items-center justify-center">
               <HealthGauge
-                score={data.overallScore}
+                score={overallScore}
                 maxScore={100}
                 size="lg"
               />
               <div className="mt-6 text-center">
                 <p className="text-slate-300 text-sm">Score global</p>
                 <p className="text-slate-400 text-xs mt-2">
-                  {data.trend === 'improving'
-                    ? '📈 En amélioration'
-                    : data.trend === 'stable'
-                      ? '➡️ Stable'
-                      : '📉 En déclin'}
+                  {trend === 'improving'
+                    ? 'En amelioration'
+                    : trend === 'stable'
+                      ? 'Stable'
+                      : 'En declin'}
                 </p>
               </div>
             </div>
@@ -1379,13 +1118,13 @@ export default function AIAdvisorPage() {
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm text-slate-300">Votre score</span>
                       <span className="font-bold text-blue-400">
-                        {data.overallScore}
+                        {overallScore}
                       </span>
                     </div>
                     <div className="w-full h-3 bg-slate-700 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-gradient-to-r from-blue-500 to-cyan-600"
-                        style={{ width: `${(data.overallScore / 100) * 100}%` }}
+                        style={{ width: `${overallScore}%` }}
                       />
                     </div>
                   </div>
@@ -1396,25 +1135,34 @@ export default function AIAdvisorPage() {
                         Moyenne secteur
                       </span>
                       <span className="font-bold text-slate-400">
-                        {data.industryAverage}
+                        {industryAverage}
                       </span>
                     </div>
                     <div className="w-full h-3 bg-slate-700 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-slate-600"
-                        style={{
-                          width: `${(data.industryAverage / 100) * 100}%`,
-                        }}
+                        style={{ width: `${industryAverage}%` }}
                       />
                     </div>
                   </div>
 
                   <div className="pt-2 border-t border-slate-700">
                     <p className="text-sm text-slate-300">
-                      <span className="text-green-400 font-bold">
-                        +{data.overallScore - data.industryAverage}
-                      </span>{' '}
-                      points au-dessus de la moyenne
+                      {overallScore >= industryAverage ? (
+                        <>
+                          <span className="text-green-400 font-bold">
+                            +{overallScore - industryAverage}
+                          </span>{' '}
+                          points au-dessus de la moyenne
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-red-400 font-bold">
+                            {overallScore - industryAverage}
+                          </span>{' '}
+                          points en dessous de la moyenne
+                        </>
+                      )}
                     </p>
                   </div>
                 </div>
@@ -1423,19 +1171,23 @@ export default function AIAdvisorPage() {
               {/* Key metrics */}
               <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
                 <h3 className="font-semibold text-slate-100 mb-4">
-                  Métriques clés
+                  Metriques cles
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-slate-700/50 rounded p-3">
                     <p className="text-xs text-slate-400">Tendance</p>
                     <p className="text-sm font-bold text-emerald-400 mt-1">
-                      📈 Amélioration
+                      {trend === 'improving'
+                        ? 'Amelioration'
+                        : trend === 'stable'
+                          ? 'Stable'
+                          : 'Declin'}
                     </p>
                   </div>
                   <div className="bg-slate-700/50 rounded p-3">
                     <p className="text-xs text-slate-400">Percentile</p>
                     <p className="text-sm font-bold text-blue-400 mt-1">
-                      78e percentile
+                      {scoreBreakdown.benchmarkPercentile}e percentile
                     </p>
                   </div>
                 </div>
@@ -1448,145 +1200,157 @@ export default function AIAdvisorPage() {
         <section className="space-y-6">
           <h2 className="text-2xl font-bold text-white flex items-center gap-3">
             <BarChart3 size={28} className="text-emerald-400" />
-            Scores par catégorie
+            Scores par categorie
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {data.categoryScores.map(category => (
+            {categoryScores.map(category => (
               <CategoryScoreCard key={category.id} category={category} />
             ))}
           </div>
         </section>
 
         {/* Section 3: Recommendations */}
-        <section className="space-y-6">
-          <h2 className="text-2xl font-bold text-white flex items-center gap-3">
-            <Zap size={28} className="text-yellow-400" />
-            Recommandations prioritaires
-          </h2>
+        {recommendations.length > 0 && (
+          <section className="space-y-6">
+            <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+              <Zap size={28} className="text-yellow-400" />
+              Recommandations prioritaires
+            </h2>
 
-          <div className="space-y-8">
-            {Object.entries(groupedRecommendations).map(([category, recs]) => (
-              <div key={category} className="space-y-4">
-                <h3 className="text-lg font-semibold text-slate-200 flex items-center gap-2">
-                  <span className="w-1 h-6 bg-gradient-to-b from-blue-500 to-cyan-600 rounded-full" />
-                  {categoryLabels[category as Category]}
-                </h3>
+            <div className="space-y-8">
+              {Object.entries(groupedRecommendations).map(([category, recs]) => (
+                <div key={category} className="space-y-4">
+                  <h3 className="text-lg font-semibold text-slate-200 flex items-center gap-2">
+                    <span className="w-1 h-6 bg-gradient-to-b from-blue-500 to-cyan-600 rounded-full" />
+                    {categoryLabelsMap[category] || category}
+                  </h3>
 
-                <div className="space-y-3">
-                  {recs.map(rec => (
-                    <RecommendationCard
-                      key={rec.id}
-                      recommendation={rec}
-                      isExpanded={expandedRecommendations.has(rec.id)}
-                      onToggleExpand={handleToggleExpand}
-                    />
-                  ))}
+                  <div className="space-y-3">
+                    {recs.map(rec => (
+                      <RecommendationCard
+                        key={rec.id}
+                        recommendation={rec}
+                        isExpanded={expandedRecommendations.has(rec.id)}
+                        onToggleExpand={handleToggleExpand}
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Section 4: Checklist */}
-        <section className="space-y-6">
-          <h2 className="text-2xl font-bold text-white flex items-center gap-3">
-            <CheckCircle2 size={28} className="text-green-400" />
-            Liste de contrôle d'optimisation
-          </h2>
+        {checklist.length > 0 && (
+          <section className="space-y-6">
+            <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+              <CheckCircle2 size={28} className="text-green-400" />
+              Liste de controle d&apos;optimisation
+            </h2>
 
-          <ChecklistSection items={checklist} onToggleDone={handleToggleDone} />
-        </section>
+            <ChecklistSection items={checklist} onToggleDone={handleToggleDone} />
+          </section>
+        )}
 
         {/* Section 5: Action Plan */}
         <section className="space-y-6">
           <h2 className="text-2xl font-bold text-white flex items-center gap-3">
             <Target size={28} className="text-purple-400" />
-            Plan d'action
+            Plan d&apos;action
           </h2>
 
-          <ActionPlanTab plans={data.actionPlans} />
+          <ActionPlanTab plans={actionPlans} />
         </section>
 
         {/* Section 6: Evolution Chart */}
-        <section className="space-y-6">
-          <h2 className="text-2xl font-bold text-white flex items-center gap-3">
-            <TrendingUp size={28} className="text-rose-400" />
-            Évolution du score SEO
-          </h2>
+        {evolutionData.length > 1 && (
+          <section className="space-y-6">
+            <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+              <TrendingUp size={28} className="text-rose-400" />
+              Evolution du score SEO
+            </h2>
 
-          <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
-            <ResponsiveContainer width="100%" height={400}>
-              <ComposedChart data={data.evolutionData}>
-                <defs>
-                  <linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient id="colorGoal" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                <XAxis dataKey="month" stroke="#94a3b8" />
-                <YAxis domain={[40, 100]} stroke="#94a3b8" />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#1e293b',
-                    border: '1px solid #475569',
-                    borderRadius: '0.5rem',
-                  }}
-                  labelStyle={{ color: '#e2e8f0' }}
-                />
-                <Legend />
-                <Area
-                  type="monotone"
-                  dataKey="actual"
-                  stroke="#3b82f6"
-                  strokeWidth={3}
-                  fill="url(#colorActual)"
-                  name="Score actuel"
-                />
-                <Area
-                  type="monotone"
-                  dataKey="goal"
-                  stroke="#10b981"
-                  strokeWidth={2}
-                  fill="url(#colorGoal)"
-                  name="Objectif"
-                  strokeDasharray="5 5"
-                />
-                <Line
-                  type="monotone"
-                  dataKey="industry"
-                  stroke="#94a3b8"
-                  strokeWidth={2}
-                  name="Moyenne secteur"
-                  strokeDasharray="3 3"
-                />
-              </ComposedChart>
-            </ResponsiveContainer>
-          </div>
+            <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
+              <ResponsiveContainer width="100%" height={400}>
+                <ComposedChart data={evolutionData}>
+                  <defs>
+                    <linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                    </linearGradient>
+                    <linearGradient id="colorGoal" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                  <XAxis dataKey="month" stroke="#94a3b8" />
+                  <YAxis domain={[0, 100]} stroke="#94a3b8" />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#1e293b',
+                      border: '1px solid #475569',
+                      borderRadius: '0.5rem',
+                    }}
+                    labelStyle={{ color: '#e2e8f0' }}
+                  />
+                  <Legend />
+                  <Area
+                    type="monotone"
+                    dataKey="actual"
+                    stroke="#3b82f6"
+                    strokeWidth={3}
+                    fill="url(#colorActual)"
+                    name="Score actuel"
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="goal"
+                    stroke="#10b981"
+                    strokeWidth={2}
+                    fill="url(#colorGoal)"
+                    name="Objectif"
+                    strokeDasharray="5 5"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="industry"
+                    stroke="#94a3b8"
+                    strokeWidth={2}
+                    name="Moyenne secteur"
+                    strokeDasharray="3 3"
+                  />
+                </ComposedChart>
+              </ResponsiveContainer>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
-              <p className="text-xs text-slate-400 mb-2">Progression</p>
-              <p className="text-2xl font-bold text-green-400">+14 pts</p>
-              <p className="text-xs text-slate-500 mt-1">Depuis janvier</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
+                <p className="text-xs text-slate-400 mb-2">Gain estime</p>
+                <p className="text-2xl font-bold text-green-400">
+                  +{data.actionPlan?.estimatedScoreGain || 0} pts
+                </p>
+                <p className="text-xs text-slate-500 mt-1">Potentiel d&apos;amelioration</p>
+              </div>
+              <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
+                <p className="text-xs text-slate-400 mb-2">Objectif</p>
+                <p className="text-2xl font-bold text-blue-400">
+                  {Math.min(100, overallScore + 20)}
+                </p>
+                <p className="text-xs text-slate-500 mt-1">Score cible</p>
+              </div>
+              <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
+                <p className="text-xs text-slate-400 mb-2">Temps estime</p>
+                <p className="text-2xl font-bold text-purple-400">
+                  {data.timeline?.monthsEstimate || '?'} mois
+                </p>
+                <p className="text-xs text-slate-500 mt-1">Pour atteindre l&apos;objectif</p>
+              </div>
             </div>
-            <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
-              <p className="text-xs text-slate-400 mb-2">Objectif</p>
-              <p className="text-2xl font-bold text-blue-400">80</p>
-              <p className="text-xs text-slate-500 mt-1">Cible juin 2026</p>
-            </div>
-            <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
-              <p className="text-xs text-slate-400 mb-2">Temps estimé</p>
-              <p className="text-2xl font-bold text-purple-400">4-6 mois</p>
-              <p className="text-xs text-slate-500 mt-1">Pour atteindre l'objectif</p>
-            </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* Section 7: Industry Benchmarks */}
         <section className="space-y-6">
@@ -1596,86 +1360,48 @@ export default function AIAdvisorPage() {
           </h2>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Radar-like comparison */}
+            {/* Strengths and Weaknesses */}
             <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
               <h3 className="font-semibold text-slate-100 mb-4">
-                Analyse comparative par secteur
+                Forces et faiblesses
               </h3>
               <div className="space-y-4">
-                {[
-                  { sector: 'E-commerce', avg: 70, yours: 72 },
-                  { sector: 'SaaS', avg: 76, yours: 72 },
-                  { sector: 'Blog/Contenu', avg: 74, yours: 72 },
-                  { sector: 'Business Local', avg: 65, yours: 72 },
-                ].map(item => (
-                  <div key={item.sector}>
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm text-slate-300">
-                        {item.sector}
-                      </span>
-                      <div className="flex gap-2">
-                        <span className="text-xs font-medium text-slate-400">
-                          Moy: {item.avg}
-                        </span>
-                        <span className="text-xs font-bold text-blue-400">
-                          Vous: {item.yours}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <div className="flex-1 h-2 bg-slate-700 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-slate-600"
-                          style={{ width: `${(item.avg / 100) * 100}%` }}
-                        />
-                      </div>
-                      <div className="flex-1 h-2 bg-slate-700 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-blue-500"
-                          style={{ width: `${(item.yours / 100) * 100}%` }}
-                        />
-                      </div>
+                {scoreBreakdown.strengths.length > 0 && (
+                  <div>
+                    <p className="text-xs text-slate-400 mb-2 uppercase tracking-wide">Forces</p>
+                    <div className="space-y-1">
+                      {scoreBreakdown.strengths.map((s, i) => (
+                        <div key={i} className="flex items-center gap-2 text-sm text-green-400">
+                          <CheckCircle2 size={14} />
+                          <span>{s}</span>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                ))}
+                )}
+                {scoreBreakdown.weaknesses.length > 0 && (
+                  <div>
+                    <p className="text-xs text-slate-400 mb-2 uppercase tracking-wide">Faiblesses</p>
+                    <div className="space-y-1">
+                      {scoreBreakdown.weaknesses.map((w, i) => (
+                        <div key={i} className="flex items-center gap-2 text-sm text-red-400">
+                          <AlertTriangle size={14} />
+                          <span>{w}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
             {/* Category comparison chart */}
             <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
               <h3 className="font-semibold text-slate-100 mb-4">
-                Scores par catégorie vs secteur
+                Scores par categorie vs secteur
               </h3>
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart
-                  data={[
-                    {
-                      name: 'Technique',
-                      yours: 78,
-                      industry: 72,
-                    },
-                    {
-                      name: 'Contenu',
-                      yours: 68,
-                      industry: 75,
-                    },
-                    {
-                      name: 'Performance',
-                      yours: 62,
-                      industry: 68,
-                    },
-                    {
-                      name: 'Backlinks',
-                      yours: 71,
-                      industry: 65,
-                    },
-                    {
-                      name: 'IA Visibility',
-                      yours: 58,
-                      industry: 60,
-                    },
-                  ]}
-                >
+                <BarChart data={benchmarkChartData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
                   <XAxis dataKey="name" stroke="#94a3b8" angle={-45} height={80} />
                   <YAxis domain={[0, 100]} stroke="#94a3b8" />
@@ -1700,13 +1426,13 @@ export default function AIAdvisorPage() {
         <section className="space-y-6">
           <h2 className="text-2xl font-bold text-white flex items-center gap-3">
             <Download size={28} className="text-indigo-400" />
-            Exporter & Actions
+            Exporter
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
               <Download size={18} />
-              Exporter le plan d'action (PDF)
+              Exporter le plan d&apos;action (PDF)
             </button>
             <button className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
               <Download size={18} />
@@ -1723,13 +1449,13 @@ export default function AIAdvisorPage() {
         <section className="border-t border-slate-800 pt-12">
           <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-8 text-center">
             <h3 className="text-xl font-bold text-white mb-2">
-              Prêt à optimiser votre SEO ?
+              Pret a optimiser votre SEO ?
             </h3>
             <p className="text-slate-300 mb-6">
-              Commencez par les recommandations critiques pour des gains immédiats
+              Commencez par les recommandations critiques pour des gains immediats
             </p>
             <button className="px-8 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-semibold rounded-lg transition-all transform hover:scale-105">
-              Démarrer l'optimisation
+              Demarrer l&apos;optimisation
             </button>
           </div>
         </section>

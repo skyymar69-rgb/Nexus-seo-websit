@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import * as cheerio from 'cheerio'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import { corsHeaders, corsOptionsResponse } from '@/lib/cors'
+import { checkPlanLimit } from '@/lib/plan-guard'
 
 interface AuditCheck {
   id: string
@@ -214,6 +218,21 @@ function parseHTML($: cheerio.CheerioAPI) {
 
 export async function POST(request: NextRequest): Promise<NextResponse<AuditResult>> {
   try {
+    // Check plan limits for authenticated users
+    const session = await getServerSession(authOptions)
+    if (session?.user?.id) {
+      const planCheck = await checkPlanLimit(session.user.id, 'auditsPerMonth', session.user.plan)
+      if (!planCheck.allowed) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: `Limite d'audits atteinte (${planCheck.used}/${planCheck.limit}). Passez au plan supérieur.`,
+          },
+          { status: 429, headers: corsHeaders() }
+        )
+      }
+    }
+
     const body = await request.json()
     const { url, websiteId } = body
 
@@ -223,7 +242,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
           success: false,
           error: 'Invalid or missing URL provided',
         },
-        { status: 400, headers: { 'Access-Control-Allow-Origin': '*' } }
+        { status: 400, headers: corsHeaders() }
       )
     }
 
@@ -242,7 +261,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
           success: false,
           error: 'Invalid URL format',
         },
-        { status: 400, headers: { 'Access-Control-Allow-Origin': '*' } }
+        { status: 400, headers: corsHeaders() }
       )
     }
 
@@ -270,7 +289,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
           success: false,
           error: `HTTP ${response.status} error loading URL`,
         },
-        { status: 400, headers: { 'Access-Control-Allow-Origin': '*' } }
+        { status: 400, headers: corsHeaders() }
       )
     }
 
@@ -952,11 +971,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
     }
 
     return NextResponse.json(result, {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-      },
+      headers: corsHeaders(),
     })
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
@@ -968,18 +983,12 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
           ? 'Request timeout exceeded 15 seconds. Ensure the URL is correct and the server is responsive.'
           : `Audit analysis error: ${errorMessage}`,
       },
-      { status: 500, headers: { 'Access-Control-Allow-Origin': '*' } }
+      { status: 500, headers: corsHeaders() }
     )
   }
 }
 
 // Handle OPTIONS requests for CORS
 export async function OPTIONS(): Promise<NextResponse> {
-  return NextResponse.json(null, {
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    },
-  })
+  return corsOptionsResponse()
 }

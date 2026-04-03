@@ -1,22 +1,29 @@
 'use client'
 
-import { useMemo, useState } from 'react'
-import { cn, formatNumber } from '@/lib/utils'
+import { useCallback, useEffect, useState } from 'react'
+import { cn } from '@/lib/utils'
 import { usePlan } from '@/hooks/usePlan'
+import { useWebsite } from '@/contexts/WebsiteContext'
 import { UpgradePrompt } from '@/components/shared/UpgradePrompt'
 import {
   Users,
   Plus,
-  ChevronUp,
-  ChevronDown,
-  TrendingUp,
+  Trash2,
+  RefreshCw,
+  Loader2,
+  Globe,
+  Clock,
+  FileText,
+  AlertTriangle,
   Link2,
-  Target,
-  Zap,
+  Image,
+  Heading1,
+  Heading2,
+  ArrowUpRight,
+  ArrowDownRight,
+  Search,
 } from 'lucide-react'
 import {
-  LineChart,
-  Line,
   BarChart,
   Bar,
   XAxis,
@@ -24,180 +31,173 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend,
-  ComposedChart,
 } from 'recharts'
 
-interface Competitor {
-  id: string
-  domain: string
-  da: number
-  seoScore: number
-  organicTraffic: number
-  keywords: number
-  backlinks: number
-  commonKeywords: number
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+interface CrawlStats {
+  totalPages: number
+  statusCodes: { [key: string]: number }
+  totalInternalLinks: number
+  totalExternalLinks: number
+  totalImages: number
+  totalImagesWithoutAlt: number
+  avgResponseTime: number
 }
 
-const competitors: Competitor[] = [
-  {
-    id: '1',
-    domain: 'semrush.fr',
-    da: 91,
-    seoScore: 94,
-    organicTraffic: 45200000,
-    keywords: 28500000,
-    backlinks: 142000,
-    commonKeywords: 234,
-  },
-  {
-    id: '2',
-    domain: 'ahrefs-france.com',
-    da: 89,
-    seoScore: 91,
-    organicTraffic: 32100000,
-    keywords: 21300000,
-    backlinks: 98000,
-    commonKeywords: 198,
-  },
-  {
-    id: '3',
-    domain: 'moz-seo.fr',
-    da: 85,
-    seoScore: 87,
-    organicTraffic: 12400000,
-    keywords: 8700000,
-    backlinks: 67000,
-    commonKeywords: 156,
-  },
-  {
-    id: '4',
-    domain: 'seranking.fr',
-    da: 72,
-    seoScore: 78,
-    organicTraffic: 3200000,
-    keywords: 2100000,
-    backlinks: 23000,
-    commonKeywords: 89,
-  },
-]
+interface CrawledPage {
+  url: string
+  statusCode: number
+  contentType: string
+  contentLength: number
+  responseTime: number
+  title: string
+  description: string
+  h1Count: number
+  h2Count: number
+  internalLinks: number
+  externalLinks: number
+  imageCount: number
+  imagesWithoutAlt: number
+  issues: string[]
+}
 
-const visibilityTrendData = [
-  { month: 'Sep', nexus: 45000, semrush: 42000, ahrefs: 38000, moz: 28000, seranking: 12000 },
-  { month: 'Oct', nexus: 48000, semrush: 44000, ahrefs: 40000, moz: 29000, seranking: 13000 },
-  { month: 'Nov', nexus: 52000, semrush: 46000, ahrefs: 42000, moz: 31000, seranking: 14000 },
-  { month: 'Dec', nexus: 58000, semrush: 48000, ahrefs: 44000, moz: 33000, seranking: 15500 },
-  { month: 'Jan', nexus: 62000, semrush: 50000, ahrefs: 46000, moz: 35000, seranking: 17000 },
-  { month: 'Fev', nexus: 68000, semrush: 52000, ahrefs: 48000, moz: 37000, seranking: 18500 },
-]
+interface CrawlResult {
+  url: string
+  stats: CrawlStats
+  pages: CrawledPage[]
+  crawledAt: string
+}
 
-const backlinksComparisonData = [
-  { domain: 'Votre site', backlinks: 8500, dofollowPercentage: 72 },
-  { domain: 'semrush.fr', backlinks: 142000, dofollowPercentage: 68 },
-  { domain: 'ahrefs-france.com', backlinks: 98000, dofollowPercentage: 71 },
-  { domain: 'moz-seo.fr', backlinks: 67000, dofollowPercentage: 65 },
-  { domain: 'seranking.fr', backlinks: 23000, dofollowPercentage: 74 },
-]
+interface CompetitorEntry {
+  id: string
+  domain: string
+  crawlResult: CrawlResult | null
+  isLoading: boolean
+  error: string | null
+}
 
-const contentGapData = [
-  { topic: 'Technical SEO', nexus: 12, competitors: 45, gap: 33 },
-  { topic: 'On-page SEO', nexus: 8, competitors: 38, gap: 30 },
-  { topic: 'Link Building', nexus: 5, competitors: 42, gap: 37 },
-  { topic: 'Content Marketing', nexus: 15, competitors: 28, gap: 13 },
-  { topic: 'Local SEO', nexus: 3, competitors: 25, gap: 22 },
-  { topic: 'International SEO', nexus: 2, competitors: 19, gap: 17 },
-]
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const keywordGapData = [
-  {
-    id: '1',
-    keyword: 'outils seo',
-    semrushRank: 5,
-    ahrefinksRank: 8,
-    yourRank: null,
-    volume: 12100,
-    difficulty: 45,
-  },
-  {
-    id: '2',
-    keyword: 'recherche de mots-cles',
-    semrushRank: 3,
-    ahrefinksRank: 2,
-    yourRank: 15,
-    volume: 14800,
-    difficulty: 68,
-  },
-  {
-    id: '3',
-    keyword: 'outil d\'audit de site',
-    semrushRank: 2,
-    ahrefinksRank: 4,
-    yourRank: null,
-    volume: 7500,
-    difficulty: 42,
-  },
-  {
-    id: '4',
-    keyword: 'analyse des backlinks',
-    semrushRank: 4,
-    ahrefinksRank: 6,
-    yourRank: 7,
-    volume: 8900,
-    difficulty: 55,
-  },
-  {
-    id: '5',
-    keyword: 'verificateur seo',
-    semrushRank: 1,
-    ahrefinksRank: 3,
-    yourRank: null,
-    volume: 9200,
-    difficulty: 38,
-  },
-  {
-    id: '6',
-    keyword: 'classement google',
-    semrushRank: 6,
-    ahrefinksRank: 7,
-    yourRank: null,
-    volume: 11300,
-    difficulty: 55,
-  },
-  {
-    id: '7',
-    keyword: 'analyse de domaine',
-    semrushRank: 2,
-    ahrefinksRank: 5,
-    yourRank: null,
-    volume: 5600,
-    difficulty: 48,
-  },
-  {
-    id: '8',
-    keyword: 'analyse seo concurrentielle',
-    semrushRank: 3,
-    ahrefinksRank: 4,
-    yourRank: 18,
-    volume: 4900,
-    difficulty: 48,
-  },
-]
+function storageKey(websiteId: string): string {
+  return `nexus-competitors-${websiteId}`
+}
 
-const serpOverlapData = [
-  { position: 'Top 10', nexus: 8, competitors: 45 },
-  { position: 'Top 20', nexus: 18, competitors: 78 },
-  { position: 'Top 50', nexus: 42, competitors: 156 },
-  { position: 'Top 100', nexus: 89, competitors: 312 },
-]
+function loadCompetitors(websiteId: string): CompetitorEntry[] {
+  if (typeof window === 'undefined') return []
+  try {
+    const raw = localStorage.getItem(storageKey(websiteId))
+    if (!raw) return []
+    const parsed = JSON.parse(raw) as CompetitorEntry[]
+    // Reset transient state
+    return parsed.map((c) => ({ ...c, isLoading: false, error: null }))
+  } catch {
+    return []
+  }
+}
 
-type SortField = 'keyword' | 'volume' | 'difficulty'
+function saveCompetitors(websiteId: string, competitors: CompetitorEntry[]) {
+  if (typeof window === 'undefined') return
+  // Strip transient state before saving
+  const toSave = competitors.map(({ id, domain, crawlResult }) => ({
+    id,
+    domain,
+    crawlResult,
+    isLoading: false,
+    error: null,
+  }))
+  localStorage.setItem(storageKey(websiteId), JSON.stringify(toSave))
+}
+
+function normalizeDomain(input: string): string {
+  let d = input.trim().toLowerCase()
+  d = d.replace(/^https?:\/\//, '')
+  d = d.replace(/\/.*$/, '')
+  return d
+}
+
+function totalIssues(pages: CrawledPage[]): number {
+  return pages.reduce((sum, p) => sum + p.issues.length, 0)
+}
+
+function avgH1(pages: CrawledPage[]): number {
+  if (pages.length === 0) return 0
+  return pages.reduce((s, p) => s + p.h1Count, 0) / pages.length
+}
+
+function avgH2(pages: CrawledPage[]): number {
+  if (pages.length === 0) return 0
+  return pages.reduce((s, p) => s + p.h2Count, 0) / pages.length
+}
+
+function pagesWithMissingMeta(pages: CrawledPage[]): number {
+  return pages.filter((p) => !p.description || !p.title).length
+}
+
+// ─── Metric comparison helpers ────────────────────────────────────────────────
+
+type CompareDir = 'higher-better' | 'lower-better'
+
+function compareColor(
+  ownValue: number,
+  competitorValue: number,
+  dir: CompareDir,
+): string {
+  if (ownValue === competitorValue) return 'text-surface-300'
+  if (dir === 'higher-better') {
+    return ownValue > competitorValue ? 'text-green-400' : 'text-red-400'
+  }
+  return ownValue < competitorValue ? 'text-green-400' : 'text-red-400'
+}
+
+function CompareArrow({
+  ownValue,
+  competitorValue,
+  dir,
+}: {
+  ownValue: number
+  competitorValue: number
+  dir: CompareDir
+}) {
+  if (ownValue === competitorValue) return null
+  const isBetter =
+    dir === 'higher-better'
+      ? ownValue > competitorValue
+      : ownValue < competitorValue
+  return isBetter ? (
+    <ArrowUpRight className="h-3.5 w-3.5 text-green-400 inline ml-1" />
+  ) : (
+    <ArrowDownRight className="h-3.5 w-3.5 text-red-400 inline ml-1" />
+  )
+}
+
+// ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function CompetitorsPage() {
   const { checkAccess } = usePlan()
-  const [sortBy, setSortBy] = useState<SortField>('volume')
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
-  const [selectedCompetitor, setSelectedCompetitor] = useState<string>('1')
-  const [newCompetitorInput, setNewCompetitorInput] = useState('')
+  const { selectedWebsite } = useWebsite()
+
+  const [competitors, setCompetitors] = useState<CompetitorEntry[]>([])
+  const [newDomain, setNewDomain] = useState('')
+  const [ownCrawl, setOwnCrawl] = useState<CrawlResult | null>(null)
+  const [ownLoading, setOwnLoading] = useState(false)
+
+  // Load competitors from localStorage when website changes
+  useEffect(() => {
+    if (!selectedWebsite) return
+    const loaded = loadCompetitors(selectedWebsite.id)
+    setCompetitors(loaded)
+  }, [selectedWebsite?.id])
+
+  // Persist competitors whenever they change (but only non-transient data)
+  const persist = useCallback(
+    (list: CompetitorEntry[]) => {
+      if (selectedWebsite) saveCompetitors(selectedWebsite.id, list)
+    },
+    [selectedWebsite?.id],
+  )
+
+  // ─── Plan gating ──────────────────────────────────────────────────────────
 
   if (!checkAccess('competitorAnalysis')) {
     return (
@@ -220,39 +220,273 @@ export default function CompetitorsPage() {
     )
   }
 
-  const sortedKeywordGap = useMemo(() => {
-    return [...keywordGapData].sort((a, b) => {
-      let aVal: number = 0
-      let bVal: number = 0
+  // ─── Crawl a URL ──────────────────────────────────────────────────────────
 
-      if (sortBy === 'volume') {
-        aVal = a.volume
-        bVal = b.volume
-      } else if (sortBy === 'difficulty') {
-        aVal = a.difficulty
-        bVal = b.difficulty
-      } else if (sortBy === 'keyword') {
-        return sortDirection === 'asc'
-          ? a.keyword.localeCompare(b.keyword)
-          : b.keyword.localeCompare(a.keyword)
-      }
-
-      return sortDirection === 'asc' ? aVal - bVal : bVal - aVal
+  async function runCrawl(url: string): Promise<CrawlResult> {
+    const res = await fetch('/api/crawl', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url, maxPages: 10 }),
     })
-  }, [sortBy, sortDirection])
-
-  const toggleSort = (field: SortField) => {
-    if (sortBy === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
-    } else {
-      setSortBy(field)
-      setSortDirection('desc')
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}))
+      throw new Error(data.error || `Erreur ${res.status}`)
+    }
+    const data = await res.json()
+    return {
+      url: data.url,
+      stats: data.stats,
+      pages: data.pages,
+      crawledAt: new Date().toISOString(),
     }
   }
 
+  // ─── Crawl own site ───────────────────────────────────────────────────────
+
+  async function crawlOwnSite() {
+    if (!selectedWebsite) return
+    setOwnLoading(true)
+    try {
+      const result = await runCrawl(`https://${selectedWebsite.domain}`)
+      setOwnCrawl(result)
+    } catch {
+      // Silently handle -- user can retry
+    } finally {
+      setOwnLoading(false)
+    }
+  }
+
+  // ─── Add competitor ───────────────────────────────────────────────────────
+
+  function addCompetitor() {
+    const domain = normalizeDomain(newDomain)
+    if (!domain) return
+    if (competitors.some((c) => c.domain === domain)) {
+      setNewDomain('')
+      return
+    }
+    const entry: CompetitorEntry = {
+      id: crypto.randomUUID(),
+      domain,
+      crawlResult: null,
+      isLoading: false,
+      error: null,
+    }
+    const updated = [...competitors, entry]
+    setCompetitors(updated)
+    persist(updated)
+    setNewDomain('')
+  }
+
+  // ─── Remove competitor ────────────────────────────────────────────────────
+
+  function removeCompetitor(id: string) {
+    const updated = competitors.filter((c) => c.id !== id)
+    setCompetitors(updated)
+    persist(updated)
+  }
+
+  // ─── Crawl a competitor ───────────────────────────────────────────────────
+
+  async function crawlCompetitor(id: string) {
+    const comp = competitors.find((c) => c.id === id)
+    if (!comp) return
+
+    setCompetitors((prev) =>
+      prev.map((c) =>
+        c.id === id ? { ...c, isLoading: true, error: null } : c,
+      ),
+    )
+
+    try {
+      const result = await runCrawl(`https://${comp.domain}`)
+      setCompetitors((prev) => {
+        const updated = prev.map((c) =>
+          c.id === id ? { ...c, crawlResult: result, isLoading: false } : c,
+        )
+        persist(updated)
+        return updated
+      })
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Erreur inconnue'
+      setCompetitors((prev) =>
+        prev.map((c) =>
+          c.id === id ? { ...c, error: message, isLoading: false } : c,
+        ),
+      )
+    }
+  }
+
+  // ─── Crawl all ────────────────────────────────────────────────────────────
+
+  async function crawlAll() {
+    crawlOwnSite()
+    for (const c of competitors) {
+      crawlCompetitor(c.id)
+    }
+  }
+
+  // ─── Derived data for charts ──────────────────────────────────────────────
+
+  const crawledCompetitors = competitors.filter((c) => c.crawlResult)
+
+  const comparisonMetrics = (() => {
+    const rows: {
+      label: string
+      icon: React.ReactNode
+      ownValue: number | null
+      competitors: { domain: string; value: number }[]
+      dir: CompareDir
+      format?: (v: number) => string
+    }[] = [
+      {
+        label: 'Pages analysees',
+        icon: <FileText className="h-4 w-4" />,
+        ownValue: ownCrawl?.stats.totalPages ?? null,
+        competitors: crawledCompetitors.map((c) => ({
+          domain: c.domain,
+          value: c.crawlResult!.stats.totalPages,
+        })),
+        dir: 'higher-better',
+      },
+      {
+        label: 'Temps de reponse moyen',
+        icon: <Clock className="h-4 w-4" />,
+        ownValue: ownCrawl?.stats.avgResponseTime ?? null,
+        competitors: crawledCompetitors.map((c) => ({
+          domain: c.domain,
+          value: c.crawlResult!.stats.avgResponseTime,
+        })),
+        dir: 'lower-better',
+        format: (v) => `${v}ms`,
+      },
+      {
+        label: 'Problemes detectes',
+        icon: <AlertTriangle className="h-4 w-4" />,
+        ownValue: ownCrawl ? totalIssues(ownCrawl.pages) : null,
+        competitors: crawledCompetitors.map((c) => ({
+          domain: c.domain,
+          value: totalIssues(c.crawlResult!.pages),
+        })),
+        dir: 'lower-better',
+      },
+      {
+        label: 'Liens internes',
+        icon: <Link2 className="h-4 w-4" />,
+        ownValue: ownCrawl?.stats.totalInternalLinks ?? null,
+        competitors: crawledCompetitors.map((c) => ({
+          domain: c.domain,
+          value: c.crawlResult!.stats.totalInternalLinks,
+        })),
+        dir: 'higher-better',
+      },
+      {
+        label: 'Liens externes',
+        icon: <Globe className="h-4 w-4" />,
+        ownValue: ownCrawl?.stats.totalExternalLinks ?? null,
+        competitors: crawledCompetitors.map((c) => ({
+          domain: c.domain,
+          value: c.crawlResult!.stats.totalExternalLinks,
+        })),
+        dir: 'higher-better',
+      },
+      {
+        label: 'Images totales',
+        icon: <Image className="h-4 w-4" />,
+        ownValue: ownCrawl?.stats.totalImages ?? null,
+        competitors: crawledCompetitors.map((c) => ({
+          domain: c.domain,
+          value: c.crawlResult!.stats.totalImages,
+        })),
+        dir: 'higher-better',
+      },
+      {
+        label: 'Images sans alt',
+        icon: <AlertTriangle className="h-4 w-4" />,
+        ownValue: ownCrawl?.stats.totalImagesWithoutAlt ?? null,
+        competitors: crawledCompetitors.map((c) => ({
+          domain: c.domain,
+          value: c.crawlResult!.stats.totalImagesWithoutAlt,
+        })),
+        dir: 'lower-better',
+      },
+      {
+        label: 'Moyenne H1 / page',
+        icon: <Heading1 className="h-4 w-4" />,
+        ownValue: ownCrawl ? +avgH1(ownCrawl.pages).toFixed(1) : null,
+        competitors: crawledCompetitors.map((c) => ({
+          domain: c.domain,
+          value: +avgH1(c.crawlResult!.pages).toFixed(1),
+        })),
+        dir: 'higher-better',
+      },
+      {
+        label: 'Moyenne H2 / page',
+        icon: <Heading2 className="h-4 w-4" />,
+        ownValue: ownCrawl ? +avgH2(ownCrawl.pages).toFixed(1) : null,
+        competitors: crawledCompetitors.map((c) => ({
+          domain: c.domain,
+          value: +avgH2(c.crawlResult!.pages).toFixed(1),
+        })),
+        dir: 'higher-better',
+      },
+      {
+        label: 'Pages sans meta',
+        icon: <Search className="h-4 w-4" />,
+        ownValue: ownCrawl ? pagesWithMissingMeta(ownCrawl.pages) : null,
+        competitors: crawledCompetitors.map((c) => ({
+          domain: c.domain,
+          value: pagesWithMissingMeta(c.crawlResult!.pages),
+        })),
+        dir: 'lower-better',
+      },
+    ]
+    return rows
+  })()
+
+  // Bar chart data: response time comparison
+  const responseTimeChartData = (() => {
+    const items: { domain: string; value: number }[] = []
+    if (ownCrawl) {
+      items.push({
+        domain: selectedWebsite?.domain ?? 'Votre site',
+        value: ownCrawl.stats.avgResponseTime,
+      })
+    }
+    crawledCompetitors.forEach((c) => {
+      items.push({
+        domain: c.domain,
+        value: c.crawlResult!.stats.avgResponseTime,
+      })
+    })
+    return items
+  })()
+
+  // Bar chart data: issues comparison
+  const issuesChartData = (() => {
+    const items: { domain: string; value: number }[] = []
+    if (ownCrawl) {
+      items.push({
+        domain: selectedWebsite?.domain ?? 'Votre site',
+        value: totalIssues(ownCrawl.pages),
+      })
+    }
+    crawledCompetitors.forEach((c) => {
+      items.push({
+        domain: c.domain,
+        value: totalIssues(c.crawlResult!.pages),
+      })
+    })
+    return items
+  })()
+
+  const hasCrawlData = ownCrawl || crawledCompetitors.length > 0
+
+  // ─── Render ───────────────────────────────────────────────────────────────
+
   return (
     <div className="space-y-8 pb-12">
-      {/* Header with Add Competitor */}
+      {/* Header */}
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-3 mb-2">
@@ -264,532 +498,525 @@ export default function CompetitorsPage() {
             </h1>
           </div>
           <p className="text-surface-400 mt-1 max-w-xl">
-            Comparez vos performances avec vos concurrents et identifiez les opportunites
+            Ajoutez des domaines concurrents, lancez un crawl et comparez les
+            metriques reelles de vos sites
           </p>
         </div>
+        {competitors.length > 0 && (
+          <button
+            onClick={crawlAll}
+            disabled={ownLoading || competitors.some((c) => c.isLoading)}
+            className="px-5 py-2.5 rounded-lg bg-brand-500 text-white hover:bg-brand-600 transition-colors font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <RefreshCw
+              className={cn(
+                'h-4 w-4',
+                (ownLoading || competitors.some((c) => c.isLoading)) &&
+                  'animate-spin',
+              )}
+            />
+            Tout analyser
+          </button>
+        )}
       </div>
 
-      {/* Add Competitor Input */}
+      {/* Add Competitor Form */}
       <div className="rounded-xl border border-surface-700 bg-surface-900/50 backdrop-blur p-6 shadow-sm">
-        <div className="flex gap-3">
+        <h2 className="text-sm font-semibold text-surface-400 uppercase tracking-wide mb-4">
+          Ajouter un concurrent
+        </h2>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            addCompetitor()
+          }}
+          className="flex gap-3"
+        >
           <div className="flex-1">
             <input
               type="text"
               placeholder="Entrez un domaine concurrent (ex: exemple.com)"
-              value={newCompetitorInput}
-              onChange={(e) => setNewCompetitorInput(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg bg-surface-800 border border-surface-700 text-surface-100 placeholder-surface-500 focus:outline-none focus:border-brand-500 transition-colors"
+              value={newDomain}
+              onChange={(e) => setNewDomain(e.target.value)}
+              className="w-full px-4 py-2.5 rounded-lg bg-surface-800 border border-surface-700 text-surface-100 placeholder-surface-500 focus:outline-none focus:border-brand-500 transition-colors"
             />
           </div>
-          <button className="px-6 py-2 rounded-lg bg-brand-500 text-white hover:bg-brand-600 transition-colors font-medium flex items-center gap-2 whitespace-nowrap">
+          <button
+            type="submit"
+            disabled={!newDomain.trim()}
+            className="px-6 py-2.5 rounded-lg bg-brand-500 text-white hover:bg-brand-600 transition-colors font-medium flex items-center gap-2 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             <Plus className="h-4 w-4" />
             Ajouter
           </button>
-        </div>
+        </form>
       </div>
 
-      {/* Competitor Cards Grid */}
-      <div className="grid grid-cols-2 gap-6">
-        {competitors.map((competitor) => (
-          <div
-            key={competitor.id}
-            onClick={() => setSelectedCompetitor(competitor.id)}
-            className={cn(
-              'rounded-xl border bg-surface-900/50 backdrop-blur p-6 shadow-sm hover:border-surface-600 transition-all cursor-pointer',
-              selectedCompetitor === competitor.id
-                ? 'border-brand-500 ring-2 ring-brand-500/20'
-                : 'border-surface-700'
-            )}
-          >
-            <div className="flex items-start justify-between mb-6">
+      {/* Empty state */}
+      {competitors.length === 0 && (
+        <div className="rounded-xl border border-dashed border-surface-700 bg-surface-900/30 p-16 text-center">
+          <Users className="h-12 w-12 text-surface-600 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-surface-300 mb-2">
+            Aucun concurrent ajoute
+          </h3>
+          <p className="text-surface-500 max-w-md mx-auto">
+            Ajoutez des domaines concurrents ci-dessus pour comparer les
+            metriques de votre site avec les leurs via un crawl en temps reel.
+          </p>
+        </div>
+      )}
+
+      {/* Competitor Cards */}
+      {competitors.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Own site card */}
+          <div className="rounded-xl border border-brand-500/40 bg-surface-900/50 backdrop-blur p-6 shadow-sm ring-2 ring-brand-500/10">
+            <div className="flex items-start justify-between mb-4">
               <div>
-                <h3 className="text-lg font-bold text-surface-100 mb-1">
-                  {competitor.domain}
-                </h3>
-                <p className="text-xs text-surface-500">
-                  {competitor.commonKeywords} mots-cles en commun
+                <p className="text-xs font-semibold text-brand-400 uppercase tracking-wide mb-1">
+                  Votre site
                 </p>
+                <h3 className="text-lg font-bold text-surface-100">
+                  {selectedWebsite?.domain ?? '---'}
+                </h3>
               </div>
-              <div className="flex items-center gap-2">
-                <div className="text-right">
+              <button
+                onClick={crawlOwnSite}
+                disabled={ownLoading}
+                className="p-2 rounded-lg bg-surface-800 hover:bg-surface-700 transition-colors text-surface-400 hover:text-surface-200 disabled:opacity-50"
+                title="Analyser votre site"
+              >
+                {ownLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <RefreshCw className="h-4 w-4" />
+                )}
+              </button>
+            </div>
+            {ownCrawl ? (
+              <div className="grid grid-cols-2 gap-4">
+                <div>
                   <p className="text-xs text-surface-500 mb-1 font-medium">
-                    SCORE SEO
+                    PAGES ANALYSEES
                   </p>
-                  <p className="text-2xl font-bold text-brand-400">
-                    {competitor.seoScore}
+                  <p className="text-2xl font-bold text-surface-100">
+                    {ownCrawl.stats.totalPages}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-surface-500 mb-1 font-medium">
+                    TEMPS MOY.
+                  </p>
+                  <p className="text-2xl font-bold text-surface-100">
+                    {ownCrawl.stats.avgResponseTime}ms
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-surface-500 mb-1 font-medium">
+                    PROBLEMES
+                  </p>
+                  <p className="text-2xl font-bold text-surface-100">
+                    {totalIssues(ownCrawl.pages)}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-surface-500 mb-1 font-medium">
+                    LIENS INTERNES
+                  </p>
+                  <p className="text-2xl font-bold text-surface-100">
+                    {ownCrawl.stats.totalInternalLinks}
                   </p>
                 </div>
               </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-xs text-surface-500 mb-1 font-medium">
-                  DOMAIN AUTHORITY
-                </p>
-                <p className="text-2xl font-bold text-surface-100">
-                  {competitor.da}
-                </p>
-              </div>
-              <div>
-                <p className="text-xs text-surface-500 mb-1 font-medium">
-                  TRAFIC ORGANIQUE
-                </p>
-                <p className="text-lg font-bold text-surface-100">
-                  {formatNumber(competitor.organicTraffic)}
-                </p>
-              </div>
-              <div>
-                <p className="text-xs text-surface-500 mb-1 font-medium">
-                  MOTS-CLES
-                </p>
-                <p className="text-lg font-bold text-surface-100">
-                  {formatNumber(competitor.keywords)}
-                </p>
-              </div>
-              <div>
-                <p className="text-xs text-surface-500 mb-1 font-medium">
-                  BACKLINKS
-                </p>
-                <p className="text-lg font-bold text-surface-100">
-                  {formatNumber(competitor.backlinks)}
-                </p>
-              </div>
-            </div>
+            ) : (
+              <p className="text-sm text-surface-500 italic">
+                {ownLoading
+                  ? 'Analyse en cours...'
+                  : 'Cliquez sur le bouton pour analyser votre site'}
+              </p>
+            )}
+            {ownCrawl && (
+              <p className="text-xs text-surface-600 mt-4">
+                Analyse du{' '}
+                {new Date(ownCrawl.crawledAt).toLocaleDateString('fr-FR', {
+                  day: 'numeric',
+                  month: 'short',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </p>
+            )}
           </div>
-        ))}
-      </div>
+
+          {/* Competitor cards */}
+          {competitors.map((comp) => (
+            <div
+              key={comp.id}
+              className="rounded-xl border border-surface-700 bg-surface-900/50 backdrop-blur p-6 shadow-sm hover:border-surface-600 transition-all"
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <p className="text-xs font-semibold text-surface-500 uppercase tracking-wide mb-1">
+                    Concurrent
+                  </p>
+                  <h3 className="text-lg font-bold text-surface-100">
+                    {comp.domain}
+                  </h3>
+                </div>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => crawlCompetitor(comp.id)}
+                    disabled={comp.isLoading}
+                    className="p-2 rounded-lg bg-surface-800 hover:bg-surface-700 transition-colors text-surface-400 hover:text-surface-200 disabled:opacity-50"
+                    title="Analyser ce concurrent"
+                  >
+                    {comp.isLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <RefreshCw className="h-4 w-4" />
+                    )}
+                  </button>
+                  <button
+                    onClick={() => removeCompetitor(comp.id)}
+                    className="p-2 rounded-lg bg-surface-800 hover:bg-red-900/50 transition-colors text-surface-400 hover:text-red-400"
+                    title="Supprimer"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+
+              {comp.error && (
+                <div className="mb-4 px-3 py-2 rounded-lg bg-red-900/20 border border-red-800/30 text-red-400 text-sm">
+                  {comp.error}
+                </div>
+              )}
+
+              {comp.crawlResult ? (
+                <>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-xs text-surface-500 mb-1 font-medium">
+                        PAGES ANALYSEES
+                      </p>
+                      <p className="text-2xl font-bold text-surface-100">
+                        {comp.crawlResult.stats.totalPages}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-surface-500 mb-1 font-medium">
+                        TEMPS MOY.
+                      </p>
+                      <p className="text-2xl font-bold text-surface-100">
+                        {comp.crawlResult.stats.avgResponseTime}ms
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-surface-500 mb-1 font-medium">
+                        PROBLEMES
+                      </p>
+                      <p className="text-2xl font-bold text-surface-100">
+                        {totalIssues(comp.crawlResult.pages)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-surface-500 mb-1 font-medium">
+                        LIENS INTERNES
+                      </p>
+                      <p className="text-2xl font-bold text-surface-100">
+                        {comp.crawlResult.stats.totalInternalLinks}
+                      </p>
+                    </div>
+                  </div>
+                  <p className="text-xs text-surface-600 mt-4">
+                    Analyse du{' '}
+                    {new Date(comp.crawlResult.crawledAt).toLocaleDateString(
+                      'fr-FR',
+                      {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      },
+                    )}
+                  </p>
+                </>
+              ) : (
+                <p className="text-sm text-surface-500 italic">
+                  {comp.isLoading
+                    ? 'Analyse en cours...'
+                    : 'Cliquez sur le bouton pour lancer le crawl'}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Comparison Table */}
-      <div className="rounded-xl border border-surface-700 bg-surface-900/50 backdrop-blur p-6 shadow-sm overflow-hidden">
-        <h2 className="text-lg font-bold text-surface-100 mb-6">
-          Tableau Comparatif
-        </h2>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-surface-700 bg-surface-800/30">
-                <th className="px-6 py-4 text-left text-xs font-semibold text-surface-400 uppercase tracking-wide">
-                  Metrique
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-surface-400 uppercase tracking-wide">
-                  Votre site
-                </th>
-                {competitors.slice(0, 2).map((comp) => (
-                  <th
-                    key={comp.id}
-                    className="px-6 py-4 text-left text-xs font-semibold text-surface-400 uppercase tracking-wide"
-                  >
-                    {comp.domain}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b border-surface-800 hover:bg-surface-800/30 transition-colors">
-                <td className="px-6 py-4 text-sm font-semibold text-surface-100">
-                  Domain Authority
-                </td>
-                <td className="px-6 py-4 text-sm">
-                  <span className="text-green-400 font-bold">58</span>
-                </td>
-                <td className="px-6 py-4 text-sm text-surface-400">
-                  {competitors[0].da}
-                </td>
-                <td className="px-6 py-4 text-sm text-surface-400">
-                  {competitors[1].da}
-                </td>
-              </tr>
-              <tr className="border-b border-surface-800 hover:bg-surface-800/30 transition-colors">
-                <td className="px-6 py-4 text-sm font-semibold text-surface-100">
-                  Score SEO
-                </td>
-                <td className="px-6 py-4 text-sm">
-                  <span className="text-green-400 font-bold">72</span>
-                </td>
-                <td className="px-6 py-4 text-sm text-surface-400">
-                  {competitors[0].seoScore}
-                </td>
-                <td className="px-6 py-4 text-sm text-surface-400">
-                  {competitors[1].seoScore}
-                </td>
-              </tr>
-              <tr className="border-b border-surface-800 hover:bg-surface-800/30 transition-colors">
-                <td className="px-6 py-4 text-sm font-semibold text-surface-100">
-                  Trafic Organique
-                </td>
-                <td className="px-6 py-4 text-sm">
-                  <span className="text-green-400 font-bold">
-                    {formatNumber(125600)}
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-sm text-surface-400">
-                  {formatNumber(45200000)}
-                </td>
-                <td className="px-6 py-4 text-sm text-surface-400">
-                  {formatNumber(32100000)}
-                </td>
-              </tr>
-              <tr className="border-b border-surface-800 hover:bg-surface-800/30 transition-colors">
-                <td className="px-6 py-4 text-sm font-semibold text-surface-100">
-                  Mots-cles Ranks
-                </td>
-                <td className="px-6 py-4 text-sm">
-                  <span className="text-green-400 font-bold">8500</span>
-                </td>
-                <td className="px-6 py-4 text-sm text-surface-400">
-                  {formatNumber(28500000)}
-                </td>
-                <td className="px-6 py-4 text-sm text-surface-400">
-                  {formatNumber(21300000)}
-                </td>
-              </tr>
-              <tr className="hover:bg-surface-800/30 transition-colors">
-                <td className="px-6 py-4 text-sm font-semibold text-surface-100">
-                  Backlinks
-                </td>
-                <td className="px-6 py-4 text-sm">
-                  <span className="text-green-400 font-bold">
-                    {formatNumber(8500)}
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-sm text-surface-400">
-                  {formatNumber(142000)}
-                </td>
-                <td className="px-6 py-4 text-sm text-surface-400">
-                  {formatNumber(98000)}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Visibility Comparison Chart */}
-      <div className="rounded-xl border border-surface-700 bg-surface-900/50 backdrop-blur p-6 shadow-sm">
-        <h2 className="text-lg font-bold text-surface-100 mb-6">
-          Comparaison de Visibilite Organique
-        </h2>
-        <ResponsiveContainer width="100%" height={350}>
-          <LineChart data={visibilityTrendData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgb(71, 85, 105)" />
-            <XAxis
-              dataKey="month"
-              stroke="rgb(107, 114, 128)"
-              style={{ fontSize: '12px' }}
-            />
-            <YAxis stroke="rgb(107, 114, 128)" style={{ fontSize: '12px' }} />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: 'rgb(17, 24, 39)',
-                border: '1px solid rgb(55, 65, 81)',
-                borderRadius: '8px',
-              }}
-              labelStyle={{ color: 'rgb(229, 231, 235)' }}
-            />
-            <Legend wrapperStyle={{ paddingTop: '20px' }} />
-            <Line
-              type="monotone"
-              dataKey="nexus"
-              stroke="rgb(99, 102, 241)"
-              strokeWidth={3}
-              dot={false}
-              name="Votre visibilite"
-            />
-            <Line
-              type="monotone"
-              dataKey="semrush"
-              stroke="rgb(129, 140, 148)"
-              strokeWidth={2}
-              dot={false}
-              name="Semrush.fr"
-            />
-            <Line
-              type="monotone"
-              dataKey="ahrefs"
-              stroke="rgb(71, 85, 105)"
-              strokeWidth={2}
-              dot={false}
-              name="Ahrefs-France"
-            />
-            <Line
-              type="monotone"
-              dataKey="moz"
-              stroke="rgb(55, 65, 81)"
-              strokeWidth={2}
-              dot={false}
-              name="Moz-Seo"
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* Backlinks Comparison */}
-      <div className="rounded-xl border border-surface-700 bg-surface-900/50 backdrop-blur p-6 shadow-sm">
-        <h2 className="text-lg font-bold text-surface-100 mb-6 flex items-center gap-2">
-          <Link2 className="h-5 w-5 text-brand-400" />
-          Comparaison des Backlinks
-        </h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={backlinksComparisonData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgb(71, 85, 105)" />
-            <XAxis
-              dataKey="domain"
-              stroke="rgb(107, 114, 128)"
-              style={{ fontSize: '12px' }}
-            />
-            <YAxis stroke="rgb(107, 114, 128)" style={{ fontSize: '12px' }} />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: 'rgb(17, 24, 39)',
-                border: '1px solid rgb(55, 65, 81)',
-                borderRadius: '8px',
-              }}
-              labelStyle={{ color: 'rgb(229, 231, 235)' }}
-            />
-            <Bar
-              dataKey="backlinks"
-              fill="rgb(99, 102, 241)"
-              name="Backlinks totaux"
-              radius={[8, 8, 0, 0]}
-            />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* Content Gap Analysis */}
-      <div className="rounded-xl border border-surface-700 bg-surface-900/50 backdrop-blur p-6 shadow-sm">
-        <h2 className="text-lg font-bold text-surface-100 mb-6 flex items-center gap-2">
-          <Target className="h-5 w-5 text-brand-400" />
-          Analyse des Lacunes de Contenu
-        </h2>
-        <p className="text-sm text-surface-400 mb-6">
-          Sujets que vos concurrents couvrent mais pas vous
-        </p>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={contentGapData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgb(71, 85, 105)" />
-            <XAxis
-              dataKey="topic"
-              stroke="rgb(107, 114, 128)"
-              style={{ fontSize: '12px' }}
-            />
-            <YAxis stroke="rgb(107, 114, 128)" style={{ fontSize: '12px' }} />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: 'rgb(17, 24, 39)',
-                border: '1px solid rgb(55, 65, 81)',
-                borderRadius: '8px',
-              }}
-              labelStyle={{ color: 'rgb(229, 231, 235)' }}
-            />
-            <Legend wrapperStyle={{ paddingTop: '20px' }} />
-            <Bar
-              dataKey="nexus"
-              fill="rgb(99, 102, 241)"
-              name="Votre contenu"
-              radius={[8, 8, 0, 0]}
-            />
-            <Bar
-              dataKey="competitors"
-              fill="rgb(148, 113, 113)"
-              name="Concurrents"
-              radius={[8, 8, 0, 0]}
-            />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* SERP Overlap Analysis */}
-      <div className="rounded-xl border border-surface-700 bg-surface-900/50 backdrop-blur p-6 shadow-sm">
-        <h2 className="text-lg font-bold text-surface-100 mb-6 flex items-center gap-2">
-          <Zap className="h-5 w-5 text-brand-400" />
-          Chevauchement SERP
-        </h2>
-        <p className="text-sm text-surface-400 mb-6">
-          Mots-cles ou vous concourez directement avec vos concurrents
-        </p>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={serpOverlapData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgb(71, 85, 105)" />
-            <XAxis
-              dataKey="position"
-              stroke="rgb(107, 114, 128)"
-              style={{ fontSize: '12px' }}
-            />
-            <YAxis stroke="rgb(107, 114, 128)" style={{ fontSize: '12px' }} />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: 'rgb(17, 24, 39)',
-                border: '1px solid rgb(55, 65, 81)',
-                borderRadius: '8px',
-              }}
-              labelStyle={{ color: 'rgb(229, 231, 235)' }}
-            />
-            <Legend wrapperStyle={{ paddingTop: '20px' }} />
-            <Bar
-              dataKey="nexus"
-              fill="rgb(99, 102, 241)"
-              name="Votre site"
-              radius={[8, 8, 0, 0]}
-            />
-            <Bar
-              dataKey="competitors"
-              fill="rgb(148, 113, 113)"
-              name="Concurrents"
-              radius={[8, 8, 0, 0]}
-            />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* Keyword Gap Analysis Table */}
-      <div className="rounded-xl border border-surface-700 bg-surface-900/50 backdrop-blur overflow-hidden shadow-sm">
-        <div className="p-6 border-b border-surface-700">
-          <h2 className="text-lg font-bold text-surface-100">
-            Analyse des Mots-cles Manquants
+      {hasCrawlData && (
+        <div className="rounded-xl border border-surface-700 bg-surface-900/50 backdrop-blur p-6 shadow-sm overflow-hidden">
+          <h2 className="text-lg font-bold text-surface-100 mb-6">
+            Tableau Comparatif
           </h2>
-          <p className="text-sm text-surface-400 mt-1">
-            Mots-cles ou vos concurrents ranken mais vous non
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-surface-700 bg-surface-800/30">
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-surface-400 uppercase tracking-wide">
+                    Metrique
+                  </th>
+                  {ownCrawl && (
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-brand-400 uppercase tracking-wide">
+                      {selectedWebsite?.domain ?? 'Votre site'}
+                    </th>
+                  )}
+                  {crawledCompetitors.map((c) => (
+                    <th
+                      key={c.id}
+                      className="px-6 py-4 text-left text-xs font-semibold text-surface-400 uppercase tracking-wide"
+                    >
+                      {c.domain}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {comparisonMetrics.map((metric) => (
+                  <tr
+                    key={metric.label}
+                    className="border-b border-surface-800 hover:bg-surface-800/30 transition-colors"
+                  >
+                    <td className="px-6 py-4 text-sm font-semibold text-surface-100">
+                      <span className="inline-flex items-center gap-2">
+                        {metric.icon}
+                        {metric.label}
+                      </span>
+                    </td>
+                    {ownCrawl && (
+                      <td className="px-6 py-4 text-sm font-bold text-brand-400">
+                        {metric.ownValue !== null
+                          ? metric.format
+                            ? metric.format(metric.ownValue)
+                            : metric.ownValue
+                          : '---'}
+                      </td>
+                    )}
+                    {metric.competitors.map((comp, i) => (
+                      <td key={i} className="px-6 py-4 text-sm">
+                        <span
+                          className={cn(
+                            'font-medium',
+                            metric.ownValue !== null
+                              ? compareColor(
+                                  metric.ownValue,
+                                  comp.value,
+                                  metric.dir,
+                                )
+                              : 'text-surface-300',
+                          )}
+                        >
+                          {metric.format
+                            ? metric.format(comp.value)
+                            : comp.value}
+                          {metric.ownValue !== null && (
+                            <CompareArrow
+                              ownValue={metric.ownValue}
+                              competitorValue={comp.value}
+                              dir={metric.dir}
+                            />
+                          )}
+                        </span>
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-surface-600 mt-4">
+            Vert = votre site est meilleur, Rouge = le concurrent est meilleur
           </p>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-surface-700 bg-surface-800/30">
-                <th
-                  className="px-6 py-4 text-left text-xs font-semibold text-surface-400 uppercase tracking-wide cursor-pointer hover:text-surface-300 transition-colors"
-                  onClick={() => toggleSort('keyword')}
-                >
-                  <div className="flex items-center gap-2">
-                    Mot-cle
-                    {sortBy === 'keyword' && (
-                      <span className="text-brand-400">
-                        {sortDirection === 'asc' ? (
-                          <ChevronUp className="h-3 w-3" />
-                        ) : (
-                          <ChevronDown className="h-3 w-3" />
-                        )}
-                      </span>
-                    )}
-                  </div>
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-surface-400 uppercase tracking-wide">
-                  Semrush
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-surface-400 uppercase tracking-wide">
-                  Ahrefs
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-surface-400 uppercase tracking-wide">
-                  Votre rang
-                </th>
-                <th
-                  className="px-6 py-4 text-left text-xs font-semibold text-surface-400 uppercase tracking-wide cursor-pointer hover:text-surface-300 transition-colors"
-                  onClick={() => toggleSort('volume')}
-                >
-                  <div className="flex items-center gap-2">
-                    Volume
-                    {sortBy === 'volume' && (
-                      <span className="text-brand-400">
-                        {sortDirection === 'asc' ? (
-                          <ChevronUp className="h-3 w-3" />
-                        ) : (
-                          <ChevronDown className="h-3 w-3" />
-                        )}
-                      </span>
-                    )}
-                  </div>
-                </th>
-                <th
-                  className="px-6 py-4 text-left text-xs font-semibold text-surface-400 uppercase tracking-wide cursor-pointer hover:text-surface-300 transition-colors"
-                  onClick={() => toggleSort('difficulty')}
-                >
-                  <div className="flex items-center gap-2">
-                    Difficulte
-                    {sortBy === 'difficulty' && (
-                      <span className="text-brand-400">
-                        {sortDirection === 'asc' ? (
-                          <ChevronUp className="h-3 w-3" />
-                        ) : (
-                          <ChevronDown className="h-3 w-3" />
-                        )}
-                      </span>
-                    )}
-                  </div>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedKeywordGap.map((item) => (
-                <tr
-                  key={item.id}
-                  className="border-b border-surface-800 hover:bg-surface-800/30 transition-colors"
-                >
-                  <td className="px-6 py-4">
-                    <a
-                      href="#"
-                      className="font-semibold text-surface-100 hover:text-brand-400 transition-colors text-sm"
-                    >
-                      {item.keyword}
-                    </a>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-surface-400">
-                    #{item.semrushRank}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-surface-400">
-                    #{item.ahrefinksRank}
-                  </td>
-                  <td className="px-6 py-4 text-sm">
-                    {item.yourRank ? (
-                      <span className="text-surface-100 font-medium">
-                        #{item.yourRank}
-                      </span>
-                    ) : (
-                      <span className="text-red-400 font-medium">
-                        Non classe
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 text-sm font-medium text-surface-300">
-                    {formatNumber(item.volume)}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <div className="w-12 h-1 rounded-full bg-surface-700 overflow-hidden">
-                        <div
-                          className={cn(
-                            'h-full',
-                            item.difficulty <= 30
-                              ? 'bg-accent-500'
-                              : item.difficulty <= 60
-                                ? 'bg-amber-500'
-                                : 'bg-red-500'
-                          )}
-                          style={{
-                            width: `${item.difficulty}%`,
-                          }}
-                        />
-                      </div>
-                      <span
-                        className={cn(
-                          'text-xs font-semibold',
-                          item.difficulty <= 30
-                            ? 'text-accent-400'
-                            : item.difficulty <= 60
-                              ? 'text-amber-400'
-                              : 'text-red-400'
-                        )}
-                      >
-                        {item.difficulty}
-                      </span>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      )}
+
+      {/* Response Time Chart */}
+      {responseTimeChartData.length >= 2 && (
+        <div className="rounded-xl border border-surface-700 bg-surface-900/50 backdrop-blur p-6 shadow-sm">
+          <h2 className="text-lg font-bold text-surface-100 mb-2 flex items-center gap-2">
+            <Clock className="h-5 w-5 text-brand-400" />
+            Comparaison du Temps de Reponse Moyen
+          </h2>
+          <p className="text-sm text-surface-400 mb-6">
+            Temps de reponse moyen en millisecondes (plus bas = mieux)
+          </p>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={responseTimeChartData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgb(71, 85, 105)" />
+              <XAxis
+                dataKey="domain"
+                stroke="rgb(107, 114, 128)"
+                style={{ fontSize: '12px' }}
+              />
+              <YAxis
+                stroke="rgb(107, 114, 128)"
+                style={{ fontSize: '12px' }}
+                unit="ms"
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'rgb(17, 24, 39)',
+                  border: '1px solid rgb(55, 65, 81)',
+                  borderRadius: '8px',
+                }}
+                labelStyle={{ color: 'rgb(229, 231, 235)' }}
+                formatter={(value: number) => [`${value}ms`, 'Temps moyen']}
+              />
+              <Bar
+                dataKey="value"
+                fill="rgb(99, 102, 241)"
+                name="Temps moyen (ms)"
+                radius={[8, 8, 0, 0]}
+              />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
-      </div>
+      )}
+
+      {/* Issues Chart */}
+      {issuesChartData.length >= 2 && (
+        <div className="rounded-xl border border-surface-700 bg-surface-900/50 backdrop-blur p-6 shadow-sm">
+          <h2 className="text-lg font-bold text-surface-100 mb-2 flex items-center gap-2">
+            <AlertTriangle className="h-5 w-5 text-brand-400" />
+            Comparaison des Problemes SEO
+          </h2>
+          <p className="text-sm text-surface-400 mb-6">
+            Nombre de problemes detectes par le crawl (plus bas = mieux)
+          </p>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={issuesChartData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgb(71, 85, 105)" />
+              <XAxis
+                dataKey="domain"
+                stroke="rgb(107, 114, 128)"
+                style={{ fontSize: '12px' }}
+              />
+              <YAxis stroke="rgb(107, 114, 128)" style={{ fontSize: '12px' }} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'rgb(17, 24, 39)',
+                  border: '1px solid rgb(55, 65, 81)',
+                  borderRadius: '8px',
+                }}
+                labelStyle={{ color: 'rgb(229, 231, 235)' }}
+                formatter={(value: number) => [value, 'Problemes']}
+              />
+              <Bar
+                dataKey="value"
+                fill="rgb(239, 68, 68)"
+                name="Problemes detectes"
+                radius={[8, 8, 0, 0]}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+
+      {/* Per-page details for each crawled competitor */}
+      {crawledCompetitors.length > 0 && (
+        <div className="space-y-6">
+          <h2 className="text-lg font-bold text-surface-100">
+            Detail des pages analysees
+          </h2>
+          {crawledCompetitors.map((comp) => (
+            <div
+              key={comp.id}
+              className="rounded-xl border border-surface-700 bg-surface-900/50 backdrop-blur overflow-hidden shadow-sm"
+            >
+              <div className="p-4 border-b border-surface-700 bg-surface-800/30">
+                <h3 className="text-sm font-bold text-surface-200">
+                  {comp.domain}{' '}
+                  <span className="text-surface-500 font-normal">
+                    -- {comp.crawlResult!.pages.length} pages
+                  </span>
+                </h3>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-surface-700">
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-surface-400">
+                        URL
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-surface-400">
+                        Status
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-surface-400">
+                        Temps
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-surface-400">
+                        H1
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-surface-400">
+                        H2
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-surface-400">
+                        Problemes
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {comp.crawlResult!.pages.map((page, idx) => (
+                      <tr
+                        key={idx}
+                        className="border-b border-surface-800/50 hover:bg-surface-800/20 transition-colors"
+                      >
+                        <td className="px-4 py-3 text-surface-300 max-w-xs truncate">
+                          {page.url}
+                        </td>
+                        <td className="px-4 py-3">
+                          <span
+                            className={cn(
+                              'font-medium',
+                              page.statusCode >= 200 && page.statusCode < 300
+                                ? 'text-green-400'
+                                : page.statusCode >= 400
+                                  ? 'text-red-400'
+                                  : 'text-amber-400',
+                            )}
+                          >
+                            {page.statusCode}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-surface-400">
+                          {page.responseTime}ms
+                        </td>
+                        <td className="px-4 py-3 text-surface-400">
+                          {page.h1Count}
+                        </td>
+                        <td className="px-4 py-3 text-surface-400">
+                          {page.h2Count}
+                        </td>
+                        <td className="px-4 py-3">
+                          {page.issues.length > 0 ? (
+                            <span className="text-amber-400">
+                              {page.issues.length}
+                            </span>
+                          ) : (
+                            <span className="text-green-400">0</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

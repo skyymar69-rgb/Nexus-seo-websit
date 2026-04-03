@@ -2,24 +2,18 @@
 
 import { useSession } from 'next-auth/react'
 import { useState, useMemo } from 'react'
-import { cn, formatNumber, formatPercent, getScoreColor, getScoreBg } from '@/lib/utils'
+import { cn, formatNumber } from '@/lib/utils'
 import { useWebsite } from '@/contexts/WebsiteContext'
+import { useDashboardData, type DashboardAudit, type DashboardNotification } from '@/hooks/useDashboardData'
 import { ExportMenu } from '@/components/shared/ExportMenu'
 import {
   LineChart,
   Line,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
-  PieChart as PieChartComponent,
 } from 'recharts'
 import {
   TrendingUp,
@@ -29,11 +23,8 @@ import {
   Link,
   Sparkles,
   RefreshCw,
-  ArrowRight,
   CheckCircle2,
   Activity,
-  Clock,
-  Calendar,
   MoreHorizontal,
   ChevronRight,
   Eye,
@@ -46,202 +37,17 @@ import {
   Settings,
   Download,
   Play,
-  Grid3x3,
   Lightbulb,
   ListTodo,
+  Bell,
+  FileText,
 } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { fr } from 'date-fns/locale'
 
 // ============================================
-// DEMO DATA GENERATORS
+// STATIC UI CONFIG
 // ============================================
-
-function generateScoreHistory(days: number = 30) {
-  const data = []
-  const baseScore = 72
-  for (let i = 0; i < days; i++) {
-    const date = new Date()
-    date.setDate(date.getDate() - (days - i))
-    const variation = Math.sin(i / 3) * 5 + Math.random() * 3
-    data.push({
-      date: date.toLocaleDateString('fr-FR', { month: 'short', day: 'numeric' }),
-      score: Math.max(50, Math.min(95, baseScore + variation + i * 0.3)),
-      fullDate: date,
-    })
-  }
-  return data
-}
-
-function generateKeywordDistribution() {
-  return [
-    { position: '1-3', count: 24, fill: '#10b981' },
-    { position: '4-10', count: 35, fill: '#3b82f6' },
-    { position: '11-20', count: 52, fill: '#f59e0b' },
-    { position: '21-50', count: 89, fill: '#ef4444' },
-  ]
-}
-
-function generateActivityFeed() {
-  const activities = [
-    {
-      id: 1,
-      type: 'audit',
-      title: 'Audit complet du site',
-      description: 'Score: 72/100',
-      time: 'Il y a 2 heures',
-      icon: CheckCircle2,
-      color: 'bg-blue-500/10 text-blue-600',
-    },
-    {
-      id: 2,
-      type: 'ranking',
-      title: 'Nouveau classement détecté',
-      description: 'Position 5 pour "agence web"',
-      time: 'Il y a 6 heures',
-      icon: TrendingUp,
-      color: 'bg-green-500/10 text-green-600',
-    },
-    {
-      id: 3,
-      type: 'backlink',
-      title: 'Nouveau lien retour',
-      description: 'De blog.example.com',
-      time: 'Il y a 1 jour',
-      icon: Link,
-      color: 'bg-purple-500/10 text-purple-600',
-    },
-    {
-      id: 4,
-      type: 'issue',
-      title: 'Problème détecté',
-      description: '3 URLs non indexées',
-      time: 'Il y a 2 jours',
-      icon: AlertCircle,
-      color: 'bg-amber-500/10 text-amber-600',
-    },
-    {
-      id: 5,
-      type: 'update',
-      title: 'Contenu mis à jour',
-      description: '12 pages modifiées',
-      time: 'Il y a 3 jours',
-      icon: RefreshCw,
-      color: 'bg-indigo-500/10 text-indigo-600',
-    },
-  ]
-  return activities
-}
-
-function generateRecentAudits() {
-  return [
-    {
-      id: 1,
-      date: '31 mars 2024',
-      score: 72,
-      grade: 'B',
-      issues: { critical: 2, high: 5, medium: 12 },
-      time: 'Il y a 2 heures',
-    },
-    {
-      id: 2,
-      date: '30 mars 2024',
-      score: 70,
-      grade: 'B',
-      issues: { critical: 2, high: 6, medium: 14 },
-      time: 'Il y a 1 jour',
-    },
-    {
-      id: 3,
-      date: '29 mars 2024',
-      score: 68,
-      grade: 'C',
-      issues: { critical: 3, high: 7, medium: 16 },
-      time: 'Il y a 2 jours',
-    },
-    {
-      id: 4,
-      date: '28 mars 2024',
-      score: 65,
-      grade: 'C',
-      issues: { critical: 4, high: 8, medium: 18 },
-      time: 'Il y a 3 jours',
-    },
-    {
-      id: 5,
-      date: '27 mars 2024',
-      score: 62,
-      grade: 'C',
-      issues: { critical: 5, high: 10, medium: 20 },
-      time: 'Il y a 4 jours',
-    },
-  ]
-}
-
-function generateAIRecommendations() {
-  return [
-    {
-      id: 1,
-      title: 'Optimiser les balises meta description',
-      description: '23 pages sans description optimisée',
-      priority: 'critical',
-      impact: 15,
-      effort: 'easy',
-      category: 'On-page SEO',
-    },
-    {
-      id: 2,
-      title: 'Améliorer la vitesse du site',
-      description: 'Réduire le FCP à moins de 1.8s',
-      priority: 'high',
-      impact: 12,
-      effort: 'medium',
-      category: 'Performance',
-    },
-    {
-      id: 3,
-      title: 'Créer du contenu pour mots-clés sans couverture',
-      description: '45 opportunités identifiées',
-      priority: 'high',
-      impact: 25,
-      effort: 'hard',
-      category: 'Stratégie contenu',
-    },
-    {
-      id: 4,
-      title: 'Corriger les erreurs d\'indexation',
-      description: '12 URLs bloquées par robots.txt',
-      priority: 'high',
-      impact: 8,
-      effort: 'easy',
-      category: 'Technique',
-    },
-    {
-      id: 5,
-      title: 'Développer une stratégie de backlinks',
-      description: 'Acquérir 50 liens de qualité',
-      priority: 'medium',
-      impact: 20,
-      effort: 'hard',
-      category: 'Autorité',
-    },
-  ]
-}
-
-function generateChecklistItems() {
-  return [
-    { id: 1, title: 'Installer Google Analytics', completed: true },
-    { id: 2, title: 'Configurer Google Search Console', completed: true },
-    { id: 3, title: 'Mettre en place SSL/HTTPS', completed: true },
-    { id: 4, title: 'Créer sitemap.xml', completed: true },
-    { id: 5, title: 'Optimiser robots.txt', completed: false },
-    { id: 6, title: 'Corriger les erreurs 404', completed: false },
-    { id: 7, title: 'Ajouter données structurées', completed: false },
-    { id: 8, title: 'Optimiser images', completed: false },
-    { id: 9, title: 'Réduire CLS', completed: false },
-    { id: 10, title: 'Améliorer LCP', completed: false },
-  ]
-}
 
 function generateToolsByCategory() {
   const categories = [
@@ -255,18 +61,18 @@ function generateToolsByCategory() {
         { id: 'core-web-vitals', name: 'Core Web Vitals', isPro: false },
         { id: 'robots', name: 'Robots.txt', isPro: false },
         { id: 'sitemap', name: 'Sitemap', isPro: false },
-        { id: 'ssl', name: 'SSL/Sécurité', isPro: false },
+        { id: 'ssl', name: 'SSL/Securite', isPro: false },
       ],
     },
     {
       id: 'keywords',
-      name: 'Mots-clés',
+      name: 'Mots-cles',
       icon: Search,
       tools: [
-        { id: 'keyword-research', name: 'Recherche Mots-clés', isPro: true },
+        { id: 'keyword-research', name: 'Recherche Mots-cles', isPro: true },
         { id: 'rank-tracker', name: 'Classements', isPro: false },
-        { id: 'long-tail', name: 'Longue traîne', isPro: true },
-        { id: 'keyword-gap', name: 'Écart Mots-clés', isPro: true },
+        { id: 'long-tail', name: 'Longue traine', isPro: true },
+        { id: 'keyword-gap', name: 'Ecart Mots-cles', isPro: true },
         { id: 'intent', name: 'Analyse Intent', isPro: true },
         { id: 'clustering', name: 'Clustering', isPro: true },
       ],
@@ -277,11 +83,11 @@ function generateToolsByCategory() {
       icon: Link,
       tools: [
         { id: 'backlink-analysis', name: 'Analyse Backlinks', isPro: false },
-        { id: 'link-gap', name: 'Écart de Liens', isPro: true },
+        { id: 'link-gap', name: 'Ecart de Liens', isPro: true },
         { id: 'competitor-links', name: 'Liens Concurrents', isPro: true },
-        { id: 'link-quality', name: 'Qualité des Liens', isPro: true },
+        { id: 'link-quality', name: 'Qualite des Liens', isPro: true },
         { id: 'anchor-text', name: 'Anchor Text', isPro: true },
-        { id: 'link-building', name: 'Opportunités', isPro: true },
+        { id: 'link-building', name: 'Opportunites', isPro: true },
       ],
     },
     {
@@ -290,9 +96,9 @@ function generateToolsByCategory() {
       icon: Settings,
       tools: [
         { id: 'content-audit', name: 'Audit Contenu', isPro: false },
-        { id: 'content-gap', name: 'Écart Contenu', isPro: true },
-        { id: 'ai-content', name: 'Générateur IA', isPro: true },
-        { id: 'readability', name: 'Lisibilité', isPro: false },
+        { id: 'content-gap', name: 'Ecart Contenu', isPro: true },
+        { id: 'ai-content', name: 'Generateur IA', isPro: true },
+        { id: 'readability', name: 'Lisibilite', isPro: false },
         { id: 'seo-brief', name: 'Brief SEO', isPro: true },
         { id: 'content-calendar', name: 'Calendrier', isPro: true },
       ],
@@ -303,7 +109,7 @@ function generateToolsByCategory() {
       icon: Users,
       tools: [
         { id: 'competitor-analysis', name: 'Analyse', isPro: false },
-        { id: 'competitor-keywords', name: 'Mots-clés', isPro: true },
+        { id: 'competitor-keywords', name: 'Mots-cles', isPro: true },
         { id: 'competitor-backlinks', name: 'Backlinks', isPro: true },
         { id: 'competitor-content', name: 'Contenu', isPro: true },
         { id: 'competitor-traffic', name: 'Trafic', isPro: true },
@@ -317,7 +123,7 @@ function generateToolsByCategory() {
       tools: [
         { id: 'local-audit', name: 'Audit Local', isPro: false },
         { id: 'gmb-optimizer', name: 'Google My Business', isPro: true },
-        { id: 'local-keywords', name: 'Mots-clés Locaux', isPro: true },
+        { id: 'local-keywords', name: 'Mots-cles Locaux', isPro: true },
         { id: 'review-monitor', name: 'Avis', isPro: true },
         { id: 'citation-audit', name: 'Citations', isPro: true },
         { id: 'local-competitors', name: 'Concurrents Locaux', isPro: true },
@@ -338,14 +144,14 @@ function generateToolsByCategory() {
     },
     {
       id: 'visibility',
-      name: 'Visibilité',
+      name: 'Visibilite',
       icon: Eye,
       tools: [
-        { id: 'ai-visibility', name: 'Visibilité IA', isPro: true },
+        { id: 'ai-visibility', name: 'Visibilite IA', isPro: true },
         { id: 'featured-snippets', name: 'Featured Snippets', isPro: true },
-        { id: 'serp-features', name: 'Fonctionnalités SERP', isPro: true },
+        { id: 'serp-features', name: 'Fonctionnalites SERP', isPro: true },
         { id: 'brand-monitoring', name: 'Marque', isPro: true },
-        { id: 'visibility-score', name: 'Score Visibilité', isPro: false },
+        { id: 'visibility-score', name: 'Score Visibilite', isPro: false },
         { id: 'visibility-history', name: 'Historique', isPro: false },
       ],
     },
@@ -355,15 +161,30 @@ function generateToolsByCategory() {
       icon: Sparkles,
       tools: [
         { id: 'url-inspector', name: 'Inspecteur URL', isPro: false },
-        { id: 'schema-validator', name: 'Schéma Validation', isPro: false },
+        { id: 'schema-validator', name: 'Schema Validation', isPro: false },
         { id: 'redirect-checker', name: 'Redirections', isPro: false },
         { id: 'api-tools', name: 'API Tools', isPro: true },
         { id: 'bulk-tools', name: 'Outils Batch', isPro: true },
-        { id: 'integrations', name: 'Intégrations', isPro: true },
+        { id: 'integrations', name: 'Integrations', isPro: true },
       ],
     },
   ]
   return categories
+}
+
+function generateChecklistItems() {
+  return [
+    { id: 1, title: 'Installer Google Analytics', completed: true },
+    { id: 2, title: 'Configurer Google Search Console', completed: true },
+    { id: 3, title: 'Mettre en place SSL/HTTPS', completed: true },
+    { id: 4, title: 'Creer sitemap.xml', completed: true },
+    { id: 5, title: 'Optimiser robots.txt', completed: false },
+    { id: 6, title: 'Corriger les erreurs 404', completed: false },
+    { id: 7, title: 'Ajouter donnees structurees', completed: false },
+    { id: 8, title: 'Optimiser images', completed: false },
+    { id: 9, title: 'Reduire CLS', completed: false },
+    { id: 10, title: 'Ameliorer LCP', completed: false },
+  ]
 }
 
 // ============================================
@@ -429,7 +250,7 @@ function KPICard({
   )
 }
 
-function ScoreGauge({ score = 72, grade = 'B' }: { score?: number; grade?: string }) {
+function ScoreGauge({ score = 0, grade = '-' }: { score?: number; grade?: string }) {
   const getColorForScore = (s: number) => {
     if (s >= 80) return 'text-emerald-500'
     if (s >= 60) return 'text-amber-500'
@@ -445,6 +266,8 @@ function ScoreGauge({ score = 72, grade = 'B' }: { score?: number; grade?: strin
         return 'bg-amber-500/20 text-amber-400'
       case 'C':
         return 'bg-orange-500/20 text-orange-400'
+      case '-':
+        return 'bg-surface-700 text-surface-400'
       default:
         return 'bg-red-500/20 text-red-400'
     }
@@ -454,7 +277,6 @@ function ScoreGauge({ score = 72, grade = 'B' }: { score?: number; grade?: strin
     <div className="flex flex-col items-center justify-center">
       <div className="relative w-48 h-48 mb-6">
         <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-          {/* Background circle */}
           <circle
             cx="50"
             cy="50"
@@ -463,7 +285,6 @@ function ScoreGauge({ score = 72, grade = 'B' }: { score?: number; grade?: strin
             stroke="rgb(55, 65, 81)"
             strokeWidth="8"
           />
-          {/* Progress circle */}
           <circle
             cx="50"
             cy="50"
@@ -476,7 +297,7 @@ function ScoreGauge({ score = 72, grade = 'B' }: { score?: number; grade?: strin
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className={cn('text-5xl font-bold', getColorForScore(score))}>{score}</span>
+          <span className={cn('text-5xl font-bold', score > 0 ? getColorForScore(score) : 'text-surface-500')}>{score > 0 ? score : '--'}</span>
           <span className="text-surface-400 text-sm">/100</span>
         </div>
       </div>
@@ -487,26 +308,7 @@ function ScoreGauge({ score = 72, grade = 'B' }: { score?: number; grade?: strin
   )
 }
 
-function AuditRow({
-  audit,
-}: {
-  audit: {
-    id: number
-    date: string
-    score: number
-    grade: string
-    issues: { critical: number; high: number; medium: number }
-    time: string
-  }
-}) {
-  const getTrendIcon = (current: number, index: number) => {
-    if (index === 0) return null
-    const prev = generateRecentAudits()[index + 1].score
-    if (current > prev) return <TrendingUp className="w-4 h-4 text-green-500" />
-    if (current < prev) return <TrendingDown className="w-4 h-4 text-red-500" />
-    return null
-  }
-
+function AuditRow({ audit }: { audit: DashboardAudit }) {
   const getScoreColor = (s: number) => {
     if (s >= 80) return 'bg-emerald-500/10 text-emerald-400'
     if (s >= 60) return 'bg-amber-500/10 text-amber-400'
@@ -514,28 +316,32 @@ function AuditRow({
     return 'bg-red-500/10 text-red-400'
   }
 
+  const formattedDate = new Date(audit.createdAt).toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
+
+  const timeAgo = formatDistanceToNow(new Date(audit.createdAt), {
+    locale: fr,
+    addSuffix: true,
+  })
+
   return (
     <tr className="border-b border-surface-700 hover:bg-surface-800/50 transition-colors">
-      <td className="px-6 py-4 text-sm text-surface-200">{audit.date}</td>
+      <td className="px-6 py-4 text-sm text-surface-200">{formattedDate}</td>
       <td className="px-6 py-4">
         <div className="flex items-center gap-3">
           <span className={cn('px-3 py-1 rounded-full font-bold text-sm', getScoreColor(audit.score))}>
             {audit.score}
           </span>
-          {getTrendIcon(audit.score, audit.id)}
         </div>
       </td>
       <td className="px-6 py-4 text-sm text-surface-300">
         <span className="px-2 py-1 bg-surface-700 rounded font-medium">{audit.grade}</span>
       </td>
-      <td className="px-6 py-4 text-sm">
-        <div className="flex items-center gap-3">
-          <span className="text-red-400 font-semibold">{audit.issues.critical}</span>
-          <span className="text-amber-400 font-semibold">{audit.issues.high}</span>
-          <span className="text-blue-400 font-semibold">{audit.issues.medium}</span>
-        </div>
-      </td>
-      <td className="px-6 py-4 text-sm text-surface-400">{audit.time}</td>
+      <td className="px-6 py-4 text-sm text-surface-400">{audit.website.domain}</td>
+      <td className="px-6 py-4 text-sm text-surface-400">{timeAgo}</td>
       <td className="px-6 py-4 text-right">
         <button className="p-2 hover:bg-surface-700 rounded-lg transition-colors">
           <MoreHorizontal className="w-4 h-4 text-surface-400" />
@@ -636,30 +442,141 @@ function ToolCard({
   )
 }
 
-function ActivityItem({
-  activity,
-}: {
-  activity: {
-    id: number
-    type: string
-    title: string
-    description: string
-    time: string
-    icon: React.ComponentType<any>
-    color: string
+function ActivityItem({ notification }: { notification: DashboardNotification }) {
+  const getIconForType = (type: string) => {
+    switch (type) {
+      case 'audit_complete':
+        return { icon: CheckCircle2, color: 'bg-blue-500/10 text-blue-600' }
+      case 'ranking_change':
+        return { icon: TrendingUp, color: 'bg-green-500/10 text-green-600' }
+      case 'backlink_new':
+        return { icon: Link, color: 'bg-purple-500/10 text-purple-600' }
+      case 'issue_detected':
+        return { icon: AlertCircle, color: 'bg-amber-500/10 text-amber-600' }
+      default:
+        return { icon: Bell, color: 'bg-indigo-500/10 text-indigo-600' }
+    }
   }
-}) {
-  const Icon = activity.icon
+
+  const { icon: Icon, color } = getIconForType(notification.type)
+
+  const timeAgo = formatDistanceToNow(new Date(notification.createdAt), {
+    locale: fr,
+    addSuffix: true,
+  })
+
   return (
     <div className="flex gap-4 pb-4 border-b border-surface-700 last:border-b-0 last:pb-0">
-      <div className={cn('p-2 rounded-lg h-fit', activity.color)}>
+      <div className={cn('p-2 rounded-lg h-fit', color)}>
         <Icon className="w-4 h-4" />
       </div>
       <div className="flex-1">
-        <h4 className="text-sm font-semibold text-surface-200">{activity.title}</h4>
-        <p className="text-xs text-surface-400 mt-1">{activity.description}</p>
-        <p className="text-xs text-surface-500 mt-2">{activity.time}</p>
+        <h4 className="text-sm font-semibold text-surface-200">{notification.title}</h4>
+        <p className="text-xs text-surface-400 mt-1">{notification.message}</p>
+        <p className="text-xs text-surface-500 mt-2">{timeAgo}</p>
       </div>
+      {!notification.read && (
+        <div className="w-2 h-2 rounded-full bg-indigo-500 mt-2 shrink-0" />
+      )}
+    </div>
+  )
+}
+
+// ============================================
+// LOADING SKELETON
+// ============================================
+
+function DashboardSkeleton() {
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-surface-900 via-surface-900 to-surface-950 text-surface-100">
+      {/* Top bar skeleton */}
+      <div className="sticky top-0 z-40 border-b border-surface-800 bg-surface-900/80 backdrop-blur-xl">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-5 h-5 rounded bg-surface-700 animate-pulse" />
+              <div>
+                <div className="h-5 w-40 bg-surface-700 rounded animate-pulse" />
+                <div className="h-3 w-28 bg-surface-700 rounded mt-2 animate-pulse" />
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="h-9 w-24 bg-surface-700 rounded-lg animate-pulse" />
+              <div className="h-9 w-9 bg-surface-700 rounded-lg animate-pulse" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+        {/* KPI skeletons */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="bg-surface-800 rounded-lg border border-surface-700 p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <div className="h-4 w-20 bg-surface-700 rounded animate-pulse" />
+                  <div className="h-8 w-16 bg-surface-700 rounded mt-3 animate-pulse" />
+                </div>
+                <div className="w-11 h-11 rounded-lg bg-surface-700 animate-pulse" />
+              </div>
+              <div className="h-4 w-24 bg-surface-700 rounded animate-pulse" />
+            </div>
+          ))}
+        </div>
+
+        {/* Chart skeletons */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-1 bg-surface-800 rounded-lg border border-surface-700 p-8">
+            <div className="h-5 w-24 bg-surface-700 rounded animate-pulse mb-6" />
+            <div className="w-48 h-48 rounded-full bg-surface-700 animate-pulse mx-auto" />
+          </div>
+          <div className="lg:col-span-2 bg-surface-800 rounded-lg border border-surface-700 p-6">
+            <div className="h-5 w-40 bg-surface-700 rounded animate-pulse mb-6" />
+            <div className="h-[300px] bg-surface-700 rounded animate-pulse" />
+          </div>
+        </div>
+
+        {/* Table skeleton */}
+        <div className="bg-surface-800 rounded-lg border border-surface-700 overflow-hidden">
+          <div className="px-6 py-4 border-b border-surface-700">
+            <div className="h-5 w-32 bg-surface-700 rounded animate-pulse" />
+          </div>
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="px-6 py-4 flex gap-8 border-b border-surface-700">
+              <div className="h-4 w-28 bg-surface-700 rounded animate-pulse" />
+              <div className="h-4 w-12 bg-surface-700 rounded animate-pulse" />
+              <div className="h-4 w-8 bg-surface-700 rounded animate-pulse" />
+              <div className="h-4 w-24 bg-surface-700 rounded animate-pulse" />
+              <div className="h-4 w-20 bg-surface-700 rounded animate-pulse" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ============================================
+// EMPTY STATE COMPONENTS
+// ============================================
+
+function EmptyStateCard({
+  icon: Icon,
+  title,
+  description,
+}: {
+  icon: React.ComponentType<any>
+  title: string
+  description: string
+}) {
+  return (
+    <div className="flex flex-col items-center justify-center py-12 text-center">
+      <div className="p-4 rounded-full bg-surface-700/50 mb-4">
+        <Icon className="w-8 h-8 text-surface-500" />
+      </div>
+      <h3 className="text-sm font-semibold text-surface-300 mb-1">{title}</h3>
+      <p className="text-xs text-surface-500 max-w-xs">{description}</p>
     </div>
   )
 }
@@ -671,50 +588,129 @@ function ActivityItem({
 export default function DashboardPage() {
   const { data: session } = useSession()
   const { selectedWebsite } = useWebsite()
+  const { data: stats, isLoading, error, refetch } = useDashboardData(selectedWebsite?.id)
   const [dateRange, setDateRange] = useState('30')
 
-  const scoreHistory = useMemo(() => generateScoreHistory(30), [])
-  const keywordDistribution = useMemo(() => generateKeywordDistribution(), [])
-  const recentAudits = useMemo(() => generateRecentAudits(), [])
-  const recommendations = useMemo(() => generateAIRecommendations(), [])
-  const activityFeed = useMemo(() => generateActivityFeed(), [])
   const checklistItems = useMemo(() => generateChecklistItems(), [])
   const toolCategories = useMemo(() => generateToolsByCategory(), [])
 
   const completedChecklist = checklistItems.filter(item => item.completed).length
   const checklistPercent = Math.round((completedChecklist / checklistItems.length) * 100)
-
   const allTools = toolCategories.flatMap(cat => cat.tools).length
 
-  // Demo data for KPIs
-  const currentScore = 72
-  const kpisData = [
-    { title: 'Score SEO', value: currentScore, unit: '/100', trend: 'up', percent: 2.5, icon: Gauge, color: 'bg-blue-500' },
-    { title: 'Mots-clés', value: 200, unit: 'tracés', trend: 'up', percent: 8.3, icon: Search, color: 'bg-green-500' },
-    { title: 'Backlinks', value: '1.2K', unit: '', trend: 'up', percent: 5.2, icon: Link, color: 'bg-purple-500' },
-    { title: 'Score Performance', value: 68, unit: '/100', trend: 'down', percent: -1.5, icon: Zap, color: 'bg-amber-500' },
-    { title: 'Visibilité IA', value: 45, unit: '%', trend: 'up', percent: 12.1, icon: Sparkles, color: 'bg-indigo-500' },
-    { title: 'Trafic Estimé', value: '12.5K', unit: '/mois', trend: 'up', percent: 18.7, icon: Users, color: 'bg-cyan-500' },
-  ]
+  // Derive score and grade from API data
+  const currentScore = stats?.audits.latestScore ?? 0
+  const currentGrade = currentScore >= 90 ? 'A' : currentScore >= 70 ? 'B' : currentScore >= 50 ? 'C' : currentScore > 0 ? 'D' : '-'
 
+  // Build mini score trend from recent audits
+  const scoreTrendData = useMemo(() => {
+    if (!stats?.recentActivity.audits || stats.recentActivity.audits.length === 0) return []
+    return [...stats.recentActivity.audits]
+      .reverse()
+      .map((a) => ({
+        date: new Date(a.createdAt).toLocaleDateString('fr-FR', { month: 'short', day: 'numeric' }),
+        score: a.score,
+      }))
+  }, [stats])
+
+  // Build KPI cards from real data
+  const kpisData = useMemo(() => {
+    if (!stats) return []
+    return [
+      {
+        title: 'Score SEO',
+        value: stats.audits.latestScore ?? '--',
+        unit: stats.audits.latestScore !== null ? '/100' : '',
+        icon: Gauge,
+        color: 'bg-blue-500',
+      },
+      {
+        title: 'Mots-cles suivis',
+        value: formatNumber(stats.keywords.total),
+        unit: '',
+        icon: Search,
+        color: 'bg-green-500',
+      },
+      {
+        title: 'Position moyenne',
+        value: stats.keywords.avgPosition !== null ? stats.keywords.avgPosition.toFixed(1) : '--',
+        unit: '',
+        icon: Target,
+        color: 'bg-amber-500',
+      },
+      {
+        title: 'Backlinks',
+        value: formatNumber(stats.backlinks.total),
+        unit: stats.backlinks.total > 0 ? `${stats.backlinks.dofollowRatio.toFixed(0)}% dofollow` : '',
+        icon: Link,
+        color: 'bg-purple-500',
+      },
+      {
+        title: 'Visibilite IA',
+        value: stats.aiVisibility.totalQueries > 0 ? `${stats.aiVisibility.mentionRate.toFixed(0)}` : '--',
+        unit: stats.aiVisibility.totalQueries > 0 ? '%' : '',
+        icon: Sparkles,
+        color: 'bg-indigo-500',
+      },
+      {
+        title: 'Audits realises',
+        value: formatNumber(stats.audits.total),
+        unit: '',
+        icon: FileText,
+        color: 'bg-cyan-500',
+      },
+    ]
+  }, [stats])
+
+  // No website selected state
   if (!selectedWebsite) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <Globe className="w-16 h-16 text-surface-600 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-surface-200 mb-2">Aucun site sélectionné</h2>
-          <p className="text-surface-400">Veuillez sélectionner ou ajouter un site pour commencer</p>
+          <h2 className="text-2xl font-bold text-surface-200 mb-2">Aucun site selectionne</h2>
+          <p className="text-surface-400">Veuillez selectionner ou ajouter un site pour commencer</p>
         </div>
       </div>
     )
   }
 
+  // Loading state
+  if (isLoading) {
+    return <DashboardSkeleton />
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <AlertCircle className="w-16 h-16 text-red-500/60 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-surface-200 mb-2">Erreur de chargement</h2>
+          <p className="text-surface-400 mb-6">{error}</p>
+          <button
+            onClick={refetch}
+            className="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg transition-colors font-medium"
+          >
+            Reessayer
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  const recentAudits = stats?.recentActivity.audits ?? []
+  const recentNotifications = stats?.recentActivity.notifications ?? []
+
+  const lastAuditTime = recentAudits.length > 0
+    ? formatDistanceToNow(new Date(recentAudits[0].createdAt), { locale: fr, addSuffix: true })
+    : null
+
   const exportData = {
     title: 'Dashboard SEO Nexus',
     sections: [
       { title: 'KPIs', content: `Score: ${currentScore}/100` },
-      { title: 'Auditist Récents', content: recentAudits.length + ' audits' },
-      { title: 'Recommandations', content: recommendations.length + ' recommandations' },
+      { title: 'Audits Recents', content: recentAudits.length + ' audits' },
     ],
   }
 
@@ -730,7 +726,9 @@ export default function DashboardPage() {
                 <div>
                   <h1 className="text-lg font-bold text-surface-100">{selectedWebsite.domain}</h1>
                   <p className="text-xs text-surface-400">
-                    Dernier audit: {formatDistanceToNow(new Date(recentAudits[0].time), { locale: fr, addSuffix: true })}
+                    {lastAuditTime
+                      ? `Dernier audit: ${lastAuditTime}`
+                      : 'Aucun audit realise'}
                   </p>
                 </div>
               </div>
@@ -746,7 +744,7 @@ export default function DashboardPage() {
                 <option value="7">7 jours</option>
                 <option value="30">30 jours</option>
                 <option value="90">90 jours</option>
-                <option value="365">1 année</option>
+                <option value="365">1 annee</option>
               </select>
             </div>
 
@@ -757,7 +755,11 @@ export default function DashboardPage() {
                 variant="compact"
                 label="Exporter"
               />
-              <button className="p-2 hover:bg-surface-800 rounded-lg transition-colors text-surface-400 hover:text-surface-200">
+              <button
+                onClick={refetch}
+                className="p-2 hover:bg-surface-800 rounded-lg transition-colors text-surface-400 hover:text-surface-200"
+                title="Rafraichir"
+              >
                 <RefreshCw className="w-5 h-5" />
               </button>
             </div>
@@ -775,8 +777,6 @@ export default function DashboardPage() {
                 title={kpi.title}
                 value={kpi.value}
                 unit={kpi.unit}
-                trend={kpi.trend as any}
-                trendPercent={kpi.percent}
                 icon={kpi.icon}
                 color={kpi.color}
               />
@@ -788,44 +788,52 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-1 bg-surface-800 rounded-lg border border-surface-700 p-8">
             <h2 className="text-lg font-bold text-surface-100 mb-6">Score SEO</h2>
-            <ScoreGauge score={currentScore} grade="B" />
+            <ScoreGauge score={currentScore} grade={currentGrade} />
           </div>
 
           <div className="lg:col-span-2 bg-surface-800 rounded-lg border border-surface-700 p-6">
-            <h2 className="text-lg font-bold text-surface-100 mb-6">Évolution (30 jours)</h2>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={scoreHistory}>
-                <defs>
-                  <linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgb(55, 65, 81)" />
-                <XAxis
-                  dataKey="date"
-                  stroke="rgb(107, 114, 128)"
-                  style={{ fontSize: '12px' }}
-                />
-                <YAxis stroke="rgb(107, 114, 128)" style={{ fontSize: '12px' }} domain={[0, 100]} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'rgb(17, 24, 39)',
-                    border: '1px solid rgb(55, 65, 81)',
-                    borderRadius: '8px',
-                  }}
-                  formatter={(value) => [`${Number(value).toFixed(1)}`, 'Score']}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="score"
-                  stroke="#6366f1"
-                  dot={false}
-                  strokeWidth={3}
-                  isAnimationActive={false}
-                />
-              </LineChart>
-            </ResponsiveContainer>
+            <h2 className="text-lg font-bold text-surface-100 mb-6">Evolution du Score</h2>
+            {scoreTrendData.length > 1 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={scoreTrendData}>
+                  <defs>
+                    <linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgb(55, 65, 81)" />
+                  <XAxis
+                    dataKey="date"
+                    stroke="rgb(107, 114, 128)"
+                    style={{ fontSize: '12px' }}
+                  />
+                  <YAxis stroke="rgb(107, 114, 128)" style={{ fontSize: '12px' }} domain={[0, 100]} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: 'rgb(17, 24, 39)',
+                      border: '1px solid rgb(55, 65, 81)',
+                      borderRadius: '8px',
+                    }}
+                    formatter={(value) => [`${Number(value).toFixed(0)}`, 'Score']}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="score"
+                    stroke="#6366f1"
+                    dot={{ fill: '#6366f1', r: 4 }}
+                    strokeWidth={3}
+                    isAnimationActive={false}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <EmptyStateCard
+                icon={BarChart3}
+                title="Pas encore de donnees"
+                description="Lancez au moins 2 audits pour voir l'evolution de votre score SEO dans le temps."
+              />
+            )}
           </div>
         </div>
 
@@ -849,91 +857,89 @@ export default function DashboardPage() {
           </button>
         </div>
 
-        {/* EVOLUTION CHARTS */}
+        {/* KEYWORDS & STATS */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Score Evolution */}
+          {/* Keyword Stats */}
           <div className="bg-surface-800 rounded-lg border border-surface-700 p-6">
-            <h2 className="text-lg font-bold text-surface-100 mb-6">Évolution du Score</h2>
-            <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={scoreHistory}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgb(55, 65, 81)" />
-                <XAxis
-                  dataKey="date"
-                  stroke="rgb(107, 114, 128)"
-                  style={{ fontSize: '11px' }}
-                />
-                <YAxis stroke="rgb(107, 114, 128)" style={{ fontSize: '11px' }} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'rgb(17, 24, 39)',
-                    border: '1px solid rgb(55, 65, 81)',
-                  }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="score"
-                  stroke="#10b981"
-                  strokeWidth={2}
-                  dot={false}
-                />
-              </LineChart>
-            </ResponsiveContainer>
+            <h2 className="text-lg font-bold text-surface-100 mb-6">Mots-cles</h2>
+            {stats && stats.keywords.total > 0 ? (
+              <div className="grid grid-cols-2 gap-6">
+                <div className="text-center p-6 bg-surface-900/50 rounded-lg">
+                  <p className="text-4xl font-bold text-surface-100">{formatNumber(stats.keywords.total)}</p>
+                  <p className="text-sm text-surface-400 mt-2">Mots-cles suivis</p>
+                </div>
+                <div className="text-center p-6 bg-surface-900/50 rounded-lg">
+                  <p className="text-4xl font-bold text-surface-100">
+                    {stats.keywords.avgPosition !== null ? stats.keywords.avgPosition.toFixed(1) : '--'}
+                  </p>
+                  <p className="text-sm text-surface-400 mt-2">Position moyenne</p>
+                </div>
+              </div>
+            ) : (
+              <EmptyStateCard
+                icon={Search}
+                title="Aucun mot-cle suivi"
+                description="Ajoutez des mots-cles pour suivre vos positions dans les resultats de recherche."
+              />
+            )}
           </div>
 
-          {/* Keyword Positions Distribution */}
+          {/* Backlinks Stats */}
           <div className="bg-surface-800 rounded-lg border border-surface-700 p-6">
-            <h2 className="text-lg font-bold text-surface-100 mb-6">Distribution Positions</h2>
-            <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={keywordDistribution}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgb(55, 65, 81)" />
-                <XAxis
-                  dataKey="position"
-                  stroke="rgb(107, 114, 128)"
-                  style={{ fontSize: '11px' }}
-                />
-                <YAxis stroke="rgb(107, 114, 128)" style={{ fontSize: '11px' }} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'rgb(17, 24, 39)',
-                    border: '1px solid rgb(55, 65, 81)',
-                  }}
-                />
-                <Bar dataKey="count" radius={[8, 8, 0, 0]}>
-                  {keywordDistribution.map((entry, index) => (
-                    <Cell key={index} fill={entry.fill} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+            <h2 className="text-lg font-bold text-surface-100 mb-6">Backlinks</h2>
+            {stats && stats.backlinks.total > 0 ? (
+              <div className="grid grid-cols-2 gap-6">
+                <div className="text-center p-6 bg-surface-900/50 rounded-lg">
+                  <p className="text-4xl font-bold text-surface-100">{formatNumber(stats.backlinks.total)}</p>
+                  <p className="text-sm text-surface-400 mt-2">Liens entrants</p>
+                </div>
+                <div className="text-center p-6 bg-surface-900/50 rounded-lg">
+                  <p className="text-4xl font-bold text-surface-100">{stats.backlinks.dofollowRatio.toFixed(0)}%</p>
+                  <p className="text-sm text-surface-400 mt-2">Dofollow</p>
+                </div>
+              </div>
+            ) : (
+              <EmptyStateCard
+                icon={Link}
+                title="Aucun backlink detecte"
+                description="Les backlinks vers votre site apparaitront ici une fois detectes."
+              />
+            )}
           </div>
         </div>
 
         {/* RECENT AUDITS TABLE */}
         <div className="bg-surface-800 rounded-lg border border-surface-700 overflow-hidden">
           <div className="px-6 py-4 border-b border-surface-700">
-            <h2 className="text-lg font-bold text-surface-100">Audits Récents</h2>
+            <h2 className="text-lg font-bold text-surface-100">Audits Recents</h2>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-surface-900 border-b border-surface-700">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-bold text-surface-400 uppercase">Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-bold text-surface-400 uppercase">Score</th>
-                  <th className="px-6 py-3 text-left text-xs font-bold text-surface-400 uppercase">Note</th>
-                  <th className="px-6 py-3 text-left text-xs font-bold text-surface-400 uppercase">
-                    Problèmes <span className="text-red-500">(C)</span> <span className="text-amber-500">(H)</span> <span className="text-blue-500">(M)</span>
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-bold text-surface-400 uppercase">Heure</th>
-                  <th className="px-6 py-3"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentAudits.map((audit, idx) => (
-                  <AuditRow key={audit.id} audit={audit} />
-                ))}
-              </tbody>
-            </table>
-          </div>
+          {recentAudits.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-surface-900 border-b border-surface-700">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-bold text-surface-400 uppercase">Date</th>
+                    <th className="px-6 py-3 text-left text-xs font-bold text-surface-400 uppercase">Score</th>
+                    <th className="px-6 py-3 text-left text-xs font-bold text-surface-400 uppercase">Note</th>
+                    <th className="px-6 py-3 text-left text-xs font-bold text-surface-400 uppercase">Site</th>
+                    <th className="px-6 py-3 text-left text-xs font-bold text-surface-400 uppercase">Date relative</th>
+                    <th className="px-6 py-3"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentAudits.map((audit) => (
+                    <AuditRow key={audit.id} audit={audit} />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <EmptyStateCard
+              icon={FileText}
+              title="Aucun audit realise"
+              description="Lancez votre premier audit SEO pour obtenir une analyse complete de votre site."
+            />
+          )}
         </div>
 
         {/* AI ADVISOR PANEL */}
@@ -942,17 +948,25 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-bold text-surface-100 flex items-center gap-2">
                 <Lightbulb className="w-5 h-5 text-yellow-500" />
-                Recommandations IA (Top 5)
+                Recommandations IA
               </h2>
-              <button className="text-indigo-400 hover:text-indigo-300 text-sm font-semibold flex items-center gap-1">
-                Voir tout <ChevronRight className="w-4 h-4" />
-              </button>
             </div>
-            <div className="space-y-3">
-              {recommendations.map((rec) => (
-                <RecommendationCard key={rec.id} rec={rec} />
-              ))}
-            </div>
+            {recentAudits.length > 0 ? (
+              <div className="space-y-3">
+                <p className="text-sm text-surface-400">
+                  Les recommandations sont generees apres chaque audit. Consultez le detail de votre dernier audit pour voir les actions recommandees.
+                </p>
+                <button className="text-indigo-400 hover:text-indigo-300 text-sm font-semibold flex items-center gap-1 mt-4">
+                  Voir le dernier audit <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <EmptyStateCard
+                icon={Lightbulb}
+                title="Lancez un audit pour recevoir des recommandations"
+                description="Notre IA analysera votre site et vous proposera des actions concretes pour ameliorer votre SEO."
+              />
+            )}
           </div>
 
           {/* CHECKLIST PROGRESS */}
@@ -974,7 +988,7 @@ export default function DashboardPage() {
                 ></div>
               </div>
               <p className="text-xs text-surface-400 mt-2">
-                {completedChecklist} sur {checklistItems.length} éléments complétés
+                {completedChecklist} sur {checklistItems.length} elements completes
               </p>
             </div>
 
@@ -996,7 +1010,7 @@ export default function DashboardPage() {
                 </div>
               ))}
               <p className="text-xs text-indigo-400 mt-3 cursor-pointer hover:text-indigo-300">
-                Voir les {checklistItems.length} éléments
+                Voir les {checklistItems.length} elements
               </p>
             </div>
           </div>
@@ -1005,7 +1019,7 @@ export default function DashboardPage() {
         {/* TOOL GRID */}
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-surface-100">Accès Outils ({allTools})</h2>
+            <h2 className="text-2xl font-bold text-surface-100">Acces Outils ({allTools})</h2>
             <button className="text-indigo-400 hover:text-indigo-300 text-sm font-semibold flex items-center gap-1">
               Voir tous <ChevronRight className="w-4 h-4" />
             </button>
@@ -1031,13 +1045,21 @@ export default function DashboardPage() {
           <div className="lg:col-span-2 bg-surface-800 rounded-lg border border-surface-700 p-6">
             <h2 className="text-lg font-bold text-surface-100 mb-6 flex items-center gap-2">
               <Activity className="w-5 h-5 text-blue-500" />
-              Activité Récente
+              Activite Recente
             </h2>
-            <div className="space-y-4">
-              {activityFeed.map((activity) => (
-                <ActivityItem key={activity.id} activity={activity} />
-              ))}
-            </div>
+            {recentNotifications.length > 0 ? (
+              <div className="space-y-4">
+                {recentNotifications.map((notification) => (
+                  <ActivityItem key={notification.id} notification={notification} />
+                ))}
+              </div>
+            ) : (
+              <EmptyStateCard
+                icon={Activity}
+                title="Aucune activite recente"
+                description="Vos notifications et activites apparaitront ici au fur et a mesure de votre utilisation."
+              />
+            )}
           </div>
 
           {/* STATS SUMMARY */}
@@ -1045,45 +1067,45 @@ export default function DashboardPage() {
             <div>
               <h3 className="text-sm font-bold text-surface-200 mb-3 flex items-center gap-2">
                 <Zap className="w-4 h-4 text-yellow-500" />
-                Statistiques
+                Resume
               </h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-surface-400">Pages indexées</span>
-                  <span className="font-bold text-surface-200">1.247</span>
+                  <span className="text-sm text-surface-400">Sites web</span>
+                  <span className="font-bold text-surface-200">{stats?.websites.total ?? 0}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-surface-400">Erreurs 404</span>
-                  <span className="font-bold text-orange-400">23</span>
+                  <span className="text-sm text-surface-400">Audits realises</span>
+                  <span className="font-bold text-surface-200">{stats?.audits.total ?? 0}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-surface-400">Redirections</span>
-                  <span className="font-bold text-surface-200">12</span>
+                  <span className="text-sm text-surface-400">Mots-cles suivis</span>
+                  <span className="font-bold text-surface-200">{stats?.keywords.total ?? 0}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-surface-400">Liens brisés</span>
-                  <span className="font-bold text-red-400">8</span>
+                  <span className="text-sm text-surface-400">Backlinks</span>
+                  <span className="font-bold text-surface-200">{stats?.backlinks.total ?? 0}</span>
                 </div>
               </div>
             </div>
 
             <div className="border-t border-surface-700 pt-6">
               <h3 className="text-sm font-bold text-surface-200 mb-3 flex items-center gap-2">
-                <Clock className="w-4 h-4 text-green-500" />
-                Temps de Chargement
+                <Eye className="w-4 h-4 text-indigo-500" />
+                Visibilite IA
               </h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-surface-400">FCP</span>
-                  <span className="font-bold text-surface-200">1.2s</span>
+                  <span className="text-sm text-surface-400">Requetes analysees</span>
+                  <span className="font-bold text-surface-200">{stats?.aiVisibility.totalQueries ?? 0}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-surface-400">LCP</span>
-                  <span className="font-bold text-surface-200">2.1s</span>
+                  <span className="text-sm text-surface-400">Taux de mention</span>
+                  <span className="font-bold text-surface-200">{stats?.aiVisibility.mentionRate.toFixed(0) ?? 0}%</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-surface-400">CLS</span>
-                  <span className="font-bold text-surface-200">0.05</span>
+                  <span className="text-sm text-surface-400">Notifications non lues</span>
+                  <span className="font-bold text-indigo-400">{stats?.notifications.unread ?? 0}</span>
                 </div>
               </div>
             </div>

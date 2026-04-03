@@ -83,3 +83,4 @@ prisma/dev.db-journal
 .AppleDouble
 .AppleDB
 .DS_Store
+.vercel

@@ -20,6 +20,8 @@ const featureDescriptions: Record<string, string> = {
   backlinkChecks: 'Analyser vos backlinks en profondeur',
   maxWebsites: 'Gérer plusieurs sites web',
   maxUsers: 'Ajouter plus d\'utilisateurs',
+  aeoReports: 'Analyser le score AEO de vos pages',
+  llmoReports: 'Mesurer votre visibilité dans les réponses LLM',
 }
 
 export function UpgradePrompt({ feature, requiredPlan }: UpgradePromptProps) {

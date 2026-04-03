@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { checkPlanLimit } from '@/lib/plan-guard'
 
 export async function GET(request: NextRequest) {
   try {
@@ -53,6 +54,16 @@ export async function POST(request: NextRequest) {
     }
 
     const userId = (session.user as any).id
+
+    // Check plan limit for number of sites
+    const planCheck = await checkPlanLimit(userId, 'sitesMax', (session.user as any).plan)
+    if (!planCheck.allowed) {
+      return NextResponse.json(
+        { error: `Limite de sites atteinte (${planCheck.used}/${planCheck.limit}). Passez au plan supérieur.` },
+        { status: 429 }
+      )
+    }
+
     const body = await request.json()
     const { domain, name } = body
 

@@ -52,18 +52,11 @@ const TIMEOUT = 10000 // 10 seconds per page
 const DEFAULT_MAX_PAGES = 10
 const MAX_PAGES_LIMIT = 50
 
-// Helper to add CORS headers
-function addCorsHeaders(response: NextResponse) {
-  response.headers.set('Access-Control-Allow-Origin', '*')
-  response.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS')
-  response.headers.set('Access-Control-Allow-Headers', 'Content-Type')
-  return response
-}
+import { withCors, corsOptionsResponse } from '@/lib/cors'
 
 // Handle preflight
 export async function OPTIONS() {
-  const response = new NextResponse(null, { status: 200 })
-  return addCorsHeaders(response)
+  return corsOptionsResponse()
 }
 
 // Extract domain from URL
@@ -317,7 +310,7 @@ export async function POST(request: NextRequest) {
 
     if (!url || typeof url !== 'string') {
       const response = NextResponse.json({ error: 'Invalid or missing URL' }, { status: 400 })
-      return addCorsHeaders(response)
+      return withCors(response)
     }
 
     // Validate URL format
@@ -326,7 +319,7 @@ export async function POST(request: NextRequest) {
       parsedUrl = new URL(url)
     } catch {
       const response = NextResponse.json({ error: 'Invalid URL format' }, { status: 400 })
-      return addCorsHeaders(response)
+      return withCors(response)
     }
 
     // Validate maxPages
@@ -431,7 +424,7 @@ export async function POST(request: NextRequest) {
         pages,
       } as CrawlResponse)
 
-      return addCorsHeaders(response)
+      return withCors(response)
     } catch (error) {
       // Update crawl session to failed if it exists
       if (crawlId) {
@@ -453,7 +446,7 @@ export async function POST(request: NextRequest) {
         },
         { status: 500 },
       )
-      return addCorsHeaders(response)
+      return withCors(response)
     }
   } catch (error) {
     const response = NextResponse.json(
@@ -462,6 +455,6 @@ export async function POST(request: NextRequest) {
       },
       { status: 500 },
     )
-    return addCorsHeaders(response)
+    return withCors(response)
   }
 }

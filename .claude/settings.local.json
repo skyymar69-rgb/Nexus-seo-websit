@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(ls /c/Users/Maison/Desktop/1x/nexus-clean/app/\\\\\\(auth\\\\\\)/)",
+      "Bash(ls /c/Users/Maison/Desktop/1x/nexus-clean/app/\\\\\\(auth\\\\\\)/login/)"
+    ]
+  }
+}

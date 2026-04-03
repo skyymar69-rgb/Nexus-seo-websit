@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { cn, formatNumber } from '@/lib/utils'
+import { useWebsite } from '@/contexts/WebsiteContext'
 import {
   LineChart,
   Line,
@@ -66,136 +67,97 @@ interface KPIData {
   icon: React.ReactNode
 }
 
-// Demo data generation
-const generateBacklinks = (): Backlink[] => {
-  const domains = [
-    { domain: 'lemonde.fr', da: 92, dr: 88 },
-    { domain: 'bbc.com', da: 95, dr: 92 },
-    { domain: 'techcrunch.com', da: 88, dr: 85 },
-    { domain: 'github.com', da: 94, dr: 91 },
-    { domain: 'stackoverflow.com', da: 93, dr: 89 },
-    { domain: 'linkedin.com', da: 96, dr: 93 },
-    { domain: 'medium.com', da: 90, dr: 87 },
-    { domain: 'forbes.com', da: 91, dr: 88 },
-    { domain: 'theguardian.com', da: 89, dr: 86 },
-    { domain: 'wired.com', da: 87, dr: 84 },
-    { domain: 'dev.to', da: 82, dr: 79 },
-    { domain: 'hashnode.com', da: 78, dr: 75 },
-    { domain: 'indiewire.com', da: 85, dr: 82 },
-    { domain: 'producthunt.com', da: 86, dr: 83 },
-    { domain: 'twitter.com', da: 97, dr: 94 },
-  ]
-
-  const anchorTexts = [
-    'Click here',
-    'Check this out',
-    'Visit our website',
-    'Read more',
-    'Learn more',
-    'Discover',
-    'View source',
-    null,
-    'More information',
-    'Official website',
-    'Expert analysis',
-    'Complete guide',
-    'In-depth review',
-  ]
-
-  const backlinks: Backlink[] = []
-  const today = new Date()
-
-  for (let i = 0; i < 42; i++) {
-    const domain = domains[i % domains.length]
-    const daysAgo = Math.floor(Math.random() * 90)
-    const firstSeen = new Date(today)
-    firstSeen.setDate(firstSeen.getDate() - daysAgo)
-
-    const lastCheckDaysAgo = Math.floor(Math.random() * 5)
-    const lastChecked = new Date(today)
-    lastChecked.setDate(lastChecked.getDate() - lastCheckDaysAgo)
-
-    const linkTypes: Array<'dofollow' | 'nofollow' | 'ugc' | 'sponsored'> = [
-      'dofollow',
-      'dofollow',
-      'dofollow',
-      'nofollow',
-      'ugc',
-      'sponsored',
-    ]
-
-    backlinks.push({
-      id: `backlink-${i}`,
-      sourceUrl: `https://${domain.domain}/article-${i}-about-technology`,
-      sourceDomain: domain.domain,
-      targetUrl: 'https://nexus-seo.com',
-      anchorText: anchorTexts[Math.floor(Math.random() * anchorTexts.length)],
-      da: domain.da + Math.floor(Math.random() * 5) - 2,
-      dr: domain.dr + Math.floor(Math.random() * 5) - 2,
-      linkType: linkTypes[Math.floor(Math.random() * linkTypes.length)],
-      spamScore: Math.floor(Math.random() * 45),
-      status:
-        Math.random() > 0.9
-          ? 'lost'
-          : Math.random() > 0.95
-            ? 'broken'
-            : 'active',
-      firstSeen: firstSeen.toISOString().split('T')[0],
-      lastChecked: lastChecked.toISOString().split('T')[0],
-    })
+// Map API backlink to local interface
+function mapApiBacklink(apiBl: any): Backlink {
+  return {
+    id: apiBl.id,
+    sourceUrl: apiBl.sourceUrl,
+    sourceDomain: apiBl.sourceDomain,
+    targetUrl: apiBl.targetUrl,
+    anchorText: apiBl.anchorText ?? null,
+    da: apiBl.da ?? 0,
+    dr: apiBl.dr ?? 0,
+    linkType: apiBl.linkType ?? 'dofollow',
+    spamScore: apiBl.spamScore ?? 0,
+    status: apiBl.status ?? 'active',
+    firstSeen: apiBl.firstSeen ? new Date(apiBl.firstSeen).toISOString().split('T')[0] : '',
+    lastChecked: apiBl.lastChecked ? new Date(apiBl.lastChecked).toISOString().split('T')[0] : '',
   }
-
-  return backlinks.sort((a, b) => new Date(b.firstSeen).getTime() - new Date(a.firstSeen).getTime())
 }
 
-const generateBacklinkGrowth = () => {
+// Compute growth chart data from actual backlinks
+function computeGrowthData(backlinks: Backlink[]) {
   const data = []
   const today = new Date()
-
   for (let i = 29; i >= 0; i--) {
     const date = new Date(today)
     date.setDate(date.getDate() - i)
-    const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-
-    data.push({
-      date: dateStr,
-      total: 450 + i * 8 + Math.floor(Math.random() * 20),
-      dofollow: 320 + i * 5 + Math.floor(Math.random() * 15),
-    })
+    const dateStr = date.toLocaleDateString('fr-FR', { month: 'short', day: 'numeric' })
+    const cutoff = date.toISOString().split('T')[0]
+    const total = backlinks.filter((b) => b.firstSeen <= cutoff).length
+    const dofollow = backlinks.filter((b) => b.firstSeen <= cutoff && b.linkType === 'dofollow').length
+    data.push({ date: dateStr, total, dofollow })
   }
-
   return data
 }
 
-const generateDailyNewLost = () => {
+// Compute new vs lost from actual backlinks
+function computeNewLostData(backlinks: Backlink[]) {
   const data = []
   const today = new Date()
-
   for (let i = 29; i >= 0; i--) {
     const date = new Date(today)
     date.setDate(date.getDate() - i)
-    const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-
-    data.push({
-      date: dateStr,
-      new: Math.floor(Math.random() * 8) + 2,
-      lost: Math.floor(Math.random() * 3) + 1,
-    })
+    const dateStr = date.toLocaleDateString('fr-FR', { month: 'short', day: 'numeric' })
+    const dayStr = date.toISOString().split('T')[0]
+    const newCount = backlinks.filter((b) => b.firstSeen === dayStr && b.status === 'active').length
+    const lostCount = backlinks.filter((b) => b.lastChecked === dayStr && b.status === 'lost').length
+    data.push({ date: dateStr, new: newCount, lost: lostCount })
   }
-
   return data
 }
 
 export default function BacklinksPage() {
-  const [backlinks] = useState<Backlink[]>(generateBacklinks)
-  const [growthData] = useState(generateBacklinkGrowth)
-  const [newLostData] = useState(generateDailyNewLost)
+  const { selectedWebsite } = useWebsite()
+  const [backlinks, setBacklinks] = useState<Backlink[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const [selectedTab, setSelectedTab] = useState<'all' | 'toxic'>('all')
   const [filterType, setFilterType] = useState<string>('all')
   const [filterStatus, setFilterStatus] = useState<string>('all')
   const [filterDARange, setFilterDARange] = useState<[number, number]>([0, 100])
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<'da' | 'date' | 'spam'>('da')
+
+  // Fetch backlinks from API
+  useEffect(() => {
+    async function fetchBacklinks() {
+      if (!selectedWebsite) {
+        setBacklinks([])
+        setIsLoading(false)
+        return
+      }
+      setIsLoading(true)
+      try {
+        const res = await fetch(`/api/backlinks?websiteId=${selectedWebsite.id}&limit=200`)
+        if (res.ok) {
+          const data = await res.json()
+          setBacklinks((data.backlinks || []).map(mapApiBacklink))
+        } else {
+          setBacklinks([])
+        }
+      } catch (error) {
+        console.error('Failed to fetch backlinks:', error)
+        setBacklinks([])
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchBacklinks()
+  }, [selectedWebsite])
+
+  // Derived chart data from real backlinks
+  const growthData = useMemo(() => computeGrowthData(backlinks), [backlinks])
+  const newLostData = useMemo(() => computeNewLostData(backlinks), [backlinks])
 
   // Calculate KPIs
   const totalBacklinks = backlinks.length
@@ -383,6 +345,24 @@ export default function BacklinksPage() {
     },
   ]
 
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 space-y-4">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
+        <p className="text-slate-400">Chargement des backlinks...</p>
+      </div>
+    )
+  }
+
+  if (!selectedWebsite) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 space-y-4">
+        <Link2 className="h-12 w-12 text-slate-600" />
+        <p className="text-slate-400 text-lg">Selectionnez un site web pour voir les backlinks</p>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Header */}
@@ -395,7 +375,7 @@ export default function BacklinksPage() {
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-white">Backlinks</h1>
-                <p className="text-sm text-slate-400 mt-1">nexus-seo.com</p>
+                <p className="text-sm text-slate-400 mt-1">{selectedWebsite.domain}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -701,6 +681,17 @@ export default function BacklinksPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-700">
+                {filteredBacklinks.length === 0 && (
+                  <tr>
+                    <td colSpan={8} className="px-6 py-12 text-center">
+                      <p className="text-slate-400">
+                        {backlinks.length === 0
+                          ? 'Aucun backlink trouve. Les backlinks apparaitront ici une fois detectes.'
+                          : 'Aucun backlink ne correspond aux filtres'}
+                      </p>
+                    </td>
+                  </tr>
+                )}
                 {filteredBacklinks.slice(0, 15).map((backlink) => (
                   <tr key={backlink.id} className="hover:bg-slate-700/50 transition-colors">
                     <td className="px-6 py-4 text-sm">

@@ -234,3 +234,51 @@
     pointer-events: none;
   }
 }
+
+/* ============================================================
+   ACCESSIBILITY
+   ============================================================ */
+
+/* Reduced motion — respect vestibular disorders */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Skip to main content link */
+.skip-to-main {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  z-index: 9999;
+}
+.skip-to-main:focus {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: auto;
+  height: auto;
+  padding: 1rem 2rem;
+  background: rgb(99 102 241);
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  z-index: 9999;
+  outline: 3px solid rgb(255 255 255);
+}
+
+/* Focus visible — enhanced for keyboard navigation */
+:focus-visible {
+  outline: 2px solid rgb(99 102 241);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

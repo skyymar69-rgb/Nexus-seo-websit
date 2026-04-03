@@ -2,8 +2,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// Pour la production : changer "sqlite" en "postgresql" et mettre à jour DATABASE_URL
+// Railway/Vercel fourniront automatiquement une DATABASE_URL PostgreSQL
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 

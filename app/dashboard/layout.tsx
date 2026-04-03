@@ -67,6 +67,7 @@ import {
   Database,
   Download,
   Check,
+  Globe,
 } from 'lucide-react'
 
 interface CategoryItem {
@@ -199,11 +200,11 @@ const navigationCategories = [
     isCategory: true,
     items: [
       { label: 'AI Visibility', href: '/dashboard/ai-visibility', icon: Sparkles, badge: 'NEW' },
-      { label: 'AI Rankings', href: '/dashboard/ai-rankings', icon: TrendingUp, badge: 'PRO' },
-      { label: 'Geographic Ranking', href: '/dashboard/geo-ranking', icon: MapPin, badge: 'PRO' },
-      { label: 'Featured Snippets', href: '/dashboard/featured-snippets', icon: Zap, badge: undefined },
-      { label: 'People Also Ask', href: '/dashboard/people-also-ask', icon: HelpCircle, badge: undefined },
-      { label: 'Knowledge Graph', href: '/dashboard/knowledge-graph', icon: Database, badge: 'PRO' },
+      { label: 'Audit GEO', href: '/dashboard/geo-audit', icon: Globe, badge: 'NEW' },
+      { label: 'Score AEO', href: '/dashboard/aeo-score', icon: Zap, badge: 'NEW' },
+      { label: 'Score LLMO', href: '/dashboard/llmo-score', icon: TrendingUp, badge: 'PRO' },
+      { label: 'AI Advisor', href: '/dashboard/ai-advisor', icon: Lightbulb, badge: undefined },
+      { label: 'AI Content', href: '/dashboard/ai-content', icon: FileText, badge: undefined },
     ],
   },
   {

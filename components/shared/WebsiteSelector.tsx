@@ -12,6 +12,7 @@ export function WebsiteSelector() {
   const [newDomain, setNewDomain] = useState('')
   const [newName, setNewName] = useState('')
   const [isAdding, setIsAdding] = useState(false)
+  const [error, setError] = useState('')
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -28,12 +29,22 @@ export function WebsiteSelector() {
   const handleAdd = async () => {
     if (!newDomain.trim()) return
     setIsAdding(true)
-    const website = await addWebsite(newDomain.trim(), newName.trim() || undefined)
-    if (website) {
-      setNewDomain('')
-      setNewName('')
-      setShowAddForm(false)
-      setIsOpen(false)
+    setError('')
+    try {
+      const website = await addWebsite(newDomain.trim(), newName.trim() || undefined)
+      if (website) {
+        setNewDomain('')
+        setNewName('')
+        setShowAddForm(false)
+        setIsOpen(false)
+      }
+    } catch (err: any) {
+      const msg = err?.message || 'Erreur lors de l\'ajout'
+      if (msg.includes('Non autorisé') || msg.includes('401')) {
+        setError('Connectez-vous pour ajouter un site')
+      } else {
+        setError(msg)
+      }
     }
     setIsAdding(false)
   }
@@ -137,6 +148,9 @@ export function WebsiteSelector() {
                 className="w-full px-3 py-2 rounded-lg bg-surface-900 border border-surface-600 text-surface-100 text-sm placeholder:text-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none"
                 onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
               />
+              {error && (
+                <p className="text-xs text-red-400 px-1">{error}</p>
+              )}
               <div className="flex gap-2">
                 <button
                   onClick={handleAdd}

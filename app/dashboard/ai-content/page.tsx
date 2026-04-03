@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import {
   Copy,
@@ -16,38 +16,34 @@ import {
   TrendingUp,
   CheckCircle2,
   AlertCircle,
+  Loader2,
 } from 'lucide-react';
 
 const CONTENT_TYPES = [
-  { id: 'blog', label: 'Article de blog', icon: '📝' },
-  { id: 'product', label: 'Page produit', icon: '🛍️' },
-  { id: 'meta', label: 'Meta descriptions', icon: '📋' },
-  { id: 'faq', label: 'FAQ', icon: '❓' },
-  { id: 'landing', label: 'Landing page', icon: '🚀' },
-  { id: 'category', label: 'Description categorie', icon: '📂' },
+  { id: 'blog', label: 'Article de blog', icon: '📝', apiValue: 'article' },
+  { id: 'product', label: 'Page produit', icon: '🛍️', apiValue: 'product-description' },
+  { id: 'meta', label: 'Meta descriptions', icon: '📋', apiValue: 'meta-description' },
+  { id: 'faq', label: 'FAQ', icon: '❓', apiValue: 'faq' },
+  { id: 'landing', label: 'Landing page', icon: '🚀', apiValue: 'title' },
+  { id: 'category', label: 'Description categorie', icon: '📂', apiValue: 'product-description' },
 ];
 
-const TONES = ['Professionnel', 'Decontracte', 'Technique', 'Commercial'];
-const LANGUAGES = ['Francais', 'English', 'Espanol', 'Deutsch'];
+const TONES = [
+  { label: 'Professionnel', value: 'professional' },
+  { label: 'Decontracte', value: 'casual' },
+  { label: 'Technique', value: 'academic' },
+  { label: 'Commercial', value: 'persuasive' },
+];
 
-const SAMPLE_ARTICLE = `L'optimisation des moteurs de recherche (SEO) est devenue un pilier fondamental de toute stratégie de marketing numérique moderne. Dans un paysage digital en constante évolution, comprendre et maîtriser les principes du SEO est essentiel pour les entreprises qui souhaitent augmenter leur visibilité en ligne et attirer un trafic qualifié.
-
-Les moteurs de recherche, notamment Google, utilisent des algorithmes sophistiqués pour classifier et classer les pages web. Ces algorithmes prennent en compte des centaines de facteurs différents, allant de la qualité du contenu à la structure technique du site. Le SEO consiste à optimiser ces éléments pour améliorer votre positionnement dans les résultats de recherche.
-
-L'une des composantes les plus importantes du SEO est la recherche de mots-clés. Identifier les termes que votre audience utilise pour rechercher vos produits ou services vous permet de créer du contenu pertinent et attrayant. Une bonne recherche de mots-clés forme la base de toute stratégie SEO réussie.
-
-Le contenu de qualité reste roi dans le domaine du SEO. Google valorise les pages qui offrent une valeur réelle aux utilisateurs, qui répondent à leurs questions et qui fournissent des informations complètes et bien structurées. Un contenu mal écrit ou superficiel sera toujours pénalisé dans les classements.
-
-L'expérience utilisateur est également devenue un facteur de classement crucial. Google mesure les signaux d'engagement tels que le temps de passage sur la page, le taux de rebond et la compatibilité mobile. Un site web rapide, facile à naviguer et adapté aux appareils mobiles aura généralement un meilleur classement.
-
-Les liens de qualité provenant d'autres sites web demeurent un indicateur important de l'autorité d'un site. Cependant, la qualité des liens est bien plus importante que leur quantité. Un petit nombre de liens provenant de sites de haute autorité vaut bien plus qu'un grand nombre de liens de faible qualité.
-
-Pour réussir en SEO, il est important d'adopter une approche holistique. Cela signifie optimiser à la fois les aspects techniques, le contenu, et la construction de liens. Une stratégie SEO efficace est une stratégie intégrée qui prend en compte tous ces éléments.
-
-En conclusion, le SEO est un investissement à long terme qui produit des résultats durables. Bien qu'il nécessite du temps et de l'effort, les bénéfices d'un bon classement dans les moteurs de recherche sont considérables. En mettant en œuvre une stratégie SEO solide et en restant à jour avec les dernières tendances, vous pouvez positionner votre entreprise pour le succès à long terme.`;
+const LANGUAGES = [
+  { label: 'Francais', value: 'fr' },
+  { label: 'English', value: 'en' },
+  { label: 'Espanol', value: 'es' },
+  { label: 'Deutsch', value: 'de' },
+];
 
 const HISTORY_ITEMS = [
-  { id: 1, title: 'Guide complet du SEO 2024', date: 'Aujourd\'hui' },
+  { id: 1, title: 'Guide complet du SEO 2024', date: "Aujourd'hui" },
   { id: 2, title: 'Optimisation des pages produit', date: 'Hier' },
   { id: 3, title: 'Stratégie de contenu pour e-commerce', date: '3 jours' },
   { id: 4, title: 'FAQ - Amélioration continue', date: '1 semaine' },
@@ -68,14 +64,18 @@ const RELATED_KEYWORDS = [
 export default function AIContentPage() {
   const [selectedType, setSelectedType] = useState('blog');
   const [keyword, setKeyword] = useState('');
-  const [tone, setTone] = useState('Professionnel');
-  const [language, setLanguage] = useState('Francais');
+  const [tone, setTone] = useState('professional');
+  const [language, setLanguage] = useState('fr');
   const [wordCount, setWordCount] = useState(1500);
+  const [instructions, setInstructions] = useState('');
   const [content, setContent] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [showSEO, setShowSEO] = useState(false);
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
   const [charCount, setCharCount] = useState(0);
+  const [isDemo, setIsDemo] = useState(false);
+  const [error, setError] = useState('');
+  const abortRef = useRef<AbortController | null>(null);
 
   const wordCountValue = content.split(/\s+/).filter(w => w.length > 0).length;
 
@@ -85,33 +85,121 @@ export default function AIContentPage() {
 
   const handleGenerate = async () => {
     if (!keyword.trim()) {
-      alert('Veuillez entrer un mot-clé');
+      setError('Veuillez entrer un mot-cle');
       return;
     }
+
+    // Cancel any in-flight request
+    if (abortRef.current) {
+      abortRef.current.abort();
+    }
+    const controller = new AbortController();
+    abortRef.current = controller;
 
     setIsGenerating(true);
     setContent('');
     setShowSEO(false);
+    setIsDemo(false);
+    setError('');
 
-    // Simulate AI generation with typing effect
-    let index = 0;
-    const generateChar = () => {
-      if (index < SAMPLE_ARTICLE.length) {
-        setContent(prev => prev + SAMPLE_ARTICLE[index]);
-        index++;
-        setTimeout(generateChar, 5);
-      } else {
-        setIsGenerating(false);
-        setShowSEO(true);
+    const contentType = CONTENT_TYPES.find(t => t.id === selectedType);
+
+    try {
+      const res = await fetch('/api/ai-content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: contentType?.apiValue || 'article',
+          keyword: keyword.trim(),
+          tone,
+          language,
+          wordCount,
+          instructions: instructions.trim() || undefined,
+        }),
+        signal: controller.signal,
+      });
+
+      // Handle JSON responses (demo mode or errors)
+      const contentTypeHeader = res.headers.get('content-type') || '';
+      if (contentTypeHeader.includes('application/json')) {
+        const data = await res.json();
+        if (data.demo) {
+          setIsDemo(true);
+          setIsGenerating(false);
+          return;
+        }
+        if (data.error) {
+          setError(data.error);
+          setIsGenerating(false);
+          return;
+        }
       }
-    };
 
-    generateChar();
+      // Handle SSE stream
+      if (!res.body) {
+        setError('Pas de reponse du serveur');
+        setIsGenerating(false);
+        return;
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        // Keep the last potentially incomplete line in the buffer
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed.startsWith('data: ')) continue;
+
+          try {
+            const payload = JSON.parse(trimmed.slice(6));
+            if (payload.done) {
+              break;
+            }
+            if (payload.error) {
+              setError(payload.error);
+              break;
+            }
+            if (payload.text) {
+              setContent(prev => prev + payload.text);
+            }
+          } catch {
+            // Skip malformed lines
+          }
+        }
+      }
+
+      setShowSEO(true);
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === 'AbortError') return;
+      setError(err instanceof Error ? err.message : 'Erreur de connexion');
+    } finally {
+      setIsGenerating(false);
+      abortRef.current = null;
+    }
+  };
+
+  const handleStop = () => {
+    if (abortRef.current) {
+      abortRef.current.abort();
+      abortRef.current = null;
+    }
+    setIsGenerating(false);
+    if (content.length > 0) {
+      setShowSEO(true);
+    }
   };
 
   const handleCopy = () => {
     navigator.clipboard.writeText(content);
-    alert('Contenu copié!');
   };
 
   const handleDownload = () => {
@@ -141,16 +229,43 @@ export default function AIContentPage() {
           <div className="flex items-center gap-3 mb-2">
             <Sparkles className="w-8 h-8 text-brand-600" />
             <h1 className="text-3xl font-bold text-surface-900 dark:text-white">
-              Génération de Contenu IA
+              Generation de Contenu IA
             </h1>
           </div>
           <p className="text-surface-600 dark:text-surface-400">
-            Créez du contenu SEO-optimisé en quelques secondes avec notre éditeur IA
+            Creez du contenu SEO-optimise en quelques secondes avec notre editeur IA
           </p>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Demo Banner */}
+        {isDemo && (
+          <div className="mb-6 rounded-xl border-2 border-amber-400 dark:border-amber-600 bg-amber-50 dark:bg-amber-950/30 p-5">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="w-6 h-6 text-amber-600 flex-shrink-0" />
+              <div>
+                <p className="font-semibold text-amber-800 dark:text-amber-300 text-lg">
+                  MODE DEMO
+                </p>
+                <p className="text-amber-700 dark:text-amber-400 text-sm mt-1">
+                  Configurez la variable d&apos;environnement <code className="px-1.5 py-0.5 rounded bg-amber-200 dark:bg-amber-900 font-mono text-xs">OPENAI_API_KEY</code> pour activer la generation IA reelle.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Error Banner */}
+        {error && (
+          <div className="mb-6 rounded-xl border border-red-300 dark:border-red-800 bg-red-50 dark:bg-red-950/30 p-4">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+              <p className="text-red-700 dark:text-red-400 text-sm">{error}</p>
+            </div>
+          </div>
+        )}
+
         {/* Content Type Selector */}
         <div className="mb-8">
           <h2 className="text-lg font-semibold text-surface-900 dark:text-white mb-4">
@@ -189,13 +304,13 @@ export default function AIContentPage() {
               {/* Keyword Input */}
               <div className="mb-5">
                 <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
-                  Mot-clé cible
+                  Mot-cle cible
                 </label>
                 <input
                   type="text"
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
-                  placeholder="Ex: SEO, développement web, e-commerce..."
+                  placeholder="Ex: SEO, developpement web, e-commerce..."
                   className="w-full px-4 py-2 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800 text-surface-900 dark:text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </div>
@@ -208,16 +323,16 @@ export default function AIContentPage() {
                 <div className="grid grid-cols-2 gap-2">
                   {TONES.map(t => (
                     <button
-                      key={t}
-                      onClick={() => setTone(t)}
+                      key={t.value}
+                      onClick={() => setTone(t.value)}
                       className={cn(
                         'px-3 py-2 rounded-lg text-sm font-medium transition-all',
-                        tone === t
+                        tone === t.value
                           ? 'bg-brand-600 text-white'
                           : 'bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 hover:bg-surface-200 dark:hover:bg-surface-700'
                       )}
                     >
-                      {t}
+                      {t.label}
                     </button>
                   ))}
                 </div>
@@ -234,13 +349,13 @@ export default function AIContentPage() {
                   className="w-full px-4 py-2 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
                 >
                   {LANGUAGES.map(lang => (
-                    <option key={lang} value={lang}>{lang}</option>
+                    <option key={lang.value} value={lang.value}>{lang.label}</option>
                   ))}
                 </select>
               </div>
 
               {/* Word Count Slider */}
-              <div className="mb-6">
+              <div className="mb-5">
                 <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
                   Nombre de mots: {wordCount}
                 </label>
@@ -259,25 +374,70 @@ export default function AIContentPage() {
                 </div>
               </div>
 
-              {/* Generate Button */}
-              <button
-                onClick={handleGenerate}
-                disabled={isGenerating}
-                className="w-full py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-brand-600 to-accent-600 hover:from-brand-700 hover:to-accent-700 shadow-lg hover:shadow-xl"
-              >
-                {isGenerating ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Génération en cours...
-                  </span>
-                ) : (
-                  <span className="flex items-center justify-center gap-2">
-                    <Sparkles className="w-5 h-5" />
-                    Générer
-                  </span>
+              {/* Instructions */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+                  Instructions supplementaires (optionnel)
+                </label>
+                <textarea
+                  value={instructions}
+                  onChange={(e) => setInstructions(e.target.value)}
+                  placeholder="Ex: Inclure des statistiques recentes, mentionner des outils specifiques..."
+                  rows={3}
+                  maxLength={1000}
+                  className="w-full px-4 py-2 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800 text-surface-900 dark:text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-brand-500 resize-none"
+                />
+              </div>
+
+              {/* Generate / Stop Buttons */}
+              <div className="flex gap-3">
+                <button
+                  onClick={handleGenerate}
+                  disabled={isGenerating}
+                  className="flex-1 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-brand-600 to-accent-600 hover:from-brand-700 hover:to-accent-700 shadow-lg hover:shadow-xl"
+                >
+                  {isGenerating ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Generation en cours...
+                    </span>
+                  ) : (
+                    <span className="flex items-center justify-center gap-2">
+                      <Sparkles className="w-5 h-5" />
+                      Generer
+                    </span>
+                  )}
+                </button>
+                {isGenerating && (
+                  <button
+                    onClick={handleStop}
+                    className="px-6 py-3 rounded-lg font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors"
+                  >
+                    Arreter
+                  </button>
                 )}
-              </button>
+              </div>
             </div>
+
+            {/* Streaming skeleton / placeholder */}
+            {isGenerating && !content && (
+              <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <Loader2 className="w-5 h-5 animate-spin text-brand-600" />
+                  <span className="text-sm font-medium text-surface-600 dark:text-surface-400">
+                    L&apos;IA genere votre contenu...
+                  </span>
+                </div>
+                <div className="space-y-3 animate-pulse">
+                  <div className="h-4 bg-surface-200 dark:bg-surface-800 rounded w-3/4" />
+                  <div className="h-4 bg-surface-200 dark:bg-surface-800 rounded w-full" />
+                  <div className="h-4 bg-surface-200 dark:bg-surface-800 rounded w-5/6" />
+                  <div className="h-4 bg-surface-200 dark:bg-surface-800 rounded w-2/3" />
+                  <div className="h-4 bg-surface-200 dark:bg-surface-800 rounded w-full" />
+                  <div className="h-4 bg-surface-200 dark:bg-surface-800 rounded w-4/5" />
+                </div>
+              </div>
+            )}
 
             {/* AI Editor */}
             {content && (
@@ -303,8 +463,14 @@ export default function AIContentPage() {
                     <Link2 className="w-4 h-4 text-surface-600 dark:text-surface-400" />
                   </button>
                   <div className="flex-1"></div>
+                  {isGenerating && (
+                    <div className="flex items-center gap-2 mr-3">
+                      <Loader2 className="w-4 h-4 animate-spin text-brand-600" />
+                      <span className="text-xs text-brand-600 font-medium">En cours...</span>
+                    </div>
+                  )}
                   <div className="text-sm text-surface-600 dark:text-surface-400">
-                    {wordCountValue} mots | {charCount} caractères
+                    {wordCountValue} mots | {charCount} caracteres
                   </div>
                 </div>
 
@@ -313,7 +479,7 @@ export default function AIContentPage() {
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   className="w-full h-96 p-6 focus:outline-none bg-white dark:bg-surface-900 text-surface-900 dark:text-white resize-none font-serif leading-relaxed"
-                  placeholder="Le contenu généré apparaîtra ici..."
+                  placeholder="Le contenu genere apparaitra ici..."
                 />
 
                 {/* Actions */}
@@ -330,20 +496,20 @@ export default function AIContentPage() {
                     className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-700 text-surface-700 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors font-medium"
                   >
                     <Download className="w-4 h-4" />
-                    Télécharger
+                    Telecharger
                   </button>
                 </div>
               </div>
             )}
 
             {/* Content Templates */}
-            {!content && (
+            {!content && !isGenerating && (
               <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
                 <h2 className="text-lg font-semibold text-surface-900 dark:text-white mb-4">
-                  Modèles disponibles
+                  Modeles disponibles
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {['Blog listicle', 'Guide complet', 'Étude de cas', 'Entrevue', 'Comparatif', 'Tutoriel'].map(template => (
+                  {['Blog listicle', 'Guide complet', 'Etude de cas', 'Entrevue', 'Comparatif', 'Tutoriel'].map(template => (
                     <button
                       key={template}
                       className="p-4 text-left rounded-lg bg-surface-50 dark:bg-surface-800/50 border border-surface-200 dark:border-surface-700 hover:border-brand-400 dark:hover:border-brand-600 transition-colors text-surface-700 dark:text-surface-300 hover:text-surface-900 dark:hover:text-white font-medium"
@@ -408,14 +574,14 @@ export default function AIContentPage() {
                     </svg>
                   </div>
                   <p className="text-center text-sm text-surface-600 dark:text-surface-400">
-                    Excellent! Votre contenu est bien optimisé.
+                    Excellent! Votre contenu est bien optimise.
                   </p>
                 </div>
 
                 {/* Keyword Density */}
                 <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
                   <h3 className="font-semibold text-surface-900 dark:text-white mb-3">
-                    Densité du mot-clé
+                    Densite du mot-cle
                   </h3>
                   {keyword && (
                     <div className="space-y-2">
@@ -435,7 +601,7 @@ export default function AIContentPage() {
                 <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
                   <h3 className="font-semibold text-surface-900 dark:text-white mb-4 flex items-center gap-2">
                     <CheckCircle2 className="w-5 h-5 text-green-500" />
-                    Lisibilité
+                    Lisibilite
                   </h3>
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
@@ -448,7 +614,7 @@ export default function AIContentPage() {
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-surface-600 dark:text-surface-400">Titres</span>
-                      <span className="text-sm text-green-600">✓ Bien structuré</span>
+                      <span className="text-sm text-green-600">Bien structure</span>
                     </div>
                   </div>
                 </div>
@@ -462,7 +628,7 @@ export default function AIContentPage() {
                     {metaTitle}
                   </p>
                   <p className="text-xs text-surface-500">
-                    {metaTitle.length}/60 caractères
+                    {metaTitle.length}/60 caracteres
                   </p>
                   <p className={cn(
                     'text-xs mt-2',
@@ -470,7 +636,7 @@ export default function AIContentPage() {
                       ? 'text-green-600'
                       : 'text-amber-600'
                   )}>
-                    {metaTitle.length <= 60 ? '✓ Optimal' : '⚠ Trop long'}
+                    {metaTitle.length <= 60 ? 'Optimal' : 'Trop long'}
                   </p>
                 </div>
 
@@ -483,7 +649,7 @@ export default function AIContentPage() {
                     {metaDesc}
                   </p>
                   <p className="text-xs text-surface-500">
-                    {metaDesc.length}/160 caractères
+                    {metaDesc.length}/160 caracteres
                   </p>
                   <p className={cn(
                     'text-xs mt-2',
@@ -491,14 +657,14 @@ export default function AIContentPage() {
                       ? 'text-green-600'
                       : 'text-amber-600'
                   )}>
-                    {metaDesc.length > 120 && metaDesc.length <= 160 ? '✓ Optimal' : '⚠ À ajuster'}
+                    {metaDesc.length > 120 && metaDesc.length <= 160 ? 'Optimal' : 'A ajuster'}
                   </p>
                 </div>
 
                 {/* Related Keywords */}
                 <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
                   <h3 className="font-semibold text-surface-900 dark:text-white mb-4">
-                    Mots-clés connexes
+                    Mots-cles connexes
                   </h3>
                   <div className="space-y-2">
                     {RELATED_KEYWORDS.map(kw => (
@@ -524,11 +690,11 @@ export default function AIContentPage() {
                     Recommandations
                   </h3>
                   <ul className="space-y-2 text-sm text-surface-700 dark:text-surface-300">
-                    <li>✓ Utilisez votre mot-clé dans le premier paragraphe</li>
-                    <li>✓ Ajoutez au moins 3-4 sous-titres H2/H3</li>
-                    <li>✓ Incluez des listes à puces (comme ici)</li>
-                    <li>✓ Intégrez les mots-clés LSI naturellement</li>
-                    <li>⚠ Ajoutez une image avec alt-text optimisé</li>
+                    <li>Utilisez votre mot-cle dans le premier paragraphe</li>
+                    <li>Ajoutez au moins 3-4 sous-titres H2/H3</li>
+                    <li>Incluez des listes a puces</li>
+                    <li>Integrez les mots-cles LSI naturellement</li>
+                    <li>Ajoutez une image avec alt-text optimise</li>
                   </ul>
                 </div>
               </>

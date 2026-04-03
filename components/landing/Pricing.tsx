@@ -1,9 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, ArrowRight, Zap } from 'lucide-react'
+import { Check, ArrowRight, Zap, Loader2 } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import { useSession } from '@/hooks/useSession'
 
 const plans = [
   {
@@ -80,6 +82,78 @@ const plans = [
     cta: 'Contacter les ventes',
   },
 ]
+
+function PricingButton({ planId, isPopular, isAnnual }: { planId: string; isPopular: boolean; isAnnual: boolean }) {
+  const { isAuthenticated } = useSession()
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
+
+  if (planId === 'souveraine') {
+    return (
+      <Link
+        href="/contact"
+        className={cn(
+          'w-full py-2.5 rounded-xl text-sm font-semibold text-center mb-6 transition-all duration-200 flex items-center justify-center gap-2',
+          'btn-primary'
+        )}
+      >
+        Contacter les ventes
+        <ArrowRight className="w-3.5 h-3.5" />
+      </Link>
+    )
+  }
+
+  const handleCheckout = async () => {
+    if (!isAuthenticated) {
+      router.push(`/signup?plan=${planId}`)
+      return
+    }
+
+    setLoading(true)
+    try {
+      const res = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ planId, billing: isAnnual ? 'annual' : 'monthly' }),
+      })
+      const data = await res.json()
+
+      if (data.url) {
+        window.location.href = data.url
+      } else if (data.error) {
+        // Stripe not configured — redirect to signup
+        router.push(`/signup?plan=${planId}`)
+      }
+    } catch {
+      router.push(`/signup?plan=${planId}`)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <button
+      onClick={handleCheckout}
+      disabled={loading}
+      className={cn(
+        'w-full py-2.5 rounded-xl text-sm font-semibold text-center mb-6 transition-all duration-200 flex items-center justify-center gap-2',
+        isPopular
+          ? 'bg-white text-brand-600 hover:bg-white/90'
+          : 'btn-primary',
+        loading && 'opacity-70 cursor-not-allowed'
+      )}
+    >
+      {loading ? (
+        <Loader2 className="w-4 h-4 animate-spin" />
+      ) : (
+        <>
+          Commencer
+          <ArrowRight className="w-3.5 h-3.5" />
+        </>
+      )}
+    </button>
+  )
+}
 
 export function Pricing() {
   const [isAnnual, setIsAnnual] = useState(false)
@@ -178,18 +252,7 @@ export function Pricing() {
                   )}
                 </div>
 
-                <Link
-                  href={plan.id === 'souveraine' ? '/contact' : `/signup?plan=${plan.id}`}
-                  className={cn(
-                    'w-full py-2.5 rounded-xl text-sm font-semibold text-center mb-6 transition-all duration-200 flex items-center justify-center gap-2',
-                    isPopular
-                      ? 'bg-white text-brand-600 hover:bg-white/90'
-                      : 'btn-primary'
-                  )}
-                >
-                  {plan.id === 'souveraine' ? 'Contacter les ventes' : 'Commencer'}
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
+                <PricingButton planId={plan.id} isPopular={isPopular} isAnnual={isAnnual} />
 
                 <ul className="space-y-2.5 flex-1">
                   {plan.features.map((feature) => (

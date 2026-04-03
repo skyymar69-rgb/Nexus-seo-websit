@@ -95,10 +95,12 @@ export function WebsiteProvider({ children }: { children: ReactNode }) {
         }
         return newWebsite
       }
+      const errorData = await res.json().catch(() => ({ error: 'Erreur inconnue' }))
+      throw new Error(errorData.error || `Erreur ${res.status}`)
     } catch (error) {
       console.error('Failed to add website:', error)
+      throw error
     }
-    return null
   }, [selectedWebsite])
 
   return (

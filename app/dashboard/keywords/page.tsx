@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { cn, formatNumber } from '@/lib/utils'
+import { useWebsite } from '@/contexts/WebsiteContext'
 import {
   Search,
   Plus,
@@ -22,6 +23,7 @@ import {
   Zap,
   Navigation,
   BarChart3,
+  Loader2,
 } from 'lucide-react'
 import {
   BarChart,
@@ -63,117 +65,31 @@ interface PositionDistribution {
   count: number
 }
 
-// ============ DEMO DATA ============
-const generateDemoKeywords = (): Keyword[] => {
-  const intents: Array<'Info' | 'Commercial' | 'Transaction' | 'Navigation'> = [
-    'Info',
-    'Commercial',
-    'Transaction',
-    'Navigation',
-  ]
-  const serpFeatures = [
-    'Featured Snippet',
-    'People Also Ask',
-    'Local Pack',
-    'Knowledge Panel',
-    'Video',
-    'News',
-    'Product Carousel',
-    'Related Searches',
-  ]
-  const groups = [
-    'SEO Basics',
-    'E-commerce',
-    'Digital Marketing',
-    'Web Design',
-    'Analytics',
-  ]
+// ============ API DATA MAPPER ============
+function mapApiKeyword(apiKw: any): Keyword {
+  const tracking = apiKw.latestTracking
+  const position = tracking?.position ?? 0
+  const previousPosition = tracking?.previousPosition ?? position
+  const trend: 'up' | 'down' | 'stable' =
+    position < previousPosition ? 'up' : position > previousPosition ? 'down' : 'stable'
 
-  const frenchKeywords = [
-    { keyword: 'seo agency paris', volume: 1200, difficulty: 42 },
-    { keyword: 'digital marketing services', volume: 2800, difficulty: 58 },
-    { keyword: 'web design company france', volume: 890, difficulty: 65 },
-    { keyword: 'best seo tools 2024', volume: 3400, difficulty: 48 },
-    { keyword: 'how to improve website ranking', volume: 2100, difficulty: 35 },
-    { keyword: 'local seo strategies', volume: 1650, difficulty: 38 },
-    { keyword: 'organic search marketing', volume: 2200, difficulty: 55 },
-    { keyword: 'keyword research tools', volume: 2900, difficulty: 52 },
-    { keyword: 'content marketing strategy', volume: 1800, difficulty: 44 },
-    { keyword: 'seo copywriting tips', volume: 1400, difficulty: 32 },
-    { keyword: 'website optimization checklist', volume: 950, difficulty: 28 },
-    { keyword: 'google ranking factors', volume: 3100, difficulty: 61 },
-    { keyword: 'backlink building services', volume: 1700, difficulty: 72 },
-    { keyword: 'technical seo audit', volume: 2400, difficulty: 48 },
-    { keyword: 'mobile seo optimization', volume: 2050, difficulty: 42 },
-    { keyword: 'voice search optimization', volume: 1300, difficulty: 58 },
-    { keyword: 'page speed optimization tools', volume: 2600, difficulty: 45 },
-    { keyword: 'e-commerce seo guide', volume: 1900, difficulty: 55 },
-    { keyword: 'international seo best practices', volume: 840, difficulty: 68 },
-    { keyword: 'seo for small business', volume: 2300, difficulty: 38 },
-    { keyword: 'on-page seo checklist', volume: 1550, difficulty: 28 },
-    { keyword: 'link building strategy', volume: 2100, difficulty: 62 },
-    { keyword: 'meta descriptions seo', volume: 680, difficulty: 25 },
-    { keyword: 'structured data markup', volume: 1200, difficulty: 50 },
-    { keyword: 'user experience optimization', volume: 2800, difficulty: 52 },
-    { keyword: 'conversion rate optimization', volume: 3200, difficulty: 59 },
-    { keyword: 'landing page design best practices', volume: 2400, difficulty: 48 },
-    { keyword: 'A/B testing tools', volume: 2100, difficulty: 44 },
-    { keyword: 'google analytics training', volume: 1600, difficulty: 35 },
-    { keyword: 'marketing automation platform', volume: 2900, difficulty: 65 },
-    { keyword: 'social media marketing strategy', volume: 3500, difficulty: 51 },
-    { keyword: 'influencer marketing agency', volume: 2200, difficulty: 64 },
-    { keyword: 'email marketing campaigns', volume: 2600, difficulty: 38 },
-    { keyword: 'customer relationship management', volume: 3100, difficulty: 56 },
-    { keyword: 'brand awareness strategies', volume: 1850, difficulty: 42 },
-    { keyword: 'competitive analysis framework', volume: 1200, difficulty: 46 },
-    { keyword: 'market research methods', volume: 1650, difficulty: 40 },
-    { keyword: 'customer segmentation analysis', volume: 980, difficulty: 52 },
-    { keyword: 'buyer persona development', volume: 1400, difficulty: 36 },
-    { keyword: 'sales funnel optimization', volume: 2200, difficulty: 49 },
-    { keyword: 'lead generation tactics', volume: 2800, difficulty: 54 },
-    { keyword: 'sales page copywriting', volume: 1100, difficulty: 43 },
-    { keyword: 'product positioning strategy', volume: 920, difficulty: 51 },
-    { keyword: 'pricing strategy framework', volume: 1300, difficulty: 45 },
-    { keyword: 'customer retention programs', volume: 1550, difficulty: 41 },
-    { keyword: 'loyalty program design', volume: 1200, difficulty: 48 },
-    { keyword: 'referral marketing system', volume: 1450, difficulty: 39 },
-    { keyword: 'partnership marketing ideas', volume: 850, difficulty: 44 },
-    { keyword: 'affiliate marketing program', volume: 2400, difficulty: 62 },
-    { keyword: 'growth hacking techniques', volume: 3200, difficulty: 57 },
-    { keyword: 'viral marketing campaigns', volume: 1900, difficulty: 68 },
-  ]
-
-  return frenchKeywords.map((kw, idx) => {
-    const position = Math.floor(Math.random() * 120) + 1
-    const previousPosition = position + Math.floor((Math.random() - 0.5) * 20)
-    const trend: 'up' | 'down' | 'stable' =
-      position < previousPosition ? 'up' : position > previousPosition ? 'down' : 'stable'
-
-    return {
-      id: `kw-${idx + 1}`,
-      keyword: kw.keyword,
-      position,
-      previousPosition,
-      searchVolume: kw.volume,
-      difficulty: kw.difficulty,
-      cpc: (Math.random() * 3 + 0.5).toFixed(2) as unknown as number,
-      intent: intents[Math.floor(Math.random() * intents.length)],
-      url: `https://example.com/${kw.keyword.replace(/\s+/g, '-')}`,
-      serpFeatures: Array.from(
-        new Set(
-          Array.from(
-            { length: Math.floor(Math.random() * 3) + 1 },
-            () => serpFeatures[Math.floor(Math.random() * serpFeatures.length)]
-          )
-        )
-      ) as string[],
-      trend,
-      group: groups[Math.floor(Math.random() * groups.length)],
-      lastUpdated: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000)
-        .toISOString()
-        .split('T')[0],
-    }
-  })
+  return {
+    id: apiKw.id,
+    keyword: apiKw.term,
+    position,
+    previousPosition,
+    searchVolume: apiKw.volume ?? 0,
+    difficulty: apiKw.difficulty ?? 0,
+    cpc: apiKw.cpc ?? 0,
+    intent: apiKw.intent ?? 'Info',
+    url: tracking?.url ?? '',
+    serpFeatures: tracking?.serpFeatures ? tracking.serpFeatures.split(',') : [],
+    trend,
+    group: undefined,
+    lastUpdated: tracking?.date
+      ? new Date(tracking.date).toISOString().split('T')[0]
+      : new Date(apiKw.createdAt).toISOString().split('T')[0],
+  }
 }
 
 // ============ COMPONENTS ============
@@ -292,17 +208,55 @@ function ExportMenu() {
   )
 }
 
-function AddKeywordsModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+function AddKeywordsModal({
+  isOpen,
+  onClose,
+  websiteId,
+  onAdded,
+}: {
+  isOpen: boolean
+  onClose: () => void
+  websiteId?: string
+  onAdded: (kw: Keyword) => void
+}) {
   const [keyword, setKeyword] = useState('')
   const [url, setUrl] = useState('')
+  const [saving, setSaving] = useState(false)
 
   if (!isOpen) return null
+
+  const handleSubmit = async () => {
+    if (!keyword.trim()) return
+    setSaving(true)
+    try {
+      const res = await fetch('/api/keywords', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          term: keyword.trim(),
+          websiteId: websiteId || undefined,
+        }),
+      })
+      if (res.ok) {
+        const data = await res.json()
+        const newKw = mapApiKeyword(data.keyword ? { ...data.keyword, latestTracking: null } : { ...data, latestTracking: null })
+        onAdded(newKw)
+        setKeyword('')
+        setUrl('')
+        onClose()
+      }
+    } catch (error) {
+      console.error('Failed to add keyword:', error)
+    } finally {
+      setSaving(false)
+    }
+  }
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm">
       <div className="bg-surface-900 border border-surface-700 rounded-xl p-6 w-full max-w-md">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-surface-100">Ajouter des mots-clés</h2>
+          <h2 className="text-xl font-bold text-surface-100">Ajouter des mots-cles</h2>
           <button
             onClick={onClose}
             className="p-1 hover:bg-surface-800 rounded-lg transition-colors"
@@ -314,7 +268,7 @@ function AddKeywordsModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-surface-300 mb-2">
-              Mot-clé
+              Mot-cle
             </label>
             <input
               type="text"
@@ -346,14 +300,11 @@ function AddKeywordsModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
               Annuler
             </button>
             <button
-              onClick={() => {
-                setKeyword('')
-                setUrl('')
-                onClose()
-              }}
-              className="flex-1 px-4 py-2 rounded-lg bg-brand-500 text-white hover:bg-brand-600 transition-colors font-medium"
+              onClick={handleSubmit}
+              disabled={saving || !keyword.trim()}
+              className="flex-1 px-4 py-2 rounded-lg bg-brand-500 text-white hover:bg-brand-600 transition-colors font-medium disabled:opacity-50"
             >
-              Ajouter
+              {saving ? 'Ajout en cours...' : 'Ajouter'}
             </button>
           </div>
         </div>
@@ -491,10 +442,36 @@ function FilterPanel({
 // ============ MAIN PAGE ============
 
 export default function KeywordsPage() {
-  const [keywords, setKeywords] = useState<Keyword[]>(generateDemoKeywords())
+  const { selectedWebsite } = useWebsite()
+  const [keywords, setKeywords] = useState<Keyword[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const [showAddModal, setShowAddModal] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedKeywords, setSelectedKeywords] = useState<Set<string>>(new Set())
+
+  // Fetch keywords from API
+  useEffect(() => {
+    async function fetchKeywords() {
+      setIsLoading(true)
+      try {
+        const params = new URLSearchParams()
+        if (selectedWebsite) params.set('websiteId', selectedWebsite.id)
+        const res = await fetch(`/api/keywords?${params.toString()}`)
+        if (res.ok) {
+          const data = await res.json()
+          setKeywords(data.map(mapApiKeyword))
+        } else {
+          setKeywords([])
+        }
+      } catch (error) {
+        console.error('Failed to fetch keywords:', error)
+        setKeywords([])
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchKeywords()
+  }, [selectedWebsite])
 
   // Filters
   const [positionRange, setPositionRange] = useState<[number, number]>([1, 100])
@@ -614,16 +591,27 @@ export default function KeywordsPage() {
     setSelectedKeywords(new Set())
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 space-y-4">
+        <Loader2 className="h-8 w-8 animate-spin text-brand-400" />
+        <p className="text-surface-400">Chargement des mots-cles...</p>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6 pb-12">
       {/* ============ HEADER ============ */}
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-4xl font-bold tracking-tight text-surface-100 mb-1">
-            Mots-clés
+            Mots-cles
           </h1>
           <p className="text-surface-400">
-            Gérez et suivez les performances de vos mots-clés
+            {selectedWebsite
+              ? `Mots-cles suivis pour ${selectedWebsite.domain}`
+              : 'Gerez et suivez les performances de vos mots-cles'}
           </p>
         </div>
         <div className="flex gap-3">
@@ -959,7 +947,11 @@ export default function KeywordsPage() {
                 ) : (
                   <tr>
                     <td colSpan={11} className="px-6 py-12 text-center">
-                      <p className="text-surface-400">Aucun mot-clé ne correspond aux filtres</p>
+                      <p className="text-surface-400">
+                        {keywords.length === 0
+                          ? 'Aucun mot-cle suivi. Ajoutez des mots-cles pour commencer le suivi.'
+                          : 'Aucun mot-cle ne correspond aux filtres'}
+                      </p>
                     </td>
                   </tr>
                 )}
@@ -978,7 +970,12 @@ export default function KeywordsPage() {
       </div>
 
       {/* ============ MODALS ============ */}
-      <AddKeywordsModal isOpen={showAddModal} onClose={() => setShowAddModal(false)} />
+      <AddKeywordsModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        websiteId={selectedWebsite?.id}
+        onAdded={(kw) => setKeywords((prev) => [kw, ...prev])}
+      />
     </div>
   )
 }

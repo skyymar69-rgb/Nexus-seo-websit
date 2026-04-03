@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as cheerio from 'cheerio';
 import { prisma } from '@/lib/prisma';
+import { corsHeaders, corsOptionsResponse } from '@/lib/cors';
 
 interface PerformanceMetrics {
   url: string;
@@ -62,18 +63,10 @@ interface HTMLAnalysis {
   };
 }
 
-// CORS headers
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-};
+// CORS headers initialized from lib/cors
 
 export async function OPTIONS() {
-  return new NextResponse(null, {
-    status: 200,
-    headers: corsHeaders,
-  });
+  return corsOptionsResponse();
 }
 
 function parseUrl(urlString: string): URL {
@@ -571,14 +564,14 @@ export async function POST(request: NextRequest) {
     if (!url || typeof url !== 'string') {
       return NextResponse.json(
         { error: 'Invalid request: url is required and must be a string' },
-        { status: 400, headers: corsHeaders }
+        { status: 400, headers: corsHeaders() }
       );
     }
 
     if (device && !['desktop', 'mobile'].includes(device)) {
       return NextResponse.json(
         { error: 'Invalid device: must be "desktop" or "mobile"' },
-        { status: 400, headers: corsHeaders }
+        { status: 400, headers: corsHeaders() }
       );
     }
 
@@ -653,13 +646,13 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(result, {
       status: 200,
-      headers: corsHeaders,
+      headers: corsHeaders(),
     });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
       { error: `Performance analysis failed: ${errorMessage}` },
-      { status: 500, headers: corsHeaders }
+      { status: 500, headers: corsHeaders() }
     );
   }
 }

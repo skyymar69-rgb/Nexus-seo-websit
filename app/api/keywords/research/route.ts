@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { corsHeaders, corsOptionsResponse } from '@/lib/cors'
 
 interface KeywordResult {
   keyword: string
@@ -256,13 +257,9 @@ export async function OPTIONS(request: NextRequest) {
 }
 
 function getCORSHeaders(request: NextRequest) {
-  const origin = request.headers.get('origin') || '*'
-
+  const origin = request.headers.get('origin')
   return {
-    'Access-Control-Allow-Origin': origin,
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Access-Control-Max-Age': '86400',
+    ...corsHeaders(origin),
     'Content-Type': 'application/json',
   }
 }

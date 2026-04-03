@@ -1,14 +1,22 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useMemo, useCallback } from 'react'
+import { useSession } from '@/hooks/useSession'
 import { type PlanId, canAccess, getLimit, isFeatureLocked, getMinPlanForFeature, type PlanConfig } from '@/lib/plans'
 
-// Simulated user plan - in production this would come from auth/DB
-// Default to 'free' to demonstrate feature gating
-const DEFAULT_PLAN: PlanId = 'free'
+const VALID_PLANS: PlanId[] = ['free', 'explorer', 'professionnel', 'entreprise', 'souveraine']
+
+function isValidPlan(plan: unknown): plan is PlanId {
+  return typeof plan === 'string' && VALID_PLANS.includes(plan as PlanId)
+}
 
 export function usePlan() {
-  const [currentPlan, setCurrentPlan] = useState<PlanId>(DEFAULT_PLAN)
+  const { user, isLoading } = useSession()
+
+  const currentPlan: PlanId = useMemo(() => {
+    if (user?.plan && isValidPlan(user.plan)) return user.plan
+    return 'free'
+  }, [user?.plan])
 
   const checkAccess = useCallback(
     (feature: keyof PlanConfig['limits']) => canAccess(currentPlan, feature),
@@ -32,7 +40,7 @@ export function usePlan() {
 
   return {
     currentPlan,
-    setCurrentPlan,
+    isLoading,
     checkAccess,
     checkLimit,
     checkLocked,
