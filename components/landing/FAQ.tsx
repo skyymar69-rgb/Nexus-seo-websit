@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -49,6 +49,27 @@ const faqs = [
 
 export function FAQ() {
   const [open, setOpen] = useState<number | null>(0)
+  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([])
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent, index: number) => {
+    let targetIndex: number | null = null
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      targetIndex = (index + 1) % faqs.length
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      targetIndex = (index - 1 + faqs.length) % faqs.length
+    } else if (e.key === 'Home') {
+      e.preventDefault()
+      targetIndex = 0
+    } else if (e.key === 'End') {
+      e.preventDefault()
+      targetIndex = faqs.length - 1
+    }
+    if (targetIndex !== null) {
+      buttonRefs.current[targetIndex]?.focus()
+    }
+  }, [])
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -81,46 +102,57 @@ export function FAQ() {
           </p>
         </div>
 
-        <div className="space-y-3">
-          {faqs.map((faq, i) => (
-            <div
-              key={i}
-              className={cn(
-                'card rounded-2xl overflow-hidden transition-all duration-200',
-                open === i && 'ring-1 ring-brand-500/30 dark:ring-brand-500/20'
-              )}
-            >
-              <button
-                onClick={() => setOpen(open === i ? null : i)}
-                className="w-full flex items-center justify-between gap-4 p-5 text-left"
+        <div className="space-y-3" role="list">
+          {faqs.map((faq, i) => {
+            const panelId = `faq-panel-${i}`
+            const buttonId = `faq-button-${i}`
+            return (
+              <div
+                key={i}
+                role="listitem"
+                className={cn(
+                  'card rounded-2xl overflow-hidden transition-all duration-200',
+                  open === i && 'ring-1 ring-brand-500/30 dark:ring-brand-500/20'
+                )}
               >
-                <span className={cn(
-                  'text-sm font-semibold transition-colors',
-                  open === i
-                    ? 'text-brand-600 dark:text-brand-400'
-                    : 'text-surface-900 dark:text-white'
-                )}>
-                  {faq.question}
-                </span>
-                <ChevronDown
-                  className={cn(
-                    'w-4 h-4 flex-shrink-0 transition-transform duration-200',
+                <button
+                  id={buttonId}
+                  ref={(el) => { buttonRefs.current[i] = el }}
+                  onClick={() => setOpen(open === i ? null : i)}
+                  onKeyDown={(e) => handleKeyDown(e, i)}
+                  aria-expanded={open === i}
+                  aria-controls={panelId}
+                  className="w-full flex items-center justify-between gap-4 p-5 text-left"
+                >
+                  <span className={cn(
+                    'text-sm font-semibold transition-colors',
                     open === i
-                      ? 'rotate-180 text-brand-500'
-                      : 'text-surface-400'
-                  )}
-                />
-              </button>
+                      ? 'text-brand-600 dark:text-brand-400'
+                      : 'text-surface-900 dark:text-white'
+                  )}>
+                    {faq.question}
+                  </span>
+                  <ChevronDown
+                    className={cn(
+                      'w-4 h-4 flex-shrink-0 transition-transform duration-200',
+                      open === i
+                        ? 'rotate-180 text-brand-500'
+                        : 'text-surface-400'
+                    )}
+                    aria-hidden="true"
+                  />
+                </button>
 
-              {open === i && (
-                <div className="px-5 pb-5">
-                  <p className="text-sm text-surface-600 dark:text-surface-400 leading-relaxed border-t border-surface-100 dark:border-surface-800 pt-4">
-                    {faq.answer}
-                  </p>
-                </div>
-              )}
-            </div>
-          ))}
+                {open === i && (
+                  <div id={panelId} role="region" aria-labelledby={buttonId} className="px-5 pb-5">
+                    <p className="text-sm text-surface-600 dark:text-surface-400 leading-relaxed border-t border-surface-100 dark:border-surface-800 pt-4">
+                      {faq.answer}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )
+          })}
         </div>
 
         <p className="text-center text-sm text-surface-400 mt-10">

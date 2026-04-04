@@ -173,7 +173,7 @@ export function Pricing() {
   const [isAnnual, setIsAnnual] = useState(false)
 
   return (
-    <section id="pricing" className="py-24 px-4 sm:px-6 lg:px-8 bg-surface-50 dark:bg-surface-900/50 border-y border-surface-200 dark:border-surface-800/60">
+    <section id="pricing" className="scroll-mt-24 py-24 px-4 sm:px-6 lg:px-8 bg-surface-50 dark:bg-surface-900/50 border-y border-surface-200 dark:border-surface-800/60">
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}

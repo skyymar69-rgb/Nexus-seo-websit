@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import { useTheme } from 'next-themes'
 import { Menu, X, Sun, Moon, Zap, ChevronDown } from 'lucide-react'
@@ -16,7 +16,7 @@ const navItems = [
   ]},
   { label: 'Outils gratuits', href: '/audit-gratuit#outils' },
   { label: 'Cas clients', href: '/cases' },
-  { label: 'Tarifs',      href: '#pricing' },
+  { label: 'Tarifs',      href: '/pricing' },
   { label: 'Blog',        href: '/blog' },
   { label: 'Contact',     href: '/contact' },
 ]
@@ -27,12 +27,42 @@ export function Header() {
   const [dropdown, setDropdown]   = useState<string | null>(null)
   const [mounted, setMounted]     = useState(false)
   const { theme, setTheme }       = useTheme()
+  const dropdownRef = useRef<HTMLDivElement>(null)
+  const mobileMenuRef = useRef<HTMLDivElement>(null)
+
+  const closeAll = useCallback(() => {
+    setDropdown(null)
+    setMobile(false)
+  }, [])
 
   useEffect(() => { setMounted(true) }, [])
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 16)
     window.addEventListener('scroll', fn)
     return () => window.removeEventListener('scroll', fn)
+  }, [])
+
+  // Escape key closes dropdown and mobile menu
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeAll()
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [closeAll])
+
+  // Click outside closes dropdown
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdown(null)
+      }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(e.target as Node)) {
+        setMobile(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
   return (
@@ -63,11 +93,14 @@ export function Header() {
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-1">
             {navItems.map((item) => (
-              <div key={item.label} className="relative">
+              <div key={item.label} className="relative" ref={item.children ? dropdownRef : undefined}>
                 {item.children ? (
                   <button
                     onMouseEnter={() => setDropdown(item.label)}
                     onMouseLeave={() => setDropdown(null)}
+                    onClick={() => setDropdown(dropdown === item.label ? null : item.label)}
+                    aria-expanded={dropdown === item.label}
+                    aria-haspopup="true"
                     className={cn(
                       'flex items-center gap-1 px-4 py-2 text-sm font-medium rounded-lg transition-all',
                       scrolled
@@ -95,6 +128,8 @@ export function Header() {
                 {/* Dropdown */}
                 {item.children && dropdown === item.label && (
                   <div
+                    role="menu"
+                    aria-label={`Sous-menu ${item.label}`}
                     onMouseEnter={() => setDropdown(item.label)}
                     onMouseLeave={() => setDropdown(null)}
                     className="absolute top-full left-0 mt-1 w-60 bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 rounded-2xl shadow-xl shadow-black/10 dark:shadow-black/40 p-2 animate-slide-down"
@@ -103,6 +138,7 @@ export function Header() {
                       <Link
                         key={child.label}
                         href={child.href}
+                        role="menuitem"
                         className="block px-4 py-2.5 text-sm text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-white hover:bg-surface-50 dark:hover:bg-surface-800 rounded-xl transition-all"
                       >
                         {child.label}
@@ -148,6 +184,8 @@ export function Header() {
             {/* Mobile toggle */}
             <button
               onClick={() => setMobile(!mobileOpen)}
+              aria-label="Menu de navigation"
+              aria-expanded={mobileOpen}
               className="lg:hidden p-2 rounded-xl text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
             >
               {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -158,7 +196,7 @@ export function Header() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="lg:hidden border-t border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-950 px-4 py-4 space-y-1 animate-slide-down">
+        <div ref={mobileMenuRef} role="menu" aria-label="Navigation mobile" className="lg:hidden border-t border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-950 px-4 py-4 space-y-1 animate-slide-down">
           {navItems.map((item) => (
             <div key={item.label}>
               <Link

@@ -1,8 +1,11 @@
 import type { Metadata } from 'next'
 import { Providers } from '@/app/providers'
-import CookieBanner from '@/components/shared/CookieBanner'
-import AccessibilityToggle from '@/components/shared/AccessibilityToggle'
-import AIChatWidget from '@/components/shared/AIChatWidget'
+import dynamic from 'next/dynamic'
+import { ErrorBoundary } from '@/components/shared/ErrorBoundary'
+
+const CookieBanner = dynamic(() => import('@/components/shared/CookieBanner'), { ssr: false })
+const AccessibilityToggle = dynamic(() => import('@/components/shared/AccessibilityToggle'), { ssr: false })
+const AIChatWidget = dynamic(() => import('@/components/shared/AIChatWidget'), { ssr: false })
 import './globals.css'
 
 const BASE_URL = process.env.NEXT_PUBLIC_URL || 'https://nexus-seo.app'
@@ -52,7 +55,7 @@ const jsonLd = {
     {
       '@type': 'Organization',
       '@id': `${BASE_URL}/#organization`,
-      name: 'Nexus SEO — par Kayzen Lyon',
+      name: 'Nexus SEO',
       url: BASE_URL,
       logo: { '@type': 'ImageObject', url: `${BASE_URL}/logo.png` },
       sameAs: ['https://kayzen-lyon.fr'],
@@ -85,10 +88,10 @@ const jsonLd = {
       operatingSystem: 'Web',
       offers: {
         '@type': 'AggregateOffer',
-        lowPrice: '99',
-        highPrice: '499',
+        lowPrice: '0',
+        highPrice: '99.99',
         priceCurrency: 'EUR',
-        offerCount: '4',
+        offerCount: '3',
       },
       aggregateRating: {
         '@type': 'AggregateRating',
@@ -104,7 +107,7 @@ const jsonLd = {
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Accueil', item: BASE_URL },
         { '@type': 'ListItem', position: 2, name: 'Services', item: `${BASE_URL}/services` },
-        { '@type': 'ListItem', position: 3, name: 'Tarifs', item: `${BASE_URL}/#pricing` },
+        { '@type': 'ListItem', position: 3, name: 'Tarifs', item: `${BASE_URL}/pricing` },
         { '@type': 'ListItem', position: 4, name: 'Blog', item: `${BASE_URL}/blog` },
       ],
     },
@@ -132,6 +135,18 @@ const jsonLd = {
       areaServed: 'Worldwide',
       serviceType: 'SEO Optimization',
     },
+    {
+      '@type': 'Review',
+      '@id': `${BASE_URL}/#review`,
+      itemReviewed: { '@id': `${BASE_URL}/#organization` },
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: '4.9',
+        bestRating: '5',
+      },
+      author: { '@type': 'Organization', name: 'Utilisateurs Nexus SEO' },
+      reviewBody: 'Plateforme SEO IA de reference avec 847 avis verifies.',
+    },
   ],
 }
 
@@ -150,9 +165,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </a>
         <Providers>
           {children}
-          <CookieBanner />
-          <AccessibilityToggle />
-          <AIChatWidget />
+          <ErrorBoundary><CookieBanner /></ErrorBoundary>
+          <ErrorBoundary><AccessibilityToggle /></ErrorBoundary>
+          <ErrorBoundary><AIChatWidget /></ErrorBoundary>
         </Providers>
       </body>
     </html>

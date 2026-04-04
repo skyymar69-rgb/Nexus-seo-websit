@@ -50,7 +50,9 @@
       "Bash(mkdir -p /tmp/skills)",
       "Read(//tmp/**)",
       "Bash(unzip -o \"C:/Users/Maison/Downloads/marketingskills-main.zip\")",
-      "Bash(npx vitest:*)"
+      "Bash(npx vitest:*)",
+      "Bash(taskkill //F //IM node.exe)",
+      "Bash(wc -l /c/Users/Maison/Desktop/1x/nexus-clean/components/landing/*.tsx)"
     ]
   }
 }

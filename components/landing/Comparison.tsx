@@ -26,10 +26,10 @@ const tools = [
 
 function Cell({ val }: { val: boolean | 'partial' }) {
   if (val === true)
-    return <Check className="w-5 h-5 text-brand-500 mx-auto" />
+    return <Check className="w-5 h-5 text-brand-500 mx-auto" aria-label="Disponible" />
   if (val === 'partial')
-    return <Minus className="w-5 h-5 text-amber-400 mx-auto" />
-  return <X className="w-5 h-5 text-surface-300 dark:text-surface-700 mx-auto" />
+    return <Minus className="w-5 h-5 text-amber-400 mx-auto" aria-label="Partiel" />
+  return <X className="w-5 h-5 text-surface-300 dark:text-surface-700 mx-auto" aria-label="Non disponible" />
 }
 
 export function Comparison() {
@@ -50,8 +50,11 @@ export function Comparison() {
 
         {/* Table */}
         <div className="card-gradient rounded-3xl overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
+          <div className="relative">
+            {/* Indicateur de scroll horizontal sur mobile */}
+            <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-surface-900 to-transparent pointer-events-none z-10 md:hidden" aria-hidden="true" />
+            <div className="overflow-x-auto scrollbar-thin">
+            <table className="w-full" role="table" aria-label="Comparaison des fonctionnalites entre Nexus et ses concurrents">
               <thead>
                 <tr className="border-b border-surface-200 dark:border-surface-700">
                   <th className="text-left p-5 text-sm font-semibold text-surface-500 w-1/2">Fonctionnalité</th>
@@ -98,6 +101,7 @@ export function Comparison() {
                 ))}
               </tbody>
             </table>
+          </div>
           </div>
 
           <div className="p-5 border-t border-surface-200 dark:border-surface-700 flex flex-wrap items-center gap-4 text-xs text-surface-400">

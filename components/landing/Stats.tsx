@@ -23,15 +23,23 @@ function Counter({ target, suffix, isFloat }: { target: number; suffix: string; 
     const obs = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && !animated.current) {
         animated.current = true
-        const steps = 60
         const duration = 1400
-        let step = 0
-        const timer = setInterval(() => {
-          step++
-          const val = Math.min((target / steps) * step, target)
+        let start: number | null = null
+
+        const animate = (timestamp: number) => {
+          if (!start) start = timestamp
+          const elapsed = timestamp - start
+          const progress = Math.min(elapsed / duration, 1)
+          // Ease-out cubic
+          const eased = 1 - Math.pow(1 - progress, 3)
+          const val = target * eased
           setCurrent(isFloat ? parseFloat(val.toFixed(1)) : Math.round(val))
-          if (step >= steps) clearInterval(timer)
-        }, duration / steps)
+          if (progress < 1) {
+            requestAnimationFrame(animate)
+          }
+        }
+
+        requestAnimationFrame(animate)
       }
     }, { threshold: 0.5 })
     obs.observe(el)
@@ -39,7 +47,7 @@ function Counter({ target, suffix, isFloat }: { target: number; suffix: string; 
   }, [target, isFloat])
 
   return (
-    <span ref={ref}>
+    <span ref={ref} aria-live="polite" aria-atomic="true">
       {isFloat ? current.toFixed(1) : current.toLocaleString('fr-FR')}{suffix}
     </span>
   )
