@@ -38,7 +38,15 @@
       "Bash(curl -s https://nexus.kayzen-lyon.fr/)",
       "Bash(grep -l hero-orbit .next/static/chunks/*.js)",
       "Bash(git add:*)",
-      "Bash(git commit -m \"feat: refonte complète - design premium, audit détaillé, onboarding, SVG animé, 9 pages connectées, export PDF/MD/JSON:*)"
+      "Bash(git commit -m \"feat: refonte complète - design premium, audit détaillé, onboarding, SVG animé, 9 pages connectées, export PDF/MD/JSON:*)",
+      "Bash(git push:*)",
+      "Bash(curl -s https://nexus-clean-b0pfqqtlh-skyymar69-9413s-projects.vercel.app/)",
+      "Bash(curl -sI https://nexus-clean-b0pfqqtlh-skyymar69-9413s-projects.vercel.app/)",
+      "Bash(curl -sI https://nexus.kayzen-lyon.fr/)",
+      "Bash(vercel redeploy:*)",
+      "Bash(vercel alias:*)",
+      "Bash(vercel ls:*)",
+      "Bash(git commit:*)"
     ]
   }
 }

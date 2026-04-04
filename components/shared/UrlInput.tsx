@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { Globe, ChevronDown, Search, FileText, ExternalLink } from 'lucide-react'
-import { useWebsite } from '@/contexts/WebsiteContext'
 import { cn } from '@/lib/utils'
 
 interface UrlInputProps {
@@ -13,6 +12,8 @@ interface UrlInputProps {
   submitLabel?: string
   placeholder?: string
   className?: string
+  domain?: string
+  websites?: { id: string; domain: string }[]
 }
 
 export function UrlInput({
@@ -23,11 +24,10 @@ export function UrlInput({
   submitLabel = 'Analyser',
   placeholder,
   className,
+  domain = '',
+  websites = [],
 }: UrlInputProps) {
-  const { selectedWebsite, websites } = useWebsite()
   const [showDropdown, setShowDropdown] = useState(false)
-
-  const domain = selectedWebsite?.domain || ''
   const siteUrl = domain ? `https://${domain}` : ''
 
   const quickOptions = [
@@ -36,7 +36,7 @@ export function UrlInput({
       { label: `${domain}/sitemap.xml`, url: `${siteUrl}/sitemap.xml`, icon: FileText },
     ] : []),
     ...(websites || [])
-      .filter(w => w.id !== selectedWebsite?.id)
+      .filter(w => w.domain !== domain)
       .slice(0, 3)
       .map(w => ({
         label: w.domain,
