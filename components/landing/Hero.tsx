@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight, Play, TrendingUp, Globe, Zap } from 'lucide-react'
+import { ArrowRight, Play, TrendingUp, Globe, Zap, Search } from 'lucide-react'
 
 
 export function Hero() {
@@ -99,39 +99,56 @@ export function Hero() {
           </div>
 
           {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white leading-[1.08] tracking-tight mb-6">
-            La plateforme SEO qui{' '}
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white leading-[1.08] tracking-tight mb-4">
+            Audit SEO{' '}
             <span className="text-gold-400 drop-shadow-[0_0_30px_rgba(254,205,77,0.3)]">
-              domine les moteurs IA
+              Gratuit
             </span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-lg sm:text-xl text-white/85 max-w-2xl mx-auto lg:mx-0 leading-relaxed mb-10">
-            Nexus combine SEO classique et optimisation IA en une seule plateforme.
-            Soyez visible sur Google, ChatGPT, Perplexity et tous les LLMs{' '}
-            <span className="text-white/90 font-medium">avant vos concurrents.</span>
+          <p className="text-lg sm:text-xl text-white/85 max-w-2xl mx-auto lg:mx-0 leading-relaxed mb-8">
+            Analysez votre site web en 30 secondes. Obtenez un diagnostic complet
+            avec des recommandations actionnables.
           </p>
 
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-14">
-            <Link
-              href="/audit-gratuit"
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gold-400 text-brand-950 font-bold text-sm hover:bg-gold-300 transition-all duration-300 shadow-gold hover:shadow-[0_0_40px_rgba(254,205,77,0.4)] hover:scale-[1.02]"
-              aria-label="Lancer un audit SEO gratuit"
+          {/* Audit form directly in hero */}
+          <div className="w-full max-w-xl mx-auto lg:mx-0 mb-4">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+                const input = (e.target as HTMLFormElement).querySelector('input') as HTMLInputElement
+                const url = input?.value?.trim()
+                if (url) {
+                  window.location.href = `/audit-gratuit?url=${encodeURIComponent(url)}`
+                }
+              }}
+              className="flex flex-col sm:flex-row gap-3"
             >
-              Lancer mon audit gratuit
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link
-              href="#features"
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl border border-white/30 text-white font-semibold text-sm hover:bg-white/10 transition-all duration-300 backdrop-blur-sm group"
-              aria-label="Découvrir la plateforme Nexus SEO"
-            >
-              <Play className="w-4 h-4 text-gold-400 group-hover:scale-110 transition-transform" />
-              Découvrir la plateforme
-            </Link>
+              <div className="flex-1 relative">
+                <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+                <input
+                  type="url"
+                  name="url"
+                  placeholder="https://www.monsite.fr"
+                  aria-label="URL du site web à analyser"
+                  className="w-full pl-12 pr-4 py-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 text-base focus:outline-none focus:ring-2 focus:ring-gold-400/50 focus:border-gold-400/50 backdrop-blur-sm transition-all"
+                />
+              </div>
+              <button
+                type="submit"
+                className="px-8 py-4 rounded-xl bg-gold-400 text-brand-950 font-bold text-base hover:bg-gold-300 transition-all duration-300 shadow-gold hover:shadow-[0_0_40px_rgba(254,205,77,0.4)] hover:scale-[1.02] flex items-center justify-center gap-2 whitespace-nowrap"
+              >
+                <Search className="w-5 h-5" />
+                Analyser mon site
+              </button>
+            </form>
           </div>
+
+          {/* Trust text */}
+          <p className="text-sm text-white/70 mb-10">
+            Aucune inscription requise · Résultats instantanés · Export PDF, Markdown, JSON
+          </p>
 
           {/* Stats bar */}
           <div className="mb-10" role="region" aria-label="Statistiques cl&#233;s">
