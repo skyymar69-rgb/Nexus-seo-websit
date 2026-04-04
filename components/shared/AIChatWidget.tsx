@@ -193,7 +193,7 @@ export default function AIChatWidget() {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-3 space-y-3">
+          <div className="flex-1 overflow-y-auto p-3 space-y-3" aria-live="polite" aria-label="Messages du chat">
             {messages.length === 0 && (
               <div className="space-y-2">
                 <p className="text-xs text-zinc-500 mb-3">

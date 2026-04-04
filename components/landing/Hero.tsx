@@ -120,16 +120,16 @@ export function Hero() {
               className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gold-400 text-brand-950 font-bold text-sm hover:bg-gold-300 transition-all duration-300 shadow-gold hover:shadow-[0_0_40px_rgba(254,205,77,0.4)] hover:scale-[1.02]"
               aria-label="Lancer un audit SEO gratuit"
             >
-              Audit SEO gratuit
+              Lancer mon audit gratuit
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
-              href="#demo"
+              href="#features"
               className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl border border-white/30 text-white font-semibold text-sm hover:bg-white/10 transition-all duration-300 backdrop-blur-sm group"
-              aria-label="Voir la demo de la plateforme"
+              aria-label="Découvrir la plateforme Nexus SEO"
             >
               <Play className="w-4 h-4 text-gold-400 group-hover:scale-110 transition-transform" />
-              Voir la demo
+              Découvrir la plateforme
             </Link>
           </div>
 

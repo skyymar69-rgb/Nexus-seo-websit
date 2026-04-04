@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Header } from '@/components/landing/Header'
 import { Footer } from '@/components/landing/Footer'
 import { Mail, Phone, MapPin, ArrowRight, Check } from 'lucide-react'
+import { Breadcrumb } from '@/components/shared/Breadcrumb'
 
 export default function ContactPage() {
   const [sent, setSent] = useState(false)
@@ -19,9 +20,10 @@ export default function ContactPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-white dark:bg-surface-950">
+      <main id="main-content" className="min-h-screen bg-white dark:bg-surface-950">
         <section className="py-24 px-4 sm:px-6 lg:px-8">
           <div className="max-w-6xl mx-auto">
+            <Breadcrumb items={[{ label: 'Accueil', href: '/' }, { label: 'Contact' }]} />
 
             <div className="text-center mb-16">
               <div className="section-badge mx-auto mb-4">Contact</div>

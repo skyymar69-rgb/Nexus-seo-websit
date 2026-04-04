@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import { Menu, X, Sun, Moon, Zap, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -21,12 +22,19 @@ const navItems = [
   { label: 'Contact',     href: '/contact' },
 ]
 
+function isActive(pathname: string, href: string): boolean {
+  if (href === '#' || href === '/') return false
+  const basePath = href.split('#')[0]
+  return pathname === basePath || pathname.startsWith(basePath + '/')
+}
+
 export function Header() {
   const [scrolled, setScrolled]   = useState(false)
   const [mobileOpen, setMobile]   = useState(false)
   const [dropdown, setDropdown]   = useState<string | null>(null)
   const [mounted, setMounted]     = useState(false)
   const { theme, setTheme }       = useTheme()
+  const pathname = usePathname()
   const dropdownRef = useRef<HTMLDivElement>(null)
   const mobileMenuRef = useRef<HTMLDivElement>(null)
 
@@ -50,6 +58,39 @@ export function Header() {
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [closeAll])
+
+  // Focus trap for mobile menu
+  useEffect(() => {
+    if (!mobileOpen || !mobileMenuRef.current) return
+    const menu = mobileMenuRef.current
+    menu.setAttribute('tabIndex', '-1')
+    menu.focus()
+
+    const handleTrapFocus = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return
+      const focusable = menu.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )
+      if (focusable.length === 0) return
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+
+      if (e.shiftKey) {
+        if (document.activeElement === first || document.activeElement === menu) {
+          e.preventDefault()
+          last.focus()
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault()
+          first.focus()
+        }
+      }
+    }
+
+    menu.addEventListener('keydown', handleTrapFocus)
+    return () => menu.removeEventListener('keydown', handleTrapFocus)
+  }, [mobileOpen])
 
   // Click outside closes dropdown
   useEffect(() => {
@@ -116,10 +157,15 @@ export function Header() {
                     href={item.href}
                     className={cn(
                       'px-4 py-2 text-sm font-medium rounded-lg transition-all block',
-                      scrolled
-                        ? 'text-surface-600 hover:text-surface-900 hover:bg-surface-100'
-                        : 'text-white/80 hover:text-white hover:bg-white/10'
+                      isActive(pathname, item.href)
+                        ? scrolled
+                          ? 'text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/30'
+                          : 'text-white bg-white/15 underline underline-offset-4 decoration-2'
+                        : scrolled
+                          ? 'text-surface-600 hover:text-surface-900 hover:bg-surface-100'
+                          : 'text-white/80 hover:text-white hover:bg-white/10'
                     )}
+                    aria-current={isActive(pathname, item.href) ? 'page' : undefined}
                   >
                     {item.label}
                   </Link>
@@ -186,7 +232,7 @@ export function Header() {
               onClick={() => setMobile(!mobileOpen)}
               aria-label="Menu de navigation"
               aria-expanded={mobileOpen}
-              className="lg:hidden p-2 rounded-xl text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
+              className="lg:hidden p-3 rounded-xl text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
             >
               {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -202,7 +248,13 @@ export function Header() {
               <Link
                 href={item.href}
                 onClick={() => setMobile(false)}
-                className="block px-4 py-2.5 text-sm font-medium text-surface-700 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-800 rounded-xl transition-all"
+                aria-current={isActive(pathname, item.href) ? 'page' : undefined}
+                className={cn(
+                  'block px-4 py-2.5 text-sm font-medium rounded-xl transition-all',
+                  isActive(pathname, item.href)
+                    ? 'text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/30'
+                    : 'text-surface-700 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-800'
+                )}
               >
                 {item.label}
               </Link>

@@ -215,6 +215,14 @@ export function Pricing() {
               </span>
             </button>
           </div>
+
+          {/* Urgency badge */}
+          <div className="mt-6 flex justify-center">
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-300/50 dark:border-amber-700/40 text-sm font-semibold text-amber-700 dark:text-amber-300">
+              <span aria-hidden="true">🔥</span>
+              Offre de lancement — Tarifs bloqués pour les 500 premiers inscrits
+            </span>
+          </div>
         </div>
 
         {/* Cards */}

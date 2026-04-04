@@ -1,6 +1,7 @@
 import { Header } from '@/components/landing/Header'
 import { Footer } from '@/components/landing/Footer'
 import { Zap, Target, Globe, Users, TrendingUp, Award } from 'lucide-react'
+import { Breadcrumb } from '@/components/shared/Breadcrumb'
 
 export const metadata = {
   title: 'À propos — Nexus SEO',
@@ -24,10 +25,12 @@ export default function AboutPage() {
   return (
     <>
       <Header />
-      <main>
+      <main id="main-content">
         {/* Hero */}
         <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white dark:bg-surface-950">
-          <div className="max-w-4xl mx-auto text-center">
+          <div className="max-w-4xl mx-auto">
+            <Breadcrumb items={[{ label: 'Accueil', href: '/' }, { label: 'A propos' }]} />
+            <div className="text-center">
             <div className="section-badge mx-auto mb-6">Notre histoire</div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-surface-900 dark:text-white mb-6 leading-tight">
               Nous construisons{' '}
@@ -36,6 +39,7 @@ export default function AboutPage() {
             <p className="text-xl text-surface-500 dark:text-surface-400 leading-relaxed max-w-2xl mx-auto">
               Nexus est né d&apos;une conviction simple : les outils SEO de 2015 ne peuvent pas résoudre les défis de 2026. L&apos;IA a tout changé — nous l&apos;avons accepté avant tout le monde.
             </p>
+            </div>
           </div>
         </section>
 

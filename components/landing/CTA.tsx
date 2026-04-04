@@ -35,7 +35,7 @@ export function CTA() {
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
                 <Link href="/signup" className="btn-primary px-10 py-4 text-base rounded-2xl">
-                  Démarrer gratuitement — 14 jours offerts
+                  Créer mon compte gratuit
                   <ArrowRight className="w-5 h-5" />
                 </Link>
                 <Link href="/contact" className="btn-outline px-8 py-4 text-base rounded-2xl">

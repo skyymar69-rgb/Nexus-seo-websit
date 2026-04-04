@@ -12,6 +12,7 @@ import {
   BarChart3,
   Check,
 } from 'lucide-react'
+import { Breadcrumb } from '@/components/shared/Breadcrumb'
 
 export const metadata: Metadata = {
   title: 'Services — GEO, AEO, LLMO, SEO Technique | Nexus SEO',
@@ -139,10 +140,12 @@ export default function ServicesPage() {
   return (
     <>
       <Header />
-      <main className="bg-white dark:bg-surface-950">
+      <main id="main-content" className="bg-white dark:bg-surface-950">
         {/* Hero */}
         <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
+          <div className="max-w-4xl mx-auto">
+            <Breadcrumb items={[{ label: 'Accueil', href: '/' }, { label: 'Services' }]} />
+            <div className="text-center">
             <div className="section-badge mx-auto mb-4">Nos services</div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-surface-900 dark:text-white mb-6">
               La plateforme SEO{' '}
@@ -158,6 +161,7 @@ export default function ServicesPage() {
               Demarrer mon audit gratuit
               <ArrowRight className="w-5 h-5" />
             </Link>
+            </div>
           </div>
         </section>
 

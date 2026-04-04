@@ -4,6 +4,7 @@ import { Footer } from '@/components/landing/Footer'
 import { Pricing } from '@/components/landing/Pricing'
 import { Check, X, ArrowRight, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
+import { Breadcrumb } from '@/components/shared/Breadcrumb'
 
 export const metadata: Metadata = {
   title: 'Tarifs — Nexus SEO',
@@ -110,10 +111,12 @@ export default function PricingPage() {
   return (
     <>
       <Header />
-      <main className="bg-white dark:bg-surface-950">
+      <main id="main-content" className="bg-white dark:bg-surface-950">
         {/* Hero */}
         <section className="pt-32 pb-8 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
+          <div className="max-w-4xl mx-auto">
+            <Breadcrumb items={[{ label: 'Accueil', href: '/' }, { label: 'Tarifs' }]} />
+            <div className="text-center">
             <div className="section-badge mx-auto mb-4">Tarifs</div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-surface-900 dark:text-white mb-6">
               Le bon plan pour{' '}
@@ -122,6 +125,7 @@ export default function PricingPage() {
             <p className="text-xl text-surface-500 dark:text-surface-400 max-w-2xl mx-auto">
               Commencez gratuitement, evoluez quand vous etes pret. Tous les plans incluent l&apos;acces aux scores GEO et AEO.
             </p>
+            </div>
           </div>
         </section>
 

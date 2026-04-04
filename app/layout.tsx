@@ -6,6 +6,7 @@ import { ErrorBoundary } from '@/components/shared/ErrorBoundary'
 const CookieBanner = dynamic(() => import('@/components/shared/CookieBanner'), { ssr: false })
 const AccessibilityToggle = dynamic(() => import('@/components/shared/AccessibilityToggle'), { ssr: false })
 const AIChatWidget = dynamic(() => import('@/components/shared/AIChatWidget'), { ssr: false })
+const SocialProofToast = dynamic(() => import('@/components/shared/SocialProofToast'), { ssr: false })
 import './globals.css'
 
 const BASE_URL = process.env.NEXT_PUBLIC_URL || 'https://nexus-seo.app'
@@ -31,6 +32,12 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large' },
   },
+  alternates: {
+    canonical: BASE_URL,
+    languages: {
+      'fr': BASE_URL,
+    },
+  },
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
@@ -39,7 +46,7 @@ export const metadata: Metadata = {
     title: 'Nexus SEO — La référence mondiale du SEO IA en 2026',
     description:
       'Dominez Google, ChatGPT et tous les moteurs IA avec la seule plateforme SEO qui couvre GEO, AEO et LLMO.',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Nexus SEO Dashboard' }],
+    images: [{ url: `${BASE_URL}/api/og`, width: 1200, height: 630, alt: 'Nexus SEO' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -154,6 +161,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr" suppressHydrationWarning>
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -164,10 +173,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Aller au contenu principal
         </a>
         <Providers>
+          <div className="animate-fade-in">
           {children}
+          </div>
           <ErrorBoundary><CookieBanner /></ErrorBoundary>
           <ErrorBoundary><AccessibilityToggle /></ErrorBoundary>
           <ErrorBoundary><AIChatWidget /></ErrorBoundary>
+          <ErrorBoundary><SocialProofToast /></ErrorBoundary>
         </Providers>
       </body>
     </html>

@@ -2,6 +2,7 @@ import { Header } from '@/components/landing/Header'
 import { Footer } from '@/components/landing/Footer'
 import Link from 'next/link'
 import { ArrowRight, Clock, Tag } from 'lucide-react'
+import { Breadcrumb } from '@/components/shared/Breadcrumb'
 
 export const metadata = {
   title: 'Blog SEO IA — GEO, AEO, LLMO | Nexus SEO',
@@ -77,10 +78,12 @@ export default function BlogPage() {
   return (
     <>
       <Header />
-      <main className="bg-white dark:bg-surface-950">
+      <main id="main-content" className="bg-white dark:bg-surface-950">
         {/* Hero */}
         <section className="py-24 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
+          <div className="max-w-4xl mx-auto">
+            <Breadcrumb items={[{ label: 'Accueil', href: '/' }, { label: 'Blog' }]} />
+            <div className="text-center">
             <div className="section-badge mx-auto mb-4">Blog SEO IA</div>
             <h1 className="text-4xl sm:text-5xl font-black text-surface-900 dark:text-white mb-4">
               Les stratégies SEO{' '}
@@ -89,6 +92,7 @@ export default function BlogPage() {
             <p className="text-lg text-surface-500 dark:text-surface-400">
               GEO · AEO · LLMO · SEO Technique — guides pratiques et études de cas chaque semaine.
             </p>
+            </div>
           </div>
         </section>
 

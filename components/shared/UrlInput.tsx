@@ -69,6 +69,7 @@ export function UrlInput({
             onKeyDown={handleKeyDown}
             onFocus={() => quickOptions.length > 0 && !value && setShowDropdown(true)}
             placeholder={placeholder || (domain ? `https://${domain}` : 'https://exemple.com')}
+            aria-label="URL du site web à analyser"
             className="w-full pl-10 pr-10 py-3 rounded-xl border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-900 text-surface-900 dark:text-white placeholder-surface-400 focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 text-sm"
           />
           {quickOptions.length > 0 && (

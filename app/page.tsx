@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic'
 import { Header } from '@/components/landing/Header'
 import { Hero } from '@/components/landing/Hero'
 import { TrustedBy } from '@/components/landing/TrustedBy'
@@ -6,13 +7,16 @@ import { Problem } from '@/components/landing/Problem'
 import { Features } from '@/components/landing/Features'
 import { AISection } from '@/components/landing/AISection'
 import { HowItWorks } from '@/components/landing/HowItWorks'
-import { CaseStudies } from '@/components/landing/CaseStudies'
-import { Comparison } from '@/components/landing/Comparison'
-import { Testimonials } from '@/components/landing/Testimonials'
 import { Pricing } from '@/components/landing/Pricing'
-import { FAQ } from '@/components/landing/FAQ'
-import { CTA } from '@/components/landing/CTA'
 import { Footer } from '@/components/landing/Footer'
+
+// Below-the-fold components — lazy-loaded for performance
+const CaseStudies = dynamic(() => import('@/components/landing/CaseStudies').then(m => m.CaseStudies), { ssr: true })
+const Comparison = dynamic(() => import('@/components/landing/Comparison').then(m => m.Comparison), { ssr: true })
+const Testimonials = dynamic(() => import('@/components/landing/Testimonials').then(m => m.Testimonials), { ssr: true })
+const FAQ = dynamic(() => import('@/components/landing/FAQ').then(m => m.FAQ), { ssr: true })
+const CTA = dynamic(() => import('@/components/landing/CTA').then(m => m.CTA), { ssr: true })
+const ExitIntent = dynamic(() => import('@/components/shared/ExitIntent'), { ssr: false })
 
 export const metadata = {
   title: 'Nexus SEO — GEO · AEO · LLMO | La référence SEO de l\'ère IA',
@@ -30,7 +34,7 @@ export default function HomePage() {
   return (
     <>
       <Header />
-      <main>
+      <main id="main-content">
         {/* TOFU — Attirer & Capter */}
         <Hero />
         <TrustedBy />
@@ -52,6 +56,7 @@ export default function HomePage() {
         <FAQ />
         <CTA />
       </main>
+      <ExitIntent />
       <Footer />
     </>
   )
