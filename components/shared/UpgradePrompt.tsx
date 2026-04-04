@@ -1,32 +1,34 @@
 'use client'
 
 import Link from 'next/link'
-import { Lock } from 'lucide-react'
+import { Lock, ExternalLink } from 'lucide-react'
 import { getPlan, type PlanId } from '@/lib/plans'
 
 interface UpgradePromptProps {
   feature: string
-  requiredPlan: 'explorer' | 'professionnel' | 'entreprise' | 'souveraine'
+  requiredPlan: 'free' | 'pro' | 'expert'
 }
 
 const featureDescriptions: Record<string, string> = {
-  aiVisibility: 'Voir votre visibilité dans les réponses IA',
-  competitorAnalysis: 'Analyser vos concurrents en détail',
+  aiVisibility: 'Voir votre visibilite dans les reponses IA',
+  competitorAnalysis: 'Analyser vos concurrents en detail',
   exportPDF: 'Exporter vos audits en PDF',
-  apiAccess: 'Accéder à l\'API complète',
+  apiAccess: "Acceder a l'API complete",
   whiteLabel: 'Personnaliser la plateforme avec votre marque',
-  auditsPerMonth: 'Effectuer des audits illimités',
-  keywordsTracked: 'Suivre plus de mots-clés',
+  auditsPerMonth: 'Effectuer des audits illimites',
+  keywordsTracked: 'Suivre plus de mots-cles',
   backlinkChecks: 'Analyser vos backlinks en profondeur',
-  maxWebsites: 'Gérer plusieurs sites web',
-  maxUsers: 'Ajouter plus d\'utilisateurs',
+  maxWebsites: 'Gerer plusieurs sites web',
   aeoReports: 'Analyser le score AEO de vos pages',
-  llmoReports: 'Mesurer votre visibilité dans les réponses LLM',
+  llmoReports: 'Mesurer votre visibilite dans les reponses LLM',
+  customDashboard: 'Personnaliser votre dashboard',
+  agencyAccess: "Beneficier de l'acces prioritaire a l'Agence Kayzen",
 }
 
 export function UpgradePrompt({ feature, requiredPlan }: UpgradePromptProps) {
   const plan = getPlan(requiredPlan)
-  const description = featureDescriptions[feature] || `Accéder à cette fonctionnalité`
+  const description = featureDescriptions[feature] || 'Acceder a cette fonctionnalite'
+  const isAgencyFeature = feature === 'agencyAccess'
 
   return (
     <div className="relative rounded-2xl border border-brand-200/20 dark:border-brand-800/20 bg-gradient-to-br from-brand-50/50 to-brand-100/30 dark:from-brand-950/20 dark:to-brand-900/10 p-8 text-center overflow-hidden">
@@ -53,12 +55,24 @@ export function UpgradePrompt({ feature, requiredPlan }: UpgradePromptProps) {
 
         {/* Buttons */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-          <Link
-            href="/pricing"
-            className="inline-flex px-6 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 transition-all duration-200 shadow-lg hover:shadow-xl"
-          >
-            Passer au plan {plan.name}
-          </Link>
+          {isAgencyFeature ? (
+            <a
+              href="https://internet.kayzen-lyon.fr"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              Decouvrir l&apos;Agence Kayzen
+              <ExternalLink className="w-4 h-4" />
+            </a>
+          ) : (
+            <Link
+              href="/pricing"
+              className="inline-flex px-6 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              Passer au plan {plan.name}
+            </Link>
+          )}
 
           <Link
             href="/#pricing"

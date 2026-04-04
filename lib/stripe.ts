@@ -13,21 +13,13 @@ export const stripe = process.env.STRIPE_SECRET_KEY
 
 // Map plan IDs to Stripe Price IDs (set via env vars)
 export const PLAN_PRICE_MAP: Record<string, { monthly: string; annual: string }> = {
-  explorer: {
-    monthly: process.env.STRIPE_PRICE_EXPLORER_MONTHLY || '',
-    annual: process.env.STRIPE_PRICE_EXPLORER_ANNUAL || '',
-  },
-  professionnel: {
+  pro: {
     monthly: process.env.STRIPE_PRICE_PRO_MONTHLY || '',
     annual: process.env.STRIPE_PRICE_PRO_ANNUAL || '',
   },
-  entreprise: {
-    monthly: process.env.STRIPE_PRICE_ENTERPRISE_MONTHLY || '',
-    annual: process.env.STRIPE_PRICE_ENTERPRISE_ANNUAL || '',
-  },
-  souveraine: {
-    monthly: process.env.STRIPE_PRICE_SOVEREIGN_MONTHLY || '',
-    annual: process.env.STRIPE_PRICE_SOVEREIGN_ANNUAL || '',
+  expert: {
+    monthly: process.env.STRIPE_PRICE_EXPERT_MONTHLY || '',
+    annual: process.env.STRIPE_PRICE_EXPERT_ANNUAL || '',
   },
 }
 

@@ -10,7 +10,7 @@ const DEMO_USER = {
   email: 'demo@nexus.io',
   name: 'Utilisateur Démo',
   image: null,
-  plan: 'professionnel',
+  plan: 'pro',
   role: 'user',
   // bcrypt hash of 'demo1234'
   passwordHash: '$2a$10$B67MhkPMhkfqca2rz91MSOdVF5qsxN6o7d4ynetKH7PeCTXi122zu',

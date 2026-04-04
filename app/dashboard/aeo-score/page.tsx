@@ -240,7 +240,7 @@ export default function AEOScorePage() {
             Evaluez votre optimisation pour les moteurs de reponses IA
           </p>
         </div>
-        <UpgradePrompt feature="aeoReports" requiredPlan="professionnel" />
+        <UpgradePrompt feature="aeoReports" requiredPlan="pro" />
       </div>
     )
   }

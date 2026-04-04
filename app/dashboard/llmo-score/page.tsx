@@ -227,7 +227,7 @@ export default function LLMOScorePage() {
             Mesurez votre visibilite dans les reponses des grands modeles de langage
           </p>
         </div>
-        <UpgradePrompt feature="llmoReports" requiredPlan="entreprise" />
+        <UpgradePrompt feature="llmoReports" requiredPlan="expert" />
       </div>
     )
   }

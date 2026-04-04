@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, ArrowRight, Zap, Loader2 } from 'lucide-react'
+import { Check, ArrowRight, Zap, Loader2, Crown, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
@@ -9,95 +9,110 @@ import { useSession } from '@/hooks/useSession'
 
 const plans = [
   {
-    id: 'explorer',
-    name: 'Explorer',
-    description: 'Parfait pour démarrer',
-    price: 99,
-    color: 'from-brand-500 to-brand-600',
+    id: 'free',
+    name: 'Gratuit',
+    description: 'Auditez votre site gratuitement',
+    priceMonthly: 0,
+    priceAnnual: 0,
     features: [
+      '5 audits / mois',
+      '10 mots-cles suivis',
       '1 site web',
-      'Audit SEO IA complet',
-      'Rapport GEO mensuel',
-      'Suivi 50 mots-clés',
+      'Visibilite IA (GEO/AEO)',
+      'Rapports GEO & AEO',
+      'Chat IA integre',
       'Monitoring 2 LLMs',
-      'Support email',
     ],
     popular: false,
-    cta: 'Commencer',
+    cta: 'Commencer gratuitement',
+    badge: null,
   },
   {
-    id: 'professionnel',
-    name: 'Professionnel',
-    description: 'Pour les PME ambitieuses',
-    price: 199,
-    color: 'from-brand-600 to-violet-600',
+    id: 'pro',
+    name: 'Pro',
+    description: 'Pour les professionnels du SEO',
+    priceMonthly: 49.99,
+    priceAnnual: 39.99,
     features: [
-      '3 sites web',
-      'Rapports GEO + AEO hebdomadaires',
-      'Suivi 200 mots-clés',
-      'Monitoring 5 LLMs',
-      'Analyse 5 concurrents',
-      'Optimisations contenu IA',
-      'Support prioritaire',
+      'Audits illimites',
+      '100 mots-cles suivis',
+      '5 sites web',
+      'Rapports LLMO complets',
+      'Export PDF',
+      'Analyse 10 concurrents',
+      'Monitoring 4 LLMs',
+      'Support email prioritaire',
     ],
     popular: true,
-    cta: 'Commencer — le plus populaire',
+    cta: "Commencer l'essai gratuit",
+    badge: null,
   },
   {
-    id: 'entreprise',
-    name: 'Entreprise',
-    description: 'Pour les équipes marketing',
-    price: 299,
-    color: 'from-violet-600 to-cyan-600',
+    id: 'expert',
+    name: 'Expert',
+    description: "SEO avance + acces Agence Kayzen",
+    priceMonthly: 99.99,
+    priceAnnual: 79.99,
     features: [
-      'Sites illimités',
-      'Rapports GEO + AEO + LLMO quotidiens',
-      'Suivi 500 mots-clés',
-      'Monitoring 10 LLMs',
-      'Analyse 20 concurrents',
-      'Rapports PDF white-label',
-      'API complète',
-      'Account manager dédié',
-    ],
-    popular: false,
-    cta: 'Commencer',
-  },
-  {
-    id: 'souveraine',
-    name: 'Souveraine',
-    description: 'Pour les grandes organisations',
-    price: 499,
-    color: 'from-cyan-600 to-brand-600',
-    features: [
-      'Tout Entreprise inclus',
-      'Déploiement on-premise',
-      'Intégration MCP & agents IA',
-      'Dashboard 100% custom',
-      'Mots-clés illimités',
+      'Tout illimite',
+      'Acces API complete',
+      'White label',
+      'Dashboard personnalise',
+      'Support dedie',
+      'Concurrents illimites',
       'Tous les LLMs (10+)',
-      'SLA 99,9% garanti',
-      'Support 24/7 dédié',
+      "Acces prioritaire Agence Kayzen",
     ],
     popular: false,
-    cta: 'Contacter les ventes',
+    cta: "Acces Agence Kayzen",
+    badge: 'agency',
   },
 ]
 
-function PricingButton({ planId, isPopular, isAnnual }: { planId: string; isPopular: boolean; isAnnual: boolean }) {
+function PricingButton({
+  planId,
+  cta,
+  isPopular,
+  isAnnual,
+  isAgency,
+}: {
+  planId: string
+  cta: string
+  isPopular: boolean
+  isAnnual: boolean
+  isAgency: boolean
+}) {
   const { isAuthenticated } = useSession()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 
-  if (planId === 'souveraine') {
+  if (isAgency) {
+    return (
+      <a
+        href="https://internet.kayzen-lyon.fr"
+        target="_blank"
+        rel="noopener noreferrer"
+        className={cn(
+          'w-full py-2.5 rounded-xl text-sm font-semibold text-center mb-6 transition-all duration-200 flex items-center justify-center gap-2',
+          'bg-gradient-to-r from-amber-500 to-amber-600 text-white hover:from-amber-600 hover:to-amber-700 shadow-lg'
+        )}
+      >
+        {cta}
+        <ExternalLink className="w-3.5 h-3.5" />
+      </a>
+    )
+  }
+
+  if (planId === 'free') {
     return (
       <Link
-        href="/contact"
+        href="/signup"
         className={cn(
           'w-full py-2.5 rounded-xl text-sm font-semibold text-center mb-6 transition-all duration-200 flex items-center justify-center gap-2',
           'btn-primary'
         )}
       >
-        Contacter les ventes
+        {cta}
         <ArrowRight className="w-3.5 h-3.5" />
       </Link>
     )
@@ -121,7 +136,6 @@ function PricingButton({ planId, isPopular, isAnnual }: { planId: string; isPopu
       if (data.url) {
         window.location.href = data.url
       } else if (data.error) {
-        // Stripe not configured — redirect to signup
         router.push(`/signup?plan=${planId}`)
       }
     } catch {
@@ -147,7 +161,7 @@ function PricingButton({ planId, isPopular, isAnnual }: { planId: string; isPopu
         <Loader2 className="w-4 h-4 animate-spin" />
       ) : (
         <>
-          Commencer
+          {cta}
           <ArrowRight className="w-3.5 h-3.5" />
         </>
       )}
@@ -160,7 +174,7 @@ export function Pricing() {
 
   return (
     <section id="pricing" className="py-24 px-4 sm:px-6 lg:px-8 bg-surface-50 dark:bg-surface-900/50 border-y border-surface-200 dark:border-surface-800/60">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-6xl mx-auto">
 
         {/* Header */}
         <div className="text-center mb-12">
@@ -170,7 +184,7 @@ export function Pricing() {
             <span className="gradient-text">sans surprise</span>
           </h2>
           <p className="text-lg text-surface-500 dark:text-surface-400 mb-8">
-            14 jours d&apos;essai gratuit · Sans carte bancaire · Résiliation à tout moment
+            Plan gratuit inclus &middot; Sans carte bancaire &middot; Annulation a tout moment
           </p>
 
           {/* Toggle */}
@@ -204,10 +218,11 @@ export function Pricing() {
         </div>
 
         {/* Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {plans.map((plan) => {
-            const displayPrice = isAnnual ? Math.round(plan.price * 0.8) : plan.price
+            const displayPrice = isAnnual ? plan.priceAnnual : plan.priceMonthly
             const isPopular = plan.popular
+            const isAgency = plan.badge === 'agency'
 
             return (
               <div
@@ -215,8 +230,10 @@ export function Pricing() {
                 className={cn(
                   'relative rounded-2xl p-6 flex flex-col transition-all duration-300',
                   isPopular
-                    ? 'bg-gradient-to-b from-brand-600 to-violet-600 text-white shadow-brand'
-                    : 'card'
+                    ? 'bg-gradient-to-b from-brand-600 to-violet-600 text-white shadow-brand ring-2 ring-brand-400/30 scale-[1.03]'
+                    : isAgency
+                      ? 'card ring-1 ring-amber-400/30'
+                      : 'card'
                 )}
               >
                 {/* Popular badge */}
@@ -224,8 +241,23 @@ export function Pricing() {
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
                     <span className="px-3 py-1 text-xs font-bold rounded-full bg-white text-brand-600 flex items-center gap-1 shadow-sm whitespace-nowrap">
                       <Zap className="w-3 h-3" />
-                      Plus populaire
+                      Populaire
                     </span>
+                  </div>
+                )}
+
+                {/* Agency badge */}
+                {isAgency && (
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                    <a
+                      href="https://internet.kayzen-lyon.fr"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-3 py-1 text-xs font-bold rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-white flex items-center gap-1 shadow-sm whitespace-nowrap hover:from-amber-600 hover:to-amber-700 transition-all"
+                    >
+                      <Crown className="w-3 h-3" />
+                      Acces Agence
+                    </a>
                   </div>
                 )}
 
@@ -241,27 +273,41 @@ export function Pricing() {
                 <div className="mb-6">
                   <div className="flex items-baseline gap-1">
                     <span className={cn('text-4xl font-black', isPopular ? 'text-white' : 'text-surface-900 dark:text-white')}>
-                      {displayPrice}€
+                      {displayPrice === 0 ? '0' : `${displayPrice.toFixed(2).replace('.', ',')}`}&euro;
                     </span>
                     <span className={cn('text-sm', isPopular ? 'text-white/60' : 'text-surface-400')}>/mois</span>
                   </div>
-                  {isAnnual && (
+                  {isAnnual && displayPrice > 0 && (
                     <p className={cn('text-xs mt-1', isPopular ? 'text-white/60' : 'text-surface-400')}>
-                      Facturé {Math.round(plan.price * 0.8 * 12)}€/an
+                      Facture {(plan.priceAnnual * 12).toFixed(2).replace('.', ',')}&euro;/an
+                    </p>
+                  )}
+                  {!isAnnual && displayPrice > 0 && (
+                    <p className={cn('text-xs mt-1', isPopular ? 'text-white/60' : 'text-surface-400')}>
+                      ou {plan.priceAnnual.toFixed(2).replace('.', ',')}&euro;/mois en annuel
                     </p>
                   )}
                 </div>
 
-                <PricingButton planId={plan.id} isPopular={isPopular} isAnnual={isAnnual} />
+                <PricingButton
+                  planId={plan.id}
+                  cta={plan.cta}
+                  isPopular={isPopular}
+                  isAnnual={isAnnual}
+                  isAgency={isAgency}
+                />
 
                 <ul className="space-y-2.5 flex-1">
                   {plan.features.map((feature) => (
                     <li key={feature} className="flex items-start gap-2 text-sm">
                       <div className={cn(
                         'w-4.5 h-4.5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5',
-                        isPopular ? 'bg-white/20' : 'bg-brand-50 dark:bg-brand-950/40'
+                        isPopular ? 'bg-white/20' : isAgency ? 'bg-amber-50 dark:bg-amber-950/40' : 'bg-brand-50 dark:bg-brand-950/40'
                       )}>
-                        <Check className={cn('w-3 h-3', isPopular ? 'text-white' : 'text-brand-600 dark:text-brand-400')} />
+                        <Check className={cn(
+                          'w-3 h-3',
+                          isPopular ? 'text-white' : isAgency ? 'text-amber-600 dark:text-amber-400' : 'text-brand-600 dark:text-brand-400'
+                        )} />
                       </div>
                       <span className={cn(isPopular ? 'text-white/80' : 'text-surface-600 dark:text-surface-400')}>
                         {feature}
@@ -274,8 +320,27 @@ export function Pricing() {
           })}
         </div>
 
+        {/* Agency Banner */}
+        <div className="mt-12 rounded-2xl bg-gradient-to-r from-amber-500/10 to-brand-500/10 dark:from-amber-500/5 dark:to-brand-500/5 border border-amber-300/30 dark:border-amber-700/30 p-8 text-center">
+          <p className="text-lg font-semibold text-surface-900 dark:text-white mb-2">
+            Besoin d&apos;un site web performant ?
+          </p>
+          <p className="text-surface-600 dark:text-surface-400 mb-5 max-w-xl mx-auto">
+            L&apos;Agence Kayzen cree des sites optimises SEO des 1&nbsp;500&euro;
+          </p>
+          <a
+            href="https://internet.kayzen-lyon.fr"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+          >
+            Decouvrir l&apos;Agence Kayzen
+            <ExternalLink className="w-4 h-4" />
+          </a>
+        </div>
+
         <p className="text-center text-surface-400 dark:text-surface-500 text-sm mt-10">
-          Toutes taxes comprises · Facture TVA disponible · Support RGPD inclus
+          Toutes taxes comprises &middot; Facture TVA disponible &middot; Support RGPD inclus
         </p>
       </div>
     </section>

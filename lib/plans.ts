@@ -1,9 +1,20 @@
-export type PlanId = 'free' | 'explorer' | 'professionnel' | 'entreprise' | 'souveraine'
+/**
+ * Nexus SEO — Plans tarifaires
+ * Stratégie : Tunnel de vente vers l'Agence Web Kayzen
+ *
+ * Gratuit → découverte (audit complet, outils de base)
+ * Pro 49,99€ → professionnels autonomes (tous les outils IA)
+ * Expert 99,99€ → entreprises + accès prioritaire agence Kayzen
+ */
+
+export type PlanId = 'free' | 'pro' | 'expert'
 
 export interface PlanConfig {
   id: PlanId
   name: string
-  price: number | null  // null = gratuit/demo
+  price: number | null
+  priceAnnual: number | null  // prix mensuel en facturation annuelle
+  tagline: string
   limits: {
     auditsPerMonth: number        // -1 = illimité
     keywordsTracked: number
@@ -13,14 +24,15 @@ export interface PlanConfig {
     geoReports: boolean
     aeoReports: boolean
     llmoReports: boolean
-    competitorAnalysis: number    // nb de concurrents
+    competitorAnalysis: number
     exportPDF: boolean
     apiAccess: boolean
     whiteLabel: boolean
-    llmMonitoring: number         // nb de LLMs suivis
-    supportLevel: 'email' | 'priority' | 'dedicated' | '24/7'
+    llmMonitoring: number
+    supportLevel: 'community' | 'email' | 'priority' | 'dedicated'
     customDashboard: boolean
-    onPremise: boolean
+    aiChat: boolean
+    agencyAccess: boolean         // accès services Agence Kayzen
   }
 }
 
@@ -29,98 +41,60 @@ const plansConfig: Record<PlanId, PlanConfig> = {
     id: 'free',
     name: 'Gratuit',
     price: 0,
+    priceAnnual: 0,
+    tagline: 'Auditez votre site gratuitement',
     limits: {
-      auditsPerMonth: 1,
-      keywordsTracked: 0,
-      backlinkChecks: 0,
+      auditsPerMonth: 5,
+      keywordsTracked: 10,
+      backlinkChecks: 5,
       sitesMax: 1,
-      aiVisibility: false,
-      geoReports: false,
-      aeoReports: false,
-      llmoReports: false,
-      competitorAnalysis: 0,
-      exportPDF: false,
-      apiAccess: false,
-      whiteLabel: false,
-      llmMonitoring: 0,
-      supportLevel: 'email',
-      customDashboard: false,
-      onPremise: false,
-    },
-  },
-  explorer: {
-    id: 'explorer',
-    name: 'Explorer',
-    price: 99,
-    limits: {
-      auditsPerMonth: 4,
-      keywordsTracked: 50,
-      backlinkChecks: 10,
-      sitesMax: 1,
-      aiVisibility: true,
-      geoReports: true,
-      aeoReports: false,
-      llmoReports: false,
-      competitorAnalysis: 0,
-      exportPDF: true,
-      apiAccess: false,
-      whiteLabel: false,
-      llmMonitoring: 2,
-      supportLevel: 'email',
-      customDashboard: false,
-      onPremise: false,
-    },
-  },
-  professionnel: {
-    id: 'professionnel',
-    name: 'Professionnel',
-    price: 199,
-    limits: {
-      auditsPerMonth: -1,
-      keywordsTracked: 200,
-      backlinkChecks: -1,
-      sitesMax: 3,
       aiVisibility: true,
       geoReports: true,
       aeoReports: true,
       llmoReports: false,
-      competitorAnalysis: 5,
-      exportPDF: true,
+      competitorAnalysis: 1,
+      exportPDF: false,
       apiAccess: false,
       whiteLabel: false,
-      llmMonitoring: 5,
-      supportLevel: 'priority',
+      llmMonitoring: 2,
+      supportLevel: 'community',
       customDashboard: false,
-      onPremise: false,
+      aiChat: true,
+      agencyAccess: false,
     },
   },
-  entreprise: {
-    id: 'entreprise',
-    name: 'Entreprise',
-    price: 299,
+  pro: {
+    id: 'pro',
+    name: 'Pro',
+    price: 49.99,
+    priceAnnual: 39.99,
+    tagline: 'Pour les professionnels du SEO',
     limits: {
       auditsPerMonth: -1,
-      keywordsTracked: 500,
+      keywordsTracked: 100,
       backlinkChecks: -1,
-      sitesMax: -1,
+      sitesMax: 5,
       aiVisibility: true,
       geoReports: true,
       aeoReports: true,
       llmoReports: true,
-      competitorAnalysis: 20,
+      competitorAnalysis: 10,
       exportPDF: true,
-      apiAccess: true,
+      apiAccess: false,
       whiteLabel: false,
-      llmMonitoring: 10,
-      supportLevel: 'dedicated',
+      llmMonitoring: 4,
+      supportLevel: 'email',
       customDashboard: false,
-      onPremise: false,
+      aiChat: true,
+      agencyAccess: false,
     },
   },
-  souveraine: {
-    id: 'souveraine',
-    name: 'Souveraine',
-    price: 499,
+  expert: {
+    id: 'expert',
+    name: 'Expert',
+    price: 99.99,
+    priceAnnual: 79.99,
+    tagline: 'SEO avancé + accès Agence Kayzen',
     limits: {
       auditsPerMonth: -1,
       keywordsTracked: -1,
@@ -135,15 +109,16 @@ const plansConfig: Record<PlanId, PlanConfig> = {
       apiAccess: true,
       whiteLabel: true,
       llmMonitoring: -1,
-      supportLevel: '24/7',
+      supportLevel: 'dedicated',
       customDashboard: true,
-      onPremise: true,
+      aiChat: true,
+      agencyAccess: true,
     },
   },
 }
 
 export function getPlan(planId: PlanId): PlanConfig {
-  return plansConfig[planId]
+  return plansConfig[planId] || plansConfig.free
 }
 
 export function canAccess(planId: PlanId, feature: keyof PlanConfig['limits']): boolean {
@@ -173,7 +148,7 @@ export function isFeatureLocked(planId: PlanId, feature: string): boolean {
 }
 
 export function getMinPlanForFeature(feature: keyof PlanConfig['limits']): PlanId {
-  const plans: PlanId[] = ['free', 'explorer', 'professionnel', 'entreprise', 'souveraine']
+  const plans: PlanId[] = ['free', 'pro', 'expert']
 
   for (const planId of plans) {
     if (canAccess(planId, feature)) {
@@ -181,7 +156,7 @@ export function getMinPlanForFeature(feature: keyof PlanConfig['limits']): PlanI
     }
   }
 
-  return 'souveraine'
+  return 'expert'
 }
 
 export const allPlans: PlanConfig[] = Object.values(plansConfig)

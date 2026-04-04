@@ -20,10 +20,8 @@ import {
 
 const PLAN_LABELS: Record<string, { label: string; price: string }> = {
   free: { label: 'Gratuit', price: '0 €/mois' },
-  explorer: { label: 'Explorer', price: '49 €/mois' },
-  professionnel: { label: 'Professionnel', price: '149 €/mois' },
-  entreprise: { label: 'Entreprise', price: '349 €/mois' },
-  souveraine: { label: 'Souveraine', price: 'Sur devis' },
+  pro: { label: 'Pro', price: '49,99 €/mois' },
+  expert: { label: 'Expert', price: '99,99 €/mois' },
 }
 
 export default function SettingsPage() {

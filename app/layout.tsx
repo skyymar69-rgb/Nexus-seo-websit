@@ -1,5 +1,8 @@
 import type { Metadata } from 'next'
 import { Providers } from '@/app/providers'
+import CookieBanner from '@/components/shared/CookieBanner'
+import AccessibilityToggle from '@/components/shared/AccessibilityToggle'
+import AIChatWidget from '@/components/shared/AIChatWidget'
 import './globals.css'
 
 const BASE_URL = process.env.NEXT_PUBLIC_URL || 'https://nexus-seo.app'
@@ -145,7 +148,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a href="#main-content" className="skip-to-main">
           Aller au contenu principal
         </a>
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <CookieBanner />
+          <AccessibilityToggle />
+          <AIChatWidget />
+        </Providers>
       </body>
     </html>
   )

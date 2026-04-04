@@ -114,7 +114,7 @@ export default function EvolutionPage() {
             Suivi et analyse de l&apos;evolution de votre SEO au fil du temps
           </p>
         </div>
-        <UpgradePrompt feature="seoAnalysis" requiredPlan="professionnel" />
+        <UpgradePrompt feature="seoAnalysis" requiredPlan="pro" />
       </div>
     )
   }

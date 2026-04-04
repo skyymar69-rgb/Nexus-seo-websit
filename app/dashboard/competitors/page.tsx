@@ -215,7 +215,7 @@ export default function CompetitorsPage() {
             Analysez et comparez votre performance avec vos concurrents
           </p>
         </div>
-        <UpgradePrompt feature="competitorAnalysis" requiredPlan="professionnel" />
+        <UpgradePrompt feature="competitorAnalysis" requiredPlan="pro" />
       </div>
     )
   }

@@ -976,7 +976,7 @@ export default function AIAdvisorPage() {
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-6 py-12">
-          <UpgradePrompt feature="aiVisibility" requiredPlan="professionnel" />
+          <UpgradePrompt feature="aiVisibility" requiredPlan="pro" />
         </div>
       </div>
     )

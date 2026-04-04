@@ -403,7 +403,7 @@ export default function AIVisibilityPage() {
             Suivez votre visibilite dans les reponses des IA generatives
           </p>
         </div>
-        <UpgradePrompt feature="aiVisibility" requiredPlan="professionnel" />
+        <UpgradePrompt feature="aiVisibility" requiredPlan="pro" />
       </div>
     )
   }

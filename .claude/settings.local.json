@@ -46,7 +46,11 @@
       "Bash(vercel redeploy:*)",
       "Bash(vercel alias:*)",
       "Bash(vercel ls:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(mkdir -p /tmp/skills)",
+      "Read(//tmp/**)",
+      "Bash(unzip -o \"C:/Users/Maison/Downloads/marketingskills-main.zip\")",
+      "Bash(npx vitest:*)"
     ]
   }
 }
