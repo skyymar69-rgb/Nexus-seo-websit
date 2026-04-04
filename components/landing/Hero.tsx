@@ -10,16 +10,6 @@ export function Hero() {
 
       {/* ── Inline keyframes ── */}
       <style>{`
-        @keyframes hero-orbit {
-          0%   { transform: rotate(0deg)   translateX(var(--orbit-r)) rotate(0deg); }
-          100% { transform: rotate(360deg) translateX(var(--orbit-r)) rotate(-360deg); }
-        }
-
-        @keyframes hero-spin-slow {
-          from { transform: rotate(0deg); }
-          to   { transform: rotate(360deg); }
-        }
-
         @keyframes hero-draw-line {
           from { stroke-dashoffset: 300; }
           to   { stroke-dashoffset: 0; }
@@ -31,20 +21,8 @@ export function Hero() {
         }
 
         @keyframes hero-score-pulse {
-          0%, 100% { transform: scale(1); }
-          50%      { transform: scale(1.08); }
-        }
-
-        .hero-orbit-item {
-          position: absolute;
-          top: 50%; left: 50%;
-          margin: -14px 0 0 -14px;
-          animation: hero-orbit var(--orbit-dur) linear infinite;
-          --orbit-r: 120px;
-        }
-
-        @media (max-width: 1023px) {
-          .hero-orbit-item { --orbit-r: 80px; }
+          0%, 100% { transform: scale(1); opacity: 1; }
+          50%      { transform: scale(1.15); opacity: 0.7; }
         }
 
         .hero-bar {
@@ -52,17 +30,14 @@ export function Hero() {
           animation: hero-grow-bar 1.2s ease-out forwards;
           animation-delay: var(--bar-delay);
           transform: scaleY(0);
+          will-change: transform;
         }
 
         .hero-line-draw {
           stroke-dasharray: 300;
           stroke-dashoffset: 300;
           animation: hero-draw-line 2.5s ease-out 0.8s forwards;
-        }
-
-        .hero-spin-ring {
-          animation: hero-spin-slow 20s linear infinite;
-          transform-origin: center;
+          will-change: stroke-dashoffset;
           will-change: transform;
         }
 
@@ -71,7 +46,7 @@ export function Hero() {
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .hero-spin-ring, .hero-orbit-item, .hero-bar, .hero-line-draw, .hero-dashed-ring {
+          .hero-bar, .hero-line-draw, .hero-score-pulse {
             animation: none !important;
           }
         }
@@ -180,155 +155,124 @@ export function Hero() {
           </p>
         </div>
 
-        {/* ─── RIGHT COLUMN — SVG Illustration (2/5 on desktop) ─── */}
+        {/* ─── RIGHT COLUMN — SEO Performance Dashboard (2/5 on desktop) ─── */}
         <div className="hidden lg:flex lg:col-span-2 items-center justify-center">
           <svg
-            viewBox="0 0 400 400"
+            viewBox="0 0 420 380"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="w-full max-w-[420px] h-auto"
+            className="w-full max-w-[440px] h-auto drop-shadow-2xl"
             role="img"
-            aria-label="Dashboard SEO avec orbites LLM anim&#233;es"
+            aria-label="Dashboard de performance SEO avec graphiques animés"
           >
-            {/* ── Outer rotating ring ── */}
-            <g className="hero-spin-ring" aria-hidden="true">
-              <circle cx="200" cy="200" r="170" stroke="rgba(124,58,237,0.15)" strokeWidth="1" />
-              <circle
-                cx="200" cy="200" r="170"
-                stroke="rgba(124,58,237,0.3)"
-                strokeWidth="1.5"
-                strokeDasharray="8 12"
-                className="hero-dashed-ring"
-              />
+            {/* ── Dashboard frame ── */}
+            <rect x="10" y="10" width="400" height="360" rx="16" fill="rgba(15,5,32,0.9)" stroke="rgba(124,58,237,0.25)" strokeWidth="1" />
+            {/* Title bar */}
+            <rect x="10" y="10" width="400" height="38" rx="16" fill="rgba(43,18,76,0.8)" />
+            <rect x="10" y="38" width="400" height="10" fill="rgba(43,18,76,0.8)" />
+            {/* Window dots */}
+            <circle cx="30" cy="29" r="4" fill="#ef4444" opacity="0.8" />
+            <circle cx="44" cy="29" r="4" fill="#eab308" opacity="0.8" />
+            <circle cx="58" cy="29" r="4" fill="#22c55e" opacity="0.8" />
+            <text x="210" y="33" textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="9" fontFamily="system-ui">nexus.app/audit</text>
+
+            {/* ── Score gauge (top-left) ── */}
+            <g transform="translate(70, 100)">
+              {/* Background ring */}
+              <circle cx="0" cy="0" r="40" fill="none" stroke="rgba(124,58,237,0.15)" strokeWidth="6" />
+              {/* Progress ring — animated */}
+              <circle cx="0" cy="0" r="40" fill="none" stroke="#FECD4D" strokeWidth="6"
+                strokeDasharray="226" strokeDashoffset="30" strokeLinecap="round"
+                transform="rotate(-90)" className="hero-line-draw" />
+              {/* Score text */}
+              <text x="0" y="-4" textAnchor="middle" fill="#FECD4D" fontSize="24" fontWeight="800" fontFamily="system-ui">94</text>
+              <text x="0" y="10" textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="7" fontWeight="600" fontFamily="system-ui" letterSpacing="1">/100</text>
             </g>
+            <text x="70" y="157" textAnchor="middle" fill="rgba(255,255,255,0.6)" fontSize="8" fontWeight="600" fontFamily="system-ui" letterSpacing="0.5">SCORE SEO</text>
 
-            {/* ── Inner ring ── */}
-            <circle cx="200" cy="200" r="120" stroke="rgba(254,205,77,0.12)" strokeWidth="1" aria-hidden="true" />
+            {/* ── 3 mini KPI cards (top-right) ── */}
+            {[
+              { y: 62, label: 'Performance', value: '96', color: '#22c55e', icon: '▲' },
+              { y: 98, label: 'Accessibilité', value: '91', color: '#FECD4D', icon: '●' },
+              { y: 134, label: 'Visibilité IA', value: '87', color: '#7c3aed', icon: '◆' },
+            ].map((kpi, i) => (
+              <g key={i} transform={`translate(145, ${kpi.y})`} style={{ animation: `hero-grow-bar 0.6s ease-out ${0.3 + i * 0.15}s both` }}>
+                <rect width="250" height="30" rx="6" fill="rgba(43,18,76,0.5)" stroke="rgba(124,58,237,0.15)" strokeWidth="0.5" />
+                <text x="12" y="19" fill={kpi.color} fontSize="9" fontFamily="system-ui">{kpi.icon}</text>
+                <text x="28" y="19" fill="rgba(255,255,255,0.7)" fontSize="9" fontFamily="system-ui">{kpi.label}</text>
+                <text x="232" y="19" textAnchor="end" fill={kpi.color} fontSize="12" fontWeight="800" fontFamily="system-ui">{kpi.value}</text>
+                {/* Progress bar */}
+                <rect x="135" y="11" width="80" height="6" rx="3" fill="rgba(255,255,255,0.06)" />
+                <rect x="135" y="11" width={parseInt(kpi.value) * 0.8} height="6" rx="3" fill={kpi.color} opacity="0.6" className="hero-bar" style={{ '--bar-delay': `${0.5 + i * 0.2}s` } as React.CSSProperties} />
+              </g>
+            ))}
 
-            {/* ── Center pulsing circle ── */}
-            <circle cx="200" cy="200" r="46" fill="rgba(124,58,237,0.15)" stroke="rgba(124,58,237,0.4)" strokeWidth="1.5" className="hero-score-pulse" />
-            <circle cx="200" cy="200" r="33" fill="rgba(43,18,76,0.9)" stroke="rgba(124,58,237,0.5)" strokeWidth="1" />
-
-            {/* Center score text */}
-            <text x="200" y="196" textAnchor="middle" className="hero-score-text" fill="#FECD4D" fontSize="22" fontWeight="800" fontFamily="system-ui">94</text>
-            <text x="200" y="214" textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="8" fontWeight="600" fontFamily="system-ui" letterSpacing="1.5">SCORE GEO</text>
-
-            {/* ── Orbiting icons ── */}
-            {/* Search icon — orbit 1 */}
-            <g className="hero-orbit-item" style={{ '--orbit-dur': '12s', '--orbit-r': '120px' } as React.CSSProperties}>
-              <circle cx="14" cy="14" r="14" fill="rgba(43,18,76,0.9)" stroke="rgba(124,58,237,0.5)" strokeWidth="1" />
-              {/* magnifier */}
-              <circle cx="12" cy="12" r="5" stroke="#FECD4D" strokeWidth="1.5" fill="none" />
-              <line x1="16" y1="16" x2="20" y2="20" stroke="#FECD4D" strokeWidth="1.5" strokeLinecap="round" />
-            </g>
-
-            {/* Chart icon — orbit 2 */}
-            <g className="hero-orbit-item" style={{ '--orbit-dur': '16s', '--orbit-r': '120px', animationDelay: '-5.3s' } as React.CSSProperties}>
-              <circle cx="14" cy="14" r="14" fill="rgba(43,18,76,0.9)" stroke="rgba(254,205,77,0.4)" strokeWidth="1" />
-              {/* bar chart */}
-              <rect x="7"  y="14" width="3" height="6"  rx="0.5" fill="rgba(124,58,237,0.8)" />
-              <rect x="11" y="10" width="3" height="10" rx="0.5" fill="#7c3aed" />
-              <rect x="15" y="12" width="3" height="8"  rx="0.5" fill="rgba(124,58,237,0.8)" />
-              <rect x="19" y="8"  width="3" height="12" rx="0.5" fill="#FECD4D" />
-            </g>
-
-            {/* AI brain icon — orbit 3 */}
-            <g className="hero-orbit-item" style={{ '--orbit-dur': '20s', '--orbit-r': '120px', animationDelay: '-10s' } as React.CSSProperties}>
-              <circle cx="14" cy="14" r="14" fill="rgba(43,18,76,0.9)" stroke="rgba(124,58,237,0.5)" strokeWidth="1" />
-              {/* brain shape (simplified) */}
-              <path d="M10 17 C10 12, 12 9, 14 9 C16 9, 18 12, 18 17" stroke="#FECD4D" strokeWidth="1.2" fill="none" strokeLinecap="round" />
-              <path d="M11 15 C11 11, 13 8, 14 8 C15 8, 17 11, 17 15" stroke="rgba(124,58,237,0.7)" strokeWidth="1" fill="none" />
-              <circle cx="14" cy="12" r="1.5" fill="#FECD4D" />
-              <line x1="14" y1="13.5" x2="14" y2="18" stroke="#FECD4D" strokeWidth="0.8" />
-              <line x1="12" y1="15" x2="16" y2="15" stroke="rgba(124,58,237,0.6)" strokeWidth="0.8" />
-            </g>
-
-            {/* Globe icon — orbit 4 */}
-            <g className="hero-orbit-item" style={{ '--orbit-dur': '14s', '--orbit-r': '120px', animationDelay: '-3.5s' } as React.CSSProperties}>
-              <circle cx="14" cy="14" r="14" fill="rgba(43,18,76,0.9)" stroke="rgba(254,205,77,0.4)" strokeWidth="1" />
-              <circle cx="14" cy="14" r="6" stroke="rgba(124,58,237,0.7)" strokeWidth="1" fill="none" />
-              <ellipse cx="14" cy="14" rx="3" ry="6" stroke="rgba(254,205,77,0.5)" strokeWidth="0.8" fill="none" />
-              <line x1="8" y1="14" x2="20" y2="14" stroke="rgba(124,58,237,0.4)" strokeWidth="0.8" />
-            </g>
-
-            {/* ── Bar chart (bottom left area) ── */}
-            <g transform="translate(55, 260)">
-              <text x="0" y="-6" fill="rgba(255,255,255,0.3)" fontSize="7" fontFamily="system-ui" fontWeight="600" letterSpacing="1">TRAFIC</text>
+            {/* ── Bar chart (bottom-left) ── */}
+            <g transform="translate(30, 185)">
+              <text x="0" y="10" fill="rgba(255,255,255,0.4)" fontSize="8" fontWeight="600" fontFamily="system-ui" letterSpacing="0.5">TRAFIC ORGANIQUE</text>
+              <text x="170" y="10" textAnchor="end" fill="#22c55e" fontSize="8" fontWeight="700" fontFamily="system-ui">+340%</text>
+              {/* Grid lines */}
+              {[0, 1, 2, 3].map(i => (
+                <line key={i} x1="0" y1={25 + i * 30} x2="170" y2={25 + i * 30} stroke="rgba(255,255,255,0.04)" strokeWidth="0.5" />
+              ))}
+              {/* Bars */}
               {[
-                { x: 0,  h: 40, delay: '0.2s', color: 'rgba(124,58,237,0.6)' },
-                { x: 14, h: 55, delay: '0.4s', color: 'rgba(124,58,237,0.7)' },
-                { x: 28, h: 35, delay: '0.6s', color: 'rgba(124,58,237,0.6)' },
-                { x: 42, h: 70, delay: '0.8s', color: '#7c3aed' },
-                { x: 56, h: 50, delay: '1.0s', color: 'rgba(124,58,237,0.7)' },
-                { x: 70, h: 85, delay: '1.2s', color: '#FECD4D' },
+                { x: 5,   h: 25, delay: '0.3s' },
+                { x: 19,  h: 35, delay: '0.4s' },
+                { x: 33,  h: 30, delay: '0.5s' },
+                { x: 47,  h: 45, delay: '0.6s' },
+                { x: 61,  h: 40, delay: '0.7s' },
+                { x: 75,  h: 55, delay: '0.8s' },
+                { x: 89,  h: 50, delay: '0.9s' },
+                { x: 103, h: 65, delay: '1.0s' },
+                { x: 117, h: 60, delay: '1.1s' },
+                { x: 131, h: 75, delay: '1.2s' },
+                { x: 145, h: 70, delay: '1.3s' },
+                { x: 159, h: 90, delay: '1.4s' },
               ].map((bar, i) => (
                 <rect
-                  key={i}
-                  x={bar.x}
-                  y={90 - bar.h}
-                  width="10"
-                  height={bar.h}
-                  rx="2"
-                  fill={bar.color}
+                  key={i} x={bar.x} y={115 - bar.h} width="10" height={bar.h} rx="2"
+                  fill={i >= 10 ? '#FECD4D' : i >= 8 ? '#7c3aed' : 'rgba(124,58,237,0.5)'}
                   className="hero-bar"
                   style={{ '--bar-delay': bar.delay } as React.CSSProperties}
                 />
               ))}
-              {/* baseline */}
-              <line x1="0" y1="90" x2="80" y2="90" stroke="rgba(255,255,255,0.1)" strokeWidth="0.5" />
+              <line x1="0" y1="115" x2="170" y2="115" stroke="rgba(255,255,255,0.08)" strokeWidth="0.5" />
             </g>
 
-            {/* ── Line chart (bottom right area) ── */}
-            <g transform="translate(220, 270)">
-              <text x="0" y="-6" fill="rgba(255,255,255,0.3)" fontSize="7" fontFamily="system-ui" fontWeight="600" letterSpacing="1">VISIBILITE IA</text>
+            {/* ── Line chart (bottom-right) ── */}
+            <g transform="translate(215, 185)">
+              <text x="0" y="10" fill="rgba(255,255,255,0.4)" fontSize="8" fontWeight="600" fontFamily="system-ui" letterSpacing="0.5">POSITIONS GOOGLE</text>
+              <text x="175" y="10" textAnchor="end" fill="#FECD4D" fontSize="8" fontWeight="700" fontFamily="system-ui">Top 3</text>
+              {/* Grid */}
+              {[0, 1, 2, 3].map(i => (
+                <line key={i} x1="0" y1={25 + i * 30} x2="175" y2={25 + i * 30} stroke="rgba(255,255,255,0.04)" strokeWidth="0.5" />
+              ))}
+              {/* Line — positions improving (going UP = lower number = better) */}
               <polyline
-                points="0,65 20,55 40,50 60,35 80,40 100,20 120,10"
-                stroke="#FECD4D"
-                strokeWidth="2"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+                points="0,95 15,90 30,85 45,80 60,75 75,65 90,60 105,45 120,40 135,30 150,25 165,18"
+                stroke="#FECD4D" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"
                 className="hero-line-draw"
               />
-              {/* glow duplicate */}
-              <polyline
-                points="0,65 20,55 40,50 60,35 80,40 100,20 120,10"
-                stroke="#FECD4D"
-                strokeWidth="4"
-                fill="none"
-                opacity="0.15"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="hero-line-draw"
-                style={{ animationDelay: '1s' }}
-              />
-              {/* area fill */}
+              {/* Area fill */}
               <polygon
-                points="0,65 20,55 40,50 60,35 80,40 100,20 120,10 120,75 0,75"
-                fill="url(#hero-area-grad)"
-                opacity="0.3"
-                className="hero-line-draw"
-                style={{ animationDelay: '1.2s' }}
+                points="0,95 15,90 30,85 45,80 60,75 75,65 90,60 105,45 120,40 135,30 150,25 165,18 165,115 0,115"
+                fill="url(#hero-area-grad)" opacity="0.4" className="hero-line-draw" style={{ animationDelay: '0.8s' }}
               />
-              <line x1="0" y1="75" x2="120" y2="75" stroke="rgba(255,255,255,0.1)" strokeWidth="0.5" />
+              {/* End dot */}
+              <circle cx="165" cy="18" r="4" fill="#FECD4D" className="hero-score-pulse" />
+              <line x1="0" y1="115" x2="175" y2="115" stroke="rgba(255,255,255,0.08)" strokeWidth="0.5" />
             </g>
 
-            {/* ── Small floating data cards ── */}
-            {/* Top-right card */}
-            <g transform="translate(290, 60)" style={{ animation: 'hero-score-pulse 4s ease-in-out infinite' }}>
-              <rect width="80" height="36" rx="8" fill="rgba(43,18,76,0.85)" stroke="rgba(124,58,237,0.3)" strokeWidth="1" />
-              <text x="10" y="15" fill="rgba(255,255,255,0.5)" fontSize="6" fontFamily="system-ui">LLM mentions</text>
-              <text x="10" y="28" fill="#FECD4D" fontSize="13" fontWeight="800" fontFamily="system-ui">+128</text>
+            {/* ── Bottom status bar ── */}
+            <g transform="translate(30, 330)">
+              <rect width="360" height="28" rx="6" fill="rgba(43,18,76,0.4)" />
+              <circle cx="16" cy="14" r="4" fill="#22c55e" />
+              <text x="26" y="18" fill="rgba(255,255,255,0.5)" fontSize="8" fontFamily="system-ui">Audit en cours... 30+ controles analyses</text>
+              <text x="344" y="18" textAnchor="end" fill="#FECD4D" fontSize="8" fontWeight="700" fontFamily="system-ui">94/100 ✓</text>
             </g>
 
-            {/* Top-left card */}
-            <g style={{ animation: 'hero-score-pulse 5s ease-in-out infinite 1s' }}>
-              <rect x="30" y="90" width="72" height="36" rx="8" fill="rgba(43,18,76,0.85)" stroke="rgba(254,205,77,0.2)" strokeWidth="1" />
-              <text x="40" y="105" fill="rgba(255,255,255,0.5)" fontSize="6" fontFamily="system-ui">Mots-cles</text>
-              <text x="40" y="118" fill="white" fontSize="13" fontWeight="800" fontFamily="system-ui">847</text>
-            </g>
-
-            {/* ── Gradient definitions ── */}
+            {/* Gradient defs */}
             <defs>
               <linearGradient id="hero-area-grad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#FECD4D" stopOpacity="0.3" />
