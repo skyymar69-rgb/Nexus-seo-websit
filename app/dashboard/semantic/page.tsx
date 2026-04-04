@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { cn, formatNumber } from '@/lib/utils'
 import {
   BarChart3,
@@ -16,6 +16,8 @@ import {
   Activity,
   Zap,
 } from 'lucide-react'
+import { useWebsite } from '@/contexts/WebsiteContext'
+import { UrlInput } from '@/components/shared/UrlInput'
 
 interface TFIDFTerm {
   term: string
@@ -53,6 +55,7 @@ interface SemanticResult {
 }
 
 export default function SemanticAnalysisPage() {
+  const { selectedWebsite } = useWebsite()
   const [mode, setMode] = useState<'url' | 'text'>('url')
   const [inputValue, setInputValue] = useState('')
   const [keyword, setKeyword] = useState('')
@@ -61,106 +64,74 @@ export default function SemanticAnalysisPage() {
   const [result, setResult] = useState<SemanticResult | null>(null)
   const resultsRef = useRef<HTMLDivElement>(null)
 
-  const getMockData = (): SemanticResult => ({
-    score: 72,
-    tfidfTerms: [
-      { term: 'marketing digital', frequency: 12, density: 2.4, relevance: 0.95, isMissing: false },
-      { term: 'SEO', frequency: 10, density: 2.0, relevance: 0.92, isMissing: false },
-      { term: 'stratégie marketing', frequency: 8, density: 1.6, relevance: 0.88, isMissing: false },
-      { term: 'contenu', frequency: 7, density: 1.4, relevance: 0.85, isMissing: false },
-      { term: 'optimisation', frequency: 6, density: 1.2, relevance: 0.82, isMissing: false },
-      { term: 'moteurs de recherche', frequency: 5, density: 1.0, relevance: 0.80, isMissing: true },
-      { term: 'audience', frequency: 5, density: 1.0, relevance: 0.78, isMissing: false },
-      { term: 'conversion', frequency: 4, density: 0.8, relevance: 0.75, isMissing: true },
-      { term: 'backlinks', frequency: 4, density: 0.8, relevance: 0.73, isMissing: false },
-      { term: 'algorithme', frequency: 3, density: 0.6, relevance: 0.70, isMissing: true },
-      { term: 'trafic organique', frequency: 3, density: 0.6, relevance: 0.68, isMissing: false },
-      { term: 'mots-clés', frequency: 3, density: 0.6, relevance: 0.65, isMissing: false },
-      { term: 'indexation', frequency: 2, density: 0.4, relevance: 0.62, isMissing: true },
-      { term: 'performance', frequency: 2, density: 0.4, relevance: 0.60, isMissing: false },
-      { term: 'visibilité', frequency: 2, density: 0.4, relevance: 0.58, isMissing: false },
-      { term: 'analyse', frequency: 2, density: 0.4, relevance: 0.55, isMissing: false },
-      { term: 'résultats', frequency: 2, density: 0.4, relevance: 0.53, isMissing: false },
-      { term: 'plateforme', frequency: 1, density: 0.2, relevance: 0.50, isMissing: false },
-      { term: 'données', frequency: 1, density: 0.2, relevance: 0.48, isMissing: false },
-      { term: 'utilisateurs', frequency: 1, density: 0.2, relevance: 0.45, isMissing: true },
-    ],
-    contentStats: {
-      wordCount: 500,
-      paragraphCount: 12,
-      sentenceCount: 28,
-      avgSentenceLength: 17.9,
-      readingLevel: 'Bac+2',
-      h1Count: 1,
-      h2Count: 5,
-      h3Count: 8,
-    },
-    relatedKeywords: [
-      { keyword: 'stratégie SEO', score: 0.92, cluster: 'SEO technique' },
-      { keyword: 'optimisation on-page', score: 0.88, cluster: 'SEO technique' },
-      { keyword: 'référencement naturel', score: 0.85, cluster: 'SEO technique' },
-      { keyword: 'contenu optimisé', score: 0.82, cluster: 'Contenu' },
-      { keyword: 'analyse de mots-clés', score: 0.80, cluster: 'Recherche' },
-      { keyword: 'trafic SEO', score: 0.78, cluster: 'Performance' },
-      { keyword: 'position SERP', score: 0.75, cluster: 'Performance' },
-      { keyword: 'stratégie de contenu', score: 0.72, cluster: 'Contenu' },
-    ],
-    competitors: [
-      {
-        rank: 1,
-        url: 'seo-guide.fr',
-        wordCount: 2850,
-        score: 92,
-        keyTerms: ['marketing digital', 'SEO', 'stratégie', 'optimisation'],
-      },
-      {
-        rank: 2,
-        url: 'digital-tips.com',
-        wordCount: 2100,
-        score: 87,
-        keyTerms: ['marketing digital', 'contenu', 'audience'],
-      },
-      {
-        rank: 3,
-        url: 'blog-seo.fr',
-        wordCount: 1850,
-        score: 84,
-        keyTerms: ['SEO', 'optimisation', 'moteurs de recherche'],
-      },
-      {
-        rank: 4,
-        url: 'webmarketing.net',
-        wordCount: 1650,
-        score: 81,
-        keyTerms: ['marketing digital', 'conversion', 'stratégie'],
-      },
-      {
-        rank: 5,
-        url: 'expert-seo.com',
-        wordCount: 1420,
-        score: 78,
-        keyTerms: ['SEO', 'backlinks', 'algorithme'],
-      },
-    ],
-    recommendations: [
-      'Augmenter le compte de mots à 1200-1500 (actuellement 500)',
-      'Ajouter 2-3 sections H2 supplémentaires',
-      'Inclure les termes manquants : "moteurs de recherche", "conversion", "algorithme"',
-      'Améliorer la densité de mots-clés (viser 2-3%)',
-      'Ajouter des liens internes vers 3-4 pages connexes',
-      'Inclure au moins 2 images optimisées avec alt-text',
-      'Augmenter la profondeur du contenu avec plus d\'exemples concrets',
-    ],
-    keywordDensity: [
-      { keyword: 'marketing digital', density: 2.4 },
-      { keyword: 'SEO', density: 2.0 },
-      { keyword: 'stratégie', density: 1.8 },
-      { keyword: 'contenu', density: 1.4 },
-    ],
-  })
+  // Pre-fill URL from selected website
+  useEffect(() => {
+    if (selectedWebsite?.domain && !inputValue && mode === 'url') {
+      const domain = selectedWebsite.domain
+      setInputValue(domain.startsWith('http') ? domain : `https://${domain}`)
+    }
+  }, [selectedWebsite])
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  // Map API response to component state
+  function mapApiResponse(data: any): SemanticResult {
+    const topTerms: TFIDFTerm[] = (data.topTerms || []).map((t: any) => ({
+      term: t.term,
+      frequency: t.frequency,
+      density: t.density,
+      relevance: t.relevance,
+      isMissing: t.status === 'missing',
+    }))
+
+    const content = data.content || {}
+    const headings = content.headings || {}
+
+    const contentStats: ContentStats = {
+      wordCount: content.wordCount || 0,
+      paragraphCount: content.paragraphCount || 0,
+      sentenceCount: content.sentenceCount || 0,
+      avgSentenceLength: content.avgSentenceLength || 0,
+      readingLevel: content.readingLevel || '-',
+      h1Count: headings.h1 || 0,
+      h2Count: headings.h2 || 0,
+      h3Count: headings.h3 || 0,
+    }
+
+    const clusters: Array<{ name: string; terms: string[] }> = data.semanticClusters || []
+    const relatedKeywords = clusters.flatMap((c: any) =>
+      c.terms.map((term: string, idx: number) => ({
+        keyword: term,
+        score: Math.max(0.5, 1 - idx * 0.05),
+        cluster: c.name,
+      }))
+    )
+
+    const competitors = (data.competitors || []).map((c: any) => ({
+      rank: c.rank,
+      url: c.url,
+      wordCount: c.wordCount,
+      score: c.score,
+      keyTerms: c.terms || [],
+    }))
+
+    // Build keyword density from top terms (top 4-5 most frequent)
+    const keywordDensity = topTerms
+      .filter((t: TFIDFTerm) => !t.isMissing)
+      .slice(0, 5)
+      .map((t: TFIDFTerm) => ({ keyword: t.term, density: t.density }))
+
+    return {
+      score: data.score || 0,
+      tfidfTerms: topTerms,
+      contentStats,
+      relatedKeywords,
+      competitors,
+      recommendations: data.recommendations || [],
+      keywordDensity,
+    }
+  }
+
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault()
     setError('')
 
     if (!inputValue.trim() || !keyword.trim()) {
@@ -180,13 +151,15 @@ export default function SemanticAnalysisPage() {
         }),
       })
 
-      if (!response.ok) throw new Error('Erreur lors de l\'analyse')
       const data = await response.json()
-      setResult(data)
+
+      if (!response.ok) {
+        throw new Error(data.error || `Erreur ${response.status}`)
+      }
+
+      setResult(mapApiResponse(data))
     } catch (err) {
-      // Fallback: simulate 2s then use mock data
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-      setResult(getMockData())
+      setError(err instanceof Error ? err.message : 'Erreur lors de l\'analyse sémantique')
     } finally {
       setLoading(false)
       resultsRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -235,21 +208,27 @@ export default function SemanticAnalysisPage() {
                 <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
                   {mode === 'url' ? 'URL à analyser' : 'Contenu'}
                 </label>
-                <textarea
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  placeholder={
-                    mode === 'url'
-                      ? 'https://example.com/article'
-                      : 'Collez votre contenu ici...'
-                  }
-                  className={cn(
-                    'w-full px-4 py-3 rounded-lg border-2 border-surface-300 dark:border-surface-700',
-                    'bg-white dark:bg-surface-800 text-surface-900 dark:text-surface-50',
-                    'focus:outline-none focus:border-brand-500 dark:focus:border-brand-400',
-                    'min-h-28 resize-none font-mono'
-                  )}
-                />
+                {mode === 'url' ? (
+                  <UrlInput
+                    value={inputValue}
+                    onChange={setInputValue}
+                    onSubmit={() => { if (inputValue.trim() && keyword.trim()) handleSubmit() }}
+                    loading={loading}
+                    submitLabel="Analyser le contenu"
+                  />
+                ) : (
+                  <textarea
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    placeholder="Collez votre contenu ici..."
+                    className={cn(
+                      'w-full px-4 py-3 rounded-lg border-2 border-surface-300 dark:border-surface-700',
+                      'bg-white dark:bg-surface-800 text-surface-900 dark:text-surface-50',
+                      'focus:outline-none focus:border-brand-500 dark:focus:border-brand-400',
+                      'min-h-28 resize-none font-mono'
+                    )}
+                  />
+                )}
               </div>
 
               <div>
@@ -278,29 +257,31 @@ export default function SemanticAnalysisPage() {
               </div>
             )}
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className={cn(
-                'w-full py-3 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all',
-                loading
-                  ? 'bg-surface-300 dark:bg-surface-700 text-surface-500 dark:text-surface-400 cursor-not-allowed'
-                  : 'bg-brand-600 dark:bg-brand-500 text-white hover:bg-brand-700 dark:hover:bg-brand-600'
-              )}
-            >
-              {loading ? (
-                <>
-                  <Loader2 size={18} className="animate-spin" />
-                  Analyse en cours...
-                </>
-              ) : (
-                <>
-                  <Zap size={18} />
-                  Analyser le contenu
-                </>
-              )}
-            </button>
+            {/* Submit Button (only for text mode, URL mode has button in UrlInput) */}
+            {mode === 'text' && (
+              <button
+                type="submit"
+                disabled={loading}
+                className={cn(
+                  'w-full py-3 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all',
+                  loading
+                    ? 'bg-surface-300 dark:bg-surface-700 text-surface-500 dark:text-surface-400 cursor-not-allowed'
+                    : 'bg-brand-600 dark:bg-brand-500 text-white hover:bg-brand-700 dark:hover:bg-brand-600'
+                )}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin" />
+                    Analyse en cours...
+                  </>
+                ) : (
+                  <>
+                    <Zap size={18} />
+                    Analyser le contenu
+                  </>
+                )}
+              </button>
+            )}
           </form>
         </div>
 
@@ -448,7 +429,7 @@ export default function SemanticAnalysisPage() {
                 Champ Sémantique
               </h2>
               <div className="space-y-4">
-                {['SEO technique', 'Contenu', 'Recherche', 'Performance'].map((cluster) => (
+                {Array.from(new Set(result.relatedKeywords.map((k) => k.cluster))).map((cluster) => (
                   <div key={cluster}>
                     <h3 className="font-semibold text-surface-800 dark:text-surface-200 mb-3 text-sm">
                       {cluster}

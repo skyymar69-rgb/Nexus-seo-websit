@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ArrowRight, Check, AlertCircle, X, Zap, TrendingUp, BarChart3, Search } from 'lucide-react'
 import { useAudit, type AuditCheck, type AuditResults } from '@/hooks/useAudit'
+import { UrlInput } from '@/components/shared/UrlInput'
 
 // Score circle component
 function ScoreCircle({ score }: { score: number }) {
@@ -251,8 +252,7 @@ export default function AuditGratuitPage() {
   const [expandedCheck, setExpandedCheck] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<'tous' | 'meta' | 'contenu' | 'technique' | 'performance'>('tous')
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = () => {
     runAudit()
   }
 
@@ -309,30 +309,20 @@ export default function AuditGratuitPage() {
             </div>
 
             {/* Input Form */}
-            <form onSubmit={handleSubmit} className="mb-8">
-              <div className="flex flex-col sm:flex-row gap-3">
-                <input
-                  type="text"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  placeholder="https://www.monsite.fr"
-                  className="flex-1 px-4 sm:px-6 py-3 sm:py-4 rounded-lg border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800 text-surface-900 dark:text-surface-50 placeholder:text-surface-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
-                  disabled={loading}
-                />
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-white bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 whitespace-nowrap"
-                >
-                  <Search className="w-5 h-5" />
-                  Analyser mon site
-                </button>
-              </div>
-            </form>
+            <div className="mb-8">
+              <UrlInput
+                value={url}
+                onChange={setUrl}
+                onSubmit={handleSubmit}
+                loading={loading}
+                submitLabel="Analyser mon site"
+                placeholder="https://www.monsite.fr"
+              />
+            </div>
 
             {/* Info text */}
             <p className="text-center text-sm text-surface-500 dark:text-surface-400">
-              Aucune inscription requise. Résultats instantanés.
+              Aucune inscription requise · Résultats instantanés · Export PDF, Markdown, JSON
             </p>
 
             {/* Error state */}
@@ -675,17 +665,169 @@ export default function AuditGratuitPage() {
               </div>
             </div>
 
-            <div className="text-center">
-              <Link
-                href="/signup"
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-lg font-semibold text-white bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 transition-all duration-200 shadow-lg hover:shadow-xl"
-              >
-                Essayer Nexus Pro gratuitement <ArrowRight className="w-5 h-5" />
-              </Link>
+            {/* Continuer l'analyse — outils avec URL pré-remplie */}
+            <div className="mt-12 p-6 sm:p-8 bg-brand-50 dark:bg-brand-950/20 rounded-2xl border border-brand-200 dark:border-brand-800">
+              <h3 className="text-lg font-bold text-surface-900 dark:text-white mb-2">
+                Continuer l&apos;analyse de {url}
+              </h3>
+              <p className="text-sm text-surface-600 dark:text-surface-400 mb-6">
+                Votre audit SEO est terminé. Approfondissez avec nos outils spécialisés — l&apos;URL est déjà pré-remplie.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {[
+                  { label: 'Audit GEO (IA)', desc: 'Compatibilité moteurs IA', href: '/dashboard/geo-audit', icon: '🌐' },
+                  { label: 'Score AEO', desc: 'Featured snippets & PAA', href: '/dashboard/aeo-score', icon: '⚡' },
+                  { label: 'Core Web Vitals', desc: 'Performance & vitesse', href: '/dashboard/performance', icon: '🚀' },
+                  { label: 'Analyse sémantique', desc: 'Mots-clés & TF-IDF', href: '/dashboard/semantic', icon: '📊' },
+                  { label: 'Optimisation contenu', desc: 'Recommandations SEO', href: '/dashboard/content-optimizer', icon: '✏️' },
+                  { label: 'Crawl complet', desc: 'Scanner tout le site', href: '/dashboard/crawl', icon: '🕷️' },
+                ].map((tool) => (
+                  <Link
+                    key={tool.href}
+                    href={tool.href}
+                    className="flex items-center gap-3 p-3 bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-700 hover:border-brand-300 dark:hover:border-brand-600 hover:shadow-sm transition-all group"
+                  >
+                    <span className="text-xl">{tool.icon}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-semibold text-surface-900 dark:text-white group-hover:text-brand-600 transition-colors">{tool.label}</div>
+                      <div className="text-xs text-surface-500 truncate">{tool.desc}</div>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-surface-400 group-hover:text-brand-500 flex-shrink-0" />
+                  </Link>
+                ))}
+              </div>
+
+              <div className="text-center mt-6">
+                <Link
+                  href="/signup"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 hover:text-brand-700 transition-colors"
+                >
+                  Créer un compte gratuit pour sauvegarder vos résultats <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
             </div>
           </section>
         </>
       )}
+
+      {/* ── FREE SEO TOOLS SECTION ── */}
+      <section id="outils" className="py-20 border-t border-surface-200 dark:border-surface-800">
+        <div className="text-center mb-12">
+          <span className="section-badge mb-4">Outils gratuits</span>
+          <h2 className="text-3xl sm:text-4xl font-bold text-surface-900 dark:text-white mt-4">
+            Outils SEO gratuits pour booster votre productivité
+          </h2>
+          <p className="text-surface-500 dark:text-surface-400 mt-3 max-w-2xl mx-auto">
+            Automatisez vos tâches, améliorez votre positionnement et générez plus de trafic organique avec nos outils gratuits.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {[
+            {
+              title: 'Audit SEO complet',
+              description: 'Analysez n\'importe quelle URL avec 30+ contrôles techniques, meta, contenu, performance et sécurité.',
+              href: '#', // Already on this page
+              icon: '🔍',
+              badge: 'Populaire',
+            },
+            {
+              title: 'Audit GEO (IA)',
+              description: 'Évaluez la compatibilité de votre site avec les moteurs IA : données structurées, E-E-A-T, citation readiness.',
+              href: '/dashboard/geo-audit',
+              icon: '🌐',
+              badge: 'Nouveau',
+            },
+            {
+              title: 'Score AEO',
+              description: 'Mesurez la préparation de vos pages pour les featured snippets, réponses vocales et People Also Ask.',
+              href: '/dashboard/aeo-score',
+              icon: '⚡',
+              badge: 'Nouveau',
+            },
+            {
+              title: 'Score LLMO',
+              description: 'Testez si ChatGPT, Claude, Gemini et Perplexity recommandent votre marque dans leurs réponses.',
+              href: '/dashboard/llmo-score',
+              icon: '🤖',
+              badge: 'Nouveau',
+            },
+            {
+              title: 'Analyse sémantique',
+              description: 'Analysez la densité de mots-clés, le TF-IDF, la lisibilité et les clusters sémantiques d\'une page.',
+              href: '/dashboard/semantic',
+              icon: '📊',
+            },
+            {
+              title: 'Core Web Vitals',
+              description: 'Mesurez le TTFB, FCP, LCP, CLS et le score de performance d\'une URL en temps réel.',
+              href: '/dashboard/performance',
+              icon: '🚀',
+            },
+            {
+              title: 'Crawleur de site',
+              description: 'Crawlez jusqu\'à 50 pages d\'un site pour détecter les erreurs techniques, liens brisés et problèmes meta.',
+              href: '/dashboard/crawl',
+              icon: '🕷️',
+            },
+            {
+              title: 'Optimisation de contenu',
+              description: 'Obtenez des recommandations SEO et AEO actionnables pour optimiser n\'importe quelle page.',
+              href: '/dashboard/content-optimizer',
+              icon: '✏️',
+            },
+            {
+              title: 'Suivi de mots-clés',
+              description: 'Suivez vos positions Google sur vos mots-clés cibles et analysez les tendances.',
+              href: '/dashboard/keywords',
+              icon: '🎯',
+            },
+            {
+              title: 'Analyse de backlinks',
+              description: 'Visualisez votre profil de backlinks, ratio dofollow/nofollow et domaines référents.',
+              href: '/dashboard/backlinks',
+              icon: '🔗',
+            },
+            {
+              title: 'Visibilité IA',
+              description: 'Interrogez les LLMs pour savoir si et comment ils mentionnent votre marque.',
+              href: '/dashboard/ai-visibility',
+              icon: '✨',
+            },
+            {
+              title: 'Générateur de contenu IA',
+              description: 'Générez des articles, meta descriptions et FAQ optimisés SEO avec l\'IA.',
+              href: '/dashboard/ai-content',
+              icon: '🖊️',
+            },
+          ].map((tool) => (
+            <Link
+              key={tool.title}
+              href={tool.href}
+              className="group relative bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 rounded-xl p-6 hover:border-brand-300 dark:hover:border-brand-700 hover:shadow-md transition-all duration-200"
+            >
+              {tool.badge && (
+                <span className={`absolute top-4 right-4 px-2 py-0.5 rounded-full text-xs font-semibold ${
+                  tool.badge === 'Nouveau' ? 'bg-brand-50 text-brand-600 dark:bg-brand-950 dark:text-brand-400' :
+                  'bg-amber-50 text-amber-600 dark:bg-amber-950 dark:text-amber-400'
+                }`}>
+                  {tool.badge}
+                </span>
+              )}
+              <div className="text-3xl mb-3">{tool.icon}</div>
+              <h3 className="text-base font-bold text-surface-900 dark:text-white mb-2 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                {tool.title}
+              </h3>
+              <p className="text-sm text-surface-500 dark:text-surface-400 leading-relaxed mb-4">
+                {tool.description}
+              </p>
+              <span className="text-sm font-semibold text-brand-600 dark:text-brand-400 flex items-center gap-1 group-hover:gap-2 transition-all">
+                Utiliser l&apos;outil <ArrowRight className="w-4 h-4" />
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
     </main>
   )
 }

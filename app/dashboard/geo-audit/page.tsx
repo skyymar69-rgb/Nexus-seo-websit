@@ -1,11 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { cn, getScoreColor } from '@/lib/utils'
 import {
-  Search,
-  Globe,
-  Loader2,
   ChevronDown,
   CheckCircle,
   AlertTriangle,
@@ -16,8 +13,10 @@ import {
   Quote,
   ShieldCheck,
   Bot,
+  Globe,
 } from 'lucide-react'
 import { useWebsite } from '@/contexts/WebsiteContext'
+import { UrlInput } from '@/components/shared/UrlInput'
 import { usePlan } from '@/hooks/usePlan'
 import { UpgradePrompt } from '@/components/shared/UpgradePrompt'
 
@@ -204,10 +203,17 @@ export default function GeoAuditPage() {
   const { selectedWebsite } = useWebsite()
   const { checkAccess, getRequiredPlan } = usePlan()
 
-  const [url, setUrl] = useState(selectedWebsite?.domain ? `https://${selectedWebsite.domain}` : '')
+  const [url, setUrl] = useState('')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [result, setResult] = useState<GeoResult | null>(null)
   const [error, setError] = useState<string | null>(null)
+
+  // Pre-fill URL from selected website
+  useEffect(() => {
+    if (selectedWebsite?.domain && !url) {
+      setUrl(`https://${selectedWebsite.domain}`)
+    }
+  }, [selectedWebsite])
 
   // Plan gating
   const hasAccess = checkAccess('geoReports')
@@ -229,8 +235,7 @@ export default function GeoAuditPage() {
     )
   }
 
-  async function handleAnalyze(e: React.FormEvent) {
-    e.preventDefault()
+  async function handleAnalyze() {
     if (!url.trim() || isAnalyzing) return
 
     setIsAnalyzing(true)
@@ -273,33 +278,15 @@ export default function GeoAuditPage() {
       </div>
 
       {/* URL input form */}
-      <form onSubmit={handleAnalyze} className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1">
-            <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-surface-400" />
-            <input
-              type="url"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://example.com"
-              required
-              className="w-full pl-10 pr-4 py-3 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800 text-surface-900 dark:text-surface-50 placeholder:text-surface-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={isAnalyzing || !url.trim()}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
-          >
-            {isAnalyzing ? (
-              <Loader2 className="h-5 w-5 animate-spin" />
-            ) : (
-              <Search className="h-5 w-5" />
-            )}
-            Analyser GEO
-          </button>
-        </div>
-      </form>
+      <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6">
+        <UrlInput
+          value={url}
+          onChange={setUrl}
+          onSubmit={handleAnalyze}
+          loading={isAnalyzing}
+          submitLabel="Analyser GEO"
+        />
+      </div>
 
       {/* Error state */}
       {error && (

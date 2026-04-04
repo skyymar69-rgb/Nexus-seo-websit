@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { cn, getScoreColor } from '@/lib/utils'
 import {
   FileSearch,
@@ -8,7 +8,6 @@ import {
   CheckCircle2,
   XCircle,
   Lightbulb,
-  Send,
   Mic,
   MessageSquare,
   LayoutList,
@@ -17,6 +16,7 @@ import {
 import { usePlan } from '@/hooks/usePlan'
 import { UpgradePrompt } from '@/components/shared/UpgradePrompt'
 import { useWebsite } from '@/contexts/WebsiteContext'
+import { UrlInput } from '@/components/shared/UrlInput'
 
 // ---- Types ----
 
@@ -218,6 +218,13 @@ export default function AEOScorePage() {
   const [error, setError] = useState<string | null>(null)
   const [result, setResult] = useState<AEOResult | null>(null)
 
+  // Pre-fill URL from selected website
+  useEffect(() => {
+    if (selectedWebsite?.domain && !url) {
+      setUrl(`https://${selectedWebsite.domain}`)
+    }
+  }, [selectedWebsite])
+
   // Feature gating
   if (!checkAccess('aeoReports')) {
     return (
@@ -258,8 +265,7 @@ export default function AEOScorePage() {
     )
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async () => {
     const targetUrl = url.trim() || `https://${selectedWebsite.domain}`
     if (!targetUrl) return
 
@@ -302,46 +308,13 @@ export default function AEOScorePage() {
 
       {/* URL Input Form */}
       <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1.5">
-              URL a analyser
-            </label>
-            <input
-              type="text"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              placeholder={`https://${selectedWebsite.domain}`}
-              className="w-full px-3 py-2.5 rounded-lg border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800 text-sm outline-none text-surface-900 dark:text-surface-50 placeholder-surface-400 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
-              disabled={isLoading}
-            />
-            <p className="text-xs text-surface-400 mt-1">
-              Laissez vide pour analyser la page d&apos;accueil de {selectedWebsite.domain}
-            </p>
-          </div>
-          <button
-            type="submit"
-            disabled={isLoading}
-            className={cn(
-              'w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm transition-all',
-              isLoading
-                ? 'bg-surface-200 dark:bg-surface-700 text-surface-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-indigo-500 to-indigo-600 text-white hover:shadow-lg hover:from-indigo-600 hover:to-indigo-700'
-            )}
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Analyse en cours...
-              </>
-            ) : (
-              <>
-                <Send className="h-4 w-4" />
-                Analyser AEO
-              </>
-            )}
-          </button>
-        </form>
+        <UrlInput
+          value={url}
+          onChange={setUrl}
+          onSubmit={handleSubmit}
+          loading={isLoading}
+          submitLabel="Analyser AEO"
+        />
       </div>
 
       {/* Error */}

@@ -38,9 +38,9 @@ export default function ContactPage() {
               {/* Info */}
               <div className="lg:col-span-2 space-y-6">
                 {[
-                  { icon: Mail, label: 'Email', value: 'hello@nexus-seo.fr', href: 'mailto:hello@nexus-seo.fr' },
-                  { icon: Phone, label: 'Téléphone', value: '+33 1 23 45 67 89', href: 'tel:+33123456789' },
-                  { icon: MapPin, label: 'Adresse', value: '15 rue de la Paix, 75001 Paris', href: '#' },
+                  { icon: Mail, label: 'Email', value: 'contact@kayzen-lyon.fr', href: 'mailto:contact@kayzen-lyon.fr' },
+                  { icon: Phone, label: 'Téléphone', value: '+33 (0)4 87 77 68 61', href: 'tel:+33487776861' },
+                  { icon: MapPin, label: 'Adresse', value: '6, rue Pierre Termier, 69009 Lyon', href: 'https://maps.google.com/?q=6+rue+Pierre+Termier+69009+Lyon' },
                 ].map(({ icon: Icon, label, value, href }) => (
                   <a key={label} href={href} className="flex items-start gap-4 card p-5 hover:ring-1 hover:ring-brand-500/30 transition-all">
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-violet-600 flex items-center justify-center flex-shrink-0">

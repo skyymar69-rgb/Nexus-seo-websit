@@ -1,21 +1,8 @@
 'use client'
 
-import { useState, useMemo } from 'react'
-import { cn, formatNumber } from '@/lib/utils'
+import { useState, useEffect } from 'react'
+import { useWebsite } from '@/contexts/WebsiteContext'
 import {
-  TrendingUp,
-  TrendingDown,
-  Plus,
-  ChevronUp,
-  ChevronDown,
-  ArrowUpRight,
-  ArrowDownRight,
-  AlertCircle,
-  Users,
-} from 'lucide-react'
-import {
-  BarChart,
-  Bar,
   LineChart,
   Line,
   XAxis,
@@ -24,951 +11,376 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts'
+import {
+  TrendingUp,
+  TrendingDown,
+  Minus,
+  Search,
+  Loader2,
+  AlertCircle,
+  ArrowUp,
+  ArrowDown,
+} from 'lucide-react'
 
-interface Keyword {
+interface KeywordWithTracking {
   id: string
-  keyword: string
+  term: string
+  volume: number | null
+  difficulty: number | null
+  cpc: number | null
+  intent: string | null
+  language: string
+  createdAt: string
+  latestTracking: {
+    position: number | null
+    previousPosition: number | null
+    url: string | null
+    date: string
+  } | null
+}
+
+interface HistoryEntry {
+  date: string
   position: number
-  previousPosition: number
-  bestPosition: number
-  url: string
-  volume: number
-  features: string[]
-  lastUpdated: string
 }
-
-interface Alert {
-  keywordId: string
-  keyword: string
-  change: number
-  type: 'gain' | 'loss'
-}
-
-interface CompetitorData {
-  keyword: string
-  yourPosition: number
-  competitors: {
-    name: string
-    position: number
-  }[]
-}
-
-const mockKeywords: Keyword[] = [
-  {
-    id: '1',
-    keyword: 'agence seo paris',
-    position: 2,
-    previousPosition: 5,
-    bestPosition: 1,
-    url: '/services/seo',
-    volume: 12100,
-    features: ['Featured Snippet'],
-    lastUpdated: '28 mars',
-  },
-  {
-    id: '2',
-    keyword: 'audit seo en ligne',
-    position: 1,
-    previousPosition: 1,
-    bestPosition: 1,
-    url: '/outils/audit',
-    volume: 8200,
-    features: ['Rich Results'],
-    lastUpdated: '28 mars',
-  },
-  {
-    id: '3',
-    keyword: 'analyse backlinks gratuite',
-    position: 8,
-    previousPosition: 6,
-    bestPosition: 4,
-    url: '/outils/backlinks',
-    volume: 6800,
-    features: [],
-    lastUpdated: '28 mars',
-  },
-  {
-    id: '4',
-    keyword: 'suivi classement google',
-    position: 15,
-    previousPosition: 10,
-    bestPosition: 8,
-    url: '/outils/rank-tracker',
-    volume: 5400,
-    features: [],
-    lastUpdated: '27 mars',
-  },
-  {
-    id: '5',
-    keyword: 'referencement naturel france',
-    position: 4,
-    previousPosition: 5,
-    bestPosition: 3,
-    url: '/blog/seo-guide',
-    volume: 18500,
-    features: ['Featured Snippet'],
-    lastUpdated: '28 mars',
-  },
-  {
-    id: '6',
-    keyword: 'recherche mots cles seo',
-    position: 7,
-    previousPosition: 1,
-    bestPosition: 1,
-    url: '/outils/keywords',
-    volume: 9300,
-    features: [],
-    lastUpdated: '28 mars',
-  },
-  {
-    id: '7',
-    keyword: 'checker backlinks site',
-    position: 3,
-    previousPosition: 3,
-    bestPosition: 2,
-    url: '/outils/backlinks/checker',
-    volume: 4200,
-    features: ['Rich Results'],
-    lastUpdated: '27 mars',
-  },
-  {
-    id: '8',
-    keyword: 'keyword research tool',
-    position: 18,
-    previousPosition: 17,
-    bestPosition: 11,
-    url: '/outils/keywords/research',
-    volume: 14800,
-    features: [],
-    lastUpdated: '27 mars',
-  },
-  {
-    id: '9',
-    keyword: 'analyse concurrents seo',
-    position: 9,
-    previousPosition: 6,
-    bestPosition: 5,
-    url: '/outils/competitors',
-    volume: 3900,
-    features: [],
-    lastUpdated: '27 mars',
-  },
-  {
-    id: '10',
-    keyword: 'rapport seo automatique',
-    position: 6,
-    previousPosition: 1,
-    bestPosition: 1,
-    url: '/outils/reports',
-    volume: 2800,
-    features: ['Featured Snippet'],
-    lastUpdated: '26 mars',
-  },
-  {
-    id: '11',
-    keyword: 'optimisation contenu web',
-    position: 12,
-    previousPosition: 11,
-    bestPosition: 9,
-    url: '/blog/content',
-    volume: 6200,
-    features: [],
-    lastUpdated: '28 mars',
-  },
-  {
-    id: '12',
-    keyword: 'analyse serp google',
-    position: 5,
-    previousPosition: 4,
-    bestPosition: 4,
-    url: '/outils/serp',
-    volume: 4500,
-    features: ['Rich Results'],
-    lastUpdated: '28 mars',
-  },
-  {
-    id: '13',
-    keyword: 'outil seo gratuit france',
-    position: 11,
-    previousPosition: 10,
-    bestPosition: 9,
-    url: '/blog/outils-gratuits',
-    volume: 5600,
-    features: [],
-    lastUpdated: '27 mars',
-  },
-  {
-    id: '14',
-    keyword: 'suivi positionnement mots cles',
-    position: 24,
-    previousPosition: 19,
-    bestPosition: 15,
-    url: '/blog/rank-tracking',
-    volume: 3200,
-    features: [],
-    lastUpdated: '26 mars',
-  },
-  {
-    id: '15',
-    keyword: 'strategie seo efficace',
-    position: 13,
-    previousPosition: 12,
-    bestPosition: 10,
-    url: '/blog/strategie-seo',
-    volume: 7800,
-    features: [],
-    lastUpdated: '28 mars',
-  },
-]
-
-const positionHistoryData = [
-  { day: 'Mar 1', avgPosition: 12.4 },
-  { day: 'Mar 5', avgPosition: 11.8 },
-  { day: 'Mar 9', avgPosition: 11.2 },
-  { day: 'Mar 13', avgPosition: 10.6 },
-  { day: 'Mar 17', avgPosition: 10.1 },
-  { day: 'Mar 21', avgPosition: 9.5 },
-  { day: 'Mar 25', avgPosition: 8.9 },
-  { day: 'Mar 28', avgPosition: 8.4 },
-]
-
-const distributionData = [
-  { range: '1-3', count: 47, fill: 'rgb(34, 197, 94)' },
-  { range: '4-10', count: 28, fill: 'rgb(59, 130, 246)' },
-  { range: '11-20', count: 52, fill: 'rgb(251, 191, 36)' },
-  { range: '21-50', count: 89, fill: 'rgb(239, 68, 68)' },
-  { range: '51-100', count: 73, fill: 'rgb(107, 114, 128)' },
-  { range: '100+', count: 155, fill: 'rgb(55, 65, 81)' },
-]
-
-const competitorComparison: CompetitorData[] = [
-  {
-    keyword: 'agence seo paris',
-    yourPosition: 2,
-    competitors: [
-      { name: 'Competitor A', position: 1 },
-      { name: 'Competitor B', position: 3 },
-      { name: 'Competitor C', position: 4 },
-    ],
-  },
-  {
-    keyword: 'audit seo en ligne',
-    yourPosition: 1,
-    competitors: [
-      { name: 'Competitor A', position: 2 },
-      { name: 'Competitor B', position: 4 },
-      { name: 'Competitor C', position: 5 },
-    ],
-  },
-  {
-    keyword: 'analyse backlinks gratuite',
-    yourPosition: 8,
-    competitors: [
-      { name: 'Competitor A', position: 2 },
-      { name: 'Competitor B', position: 5 },
-      { name: 'Competitor C', position: 6 },
-    ],
-  },
-  {
-    keyword: 'referencement naturel france',
-    yourPosition: 4,
-    competitors: [
-      { name: 'Competitor A', position: 1 },
-      { name: 'Competitor B', position: 3 },
-      { name: 'Competitor C', position: 6 },
-    ],
-  },
-  {
-    keyword: 'analyse concurrents seo',
-    yourPosition: 9,
-    competitors: [
-      { name: 'Competitor A', position: 2 },
-      { name: 'Competitor B', position: 4 },
-      { name: 'Competitor C', position: 7 },
-    ],
-  },
-]
-
-type SortField = 'keyword' | 'position' | 'change' | 'volume' | 'best' | 'updated'
-type PositionFilter = 'all' | 'top3' | 'top10' | 'top50'
-type MovementFilter = 'all' | 'gain' | 'loss' | 'stable'
 
 export default function RankTrackerPage() {
-  const [keywords, setKeywords] = useState<Keyword[]>(mockKeywords)
-  const [newKeyword, setNewKeyword] = useState('')
-  const [period, setPeriod] = useState('30j')
-  const [sortBy, setSortBy] = useState<SortField>('position')
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
-  const [searchTerm, setSearchTerm] = useState('')
-  const [positionFilter, setPositionFilter] = useState<PositionFilter>('all')
-  const [movementFilter, setMovementFilter] = useState<MovementFilter>('all')
+  const { selectedWebsite } = useWebsite()
+  const [keywords, setKeywords] = useState<KeywordWithTracking[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [selectedKeywordId, setSelectedKeywordId] = useState<string | null>(null)
+  const [history, setHistory] = useState<HistoryEntry[]>([])
+  const [historyLoading, setHistoryLoading] = useState(false)
 
-  const handleAddKeyword = () => {
-    if (newKeyword.trim()) {
-      const newKw: Keyword = {
-        id: String(keywords.length + 1),
-        keyword: newKeyword.trim(),
-        position: 101,
-        previousPosition: 101,
-        bestPosition: 101,
-        url: '/tracking',
-        volume: 0,
-        features: [],
-        lastUpdated: 'Aujourd\'hui',
-      }
-      setKeywords([...keywords, newKw])
-      setNewKeyword('')
+  useEffect(() => {
+    if (!selectedWebsite) {
+      setKeywords([])
+      setSelectedKeywordId(null)
+      return
     }
-  }
 
-  const getPositionBadgeColor = (position: number) => {
-    if (position >= 1 && position <= 3) return 'bg-emerald-900/40 text-emerald-300'
-    if (position >= 4 && position <= 10) return 'bg-blue-900/40 text-blue-300'
-    if (position >= 11 && position <= 20) return 'bg-amber-900/40 text-amber-300'
-    return 'bg-red-900/40 text-red-300'
-  }
-
-  const getMovement = (current: number, previous: number) => {
-    if (current < previous) return { direction: 'up', change: previous - current }
-    if (current > previous) return { direction: 'down', change: current - previous }
-    return { direction: 'stable', change: 0 }
-  }
-
-  const filteredKeywords = useMemo(() => {
-    return keywords.filter((kw) => {
-      const matchesSearch = searchTerm
-        ? kw.keyword.toLowerCase().includes(searchTerm.toLowerCase())
-        : true
-
-      let matchesPosition = true
-      if (positionFilter === 'top3') matchesPosition = kw.position >= 1 && kw.position <= 3
-      if (positionFilter === 'top10') matchesPosition = kw.position >= 1 && kw.position <= 10
-      if (positionFilter === 'top50') matchesPosition = kw.position >= 1 && kw.position <= 50
-
-      let matchesMovement = true
-      const movement = getMovement(kw.position, kw.previousPosition)
-      if (movementFilter === 'gain') matchesMovement = movement.direction === 'up'
-      if (movementFilter === 'loss') matchesMovement = movement.direction === 'down'
-      if (movementFilter === 'stable') matchesMovement = movement.direction === 'stable'
-
-      return matchesSearch && matchesPosition && matchesMovement
-    })
-  }, [keywords, searchTerm, positionFilter, movementFilter])
-
-  const sortedKeywords = useMemo(() => {
-    const sorted = [...filteredKeywords].sort((a, b) => {
-      let aVal: number | string = 0
-      let bVal: number | string = 0
-
-      if (sortBy === 'keyword') {
-        aVal = a.keyword
-        bVal = b.keyword
-      } else if (sortBy === 'position') {
-        aVal = a.position
-        bVal = b.position
-      } else if (sortBy === 'change') {
-        aVal = Math.abs(a.position - a.previousPosition)
-        bVal = Math.abs(b.position - b.previousPosition)
-      } else if (sortBy === 'volume') {
-        aVal = a.volume
-        bVal = b.volume
-      } else if (sortBy === 'best') {
-        aVal = a.bestPosition
-        bVal = b.bestPosition
-      } else if (sortBy === 'updated') {
-        aVal = a.lastUpdated
-        bVal = b.lastUpdated
-      }
-
-      if (typeof aVal === 'string' && typeof bVal === 'string') {
-        return sortDirection === 'asc'
-          ? aVal.localeCompare(bVal)
-          : bVal.localeCompare(aVal)
-      }
-
-      return sortDirection === 'asc'
-        ? (aVal as number) - (bVal as number)
-        : (bVal as number) - (aVal as number)
-    })
-    return sorted
-  }, [filteredKeywords, sortBy, sortDirection])
-
-  const toggleSort = (field: SortField) => {
-    if (sortBy === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
-    } else {
-      setSortBy(field)
-      setSortDirection('asc')
-    }
-  }
-
-  const getAlerts = (): Alert[] => {
-    return keywords
-      .map((kw) => {
-        const change = kw.previousPosition - kw.position
-        if (Math.abs(change) >= 5) {
-          return {
-            keywordId: kw.id,
-            keyword: kw.keyword,
-            change: Math.abs(change),
-            type: change > 0 ? 'gain' : 'loss',
-          }
+    const fetchKeywords = async () => {
+      setLoading(true)
+      setError(null)
+      try {
+        const res = await fetch(
+          `/api/keywords?websiteId=${selectedWebsite.id}`
+        )
+        if (!res.ok) throw new Error('Erreur lors du chargement des mots-cles')
+        const json = await res.json()
+        setKeywords(json)
+        // Auto-select first keyword
+        if (json.length > 0) {
+          setSelectedKeywordId(json[0].id)
         }
-        return null
-      })
-      .filter((alert) => alert !== null) as Alert[]
-  }
+      } catch (err: any) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
 
-  const alerts = getAlerts()
+    fetchKeywords()
+  }, [selectedWebsite])
 
-  const stats = {
-    totalTracked: keywords.length,
-    top3: keywords.filter((k) => k.position >= 1 && k.position <= 3).length,
-    top10: keywords.filter((k) => k.position >= 1 && k.position <= 10).length,
-    avgPosition:
-      (keywords.reduce((sum, k) => sum + k.position, 0) / keywords.length).toFixed(1),
-  }
+  // Fetch history for selected keyword
+  useEffect(() => {
+    if (!selectedKeywordId || !selectedWebsite) {
+      setHistory([])
+      return
+    }
 
-  const getSortIndicator = (field: SortField) => {
-    if (sortBy !== field) return null
-    return sortDirection === 'asc' ? (
-      <ChevronUp className="h-3 w-3" />
-    ) : (
-      <ChevronDown className="h-3 w-3" />
+    const fetchHistory = async () => {
+      setHistoryLoading(true)
+      try {
+        const res = await fetch(
+          `/api/keywords?websiteId=${selectedWebsite.id}`
+        )
+        if (!res.ok) return
+        // We already have the latest position from the main fetch.
+        // For full history we query all tracking entries for this keyword via
+        // a dedicated endpoint. Since there is no dedicated history endpoint yet,
+        // we build a minimal history from the data we have.
+        const kw = keywords.find((k) => k.id === selectedKeywordId)
+        if (kw?.latestTracking?.position != null) {
+          const entries: HistoryEntry[] = []
+          // Show the latest tracking point we have
+          entries.push({
+            date: kw.latestTracking.date
+              ? new Date(kw.latestTracking.date).toLocaleDateString('fr-FR', {
+                  day: 'numeric',
+                  month: 'short',
+                })
+              : 'Maintenant',
+            position: kw.latestTracking.position,
+          })
+          // If we have a previous position, show it as an earlier point
+          if (kw.latestTracking.previousPosition != null) {
+            entries.unshift({
+              date: 'Precedent',
+              position: kw.latestTracking.previousPosition,
+            })
+          }
+          setHistory(entries)
+        } else {
+          setHistory([])
+        }
+      } catch {
+        setHistory([])
+      } finally {
+        setHistoryLoading(false)
+      }
+    }
+
+    fetchHistory()
+  }, [selectedKeywordId, selectedWebsite, keywords])
+
+  // No website selected
+  if (!selectedWebsite) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="text-center">
+          <Search className="mx-auto h-12 w-12 text-gray-300" />
+          <h2 className="mt-4 text-lg font-semibold text-gray-900">
+            Aucun site selectionne
+          </h2>
+          <p className="mt-1 text-sm text-gray-500">
+            Selectionnez un site web pour suivre vos positions.
+          </p>
+        </div>
+      </div>
     )
   }
 
-  return (
-    <div className="space-y-8 pb-12">
-      {/* Header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 rounded-lg bg-brand-500/15">
-              <TrendingUp className="h-6 w-6 text-brand-400" />
-            </div>
-            <h1 className="text-4xl font-bold tracking-tight">
-              Suivi de Positionnement
-            </h1>
-          </div>
-          <p className="text-surface-400 mt-1 max-w-xl">
-            Suivez vos positions quotidiennement sur Google
-          </p>
-        </div>
-        <div className="flex gap-3">
-          <div className="flex gap-2 bg-surface-900/50 border border-surface-700 rounded-lg p-1">
-            {['7j', '30j', '90j'].map((p) => (
-              <button
-                key={p}
-                onClick={() => setPeriod(p)}
-                className={cn(
-                  'px-3 py-2 rounded-md text-sm font-medium transition-all',
-                  period === p
-                    ? 'bg-brand-500 text-white'
-                    : 'text-surface-400 hover:text-surface-300'
-                )}
-              >
-                {p}
-              </button>
-            ))}
-          </div>
+  // Loading
+  if (loading) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <span className="ml-3 text-gray-600">
+          Chargement des mots-cles...
+        </span>
+      </div>
+    )
+  }
+
+  // Error
+  if (error) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="text-center">
+          <AlertCircle className="mx-auto h-12 w-12 text-red-400" />
+          <h2 className="mt-4 text-lg font-semibold text-gray-900">Erreur</h2>
+          <p className="mt-1 text-sm text-gray-500">{error}</p>
         </div>
       </div>
+    )
+  }
 
-      {/* Add Keyword Input */}
-      <div className="rounded-xl border border-surface-700 bg-surface-900/50 backdrop-blur p-6 shadow-sm">
-        <h2 className="text-lg font-bold text-surface-100 mb-4">Ajouter des mots-cles</h2>
-        <div className="flex gap-3">
-          <input
-            type="text"
-            placeholder="Entrez un mot-cle a tracker..."
-            value={newKeyword}
-            onChange={(e) => setNewKeyword(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleAddKeyword()}
-            className="flex-1 bg-surface-900 border border-surface-700 rounded-lg px-4 py-3 text-surface-100 placeholder:text-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none transition-all"
-          />
-          <button
-            onClick={handleAddKeyword}
-            className="px-6 py-3 rounded-lg bg-brand-500 text-white hover:bg-brand-600 transition-colors font-medium flex items-center gap-2 whitespace-nowrap"
-          >
-            <Plus className="h-4 w-4" />
-            Ajouter
-          </button>
-        </div>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-4 gap-4">
-        <div className="rounded-lg border border-surface-700 bg-surface-900/50 p-5 backdrop-blur shadow-sm">
-          <p className="text-sm text-surface-400 mb-2 font-medium">Mots-cles suivis</p>
-          <div className="flex items-baseline gap-2">
-            <p className="text-3xl font-bold text-surface-100">{stats.totalTracked}</p>
-            <TrendingUp className="h-4 w-4 text-emerald-400" />
-          </div>
-          <p className="text-xs text-surface-500 mt-2">En suivi actif</p>
-        </div>
-
-        <div className="rounded-lg border border-surface-700 bg-surface-900/50 p-5 backdrop-blur shadow-sm">
-          <p className="text-sm text-surface-400 mb-2 font-medium">Top 3</p>
-          <div className="flex items-baseline gap-2">
-            <p className="text-3xl font-bold text-surface-100">{stats.top3}</p>
-            <TrendingUp className="h-4 w-4 text-emerald-400" />
-          </div>
-          <p className="text-xs text-surface-500 mt-2">Au top 3</p>
-        </div>
-
-        <div className="rounded-lg border border-surface-700 bg-surface-900/50 p-5 backdrop-blur shadow-sm">
-          <p className="text-sm text-surface-400 mb-2 font-medium">Top 10</p>
-          <div className="flex items-baseline gap-2">
-            <p className="text-3xl font-bold text-surface-100">{stats.top10}</p>
-            <TrendingUp className="h-4 w-4 text-emerald-400" />
-          </div>
-          <p className="text-xs text-surface-500 mt-2">Dans le top 10</p>
-        </div>
-
-        <div className="rounded-lg border border-surface-700 bg-surface-900/50 p-5 backdrop-blur shadow-sm">
-          <p className="text-sm text-surface-400 mb-2 font-medium">Position moyenne</p>
-          <div className="flex items-baseline gap-2">
-            <p className="text-3xl font-bold text-surface-100">{stats.avgPosition}</p>
-            <TrendingDown className="h-4 w-4 text-emerald-400" />
-          </div>
-          <p className="text-xs text-surface-500 mt-2">Plus bas = mieux</p>
-        </div>
-      </div>
-
-      {/* Position Distribution Chart */}
-      <div className="rounded-xl border border-surface-700 bg-surface-900/50 backdrop-blur p-6 shadow-sm">
-        <h2 className="text-lg font-bold text-surface-100 mb-6">
-          Distribution des positions
-        </h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={distributionData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgb(71, 85, 105)" />
-            <XAxis
-              dataKey="range"
-              stroke="rgb(107, 114, 128)"
-              style={{ fontSize: '12px' }}
-            />
-            <YAxis stroke="rgb(107, 114, 128)" style={{ fontSize: '12px' }} />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: 'rgb(17, 24, 39)',
-                border: '1px solid rgb(55, 65, 81)',
-                borderRadius: '8px',
-              }}
-              labelStyle={{ color: 'rgb(229, 231, 235)' }}
-              formatter={(value) => [value, 'Mots-cles']}
-            />
-            <Bar dataKey="count" fill="rgb(99, 102, 241)" radius={[8, 8, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* Position History Chart */}
-      <div className="rounded-xl border border-surface-700 bg-surface-900/50 backdrop-blur p-6 shadow-sm">
-        <h2 className="text-lg font-bold text-surface-100 mb-6">
-          Historique de position (30 jours)
-        </h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={positionHistoryData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgb(71, 85, 105)" />
-            <XAxis
-              dataKey="day"
-              stroke="rgb(107, 114, 128)"
-              style={{ fontSize: '12px' }}
-            />
-            <YAxis
-              stroke="rgb(107, 114, 128)"
-              style={{ fontSize: '12px' }}
-              reversed
-            />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: 'rgb(17, 24, 39)',
-                border: '1px solid rgb(55, 65, 81)',
-                borderRadius: '8px',
-              }}
-              labelStyle={{ color: 'rgb(229, 231, 235)' }}
-              formatter={(value) => [Number(value).toFixed(1), 'Position moyenne']}
-            />
-            <Line
-              type="monotone"
-              dataKey="avgPosition"
-              stroke="rgb(34, 197, 94)"
-              strokeWidth={2}
-              dot={false}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* Alerts Section */}
-      {alerts.length > 0 && (
-        <div className="rounded-xl border border-surface-700 bg-surface-900/50 backdrop-blur p-6 shadow-sm">
-          <div className="flex items-center gap-3 mb-4">
-            <AlertCircle className="h-5 w-5 text-amber-400" />
-            <h2 className="text-lg font-bold text-surface-100">
-              Alertes de positionnement
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {alerts.slice(0, 6).map((alert) => (
-              <div
-                key={alert.keywordId}
-                className={cn(
-                  'p-3 rounded-lg border flex items-center justify-between',
-                  alert.type === 'gain'
-                    ? 'bg-emerald-900/20 border-emerald-800 text-emerald-300'
-                    : 'bg-red-900/20 border-red-800 text-red-300'
-                )}
-              >
-                <span className="font-medium text-sm">{alert.keyword}</span>
-                <div className="flex items-center gap-2">
-                  {alert.type === 'gain' ? (
-                    <ArrowUpRight className="h-4 w-4" />
-                  ) : (
-                    <ArrowDownRight className="h-4 w-4" />
-                  )}
-                  <span className="font-bold">+{alert.change}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Competitor Comparison */}
-      <div className="rounded-xl border border-surface-700 bg-surface-900/50 backdrop-blur p-6 shadow-sm">
-        <div className="flex items-center gap-3 mb-6">
-          <Users className="h-5 w-5 text-brand-400" />
-          <h2 className="text-lg font-bold text-surface-100">
-            Comparaison avec concurrents (Top 5)
+  // Empty state
+  if (keywords.length === 0) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="text-center">
+          <Search className="mx-auto h-12 w-12 text-gray-300" />
+          <h2 className="mt-4 text-lg font-semibold text-gray-900">
+            Aucun mot-cle suivi
           </h2>
-        </div>
-        <div className="space-y-4">
-          {competitorComparison.map((comp) => (
-            <div
-              key={comp.keyword}
-              className="p-4 rounded-lg border border-surface-700 bg-surface-800/20"
-            >
-              <p className="text-sm font-semibold text-surface-100 mb-3">
-                {comp.keyword}
-              </p>
-              <div className="grid grid-cols-4 gap-2">
-                <div className="p-2 rounded bg-brand-900/30 border border-brand-700">
-                  <p className="text-xs text-surface-400 mb-1">Votre position</p>
-                  <p className="text-lg font-bold text-brand-300">#{comp.yourPosition}</p>
-                </div>
-                {comp.competitors.map((competitor, idx) => (
-                  <div
-                    key={idx}
-                    className="p-2 rounded bg-surface-700/30 border border-surface-600"
-                  >
-                    <p className="text-xs text-surface-400 mb-1 truncate">
-                      {competitor.name}
-                    </p>
-                    <p className="text-lg font-bold text-surface-300">
-                      #{competitor.position}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
+          <p className="mt-1 max-w-md text-sm text-gray-500">
+            Ajoutez des mots-cles dans la section Mots-cles pour commencer le
+            suivi.
+          </p>
         </div>
       </div>
+    )
+  }
 
-      {/* Keywords Table */}
-      <div className="rounded-xl border border-surface-700 bg-surface-900/50 backdrop-blur overflow-hidden shadow-sm">
-        <div className="p-6 border-b border-surface-700 space-y-4">
-          <div>
-            <h2 className="text-lg font-bold text-surface-100 mb-4">
-              Suivi des mots-cles
+  const selectedKeyword = keywords.find((k) => k.id === selectedKeywordId)
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="border-b border-gray-200 bg-white px-8 py-6">
+        <h1 className="text-2xl font-bold text-gray-900">
+          Suivi des positions
+        </h1>
+        <p className="mt-1 text-sm text-gray-500">
+          Suivez le classement de vos mots-cles pour{' '}
+          <span className="font-medium text-gray-700">
+            {selectedWebsite.domain}
+          </span>
+        </p>
+      </div>
+
+      <div className="p-8">
+        {/* Position history chart */}
+        {selectedKeyword && history.length > 0 && (
+          <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+            <h2 className="mb-4 text-base font-semibold text-gray-900">
+              Historique de position :{' '}
+              <span className="text-blue-600">{selectedKeyword.term}</span>
             </h2>
-            <input
-              type="text"
-              placeholder="Rechercher un mot-cle..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-surface-900 border border-surface-700 rounded-lg px-4 py-2 text-surface-100 placeholder:text-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none transition-all text-sm"
-            />
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            <div className="flex gap-2">
-              <button
-                onClick={() => setPositionFilter('all')}
-                className={cn(
-                  'px-3 py-1.5 rounded-lg text-sm font-medium transition-all',
-                  positionFilter === 'all'
-                    ? 'bg-brand-500 text-white'
-                    : 'bg-surface-800 text-surface-400 hover:text-surface-300'
-                )}
-              >
-                Tous
-              </button>
-              <button
-                onClick={() => setPositionFilter('top3')}
-                className={cn(
-                  'px-3 py-1.5 rounded-lg text-sm font-medium transition-all',
-                  positionFilter === 'top3'
-                    ? 'bg-brand-500 text-white'
-                    : 'bg-surface-800 text-surface-400 hover:text-surface-300'
-                )}
-              >
-                Top 3
-              </button>
-              <button
-                onClick={() => setPositionFilter('top10')}
-                className={cn(
-                  'px-3 py-1.5 rounded-lg text-sm font-medium transition-all',
-                  positionFilter === 'top10'
-                    ? 'bg-brand-500 text-white'
-                    : 'bg-surface-800 text-surface-400 hover:text-surface-300'
-                )}
-              >
-                Top 10
-              </button>
-              <button
-                onClick={() => setPositionFilter('top50')}
-                className={cn(
-                  'px-3 py-1.5 rounded-lg text-sm font-medium transition-all',
-                  positionFilter === 'top50'
-                    ? 'bg-brand-500 text-white'
-                    : 'bg-surface-800 text-surface-400 hover:text-surface-300'
-                )}
-              >
-                Top 50
-              </button>
-            </div>
-
-            <div className="flex gap-2">
-              <button
-                onClick={() => setMovementFilter('all')}
-                className={cn(
-                  'px-3 py-1.5 rounded-lg text-sm font-medium transition-all',
-                  movementFilter === 'all'
-                    ? 'bg-brand-500 text-white'
-                    : 'bg-surface-800 text-surface-400 hover:text-surface-300'
-                )}
-              >
-                Tous mouvements
-              </button>
-              <button
-                onClick={() => setMovementFilter('gain')}
-                className={cn(
-                  'px-3 py-1.5 rounded-lg text-sm font-medium transition-all',
-                  movementFilter === 'gain'
-                    ? 'bg-emerald-600 text-white'
-                    : 'bg-surface-800 text-surface-400 hover:text-surface-300'
-                )}
-              >
-                Gains
-              </button>
-              <button
-                onClick={() => setMovementFilter('loss')}
-                className={cn(
-                  'px-3 py-1.5 rounded-lg text-sm font-medium transition-all',
-                  movementFilter === 'loss'
-                    ? 'bg-red-600 text-white'
-                    : 'bg-surface-800 text-surface-400 hover:text-surface-300'
-                )}
-              >
-                Pertes
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-surface-700 bg-surface-800/30">
-                <th
-                  className="px-6 py-4 text-left text-xs font-semibold text-surface-400 uppercase tracking-wide cursor-pointer hover:text-surface-300 transition-colors"
-                  onClick={() => toggleSort('keyword')}
-                >
-                  <div className="flex items-center gap-2">
-                    Mot-cle
-                    {getSortIndicator('keyword') && (
-                      <span className="text-brand-400">{getSortIndicator('keyword')}</span>
-                    )}
-                  </div>
-                </th>
-                <th
-                  className="px-6 py-4 text-left text-xs font-semibold text-surface-400 uppercase tracking-wide cursor-pointer hover:text-surface-300 transition-colors"
-                  onClick={() => toggleSort('position')}
-                >
-                  <div className="flex items-center gap-2">
-                    Position
-                    {getSortIndicator('position') && (
-                      <span className="text-brand-400">{getSortIndicator('position')}</span>
-                    )}
-                  </div>
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-surface-400 uppercase tracking-wide">
-                  Precedente
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-surface-400 uppercase tracking-wide">
-                  Changement
-                </th>
-                <th
-                  className="px-6 py-4 text-left text-xs font-semibold text-surface-400 uppercase tracking-wide cursor-pointer hover:text-surface-300 transition-colors"
-                  onClick={() => toggleSort('best')}
-                >
-                  <div className="flex items-center gap-2">
-                    Meilleure
-                    {getSortIndicator('best') && (
-                      <span className="text-brand-400">{getSortIndicator('best')}</span>
-                    )}
-                  </div>
-                </th>
-                <th
-                  className="px-6 py-4 text-left text-xs font-semibold text-surface-400 uppercase tracking-wide cursor-pointer hover:text-surface-300 transition-colors"
-                  onClick={() => toggleSort('volume')}
-                >
-                  <div className="flex items-center gap-2">
-                    Volume
-                    {getSortIndicator('volume') && (
-                      <span className="text-brand-400">{getSortIndicator('volume')}</span>
-                    )}
-                  </div>
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-surface-400 uppercase tracking-wide">
-                  URL
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-surface-400 uppercase tracking-wide">
-                  Features SERP
-                </th>
-                <th
-                  className="px-6 py-4 text-left text-xs font-semibold text-surface-400 uppercase tracking-wide cursor-pointer hover:text-surface-300 transition-colors"
-                  onClick={() => toggleSort('updated')}
-                >
-                  <div className="flex items-center gap-2">
-                    Maj.
-                    {getSortIndicator('updated') && (
-                      <span className="text-brand-400">{getSortIndicator('updated')}</span>
-                    )}
-                  </div>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedKeywords.map((kw) => {
-                const movement = getMovement(kw.position, kw.previousPosition)
-                return (
-                  <tr
-                    key={kw.id}
-                    className="border-b border-surface-800 hover:bg-surface-800/30 transition-colors"
-                  >
-                    <td className="px-6 py-4">
-                      <a
-                        href="#"
-                        className="font-semibold text-surface-100 hover:text-brand-400 transition-colors"
-                      >
-                        {kw.keyword}
-                      </a>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={cn(
-                          'inline-block px-3 py-1 rounded-full text-xs font-semibold',
-                          getPositionBadgeColor(kw.position)
-                        )}
-                      >
-                        #{kw.position}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-surface-400 font-medium">
-                      #{kw.previousPosition}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div
-                        className={cn(
-                          'flex items-center gap-1.5 font-semibold',
-                          movement.direction === 'up'
-                            ? 'text-emerald-400'
-                            : movement.direction === 'down'
-                              ? 'text-red-400'
-                              : 'text-surface-400'
-                        )}
-                      >
-                        {movement.direction === 'up' ? (
-                          <ArrowUpRight className="h-4 w-4" />
-                        ) : movement.direction === 'down' ? (
-                          <ArrowDownRight className="h-4 w-4" />
-                        ) : (
-                          <span className="text-lg">-</span>
-                        )}
-                        {movement.change > 0 ? `+${movement.change}` : '0'}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-surface-400 font-medium">
-                      #{kw.bestPosition}
-                    </td>
-                    <td className="px-6 py-4 font-medium text-surface-300">
-                      {formatNumber(kw.volume)}
-                    </td>
-                    <td className="px-6 py-4 text-surface-400 truncate max-w-xs">
-                      {kw.url}
-                    </td>
-                    <td className="px-6 py-4">
-                      {kw.features.length > 0 ? (
-                        <div className="flex flex-wrap gap-1">
-                          {kw.features.map((feature) => (
-                            <span
-                              key={feature}
-                              className="inline-block px-2 py-1 rounded text-xs bg-brand-900/30 text-brand-300"
-                            >
-                              {feature}
-                            </span>
-                          ))}
-                        </div>
-                      ) : (
-                        <span className="text-surface-500">-</span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-surface-500 text-xs">
-                      {kw.lastUpdated}
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination */}
-        <div className="px-6 py-4 border-t border-surface-700 bg-surface-800/20 flex items-center justify-between text-sm">
-          <p className="text-surface-400">
-            Affichage{' '}
-            <span className="font-semibold text-surface-300">
-              1-{Math.min(15, sortedKeywords.length)}
-            </span>{' '}
-            sur{' '}
-            <span className="font-semibold text-surface-300">
-              {sortedKeywords.length}
-            </span>{' '}
-            resultats
-          </p>
-          <div className="flex gap-2">
-            <button className="px-3 py-1.5 rounded-lg border border-surface-700 bg-surface-900 hover:bg-surface-800 transition-colors text-surface-400">
-              Precedent
-            </button>
-            <button className="px-3 py-1.5 rounded-lg bg-brand-500 text-white hover:bg-brand-600 transition-colors">
-              1
-            </button>
-            {Math.ceil(sortedKeywords.length / 15) > 1 && (
-              <button className="px-3 py-1.5 rounded-lg border border-surface-700 bg-surface-900 hover:bg-surface-800 transition-colors text-surface-400">
-                2
-              </button>
+            {historyLoading ? (
+              <div className="flex items-center justify-center py-10">
+                <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height={220}>
+                <LineChart data={history}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="#9ca3af" />
+                  <YAxis reversed domain={['dataMin - 1', 'dataMax + 1']} tick={{ fontSize: 12 }} stroke="#9ca3af" />
+                  <Tooltip />
+                  <Line
+                    type="monotone"
+                    dataKey="position"
+                    stroke="#3b82f6"
+                    strokeWidth={2}
+                    dot={{ r: 4, fill: '#3b82f6' }}
+                    name="Position"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
             )}
-            <button className="px-3 py-1.5 rounded-lg border border-surface-700 bg-surface-900 hover:bg-surface-800 transition-colors text-surface-400">
-              Suivant
-            </button>
+          </div>
+        )}
+
+        {/* Keywords table */}
+        <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
+          <div className="border-b border-gray-100 px-6 py-4">
+            <h2 className="text-base font-semibold text-gray-900">
+              {keywords.length} mot{keywords.length > 1 ? 's' : ''}-cle
+              {keywords.length > 1 ? 's' : ''} suivi
+              {keywords.length > 1 ? 's' : ''}
+            </h2>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-gray-100 bg-gray-50">
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600">
+                    Mot-cle
+                  </th>
+                  <th className="px-6 py-3 text-center text-xs font-semibold text-gray-600">
+                    Position
+                  </th>
+                  <th className="px-6 py-3 text-center text-xs font-semibold text-gray-600">
+                    Precedente
+                  </th>
+                  <th className="px-6 py-3 text-center text-xs font-semibold text-gray-600">
+                    Variation
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600">
+                    Volume
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600">
+                    Difficulte
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {keywords.map((kw) => {
+                  const pos = kw.latestTracking?.position
+                  const prev = kw.latestTracking?.previousPosition
+                  const change =
+                    pos != null && prev != null ? prev - pos : null
+                  const isSelected = kw.id === selectedKeywordId
+
+                  return (
+                    <tr
+                      key={kw.id}
+                      onClick={() => setSelectedKeywordId(kw.id)}
+                      className={`cursor-pointer border-b border-gray-50 transition-colors ${
+                        isSelected
+                          ? 'bg-blue-50'
+                          : 'hover:bg-gray-50'
+                      }`}
+                    >
+                      <td className="px-6 py-3.5">
+                        <span className="text-sm font-medium text-gray-900">
+                          {kw.term}
+                        </span>
+                      </td>
+                      <td className="px-6 py-3.5 text-center">
+                        {pos != null ? (
+                          <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-sm font-bold text-gray-900">
+                            #{pos}
+                          </span>
+                        ) : (
+                          <span className="text-sm text-gray-400">-</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-3.5 text-center text-sm text-gray-500">
+                        {prev != null ? `#${prev}` : '-'}
+                      </td>
+                      <td className="px-6 py-3.5 text-center">
+                        <ChangeIndicator change={change} />
+                      </td>
+                      <td className="px-6 py-3.5 text-right text-sm text-gray-600">
+                        {kw.volume != null
+                          ? kw.volume.toLocaleString('fr-FR')
+                          : '-'}
+                      </td>
+                      <td className="px-6 py-3.5 text-right">
+                        {kw.difficulty != null ? (
+                          <DifficultyBadge value={kw.difficulty} />
+                        ) : (
+                          <span className="text-sm text-gray-400">-</span>
+                        )}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
+  )
+}
+
+function ChangeIndicator({ change }: { change: number | null }) {
+  if (change == null) {
+    return <span className="text-sm text-gray-400">-</span>
+  }
+
+  if (change > 0) {
+    return (
+      <span className="inline-flex items-center gap-0.5 text-sm font-medium text-green-600">
+        <ArrowUp className="h-3.5 w-3.5" />+{change}
+      </span>
+    )
+  }
+
+  if (change < 0) {
+    return (
+      <span className="inline-flex items-center gap-0.5 text-sm font-medium text-red-600">
+        <ArrowDown className="h-3.5 w-3.5" />
+        {change}
+      </span>
+    )
+  }
+
+  return (
+    <span className="inline-flex items-center gap-0.5 text-sm text-gray-500">
+      <Minus className="h-3.5 w-3.5" />
+      stable
+    </span>
+  )
+}
+
+function DifficultyBadge({ value }: { value: number }) {
+  let color = 'bg-green-100 text-green-700'
+  if (value >= 70) color = 'bg-red-100 text-red-700'
+  else if (value >= 40) color = 'bg-yellow-100 text-yellow-700'
+
+  return (
+    <span
+      className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${color}`}
+    >
+      {value}
+    </span>
   )
 }

@@ -124,7 +124,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-surface-400">
-            © {currentYear} Nexus SEO. Tous droits réservés. Fait avec ♥ en France.
+            © {currentYear} Nexus SEO — un service de <a href="https://kayzen-lyon.fr" className="text-brand-500 hover:underline">Kayzen Lyon</a>. Tous droits réservés.
           </p>
           <div className="flex items-center gap-1.5">
             {[

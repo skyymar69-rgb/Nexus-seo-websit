@@ -14,6 +14,7 @@ const navItems = [
     { label: 'SEO Technique',            href: '/services#technical' },
     { label: 'Analytics & Rapports',     href: '/services#analytics' },
   ]},
+  { label: 'Outils gratuits', href: '/audit-gratuit#outils' },
   { label: 'Cas clients', href: '/cases' },
   { label: 'Tarifs',      href: '#pricing' },
   { label: 'Blog',        href: '/blog' },
@@ -39,7 +40,7 @@ export function Header() {
       className={cn(
         'fixed top-0 inset-x-0 z-50 transition-all duration-300',
         scrolled
-          ? 'bg-white/80 dark:bg-surface-950/80 backdrop-blur-xl border-b border-surface-200/60 dark:border-surface-800/60 shadow-sm'
+          ? 'bg-white dark:bg-surface-950 border-b border-surface-200 dark:border-surface-800 shadow-sm'
           : 'bg-transparent border-b border-transparent'
       )}
     >
@@ -48,11 +49,14 @@ export function Header() {
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group shrink-0">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-brand-500 to-violet-600 flex items-center justify-center shadow-brand/50 shadow-lg">
+            <div className="w-8 h-8 rounded-xl bg-brand-600 flex items-center justify-center">
               <Zap className="w-4 h-4 text-white fill-white" />
             </div>
-            <span className="text-lg font-bold tracking-tight text-surface-900 dark:text-white">
-              NEXUS<span className="gradient-text">.</span>
+            <span className={cn(
+              'text-lg font-bold tracking-tight transition-colors',
+              scrolled ? 'text-surface-900 dark:text-white' : 'text-white'
+            )}>
+              NEXUS<span className="text-gold-400">.</span>
             </span>
           </Link>
 
@@ -64,7 +68,12 @@ export function Header() {
                   <button
                     onMouseEnter={() => setDropdown(item.label)}
                     onMouseLeave={() => setDropdown(null)}
-                    className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-white rounded-lg hover:bg-surface-100 dark:hover:bg-surface-800/60 transition-all"
+                    className={cn(
+                      'flex items-center gap-1 px-4 py-2 text-sm font-medium rounded-lg transition-all',
+                      scrolled
+                        ? 'text-surface-600 hover:text-surface-900 hover:bg-surface-100'
+                        : 'text-white/80 hover:text-white hover:bg-white/10'
+                    )}
                   >
                     {item.label}
                     <ChevronDown className={cn('w-4 h-4 transition-transform', dropdown === item.label && 'rotate-180')} />
@@ -72,7 +81,12 @@ export function Header() {
                 ) : (
                   <Link
                     href={item.href}
-                    className="px-4 py-2 text-sm font-medium text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-white rounded-lg hover:bg-surface-100 dark:hover:bg-surface-800/60 transition-all block"
+                    className={cn(
+                      'px-4 py-2 text-sm font-medium rounded-lg transition-all block',
+                      scrolled
+                        ? 'text-surface-600 hover:text-surface-900 hover:bg-surface-100'
+                        : 'text-white/80 hover:text-white hover:bg-white/10'
+                    )}
                   >
                     {item.label}
                   </Link>
@@ -125,7 +139,7 @@ export function Header() {
               </Link>
               <Link
                 href="/signup"
-                className="px-5 py-2 text-sm font-semibold text-white rounded-xl bg-gradient-to-r from-brand-600 to-violet-600 hover:from-brand-500 hover:to-violet-500 shadow-brand hover:shadow-brand-lg transition-all duration-200"
+                className="btn-primary px-5 py-2 text-sm rounded-xl"
               >
                 Démarrer gratuitement
               </Link>
@@ -174,7 +188,7 @@ export function Header() {
             <Link href="/login" className="flex-1 text-center py-2.5 text-sm font-medium text-surface-700 dark:text-surface-300 border border-surface-200 dark:border-surface-700 rounded-xl hover:bg-surface-50 dark:hover:bg-surface-800 transition-all">
               Connexion
             </Link>
-            <Link href="/signup" className="flex-1 text-center py-2.5 text-sm font-semibold text-white rounded-xl bg-gradient-to-r from-brand-600 to-violet-600">
+            <Link href="/signup" className="flex-1 text-center py-2.5 text-sm font-semibold text-white rounded-xl bg-brand-600 hover:bg-brand-700 transition-colors">
               Démarrer
             </Link>
           </div>

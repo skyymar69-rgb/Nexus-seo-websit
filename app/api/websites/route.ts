@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { checkPlanLimit } from '@/lib/plan-guard'
+import { ensureUserExists } from '@/lib/ensure-user'
 
 export async function GET(request: NextRequest) {
   try {
@@ -54,6 +55,9 @@ export async function POST(request: NextRequest) {
     }
 
     const userId = (session.user as any).id
+
+    // Ensure user exists in DB (demo user is hardcoded in auth)
+    await ensureUserExists(userId, session)
 
     // Check plan limit for number of sites
     const planCheck = await checkPlanLimit(userId, 'sitesMax', (session.user as any).plan)

@@ -1,7 +1,8 @@
 'use client'
 
 import { useSession } from 'next-auth/react'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { cn, formatNumber } from '@/lib/utils'
 import { useWebsite } from '@/contexts/WebsiteContext'
 import { useDashboardData, type DashboardAudit, type DashboardNotification } from '@/hooks/useDashboardData'
@@ -587,9 +588,17 @@ function EmptyStateCard({
 
 export default function DashboardPage() {
   const { data: session } = useSession()
-  const { selectedWebsite } = useWebsite()
+  const { selectedWebsite, websites } = useWebsite()
   const { data: stats, isLoading, error, refetch } = useDashboardData(selectedWebsite?.id)
   const [dateRange, setDateRange] = useState('30')
+  const router = useRouter()
+
+  // Redirect to onboarding if no websites configured
+  useEffect(() => {
+    if (!isLoading && websites && websites.length === 0) {
+      router.push('/dashboard/onboarding')
+    }
+  }, [isLoading, websites, router])
 
   const checklistItems = useMemo(() => generateChecklistItems(), [])
   const toolCategories = useMemo(() => generateToolsByCategory(), [])

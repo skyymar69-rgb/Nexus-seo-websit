@@ -102,8 +102,51 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async signIn({ user, account }) {
+      // Persist OAuth users to DB on first sign-in
+      if (account?.provider === 'google' || account?.provider === 'github') {
+        try {
+          const { prisma } = await import('@/lib/prisma')
+          await prisma.user.upsert({
+            where: { email: user.email! },
+            update: {
+              name: user.name,
+              image: user.image,
+            },
+            create: {
+              email: user.email!,
+              name: user.name,
+              image: user.image,
+              plan: 'free',
+              role: 'user',
+            },
+          })
+        } catch {
+          // DB error — still allow sign-in
+        }
+      }
+      return true
+    },
+    async jwt({ token, user, account }) {
       if (user) {
+        // For OAuth users, get the DB user ID
+        if (account?.provider === 'google' || account?.provider === 'github') {
+          try {
+            const { prisma } = await import('@/lib/prisma')
+            const dbUser = await prisma.user.findUnique({
+              where: { email: user.email! },
+              select: { id: true, plan: true, role: true },
+            })
+            if (dbUser) {
+              token.id = dbUser.id
+              token.plan = dbUser.plan
+              token.role = dbUser.role
+              return token
+            }
+          } catch {
+            // Fallback
+          }
+        }
         token.id = user.id
         token.plan = (user as any).plan ?? 'free'
         token.role = (user as any).role ?? 'user'
@@ -113,8 +156,8 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string
-        session.user.plan = token.plan as string
-        session.user.role = token.role as string
+        session.user.plan = (token.plan as string) || 'free'
+        session.user.role = (token.role as string) || 'user'
       }
       return session
     },

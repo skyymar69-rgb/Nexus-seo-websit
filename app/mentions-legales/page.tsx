@@ -44,9 +44,9 @@ export default function MentionsLegalesPage() {
               <div>
                 <h2 className="text-xl font-bold text-surface-900 dark:text-white mb-4">3. Hébergement</h2>
                 <div className="card p-6 space-y-2 text-sm">
-                  <p><strong className="text-surface-900 dark:text-white">Hébergeur principal :</strong> Railway Corp.</p>
-                  <p><strong className="text-surface-900 dark:text-white">Adresse :</strong> 340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis</p>
-                  <p><strong className="text-surface-900 dark:text-white">Site :</strong> <a href="https://railway.app" target="_blank" rel="noopener noreferrer" className="text-brand-600 dark:text-brand-400 hover:underline">railway.app</a></p>
+                  <p><strong className="text-surface-900 dark:text-white">Hébergeur principal :</strong> Vercel Inc.</p>
+                  <p><strong className="text-surface-900 dark:text-white">Adresse :</strong> 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis</p>
+                  <p><strong className="text-surface-900 dark:text-white">Site :</strong> <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" className="text-brand-600 dark:text-brand-400 hover:underline">vercel.com</a></p>
                   <p className="text-surface-500 italic text-xs mt-2">🌱 Nexus SEO s&apos;engage dans une démarche d&apos;éco-responsabilité numérique. Nos services privilégient les infrastructures à bilan carbone réduit.</p>
                 </div>
               </div>

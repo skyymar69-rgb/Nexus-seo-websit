@@ -4,6 +4,22 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { corsHeaders, corsOptionsResponse } from '@/lib/cors'
 import { checkPlanLimit } from '@/lib/plan-guard'
+import {
+  type DetailedCheck,
+  checkTitleTag,
+  checkMetaDescription,
+  checkCanonical,
+  checkH1,
+  checkImages,
+  checkHTTPS,
+  checkLoadTime,
+  checkStructuredData,
+  checkOpenGraph,
+  checkViewport,
+  checkWordCount,
+  checkHeadingHierarchy,
+  checkSecurityHeaders,
+} from '@/lib/audit-checks'
 
 interface AuditCheck {
   id: string
@@ -23,6 +39,7 @@ interface AuditResult {
     loadTime: number
     htmlSize: number
     checks: AuditCheck[]
+    detailedChecks: DetailedCheck[]
     summary: {
       passed: number
       warnings: number
@@ -351,91 +368,45 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
     const xContentTypeOptions = response.headers.get('x-content-type-options')
     const contentLength = response.headers.get('content-length')
 
-    // Build comprehensive checks array
-    const checks: AuditCheck[] = []
-    let totalScore = 0
-    let checkCount = 0
+    // Extract H1 text for detailed check
+    const h1Text = $('h1').first().text().trim() || null
 
     // ============================================
-    // META & SEO CATEGORY
+    // Build detailed checks using audit-checks engine
     // ============================================
+    const detailedChecks: DetailedCheck[] = [
+      checkTitleTag(title, normalizedUrl),
+      checkMetaDescription(description),
+      checkCanonical(canonical, normalizedUrl),
+      checkH1(h1Count, h1Text),
+      checkImages(imageData.total, imageData.withAlt, imageData.total - imageData.withAlt),
+      checkHTTPS(normalizedUrl),
+      checkLoadTime(loadTime, htmlSize),
+      checkStructuredData(structuredDataCount),
+      checkOpenGraph(ogTitle, ogDescription, ogImage),
+      checkViewport(viewport),
+      checkWordCount(wordCount),
+      checkHeadingHierarchy(h1Count, h2Count, h3Count),
+      checkSecurityHeaders(csp, xFrameOptions, xContentTypeOptions),
+    ]
 
-    // Title tag check
-    const titleStatus = !title ? 'error' : title.length < 30 ? 'warning' : title.length > 60 ? 'warning' : 'passed'
-    const titleScore = !title ? 0 : title.length < 30 ? 50 : title.length > 60 ? 70 : 100
-    checks.push({
-      id: 'meta_title',
-      category: 'meta',
-      name: 'Title Tag',
-      status: titleStatus,
-      score: titleScore,
-      value: title || 'Missing',
-      recommendation: !title
-        ? 'Add a unique title tag between 30-60 characters'
-        : title.length < 30
-          ? 'Title is too short (less than 30 characters)'
-          : title.length > 60
-            ? 'Title is too long (more than 60 characters)'
-            : 'Title tag is well-optimized',
-    })
-    totalScore += titleScore
-    checkCount++
+    // Calculate overall score from detailed checks
+    const overallScore = Math.round(
+      detailedChecks.reduce((sum, dc) => sum + dc.score, 0) / detailedChecks.length
+    )
 
-    // Meta description check
-    const descStatus = !description ? 'error' : description.length < 120 ? 'warning' : description.length > 160 ? 'warning' : 'passed'
-    const descScore = !description ? 0 : description.length < 120 ? 50 : description.length > 160 ? 70 : 100
-    checks.push({
-      id: 'meta_description',
-      category: 'meta',
-      name: 'Meta Description',
-      status: descStatus,
-      score: descScore,
-      value: description ? `${description.substring(0, 60)}... (${description.length} chars)` : 'Missing',
-      recommendation: !description
-        ? 'Add a meta description between 120-160 characters'
-        : description.length < 120
-          ? 'Description is too short'
-          : description.length > 160
-            ? 'Description is too long'
-            : 'Meta description is well-optimized',
-    })
-    totalScore += descScore
-    checkCount++
+    // Build backwards-compatible checks array from detailed checks
+    const checks: AuditCheck[] = detailedChecks.map((dc) => ({
+      id: dc.id,
+      category: dc.category,
+      name: dc.name,
+      status: dc.status,
+      score: dc.score,
+      value: dc.value,
+      recommendation: dc.summary,
+    }))
 
-    // Canonical tag check
-    const canonicalScore = canonical ? 100 : 50
-    checks.push({
-      id: 'meta_canonical',
-      category: 'meta',
-      name: 'Canonical Tag',
-      status: canonical ? 'passed' : 'warning',
-      score: canonicalScore,
-      value: canonical || 'Not present',
-      recommendation: canonical
-        ? 'Canonical tag properly defined'
-        : 'Add a canonical tag to prevent duplicate content issues',
-    })
-    totalScore += canonicalScore
-    checkCount++
-
-    // Open Graph tags check
-    const ogScore = ogTitle && ogDescription && ogImage ? 100 : ogTitle || ogDescription || ogImage ? 60 : 0
-    checks.push({
-      id: 'meta_og',
-      category: 'meta',
-      name: 'Open Graph Tags',
-      status: ogScore === 100 ? 'passed' : ogScore > 0 ? 'warning' : 'error',
-      score: ogScore,
-      value: `og:title ${ogTitle ? '✓' : '✗'}, og:description ${ogDescription ? '✓' : '✗'}, og:image ${ogImage ? '✓' : '✗'}`,
-      recommendation:
-        ogScore === 100
-          ? 'All Open Graph tags configured'
-          : 'Add og:title, og:description, and og:image for better social sharing',
-    })
-    totalScore += ogScore
-    checkCount++
-
-    // Twitter Card tags check
+    // Additional legacy checks not covered by detailed check functions
     const twitterScore = twitterCard && twitterTitle && twitterDescription ? 100 : twitterCard ? 50 : 0
     checks.push({
       id: 'meta_twitter',
@@ -443,16 +414,13 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
       name: 'Twitter Card Tags',
       status: twitterScore === 100 ? 'passed' : twitterScore > 0 ? 'warning' : 'error',
       score: twitterScore,
-      value: `twitter:card ${twitterCard ? '✓' : '✗'}, twitter:title ${twitterTitle ? '✓' : '✗'}, twitter:description ${twitterDescription ? '✓' : '✗'}`,
+      value: `twitter:card ${twitterCard ? '\u2713' : '\u2717'}, twitter:title ${twitterTitle ? '\u2713' : '\u2717'}, twitter:description ${twitterDescription ? '\u2713' : '\u2717'}`,
       recommendation:
         twitterScore === 100
           ? 'Twitter Card tags configured'
           : 'Add Twitter Card meta tags for better Twitter sharing',
     })
-    totalScore += twitterScore
-    checkCount++
 
-    // Robots meta tag check
     const robotsScore = robots ? 100 : 50
     checks.push({
       id: 'meta_robots',
@@ -465,10 +433,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
         ? 'Robots meta tag configured'
         : 'Consider configuring robots meta tag if you have specific indexing needs',
     })
-    totalScore += robotsScore
-    checkCount++
 
-    // Favicon check
     const faviconScore = faviconPresent ? 100 : 50
     checks.push({
       id: 'meta_favicon',
@@ -480,10 +445,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
       recommendation:
         faviconScore === 100 ? 'Favicon properly configured' : 'Add a favicon to improve branding and user experience',
     })
-    totalScore += faviconScore
-    checkCount++
 
-    // Hreflang tags check
     const hreflangScore = hreflangCount > 0 ? 100 : 50
     checks.push({
       id: 'meta_hreflang',
@@ -497,90 +459,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
           ? 'Hreflang tags configured for international SEO'
           : 'Add hreflang tags if your site targets multiple languages or regions',
     })
-    totalScore += hreflangScore
-    checkCount++
 
-    // ============================================
-    // CONTENT CATEGORY
-    // ============================================
-
-    // H1 check
-    const h1Status = h1Count === 1 ? 'passed' : h1Count === 0 ? 'error' : 'warning'
-    const h1Score = h1Count === 1 ? 100 : h1Count === 0 ? 0 : 50
-    checks.push({
-      id: 'content_h1',
-      category: 'content',
-      name: 'H1 Tag',
-      status: h1Status,
-      score: h1Score,
-      value: `${h1Count} H1 tag(s) found`,
-      recommendation:
-        h1Count === 1
-          ? 'Exactly one H1 tag - perfect'
-          : h1Count === 0
-            ? 'Add a unique H1 tag to structure your content'
-            : 'Limit to a single H1 tag per page',
-    })
-    totalScore += h1Score
-    checkCount++
-
-    // Heading hierarchy check
-    const h2h3Score = h2Count > 0 || h3Count > 0 ? 100 : 50
-    checks.push({
-      id: 'content_headings',
-      category: 'content',
-      name: 'Heading Hierarchy',
-      status: h2h3Score === 100 ? 'passed' : 'warning',
-      score: h2h3Score,
-      value: `H2: ${h2Count}, H3: ${h3Count}`,
-      recommendation:
-        h2h3Score === 100
-          ? 'Good heading hierarchy structure'
-          : 'Use H2 and H3 tags to properly structure content',
-    })
-    totalScore += h2h3Score
-    checkCount++
-
-    // Word count check
-    const wordCountScore = wordCount >= 300 ? 100 : wordCount >= 200 ? 80 : wordCount >= 100 ? 60 : 30
-    checks.push({
-      id: 'content_wordcount',
-      category: 'content',
-      name: 'Text Content',
-      status: wordCount >= 300 ? 'passed' : wordCount >= 200 ? 'passed' : wordCount >= 100 ? 'warning' : 'error',
-      score: wordCountScore,
-      value: `${wordCount} words`,
-      recommendation:
-        wordCount >= 300
-          ? 'Sufficient content length for SEO'
-          : wordCount >= 200
-            ? 'Consider adding more content'
-            : 'Add more text content to improve SEO',
-    })
-    totalScore += wordCountScore
-    checkCount++
-
-    // Image optimization check
-    const imageAltScore =
-      imageData.total === 0 ? 50 : imageData.withAlt === imageData.total ? 100 : (imageData.withAlt / imageData.total) * 100
-    checks.push({
-      id: 'content_images_alt',
-      category: 'content',
-      name: 'Image Alt Text',
-      status: imageAltScore === 100 ? 'passed' : imageAltScore >= 70 ? 'warning' : 'error',
-      score: Math.round(imageAltScore),
-      value: `${imageData.withAlt}/${imageData.total} images have alt text`,
-      recommendation:
-        imageAltScore === 100
-          ? 'All images have descriptive alt text'
-          : imageData.total === 0
-            ? 'Consider adding images to enrich content'
-            : `Add alt text to ${imageData.total - imageData.withAlt} images`,
-    })
-    totalScore += imageAltScore
-    checkCount++
-
-    // Image width/height attributes check
     const imageWidthHeightScore =
       imageData.total === 0 ? 50 : ((imageData.total - imageData.withoutWidthHeight) / imageData.total) * 100
     checks.push({
@@ -595,10 +474,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
           ? 'All images have width/height attributes'
           : 'Add width and height attributes to prevent layout shift',
     })
-    totalScore += imageWidthHeightScore
-    checkCount++
 
-    // Lazy loading check
     const lazyLoadScore = lazyLoadImages > 0 ? 100 : 50
     checks.push({
       id: 'content_lazy_loading',
@@ -612,10 +488,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
           ? 'Lazy loading implemented for images'
           : 'Implement lazy loading for images to improve performance',
     })
-    totalScore += lazyLoadScore
-    checkCount++
 
-    // Internal links check
     const internalLinksScore = linkData.internal >= 3 ? 100 : linkData.internal >= 1 ? 70 : 30
     checks.push({
       id: 'content_internal_links',
@@ -629,61 +502,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
           ? 'Good internal linking strategy'
           : 'Add more internal links to improve site structure',
     })
-    totalScore += internalLinksScore
-    checkCount++
 
-    // ============================================
-    // TECHNICAL CATEGORY
-    // ============================================
-
-    // HTTPS/SSL check
-    const httpsScore = urlObj.protocol === 'https:' ? 100 : 0
-    checks.push({
-      id: 'tech_https',
-      category: 'technical',
-      name: 'HTTPS/SSL',
-      status: httpsScore === 100 ? 'passed' : 'error',
-      score: httpsScore,
-      value: urlObj.protocol === 'https:' ? 'HTTPS' : 'HTTP',
-      recommendation: httpsScore === 100 ? 'Site uses HTTPS' : 'Migrate to HTTPS for security and SEO benefits',
-    })
-    totalScore += httpsScore
-    checkCount++
-
-    // Response time check
-    const responseTimeScore = loadTime < 2000 ? 100 : loadTime < 4000 ? 70 : loadTime < 6000 ? 50 : 20
-    checks.push({
-      id: 'tech_response_time',
-      category: 'technical',
-      name: 'Response Time',
-      status: responseTimeScore === 100 ? 'passed' : responseTimeScore >= 70 ? 'passed' : responseTimeScore >= 50 ? 'warning' : 'error',
-      score: responseTimeScore,
-      value: `${loadTime}ms`,
-      recommendation:
-        responseTimeScore === 100
-          ? 'Excellent server response time'
-          : 'Optimize server and caching for faster response',
-    })
-    totalScore += responseTimeScore
-    checkCount++
-
-    // HTML size check
-    const htmlSizeKB = htmlSize / 1024
-    const htmlSizeScore = htmlSizeKB < 100 ? 100 : htmlSizeKB < 300 ? 70 : 40
-    checks.push({
-      id: 'tech_html_size',
-      category: 'technical',
-      name: 'HTML Size',
-      status: htmlSizeScore === 100 ? 'passed' : htmlSizeScore >= 70 ? 'passed' : 'warning',
-      score: htmlSizeScore,
-      value: `${htmlSizeKB.toFixed(2)} KB`,
-      recommendation:
-        htmlSizeScore === 100 ? 'Optimal HTML size' : 'Reduce HTML size by minifying code',
-    })
-    totalScore += htmlSizeScore
-    checkCount++
-
-    // Content encoding check
     const compressionScore = contentEncoding && (contentEncoding.includes('gzip') || contentEncoding.includes('deflate')) ? 100 : 50
     checks.push({
       id: 'tech_compression',
@@ -697,10 +516,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
           ? 'Content properly compressed'
           : 'Enable gzip or deflate compression for better performance',
     })
-    totalScore += compressionScore
-    checkCount++
 
-    // Charset check
     const charsetScore = charset ? 100 : 50
     checks.push({
       id: 'tech_charset',
@@ -712,10 +528,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
       recommendation:
         charsetScore === 100 ? 'Character set properly declared' : 'Declare character set (UTF-8 recommended)',
     })
-    totalScore += charsetScore
-    checkCount++
 
-    // DOCTYPE check
     const doctypeScore = doctype ? 100 : 50
     checks.push({
       id: 'tech_doctype',
@@ -727,10 +540,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
       recommendation:
         doctypeScore === 100 ? 'DOCTYPE properly declared' : 'Add DOCTYPE declaration for HTML5',
     })
-    totalScore += doctypeScore
-    checkCount++
 
-    // Content-Type header check
     const contentTypeScore = contentType && contentType.includes('text/html') ? 100 : 50
     checks.push({
       id: 'tech_content_type',
@@ -744,31 +554,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
           ? 'Content-Type header correctly set'
           : 'Ensure Content-Type is properly defined',
     })
-    totalScore += contentTypeScore
-    checkCount++
 
-    // Structured data check
-    const structuredDataScore = structuredDataCount > 0 ? 100 : 50
-    checks.push({
-      id: 'tech_structured_data',
-      category: 'technical',
-      name: 'Structured Data',
-      status: structuredDataScore === 100 ? 'passed' : 'warning',
-      score: structuredDataScore,
-      value: `${structuredDataCount} JSON-LD block(s)`,
-      recommendation:
-        structuredDataScore === 100
-          ? 'Structured data implemented'
-          : 'Add JSON-LD structured data (schema.org) for better search visibility',
-    })
-    totalScore += structuredDataScore
-    checkCount++
-
-    // ============================================
-    // PERFORMANCE CATEGORY
-    // ============================================
-
-    // External scripts check
     const externalScriptsScore = externalScripts <= 5 ? 100 : externalScripts <= 10 ? 70 : 40
     checks.push({
       id: 'perf_external_scripts',
@@ -782,10 +568,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
           ? 'Good number of external scripts'
           : 'Reduce the number of external scripts for better performance',
     })
-    totalScore += externalScriptsScore
-    checkCount++
 
-    // Inline scripts check
     const inlineScriptsScore = inlineScripts === 0 ? 100 : inlineScripts <= 3 ? 70 : 40
     checks.push({
       id: 'perf_inline_scripts',
@@ -799,10 +582,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
           ? 'No inline scripts detected'
           : 'Externalize scripts to improve cache performance',
     })
-    totalScore += inlineScriptsScore
-    checkCount++
 
-    // External stylesheets check
     const externalStylesheetsScore = externalStylesheets <= 5 ? 100 : externalStylesheets <= 10 ? 70 : 40
     checks.push({
       id: 'perf_external_stylesheets',
@@ -816,10 +596,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
           ? 'Good number of stylesheets'
           : 'Consolidate stylesheets for better performance',
     })
-    totalScore += externalStylesheetsScore
-    checkCount++
 
-    // Inline styles check
     const inlineStylesScore = inlineStyles === 0 ? 100 : inlineStyles <= 5 ? 70 : 40
     checks.push({
       id: 'perf_inline_styles',
@@ -833,86 +610,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
           ? 'No inline styles detected'
           : 'Externalize styles to improve cache and maintainability',
     })
-    totalScore += inlineStylesScore
-    checkCount++
 
-    // ============================================
-    // SECURITY CATEGORY
-    // ============================================
-
-    // CSP header check
-    const cspScore = csp ? 100 : 50
-    checks.push({
-      id: 'security_csp',
-      category: 'security',
-      name: 'Content Security Policy',
-      status: cspScore === 100 ? 'passed' : 'warning',
-      score: cspScore,
-      value: csp ? 'Present' : 'Not set',
-      recommendation:
-        cspScore === 100
-          ? 'CSP header configured'
-          : 'Implement Content Security Policy to protect against XSS attacks',
-    })
-    totalScore += cspScore
-    checkCount++
-
-    // X-Frame-Options check
-    const xFrameScore = xFrameOptions ? 100 : 50
-    checks.push({
-      id: 'security_x_frame_options',
-      category: 'security',
-      name: 'X-Frame-Options',
-      status: xFrameScore === 100 ? 'passed' : 'warning',
-      score: xFrameScore,
-      value: xFrameOptions || 'Not set',
-      recommendation:
-        xFrameScore === 100
-          ? 'X-Frame-Options header configured'
-          : 'Set X-Frame-Options to prevent clickjacking attacks',
-    })
-    totalScore += xFrameScore
-    checkCount++
-
-    // X-Content-Type-Options check
-    const xContentTypeScore = xContentTypeOptions ? 100 : 50
-    checks.push({
-      id: 'security_x_content_type',
-      category: 'security',
-      name: 'X-Content-Type-Options',
-      status: xContentTypeScore === 100 ? 'passed' : 'warning',
-      score: xContentTypeScore,
-      value: xContentTypeOptions || 'Not set',
-      recommendation:
-        xContentTypeScore === 100
-          ? 'X-Content-Type-Options header configured'
-          : 'Set X-Content-Type-Options: nosniff to prevent MIME-type attacks',
-    })
-    totalScore += xContentTypeScore
-    checkCount++
-
-    // ============================================
-    // MOBILE CATEGORY
-    // ============================================
-
-    // Viewport meta tag check
-    const viewportScore = viewport ? 100 : 0
-    checks.push({
-      id: 'mobile_viewport',
-      category: 'mobile',
-      name: 'Viewport Meta Tag',
-      status: viewportScore === 100 ? 'passed' : 'error',
-      score: viewportScore,
-      value: viewport || 'Missing',
-      recommendation:
-        viewportScore === 100
-          ? 'Viewport meta tag properly configured'
-          : 'Add viewport meta tag for mobile responsiveness',
-    })
-    totalScore += viewportScore
-    checkCount++
-
-    // Touch icons check
     const touchIconScore = touchIcons > 0 ? 100 : 50
     checks.push({
       id: 'mobile_touch_icons',
@@ -926,11 +624,6 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
           ? 'Touch icons configured for mobile devices'
           : 'Add apple-touch-icon for home screen bookmarks',
     })
-    totalScore += touchIconScore
-    checkCount++
-
-    // Calculate overall weighted score
-    const overallScore = Math.round(totalScore / checkCount)
 
     // Count summary by status
     const summary = {
@@ -948,6 +641,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
         loadTime,
         htmlSize,
         checks,
+        detailedChecks,
         summary,
         meta: {
           title: title || null,

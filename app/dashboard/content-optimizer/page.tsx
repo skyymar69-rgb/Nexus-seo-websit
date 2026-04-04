@@ -1,95 +1,211 @@
 'use client'
 
-import { useState } from 'react'
-import { cn, getScoreColor } from '@/lib/utils'
+import { useState, useEffect } from 'react'
+import { cn } from '@/lib/utils'
 import {
   FileText,
   CheckCircle,
   AlertCircle,
   Lightbulb,
-  TrendingUp,
+  Loader2,
+  Search,
 } from 'lucide-react'
+import { useWebsite } from '@/contexts/WebsiteContext'
+import { UrlInput } from '@/components/shared/UrlInput'
 
-const recommendations = [
-  {
-    id: '1',
-    type: 'high',
-    icon: AlertCircle,
-    title: 'Optimisez la structure des titres',
-    description: 'H1 et H2 ne sont pas assez descriptifs. Incluez des mots-cles principaux.',
-  },
-  {
-    id: '2',
-    type: 'high',
-    icon: AlertCircle,
-    title: 'Ameliorez la readabilite',
-    description:
-      'Votre score de lisibilite est de 42/100. Utilisez des phrases plus courtes.',
-  },
-  {
-    id: '3',
-    type: 'medium',
-    icon: Lightbulb,
-    title: 'Ajoutez des liens internes',
-    description: 'Ajouter 3-5 liens internes pertinents ameliorera votre SEO.',
-  },
-  {
-    id: '4',
-    type: 'medium',
-    icon: Lightbulb,
-    title: 'Optimisez la meta description',
-    description: 'Utilisez 155-160 caracteres et incluez votre mot-cle principal.',
-  },
-  {
-    id: '5',
-    type: 'low',
-    icon: CheckCircle,
-    title: 'Contenu original',
-    description: 'Excellent - 0% de contenu duplique detecte.',
-  },
-  {
-    id: '6',
-    type: 'low',
-    icon: CheckCircle,
-    title: 'Longueur du contenu',
-    description: '2,450 mots - ideal pour votre mot-cle cible.',
-  },
-]
+interface SemanticResult {
+  score: number
+  keyword: string
+  content: {
+    wordCount: number
+    sentenceCount: number
+    paragraphCount: number
+    avgSentenceLength: number
+    readingLevel: string
+    headings: { h1: number; h2: number; h3: number }
+  }
+  keywordAnalysis: {
+    density: number
+    occurrences: number
+    inTitle: boolean
+    inH1: boolean
+    inMetaDescription: boolean
+  }
+  topTerms: Array<{
+    term: string
+    frequency: number
+    density: number
+    relevance: number
+    status: 'present' | 'missing'
+  }>
+  recommendations: string[]
+}
+
+interface AEOResult {
+  overallScore: number
+  grade: string
+  snippetReadiness: { score: number; checks: Array<{ name: string; passed: boolean; details: string }> }
+  qaPatterns: { score: number; checks: Array<{ name: string; passed: boolean; details: string }> }
+  voiceReadiness: { score: number; checks: Array<{ name: string; passed: boolean; details: string }> }
+  recommendations: string[]
+}
+
+interface Recommendation {
+  id: string
+  type: 'high' | 'medium' | 'low'
+  title: string
+  description: string
+}
+
+function classifyRecommendation(text: string): 'high' | 'medium' | 'low' {
+  const lower = text.toLowerCase()
+  if (
+    lower.includes('ajoutez') ||
+    lower.includes('incluez') ||
+    lower.includes('augmentez') ||
+    lower.includes('reduisez') ||
+    lower.includes('necessite') ||
+    lower.includes('manque')
+  ) {
+    return 'high'
+  }
+  if (
+    lower.includes('continuez') ||
+    lower.includes('ameliorez') ||
+    lower.includes('considerez') ||
+    lower.includes('incorporez') ||
+    lower.includes('structurez')
+  ) {
+    return 'medium'
+  }
+  return 'low'
+}
 
 export default function ContentOptimizerPage() {
+  const { selectedWebsite } = useWebsite()
   const [inputType, setInputType] = useState<'url' | 'text'>('url')
   const [urlInput, setUrlInput] = useState('')
+  const [keywordInput, setKeywordInput] = useState('')
   const [textInput, setTextInput] = useState('')
-  const [analyzed, setAnalyzed] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleAnalyze = () => {
-    if ((inputType === 'url' && urlInput) || (inputType === 'text' && textInput)) {
-      setAnalyzed(true)
+  const [semanticResult, setSemanticResult] = useState<SemanticResult | null>(null)
+  const [aeoResult, setAeoResult] = useState<AEOResult | null>(null)
+  const [recommendations, setRecommendations] = useState<Recommendation[]>([])
+
+  // Pre-fill URL from selected website
+  useEffect(() => {
+    if (selectedWebsite?.domain && !urlInput) {
+      setUrlInput(`https://${selectedWebsite.domain}`)
+    }
+  }, [selectedWebsite])
+
+  const handleAnalyze = async () => {
+    const hasInput = inputType === 'url' ? urlInput : textInput
+    if (!hasInput || !keywordInput) return
+
+    setLoading(true)
+    setError(null)
+    setSemanticResult(null)
+    setAeoResult(null)
+    setRecommendations([])
+
+    try {
+      // Call semantic API
+      const semanticBody: Record<string, string> = { keyword: keywordInput }
+      if (inputType === 'url') {
+        semanticBody.url = urlInput
+      } else {
+        semanticBody.text = textInput
+      }
+
+      const semanticRes = await fetch('/api/semantic', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(semanticBody),
+      })
+
+      if (!semanticRes.ok) {
+        const errData = await semanticRes.json().catch(() => ({ error: 'Erreur inconnue' }))
+        throw new Error(errData.error || `Erreur ${semanticRes.status}`)
+      }
+
+      const semanticData: SemanticResult = await semanticRes.json()
+      setSemanticResult(semanticData)
+
+      // Build recommendations from semantic data
+      const allRecs: Recommendation[] = semanticData.recommendations.map((text, i) => ({
+        id: `sem-${i}`,
+        type: classifyRecommendation(text),
+        title: text.split('.')[0] || text,
+        description: text,
+      }))
+
+      // Also call AEO API if URL mode
+      if (inputType === 'url' && urlInput) {
+        try {
+          const aeoRes = await fetch('/api/aeo-score', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: urlInput }),
+          })
+
+          if (aeoRes.ok) {
+            const aeoData = await aeoRes.json()
+            setAeoResult(aeoData)
+
+            // Add AEO recommendations
+            if (aeoData.recommendations) {
+              const aeoRecs: Recommendation[] = aeoData.recommendations.map((text: string, i: number) => ({
+                id: `aeo-${i}`,
+                type: classifyRecommendation(text),
+                title: `AEO: ${text.split('.')[0] || text}`,
+                description: text,
+              }))
+              allRecs.push(...aeoRecs)
+            }
+          }
+        } catch {
+          // AEO is optional, don't block on failure
+        }
+      }
+
+      // Sort: high first, then medium, then low
+      const priority: Record<string, number> = { high: 0, medium: 1, low: 2 }
+      allRecs.sort((a, b) => priority[a.type] - priority[b.type])
+      setRecommendations(allRecs)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erreur inconnue')
+    } finally {
+      setLoading(false)
     }
   }
+
+  const score = semanticResult?.score ?? 0
 
   return (
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold">Optimisation de Contenu</h1>
-        <p className="text-surface-400 mt-1">
+        <h1 className="text-3xl font-bold text-gray-900">Optimisation de Contenu</h1>
+        <p className="text-gray-500 mt-1">
           Analysez et optimisez le contenu de vos pages
         </p>
       </div>
 
       {/* Input Section */}
-      <div className="rounded-lg border border-surface-800 bg-surface-900 p-6">
+      <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
         <div className="mb-6">
-          <p className="text-sm font-medium mb-4">Choisissez comment analyser</p>
+          <p className="text-sm font-medium mb-4 text-gray-700">Choisissez comment analyser</p>
           <div className="flex gap-4">
             <button
               onClick={() => setInputType('url')}
               className={cn(
                 'flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors',
                 inputType === 'url'
-                  ? 'bg-cyan-500 text-surface-900'
-                  : 'bg-surface-800 text-surface-400 hover:bg-surface-700'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
               )}
             >
               <FileText className="h-4 w-4" />
@@ -100,8 +216,8 @@ export default function ContentOptimizerPage() {
               className={cn(
                 'flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors',
                 inputType === 'text'
-                  ? 'bg-cyan-500 text-surface-900'
-                  : 'bg-surface-800 text-surface-400 hover:bg-surface-700'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
               )}
             >
               <FileText className="h-4 w-4" />
@@ -110,51 +226,74 @@ export default function ContentOptimizerPage() {
           </div>
         </div>
 
-        {inputType === 'url' ? (
-          <div className="space-y-3">
-            <label className="block text-sm font-medium">URL de la page</label>
-            <div className="flex gap-3">
-              <input
-                type="url"
-                placeholder="https://exemple.com/page"
+        <div className="space-y-3">
+          {/* Keyword input (always shown) */}
+          <div>
+            <label className="block text-sm font-medium mb-1 text-gray-700">Mot-cle cible</label>
+            <input
+              type="text"
+              placeholder="Ex: optimisation SEO"
+              value={keywordInput}
+              onChange={(e) => setKeywordInput(e.target.value)}
+              className="w-full rounded-lg bg-white border border-gray-200 px-4 py-2 text-gray-900 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            />
+          </div>
+
+          {inputType === 'url' ? (
+            <div>
+              <label className="block text-sm font-medium mb-1 text-gray-700">URL de la page</label>
+              <UrlInput
                 value={urlInput}
-                onChange={(e) => setUrlInput(e.target.value)}
-                className="flex-1 rounded-lg bg-surface-800 border border-surface-700 px-4 py-2 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
+                onChange={setUrlInput}
+                onSubmit={handleAnalyze}
+                loading={loading}
+                submitLabel="Analyser"
+              />
+            </div>
+          ) : (
+            <div>
+              <label className="block text-sm font-medium mb-1 text-gray-700">Collez votre contenu</label>
+              <textarea
+                placeholder="Collez le texte de votre page ici..."
+                value={textInput}
+                onChange={(e) => setTextInput(e.target.value)}
+                rows={6}
+                className="w-full rounded-lg bg-white border border-gray-200 px-4 py-2 text-gray-900 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
               />
               <button
                 onClick={handleAnalyze}
-                disabled={!urlInput}
-                className="px-6 py-2 rounded-lg bg-cyan-500 text-surface-900 font-medium hover:bg-cyan-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                disabled={!textInput || !keywordInput || loading}
+                className="flex items-center gap-2 px-6 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors mt-3"
               >
+                {loading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Search className="h-4 w-4" />
+                )}
                 Analyser
               </button>
             </div>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            <label className="block text-sm font-medium">Collez votre contenu</label>
-            <textarea
-              placeholder="Collez le texte de votre page ici..."
-              value={textInput}
-              onChange={(e) => setTextInput(e.target.value)}
-              rows={6}
-              className="w-full rounded-lg bg-surface-800 border border-surface-700 px-4 py-2 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 resize-none"
-            />
-            <button
-              onClick={handleAnalyze}
-              disabled={!textInput}
-              className="px-6 py-2 rounded-lg bg-cyan-500 text-surface-900 font-medium hover:bg-cyan-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              Analyser
-            </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
-      {analyzed && (
+      {error && (
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-600">
+          {error}
+        </div>
+      )}
+
+      {loading && (
+        <div className="flex items-center justify-center py-16">
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+          <span className="ml-3 text-gray-500">Analyse en cours...</span>
+        </div>
+      )}
+
+      {!loading && semanticResult && (
         <>
           {/* Content Score */}
-          <div className="rounded-lg border border-surface-800 bg-surface-900 p-6">
+          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
             <div className="flex items-start gap-8">
               <div className="flex-shrink-0">
                 <div className="relative w-48 h-48">
@@ -167,7 +306,7 @@ export default function ContentOptimizerPage() {
                       cy="100"
                       r="90"
                       fill="none"
-                      stroke="#334155"
+                      stroke="#e5e7eb"
                       strokeWidth="8"
                     />
                     <circle
@@ -175,162 +314,219 @@ export default function ContentOptimizerPage() {
                       cy="100"
                       r="90"
                       fill="none"
-                      stroke="#06b6d4"
+                      stroke={score >= 70 ? '#16a34a' : score >= 50 ? '#d97706' : '#dc2626'}
                       strokeWidth="8"
-                      strokeDasharray={`${(72 / 100) * 565} 565`}
+                      strokeDasharray={`${(score / 100) * 565} 565`}
                       strokeLinecap="round"
                     />
                   </svg>
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-center">
-                      <p className="text-4xl font-bold text-cyan-400">72</p>
-                      <p className="text-sm text-surface-400">/100</p>
+                      <p className={cn(
+                        'text-4xl font-bold',
+                        score >= 70 ? 'text-green-600' : score >= 50 ? 'text-amber-600' : 'text-red-600'
+                      )}>
+                        {score}
+                      </p>
+                      <p className="text-sm text-gray-400">/100</p>
                     </div>
                   </div>
                 </div>
               </div>
 
               <div className="flex-1">
-                <h2 className="text-xl font-bold mb-6">Resultats de l'analyse</h2>
+                <h2 className="text-xl font-bold mb-6 text-gray-900">Resultats de l&apos;analyse</h2>
                 <div className="space-y-4">
+                  {/* Keyword density */}
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium">Readabilite</span>
-                      <span className="text-amber-500 font-bold">42/100</span>
-                    </div>
-                    <div className="h-2 rounded-full bg-surface-700 overflow-hidden">
-                      <div
-                        className="h-full bg-amber-500"
-                        style={{ width: '42%' }}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium">
-                        Optimisation SEO
+                      <span className="text-sm font-medium text-gray-700">Densite du mot-cle</span>
+                      <span className="text-blue-600 font-bold">
+                        {semanticResult.keywordAnalysis.density}%
                       </span>
-                      <span className="text-blue-500 font-bold">78/100</span>
                     </div>
-                    <div className="h-2 rounded-full bg-surface-700 overflow-hidden">
-                      <div className="h-full bg-blue-500" style={{ width: '78%' }} />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium">Longueur</span>
-                      <span className="text-emerald-500 font-bold">88/100</span>
-                    </div>
-                    <div className="h-2 rounded-full bg-surface-700 overflow-hidden">
+                    <div className="h-2 rounded-full bg-gray-200 overflow-hidden">
                       <div
-                        className="h-full bg-emerald-500"
-                        style={{ width: '88%' }}
+                        className="h-full bg-blue-600"
+                        style={{ width: `${Math.min(semanticResult.keywordAnalysis.density * 20, 100)}%` }}
                       />
                     </div>
                   </div>
 
+                  {/* Word count */}
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium">Unicite</span>
-                      <span className="text-emerald-500 font-bold">95/100</span>
+                      <span className="text-sm font-medium text-gray-700">Longueur du contenu</span>
+                      <span className="text-gray-700 font-bold">
+                        {semanticResult.content.wordCount} mots
+                      </span>
                     </div>
-                    <div className="h-2 rounded-full bg-surface-700 overflow-hidden">
+                    <div className="h-2 rounded-full bg-gray-200 overflow-hidden">
                       <div
-                        className="h-full bg-emerald-500"
-                        style={{ width: '95%' }}
+                        className={cn(
+                          'h-full',
+                          semanticResult.content.wordCount >= 300 ? 'bg-green-500' : 'bg-amber-500'
+                        )}
+                        style={{
+                          width: `${Math.min((semanticResult.content.wordCount / 2000) * 100, 100)}%`,
+                        }}
                       />
                     </div>
+                  </div>
+
+                  {/* Readability */}
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-gray-700">Lisibilite</span>
+                      <span className="text-gray-700 font-bold">
+                        {semanticResult.content.readingLevel}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Keyword placement checks */}
+                  <div className="flex flex-wrap gap-3 pt-2">
+                    <span className={cn(
+                      'px-3 py-1 rounded-full text-xs font-medium',
+                      semanticResult.keywordAnalysis.inTitle
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-red-100 text-red-700'
+                    )}>
+                      {semanticResult.keywordAnalysis.inTitle ? 'Mot-cle dans le titre' : 'Absent du titre'}
+                    </span>
+                    <span className={cn(
+                      'px-3 py-1 rounded-full text-xs font-medium',
+                      semanticResult.keywordAnalysis.inH1
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-red-100 text-red-700'
+                    )}>
+                      {semanticResult.keywordAnalysis.inH1 ? 'Mot-cle dans le H1' : 'Absent du H1'}
+                    </span>
+                    <span className={cn(
+                      'px-3 py-1 rounded-full text-xs font-medium',
+                      semanticResult.keywordAnalysis.inMetaDescription
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-red-100 text-red-700'
+                    )}>
+                      {semanticResult.keywordAnalysis.inMetaDescription ? 'Dans la meta description' : 'Absent de la meta'}
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Recommendations */}
-          <div className="space-y-4">
-            <h2 className="text-lg font-bold">Recommandations</h2>
+          {/* AEO Score (if available) */}
+          {aeoResult && (
+            <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+              <h2 className="text-lg font-bold mb-4 text-gray-900">Score AEO (Answer Engine Optimization)</h2>
+              <div className="grid grid-cols-4 gap-4">
+                <div className="text-center p-4 rounded-lg bg-gray-50">
+                  <p className="text-2xl font-bold text-blue-600">{aeoResult.overallScore}</p>
+                  <p className="text-xs text-gray-500 mt-1">Score global</p>
+                </div>
+                <div className="text-center p-4 rounded-lg bg-gray-50">
+                  <p className="text-2xl font-bold text-green-600">{aeoResult.snippetReadiness?.score ?? '-'}</p>
+                  <p className="text-xs text-gray-500 mt-1">Snippets</p>
+                </div>
+                <div className="text-center p-4 rounded-lg bg-gray-50">
+                  <p className="text-2xl font-bold text-amber-600">{aeoResult.qaPatterns?.score ?? '-'}</p>
+                  <p className="text-xs text-gray-500 mt-1">Q&A Patterns</p>
+                </div>
+                <div className="text-center p-4 rounded-lg bg-gray-50">
+                  <p className="text-2xl font-bold text-purple-600">{aeoResult.voiceReadiness?.score ?? '-'}</p>
+                  <p className="text-xs text-gray-500 mt-1">Voice Ready</p>
+                </div>
+              </div>
+            </div>
+          )}
 
-            {/* High Priority */}
-            {recommendations
-              .filter((r) => r.type === 'high')
-              .map((rec) => {
-                const Icon = rec.icon
-                return (
+          {/* Top Terms */}
+          {semanticResult.topTerms.length > 0 && (
+            <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+              <h2 className="text-lg font-bold mb-4 text-gray-900">Termes principaux detectes</h2>
+              <div className="flex flex-wrap gap-2">
+                {semanticResult.topTerms.slice(0, 15).map((term) => (
+                  <span
+                    key={term.term}
+                    className={cn(
+                      'px-3 py-1.5 rounded-full text-sm font-medium',
+                      term.status === 'present'
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-gray-100 text-gray-500'
+                    )}
+                  >
+                    {term.term}
+                    <span className="ml-1 text-xs opacity-70">({term.frequency})</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Recommendations */}
+          {recommendations.length > 0 && (
+            <div className="space-y-4">
+              <h2 className="text-lg font-bold text-gray-900">Recommandations</h2>
+
+              {/* High Priority */}
+              {recommendations
+                .filter((r) => r.type === 'high')
+                .map((rec) => (
                   <div
                     key={rec.id}
-                    className="rounded-lg border border-red-500/20 bg-red-500/5 p-4 hover:bg-red-500/10 transition-colors"
+                    className="rounded-lg border border-red-200 bg-red-50 p-4 hover:bg-red-100 transition-colors"
                   >
                     <div className="flex items-start gap-4">
-                      <Icon className="h-5 w-5 text-red-500 flex-shrink-0 mt-1" />
+                      <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
                       <div className="flex-1">
-                        <h3 className="font-medium text-red-500">{rec.title}</h3>
-                        <p className="text-sm text-surface-400 mt-1">
-                          {rec.description}
-                        </p>
+                        <p className="text-sm text-red-700">{rec.description}</p>
                       </div>
-                      <span className="px-2 py-1 rounded text-xs font-medium bg-red-500/20 text-red-400 flex-shrink-0">
+                      <span className="px-2 py-1 rounded text-xs font-medium bg-red-200 text-red-700 flex-shrink-0">
                         Priorite haute
                       </span>
                     </div>
                   </div>
-                )
-              })}
+                ))}
 
-            {/* Medium Priority */}
-            {recommendations
-              .filter((r) => r.type === 'medium')
-              .map((rec) => {
-                const Icon = rec.icon
-                return (
+              {/* Medium Priority */}
+              {recommendations
+                .filter((r) => r.type === 'medium')
+                .map((rec) => (
                   <div
                     key={rec.id}
-                    className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-4 hover:bg-amber-500/10 transition-colors"
+                    className="rounded-lg border border-amber-200 bg-amber-50 p-4 hover:bg-amber-100 transition-colors"
                   >
                     <div className="flex items-start gap-4">
-                      <Icon className="h-5 w-5 text-amber-500 flex-shrink-0 mt-1" />
+                      <Lightbulb className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
                       <div className="flex-1">
-                        <h3 className="font-medium text-amber-500">
-                          {rec.title}
-                        </h3>
-                        <p className="text-sm text-surface-400 mt-1">
-                          {rec.description}
-                        </p>
+                        <p className="text-sm text-amber-700">{rec.description}</p>
                       </div>
-                      <span className="px-2 py-1 rounded text-xs font-medium bg-amber-500/20 text-amber-400 flex-shrink-0">
+                      <span className="px-2 py-1 rounded text-xs font-medium bg-amber-200 text-amber-700 flex-shrink-0">
                         Priorite moyenne
                       </span>
                     </div>
                   </div>
-                )
-              })}
+                ))}
 
-            {/* Low Priority */}
-            {recommendations
-              .filter((r) => r.type === 'low')
-              .map((rec) => {
-                const Icon = rec.icon
-                return (
+              {/* Low Priority / Good */}
+              {recommendations
+                .filter((r) => r.type === 'low')
+                .map((rec) => (
                   <div
                     key={rec.id}
-                    className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4"
+                    className="rounded-lg border border-green-200 bg-green-50 p-4"
                   >
                     <div className="flex items-start gap-4">
-                      <Icon className="h-5 w-5 text-emerald-500 flex-shrink-0 mt-1" />
+                      <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
                       <div className="flex-1">
-                        <h3 className="font-medium text-emerald-500">
-                          {rec.title}
-                        </h3>
-                        <p className="text-sm text-surface-400 mt-1">
-                          {rec.description}
-                        </p>
+                        <p className="text-sm text-green-700">{rec.description}</p>
                       </div>
                     </div>
                   </div>
-                )
-              })}
-          </div>
+                ))}
+            </div>
+          )}
         </>
       )}
     </div>

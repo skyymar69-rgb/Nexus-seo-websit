@@ -85,10 +85,10 @@
   /* ---------- Boutons ---------- */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl
-           bg-gradient-to-r from-brand-600 to-violet-600
+           bg-brand-600 hover:bg-brand-700
            text-white font-semibold text-sm
-           shadow-brand hover:shadow-brand-lg
-           hover:opacity-95 active:scale-[0.98]
+           shadow-sm hover:shadow-md
+           active:scale-[0.98]
            transition-all duration-200;
   }
   .btn-secondary {
@@ -128,11 +128,8 @@
            hover:shadow-lg dark:hover:shadow-surface-950/50;
   }
   .card-gradient {
-    position: relative;
-    @apply bg-white dark:bg-surface-900 rounded-2xl;
-    background: linear-gradient(rgb(var(--bg-card)), rgb(var(--bg-card))) padding-box,
-                linear-gradient(135deg, #4f46e5, #7c3aed, #06b6d4) border-box;
-    border: 1px solid transparent;
+    @apply bg-white dark:bg-surface-900 rounded-2xl
+           border border-brand-200 dark:border-brand-800;
   }
 
   /* ---------- Badge de section ---------- */
@@ -281,4 +278,70 @@
   outline: 2px solid rgb(99 102 241);
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+/* ============================================================
+   PRINT STYLES — Audit report
+   ============================================================ */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 11pt;
+    line-height: 1.4;
+  }
+
+  /* Hide sidebar, header, navigation */
+  aside,
+  header,
+  nav,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Make main content full-width */
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  main > div {
+    padding: 0 !important;
+  }
+
+  /* Cards: clean borders, no shadows */
+  [class*="rounded-lg"] {
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+
+  /* Score gauge: ensure color prints */
+  svg circle {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Impact badges, status dots: preserve colors */
+  [class*="bg-red-"],
+  [class*="bg-green-"],
+  [class*="bg-amber-"],
+  [class*="bg-blue-"],
+  [class*="bg-orange-"],
+  [class*="bg-yellow-"],
+  [class*="bg-purple-"],
+  [class*="bg-cyan-"],
+  [class*="bg-brand-"] {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Page breaks */
+  .print\:break-inside-avoid {
+    break-inside: avoid;
+  }
+
+  h1, h2, h3 {
+    break-after: avoid;
+  }
 }

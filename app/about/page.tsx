@@ -15,7 +15,7 @@ const values = [
 
 const stats = [
   { value: '2 500+', label: 'Équipes actives', desc: '45 pays' },
-  { value: '2026', label: 'Fondé en', desc: 'Paris, France' },
+  { value: '2026', label: 'Fondé en', desc: 'Lyon, France' },
   { value: '4,9/5', label: 'Note G2', desc: '847 avis' },
   { value: '98%', label: 'Rétention', desc: 'Taux annuel' },
 ]

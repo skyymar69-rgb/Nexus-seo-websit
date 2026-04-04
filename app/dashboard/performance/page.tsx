@@ -1,12 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Zap, AlertCircle, TrendingUp, Download, Share2, Loader2, Globe, BarChart3,
   ArrowUpRight, ArrowDownRight, Gauge, Activity, Smartphone, Monitor, TrendingDown, CheckCircle
 } from 'lucide-react'
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { cn } from '@/lib/utils'
+import { useWebsite } from '@/contexts/WebsiteContext'
+import { UrlInput } from '@/components/shared/UrlInput'
 
 // Types
 interface CoreWebVital {
@@ -265,168 +267,116 @@ function CompetitorComparison({ competitors }: { competitors: PerformanceData['c
   )
 }
 
-// Demo data generator
-function generateDemoData(device: 'mobile' | 'desktop'): PerformanceData {
-  const isMobile = device === 'mobile'
+// Helper: get rating from value + thresholds
+function getRating(value: number, good: number, poor: number): 'good' | 'needs-improvement' | 'poor' {
+  if (value <= good) return 'good'
+  if (value <= poor) return 'needs-improvement'
+  return 'poor'
+}
+
+// Map API response (PerformanceMetrics) to component state (PerformanceData)
+function mapApiResponse(apiData: any, device: 'mobile' | 'desktop'): PerformanceData {
+  const cwv = apiData.coreWebVitals
+  const m = apiData.metrics
+  const res = apiData.resources
+
+  // Build resource arrays from breakdown
+  const breakdown: Array<{ type: string; size: number; percentage: number }> = res.breakdown || []
+  const buildResourceArray = (type: string, count: number, avgSize: number): { size: number; loadTime: number; blocking: boolean }[] =>
+    Array.from({ length: count }, () => ({
+      size: avgSize,
+      loadTime: Math.round(avgSize / 500),
+      blocking: type === 'CSS',
+    }))
+
+  const totalSize = res.totalSize || apiData.technical?.contentLength || 0
 
   return {
-    url: 'https://luxe-vino.fr',
-    score: isMobile ? 78 : 88,
-    grade: isMobile ? 'B' : 'A',
+    url: apiData.url,
+    score: apiData.score,
+    grade: apiData.grade,
     device,
     timestamp: new Date().toISOString(),
     coreWebVitals: {
       lcp: {
-        value: isMobile ? 2.8 : 1.9,
-        unit: 's',
-        rating: isMobile ? 'needs-improvement' : 'good',
+        value: cwv.lcp.value,
+        unit: cwv.lcp.unit,
+        rating: cwv.lcp.rating,
         threshold: { good: 2.5, needsImprovement: 4 },
-        trend: -12,
+        trend: 0,
       },
       inp: {
-        value: isMobile ? 185 : 92,
-        unit: 'ms',
-        rating: isMobile ? 'needs-improvement' : 'good',
+        value: cwv.inp.value,
+        unit: cwv.inp.unit,
+        rating: cwv.inp.rating,
         threshold: { good: 200, needsImprovement: 500 },
-        trend: -8,
+        trend: 0,
       },
       cls: {
-        value: 0.08,
-        unit: '',
-        rating: 'good',
+        value: cwv.cls.value,
+        unit: cwv.cls.unit,
+        rating: cwv.cls.rating,
         threshold: { good: 0.1, needsImprovement: 0.25 },
         trend: 0,
       },
       fcp: {
-        value: isMobile ? 1.6 : 0.9,
+        value: m.fcp / 1000,
         unit: 's',
-        rating: isMobile ? 'needs-improvement' : 'good',
+        rating: getRating(m.fcp, 1800, 3000),
         threshold: { good: 1.8, needsImprovement: 3 },
-        trend: -5,
+        trend: 0,
       },
       ttfb: {
-        value: isMobile ? 650 : 380,
+        value: m.ttfb,
         unit: 'ms',
-        rating: isMobile ? 'needs-improvement' : 'good',
+        rating: getRating(m.ttfb, 600, 1800),
         threshold: { good: 600, needsImprovement: 1800 },
-        trend: -15,
+        trend: 0,
       },
       tbt: {
-        value: isMobile ? 245 : 82,
+        value: m.tbt,
         unit: 'ms',
-        rating: isMobile ? 'poor' : 'good',
+        rating: getRating(m.tbt, 200, 600),
         threshold: { good: 200, needsImprovement: 600 },
-        trend: 22,
+        trend: 0,
       },
     },
     resources: {
-      scripts: Array(4).fill(0).map(() => ({ size: 85000 + Math.random() * 50000, loadTime: 120 + Math.random() * 100, blocking: Math.random() > 0.6 })),
-      stylesheets: Array(3).fill(0).map(() => ({ size: 45000 + Math.random() * 30000, loadTime: 80 + Math.random() * 60, blocking: true })),
-      images: Array(15).fill(0).map(() => ({ size: 200000 + Math.random() * 400000, loadTime: 200 + Math.random() * 300, blocking: false })),
-      fonts: Array(2).fill(0).map(() => ({ size: 80000 + Math.random() * 40000, loadTime: 150 + Math.random() * 80, blocking: false })),
-      other: Array(2).fill(0).map(() => ({ size: 50000 + Math.random() * 100000, loadTime: 100 + Math.random() * 150, blocking: false })),
-      totalSize: isMobile ? 3200000 : 2800000,
+      scripts: buildResourceArray('JS', res.scripts || 0, 85000),
+      stylesheets: buildResourceArray('CSS', res.stylesheets || 0, 45000),
+      images: buildResourceArray('Image', res.images || 0, 200000),
+      fonts: buildResourceArray('Font', res.fonts || 0, 80000),
+      other: [],
+      totalSize,
     },
-    opportunities: [
-      {
-        title: 'Différer le JavaScript inutilisé',
-        description: 'Réduire le JavaScript non critique pour accélérer le chargement initial de la page.',
-        savings: { value: 850, unit: 'ms' },
-        severity: 'high',
-      },
-      {
-        title: 'Optimiser les images',
-        description: 'Convertir les images PNG en WebP et ajouter la compression intelligente.',
-        savings: { value: 450, unit: 'ms' },
-        severity: 'high',
-      },
-      {
-        title: 'Implémenter le cache HTTPS/2',
-        description: 'Activer la mise en cache du serveur et HTTP/2 push pour les ressources critiques.',
-        savings: { value: 280, unit: 'ms' },
-        severity: 'medium',
-      },
-      {
-        title: 'Minifier le CSS et le JavaScript',
-        description: 'Réduire la taille des ressources CSS et JS de 25-30%.',
-        savings: { value: 165, unit: 'ms' },
-        severity: 'medium',
-      },
-    ],
-    diagnostics: [
-      {
-        title: 'Animation JS bloquant le thread principal',
-        description: 'Les animations de défilement parallaxe utilisent trop de JavaScript, bloquant l\'interaction utilisateur.',
-        severity: 'high',
-      },
-      {
-        title: 'Polices web personnalisées non optimisées',
-        description: 'Les polices sont chargées de manière synchrone, bloquant le rendu du texte.',
-        severity: 'medium',
-      },
-      {
-        title: 'Images non redimensionnées',
-        description: 'Plusieurs images sont plus grandes que leur conteneur d\'affichage.',
-        severity: 'medium',
-      },
-      {
-        title: 'Requêtes DOM excessives',
-        description: 'Le script de panier réinterroge le DOM 45 fois par chargement.',
-        severity: 'low',
-      },
-    ],
-    competitors: [
-      {
-        name: 'Château Margaux',
-        score: 82,
-        lcp: 2.1,
-        inp: 145,
-        cls: 0.06,
-      },
-      {
-        name: 'Domaine de la Romanée',
-        score: 75,
-        lcp: 3.2,
-        inp: 210,
-        cls: 0.12,
-      },
-      {
-        name: 'Bordeaux Premium',
-        score: 68,
-        lcp: 4.1,
-        inp: 320,
-        cls: 0.18,
-      },
-    ],
+    opportunities: (apiData.opportunities || []).map((opp: any) => ({
+      title: opp.title,
+      description: opp.description,
+      savings: { value: parseInt(opp.savings) || 0, unit: 'ms' },
+      severity: opp.savings && parseInt(opp.savings) > 500 ? 'high' as const : parseInt(opp.savings) > 200 ? 'medium' as const : 'low' as const,
+    })),
+    diagnostics: [],
+    competitors: [],
   }
-}
-
-function generateHistory(): HistoryPoint[] {
-  const data: HistoryPoint[] = []
-  for (let i = 29; i >= 0; i--) {
-    const date = new Date()
-    date.setDate(date.getDate() - i)
-    data.push({
-      date: date.toLocaleDateString('fr-FR', { month: 'short', day: 'numeric' }),
-      lcp: 1.8 + Math.random() * 1.2,
-      inp: 85 + Math.random() * 150,
-      cls: 0.05 + Math.random() * 0.1,
-      fcp: 0.9 + Math.random() * 0.8,
-      ttfb: 350 + Math.random() * 300,
-      tbt: 75 + Math.random() * 200,
-    })
-  }
-  return data
 }
 
 // Main Component
 export default function PerformancePage() {
+  const { selectedWebsite } = useWebsite()
   const [device, setDevice] = useState<'mobile' | 'desktop'>('desktop')
   const [urlInput, setUrlInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<PerformanceData | null>(null)
   const [historyData, setHistoryData] = useState<HistoryPoint[]>([])
   const [error, setError] = useState('')
+
+  // Pre-fill URL from selected website
+  useEffect(() => {
+    if (selectedWebsite?.domain && !urlInput) {
+      const domain = selectedWebsite.domain
+      setUrlInput(domain.startsWith('http') ? domain : `https://${domain}`)
+    }
+  }, [selectedWebsite])
 
   const handleAnalyze = async () => {
     if (!urlInput.trim()) {
@@ -437,12 +387,26 @@ export default function PerformancePage() {
     setLoading(true)
     setError('')
 
-    // Simulate API call
-    setTimeout(() => {
-      setData(generateDemoData(device))
-      setHistoryData(generateHistory())
+    try {
+      const res = await fetch('/api/performance', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: urlInput, device }),
+      })
+
+      const json = await res.json()
+
+      if (!res.ok) {
+        throw new Error(json.error || `Erreur ${res.status}`)
+      }
+
+      setData(mapApiResponse(json, device))
+      setHistoryData([])
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erreur lors de l\'analyse')
+    } finally {
       setLoading(false)
-    }, 2000)
+    }
   }
 
   const handleExport = () => {
@@ -497,26 +461,13 @@ export default function PerformancePage() {
         {!data && (
           <div className="bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-8">
             <label className="block text-sm font-medium text-surface-900 dark:text-surface-50 mb-4">URL à analyser</label>
-            <div className="flex gap-3">
-              <div className="flex-1 flex items-center gap-3 px-4 py-3 rounded-lg border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-900">
-                <Globe className="h-5 w-5 text-surface-400 flex-shrink-0" />
-                <input
-                  type="url"
-                  value={urlInput}
-                  onChange={(e) => setUrlInput(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleAnalyze()}
-                  placeholder="https://exemple.fr"
-                  className="flex-1 bg-transparent text-surface-900 dark:text-surface-50 outline-none placeholder-surface-400"
-                />
-              </div>
-              <button
-                onClick={handleAnalyze}
-                disabled={loading}
-                className="px-8 py-3 rounded-lg bg-gradient-to-r from-brand-500 to-brand-600 text-white font-medium hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all inline-flex items-center gap-2"
-              >
-                {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Analyse...</> : <><Zap className="w-4 h-4" /> Analyser</>}
-              </button>
-            </div>
+            <UrlInput
+              value={urlInput}
+              onChange={setUrlInput}
+              onSubmit={handleAnalyze}
+              loading={loading}
+              submitLabel="Analyser"
+            />
             {error && (
               <div className="text-red-500 text-sm mt-3 flex items-center gap-2">
                 <AlertCircle className="w-4 h-4" /> {error}
@@ -542,7 +493,6 @@ export default function PerformancePage() {
               <button
                 onClick={() => {
                   setDevice('desktop')
-                  setData(generateDemoData('desktop'))
                 }}
                 className={cn(
                   'px-4 py-2 rounded-lg font-medium inline-flex items-center gap-2 transition-colors',
@@ -556,7 +506,6 @@ export default function PerformancePage() {
               <button
                 onClick={() => {
                   setDevice('mobile')
-                  setData(generateDemoData('mobile'))
                 }}
                 className={cn(
                   'px-4 py-2 rounded-lg font-medium inline-flex items-center gap-2 transition-colors',
@@ -620,27 +569,29 @@ export default function PerformancePage() {
             </div>
 
             {/* Performance Evolution Chart */}
-            <div className="bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-6">
-              <h2 className="text-xl font-bold text-surface-900 dark:text-surface-50 mb-6">Évolution des Performances (30 jours)</h2>
-              <ResponsiveContainer width="100%" height={350}>
-                <LineChart data={historyData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" className="dark:stroke-surface-700" />
-                  <XAxis dataKey="date" stroke="#9ca3af" style={{ fontSize: '12px' }} />
-                  <YAxis stroke="#9ca3af" style={{ fontSize: '12px' }} />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: '#fff',
-                      border: '1px solid #e5e7eb',
-                      borderRadius: '8px',
-                    }}
-                  />
-                  <Legend />
-                  <Line type="monotone" dataKey="lcp" stroke="#10b981" strokeWidth={2} name="LCP (s)" dot={false} />
-                  <Line type="monotone" dataKey="inp" stroke="#f59e0b" strokeWidth={2} name="INP (ms, /100)" dot={false} />
-                  <Line type="monotone" dataKey="cls" stroke="#3b82f6" strokeWidth={2} name="CLS (*10)" dot={false} />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+            {historyData.length > 0 && (
+              <div className="bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-6">
+                <h2 className="text-xl font-bold text-surface-900 dark:text-surface-50 mb-6">Évolution des Performances (30 jours)</h2>
+                <ResponsiveContainer width="100%" height={350}>
+                  <LineChart data={historyData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" className="dark:stroke-surface-700" />
+                    <XAxis dataKey="date" stroke="#9ca3af" style={{ fontSize: '12px' }} />
+                    <YAxis stroke="#9ca3af" style={{ fontSize: '12px' }} />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: '#fff',
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '8px',
+                      }}
+                    />
+                    <Legend />
+                    <Line type="monotone" dataKey="lcp" stroke="#10b981" strokeWidth={2} name="LCP (s)" dot={false} />
+                    <Line type="monotone" dataKey="inp" stroke="#f59e0b" strokeWidth={2} name="INP (ms, /100)" dot={false} />
+                    <Line type="monotone" dataKey="cls" stroke="#3b82f6" strokeWidth={2} name="CLS (*10)" dot={false} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            )}
 
             {/* Resource Breakdown */}
             <div className="bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-6">
@@ -677,35 +628,39 @@ export default function PerformancePage() {
             </div>
 
             {/* Diagnostics */}
-            <div className="bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-6">
-              <h2 className="text-xl font-bold text-surface-900 dark:text-surface-50 mb-6 flex items-center gap-2">
-                <AlertCircle className="w-5 h-5 text-amber-500" /> Diagnostics Techniques
-              </h2>
-              <div className="space-y-4">
-                {data.diagnostics.map((diag, idx) => {
-                  const severityInfo = getSeverityColor(diag.severity)
-                  return (
-                    <div key={idx} className={cn('rounded-lg p-4 border', severityInfo.bg, severityInfo.border)}>
-                      <div className="flex items-start gap-3">
-                        <AlertCircle className={cn('w-5 h-5 flex-shrink-0 mt-0.5', severityInfo.color)} />
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-surface-900 dark:text-surface-50">{diag.title}</h4>
-                          <p className="text-sm text-surface-600 dark:text-surface-400 mt-1">{diag.description}</p>
+            {data.diagnostics.length > 0 && (
+              <div className="bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-6">
+                <h2 className="text-xl font-bold text-surface-900 dark:text-surface-50 mb-6 flex items-center gap-2">
+                  <AlertCircle className="w-5 h-5 text-amber-500" /> Diagnostics Techniques
+                </h2>
+                <div className="space-y-4">
+                  {data.diagnostics.map((diag, idx) => {
+                    const severityInfo = getSeverityColor(diag.severity)
+                    return (
+                      <div key={idx} className={cn('rounded-lg p-4 border', severityInfo.bg, severityInfo.border)}>
+                        <div className="flex items-start gap-3">
+                          <AlertCircle className={cn('w-5 h-5 flex-shrink-0 mt-0.5', severityInfo.color)} />
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-surface-900 dark:text-surface-50">{diag.title}</h4>
+                            <p className="text-sm text-surface-600 dark:text-surface-400 mt-1">{diag.description}</p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )
-                })}
+                    )
+                  })}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Competitor Comparison */}
-            <div className="bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-6">
-              <h2 className="text-xl font-bold text-surface-900 dark:text-surface-50 mb-6 flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-blue-500" /> Comparaison avec les Concurrents
-              </h2>
-              <CompetitorComparison competitors={data.competitors} />
-            </div>
+            {data.competitors.length > 0 && (
+              <div className="bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-6">
+                <h2 className="text-xl font-bold text-surface-900 dark:text-surface-50 mb-6 flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5 text-blue-500" /> Comparaison avec les Concurrents
+                </h2>
+                <CompetitorComparison competitors={data.competitors} />
+              </div>
+            )}
 
             {/* Action Buttons */}
             <div className="flex gap-3">

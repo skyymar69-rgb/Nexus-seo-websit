@@ -49,10 +49,19 @@ const jsonLd = {
     {
       '@type': 'Organization',
       '@id': `${BASE_URL}/#organization`,
-      name: 'Nexus SEO',
+      name: 'Nexus SEO — par Kayzen Lyon',
       url: BASE_URL,
       logo: { '@type': 'ImageObject', url: `${BASE_URL}/logo.png` },
-      sameAs: ['https://twitter.com/nexusseo', 'https://linkedin.com/company/nexusseo'],
+      sameAs: ['https://kayzen-lyon.fr'],
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: '6, rue Pierre Termier',
+        addressLocality: 'Lyon',
+        postalCode: '69009',
+        addressCountry: 'FR',
+      },
+      telephone: '+33487776861',
+      email: 'contact@kayzen-lyon.fr',
     },
     {
       '@type': 'WebSite',

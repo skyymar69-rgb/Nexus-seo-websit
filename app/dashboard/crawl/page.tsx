@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { cn, formatNumber } from '@/lib/utils';
 import {
   BarChart3,
@@ -17,6 +17,8 @@ import {
   Image,
   Search,
 } from 'lucide-react';
+import { useWebsite } from '@/contexts/WebsiteContext';
+import { UrlInput } from '@/components/shared/UrlInput';
 
 interface CrawledPage {
   url: string;
@@ -53,11 +55,19 @@ interface CrawlData {
 }
 
 export default function CrawlPage() {
+  const { selectedWebsite } = useWebsite();
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<CrawlData | null>(null);
   const [maxPages, setMaxPages] = useState(10);
+
+  // Pre-fill URL from selected website
+  useEffect(() => {
+    if (selectedWebsite?.domain && !url) {
+      setUrl(`https://${selectedWebsite.domain}`);
+    }
+  }, [selectedWebsite]);
 
   const handleCrawl = async () => {
     if (!url.trim()) {
@@ -128,44 +138,27 @@ export default function CrawlPage() {
             <label className="block text-sm font-medium text-surface-700 dark:text-surface-300">
               URL à crawler
             </label>
-            <div className="flex gap-3">
-              <input
-                type="url"
-                placeholder="https://example.com"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleCrawl()}
-                disabled={loading}
-                className="flex-1 h-10 rounded-lg border border-surface-200 dark:border-surface-600 bg-surface-50 dark:bg-surface-700 px-3 py-2 text-sm text-surface-900 dark:text-surface-50 placeholder:text-surface-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
-              />
+            <div className="flex gap-3 items-start">
+              <div className="flex-1">
+                <UrlInput
+                  value={url}
+                  onChange={setUrl}
+                  onSubmit={handleCrawl}
+                  loading={loading}
+                  submitLabel="Lancer le crawl"
+                />
+              </div>
               <select
                 value={maxPages}
                 onChange={(e) => setMaxPages(Number(e.target.value))}
                 disabled={loading}
-                className="h-10 rounded-lg border border-surface-200 dark:border-surface-600 bg-surface-50 dark:bg-surface-700 px-3 text-sm text-surface-900 dark:text-surface-50 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                className="h-[46px] rounded-lg border border-surface-200 dark:border-surface-600 bg-surface-50 dark:bg-surface-700 px-3 text-sm text-surface-900 dark:text-surface-50 focus:outline-none focus:ring-2 focus:ring-brand-500"
               >
                 <option value={5}>5 pages</option>
                 <option value={10}>10 pages</option>
                 <option value={25}>25 pages</option>
                 <option value={50}>50 pages</option>
               </select>
-              <button
-                onClick={handleCrawl}
-                disabled={loading}
-                className="inline-flex items-center justify-center h-10 rounded-lg bg-brand-600 hover:bg-brand-700 text-white px-6 text-sm font-medium transition-colors disabled:opacity-50"
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Crawling...
-                  </>
-                ) : (
-                  <>
-                    <Search className="w-4 h-4 mr-2" />
-                    Lancer le crawl
-                  </>
-                )}
-              </button>
             </div>
             {error && (
               <div className="flex items-start gap-3 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">

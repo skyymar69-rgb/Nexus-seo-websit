@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import { cn, getScoreColor, formatNumber } from '@/lib/utils'
 import {
   Search,
@@ -11,56 +11,44 @@ import {
   Smartphone,
   BookOpen,
   AlertCircle,
-  AlertTriangle,
-  Info,
   CheckCircle,
   ChevronDown,
+  ChevronRight,
   Globe,
-  Calendar,
   Loader2,
-  ExternalLink,
-  TrendingUp,
-  TrendingDown,
-  Minus,
   Download,
-  Eye,
-  ArrowRight,
-  Lightbulb,
-  Target,
-  Clock,
-  BarChart3,
-  PieChart as PieChartIcon,
+  Printer,
+  FileJson,
+  FileDown,
+  ArrowUpDown,
 } from 'lucide-react'
 import {
-  BarChart,
-  Bar,
-  LineChart,
-  Line,
-  PieChart,
-  Pie,
-  Cell,
   RadarChart,
   Radar,
   PolarGrid,
   PolarAngleAxis,
   PolarRadiusAxis,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
   ResponsiveContainer,
 } from 'recharts'
-import { ExportMenu } from '@/components/shared/ExportMenu'
+import { useWebsite } from '@/contexts/WebsiteContext'
+import { UrlInput } from '@/components/shared/UrlInput'
 
-interface ApiCheck {
+/* ────────────────────────────────────────────────────────────── */
+/*  Types                                                        */
+/* ────────────────────────────────────────────────────────────── */
+
+interface DetailedCheck {
   id: string
   category: 'meta' | 'content' | 'technical' | 'performance' | 'security' | 'mobile'
   name: string
   status: 'passed' | 'warning' | 'error'
   score: number
   value: string
-  recommendation: string
+  summary: string
+  report: string
+  bestPractices: string[]
+  impact: 'critical' | 'high' | 'medium' | 'low'
+  sources: string[]
 }
 
 interface ApiAuditData {
@@ -68,7 +56,8 @@ interface ApiAuditData {
   score: number
   loadTime: number
   htmlSize: number
-  checks: ApiCheck[]
+  checks: any[]
+  detailedChecks: DetailedCheck[]
   summary: {
     passed: number
     warnings: number
@@ -101,45 +90,35 @@ interface ApiAuditResponse {
   error?: string
 }
 
-interface DisplayCategory {
-  name: string
-  key: string
-  score: number
-  checks: ApiCheck[]
+type CategoryKey = 'meta' | 'content' | 'technical' | 'performance' | 'security' | 'mobile'
+
+/* ────────────────────────────────────────────────────────────── */
+/*  Constants                                                    */
+/* ────────────────────────────────────────────────────────────── */
+
+const categoryConfig: Record<CategoryKey, { label: string; icon: any; color: string; bgColor: string; borderColor: string }> = {
+  meta:        { label: 'Meta & SEO',       icon: FileText,   color: 'text-blue-600',   bgColor: 'bg-blue-50 dark:bg-blue-950/30',   borderColor: 'border-blue-200 dark:border-blue-800' },
+  content:     { label: 'Contenu',          icon: BookOpen,   color: 'text-purple-600', bgColor: 'bg-purple-50 dark:bg-purple-950/30', borderColor: 'border-purple-200 dark:border-purple-800' },
+  technical:   { label: 'Technique',        icon: Settings,   color: 'text-orange-600', bgColor: 'bg-orange-50 dark:bg-orange-950/30', borderColor: 'border-orange-200 dark:border-orange-800' },
+  performance: { label: 'Performance',      icon: Zap,        color: 'text-amber-600',  bgColor: 'bg-amber-50 dark:bg-amber-950/30',  borderColor: 'border-amber-200 dark:border-amber-800' },
+  security:    { label: 'Securite',         icon: Shield,     color: 'text-green-600',  bgColor: 'bg-green-50 dark:bg-green-950/30',  borderColor: 'border-green-200 dark:border-green-800' },
+  mobile:      { label: 'Mobile',           icon: Smartphone, color: 'text-cyan-600',   bgColor: 'bg-cyan-50 dark:bg-cyan-950/30',    borderColor: 'border-cyan-200 dark:border-cyan-800' },
 }
 
-interface PastAudit {
-  date: string
-  score: number
-  passed: number
-  warnings: number
-  errors: number
+const impactConfig: Record<string, { label: string; color: string; bg: string }> = {
+  critical: { label: 'Critique',  color: 'text-red-700 dark:text-red-300',    bg: 'bg-red-100 dark:bg-red-900/40' },
+  high:     { label: 'Haute',     color: 'text-orange-700 dark:text-orange-300', bg: 'bg-orange-100 dark:bg-orange-900/40' },
+  medium:   { label: 'Moyenne',   color: 'text-yellow-700 dark:text-yellow-300', bg: 'bg-yellow-100 dark:bg-yellow-900/40' },
+  low:      { label: 'Basse',     color: 'text-blue-700 dark:text-blue-300',  bg: 'bg-blue-100 dark:bg-blue-900/40' },
 }
 
-const categoryConfig: Record<string, { label: string; icon: any; color: string; bgColor: string }> = {
-  meta:        { label: 'SEO On-Page',   icon: FileText,   color: 'text-blue-500',   bgColor: 'bg-blue-500/10' },
-  content:     { label: 'Contenu',       icon: BookOpen,   color: 'text-purple-500', bgColor: 'bg-purple-500/10' },
-  technical:   { label: 'Technique',     icon: Settings,   color: 'text-orange-500', bgColor: 'bg-orange-500/10' },
-  performance: { label: 'Performance',   icon: Zap,        color: 'text-amber-500',  bgColor: 'bg-amber-500/10' },
-  security:    { label: 'Accessibilité', icon: Shield,     color: 'text-green-500',  bgColor: 'bg-green-500/10' },
-  mobile:      { label: 'Mobile',        icon: Smartphone, color: 'text-cyan-500',   bgColor: 'bg-cyan-500/10' },
-}
+const impactOrder = { critical: 0, high: 1, medium: 2, low: 3 }
 
-const DEMO_PAST_AUDITS: PastAudit[] = [
-  { date: '2025-03-29', score: 74, passed: 28, warnings: 8, errors: 4 },
-  { date: '2025-03-22', score: 70, passed: 25, warnings: 10, errors: 5 },
-  { date: '2025-03-15', score: 68, passed: 24, warnings: 11, errors: 5 },
-  { date: '2025-03-08', score: 65, passed: 22, warnings: 12, errors: 6 },
-  { date: '2025-03-01', score: 62, passed: 20, warnings: 13, errors: 7 },
-]
+const CATEGORY_ORDER: CategoryKey[] = ['meta', 'content', 'technical', 'performance', 'security', 'mobile']
 
-const DEMO_RECOMMENDATIONS = [
-  { id: '1', priority: 'critique', title: 'Optimiser les images en WebP', impact: '+15 points', effort: '2-3 jours' },
-  { id: '2', priority: 'haute', title: 'Implémenter la mise en cache du navigateur', impact: '+12 points', effort: '1-2 jours' },
-  { id: '3', priority: 'haute', title: 'Améliorer les Core Web Vitals (LCP)', impact: '+10 points', effort: '3-5 jours' },
-  { id: '4', priority: 'moyenne', title: 'Ajouter des schémas structurés JSON-LD', impact: '+8 points', effort: '1 jour' },
-  { id: '5', priority: 'moyenne', title: 'Réduire le JavaScript non critique', impact: '+7 points', effort: '2-3 jours' },
-]
+/* ────────────────────────────────────────────────────────────── */
+/*  Helpers                                                      */
+/* ────────────────────────────────────────────────────────────── */
 
 function getGrade(score: number): string {
   if (score >= 90) return 'A'
@@ -149,75 +128,312 @@ function getGrade(score: number): string {
   return 'F'
 }
 
-function getSeverityFromStatus(status: string) {
-  switch (status) {
-    case 'error':   return { label: 'critique', icon: AlertCircle, color: 'text-red-500', border: 'border-red-200 bg-red-50 dark:bg-red-950/20 dark:border-red-900', badge: 'bg-red-200/50' }
-    case 'warning': return { label: 'avertissement', icon: AlertTriangle, color: 'text-orange-500', border: 'border-orange-200 bg-orange-50 dark:bg-orange-950/20 dark:border-orange-900', badge: 'bg-orange-200/50' }
-    case 'passed':  return { label: 'réussi', icon: CheckCircle, color: 'text-green-500', border: 'border-green-200 bg-green-50 dark:bg-green-950/20 dark:border-green-900', badge: 'bg-green-200/50' }
-    default:        return { label: 'info', icon: Info, color: 'text-blue-500', border: 'border-blue-200 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-900', badge: 'bg-blue-200/50' }
-  }
+function getGaugeColor(score: number): string {
+  if (score >= 80) return '#22c55e'
+  if (score >= 60) return '#f59e0b'
+  return '#ef4444'
 }
 
-function ExpandableCheck({ check }: { check: ApiCheck }) {
+function statusIcon(status: string) {
+  if (status === 'passed') return <span className="inline-block w-2.5 h-2.5 rounded-full bg-green-500 flex-shrink-0" />
+  if (status === 'warning') return <span className="inline-block w-2.5 h-2.5 rounded-full bg-amber-500 flex-shrink-0" />
+  return <span className="inline-block w-2.5 h-2.5 rounded-full bg-red-500 flex-shrink-0" />
+}
+
+/** Render simple markdown-like formatting: **bold**, bullet points */
+function renderReport(text: string) {
+  const lines = text.split('\n')
+  return lines.map((line, i) => {
+    const trimmed = line.trim()
+    if (!trimmed) return <br key={i} />
+
+    // Bullet points
+    if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+      return (
+        <li key={i} className="ml-4 list-disc text-sm text-surface-700 dark:text-surface-300 leading-relaxed">
+          {renderInlineMarkdown(trimmed.slice(2))}
+        </li>
+      )
+    }
+
+    return (
+      <p key={i} className="text-sm text-surface-700 dark:text-surface-300 leading-relaxed">
+        {renderInlineMarkdown(trimmed)}
+      </p>
+    )
+  })
+}
+
+function renderInlineMarkdown(text: string) {
+  // Replace **bold** with <strong>
+  const parts = text.split(/(\*\*[^*]+\*\*)/)
+  return parts.map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={i} className="font-semibold text-surface-900 dark:text-surface-100">{part.slice(2, -2)}</strong>
+    }
+    return <span key={i}>{part}</span>
+  })
+}
+
+/* ────────────────────────────────────────────────────────────── */
+/*  Export helpers                                                */
+/* ────────────────────────────────────────────────────────────── */
+
+function downloadFile(content: string, filename: string, type: string) {
+  const blob = new Blob([content], { type })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
+}
+
+function generateMarkdownReport(data: ApiAuditData): string {
+  const date = new Date().toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })
+  const grade = getGrade(data.score)
+  const checks = data.detailedChecks || []
+
+  let md = `# Rapport d'Audit SEO --- ${data.url}\n\n`
+  md += `**Date** : ${date}\n`
+  md += `**Score global** : ${data.score}/100 (${grade})\n\n`
+  md += `## Resume\n\n`
+  md += `- ${data.summary.passed} controles reussis\n`
+  md += `- ${data.summary.warnings} avertissements\n`
+  md += `- ${data.summary.errors} erreurs\n\n`
+  md += `## Details par categorie\n\n`
+
+  for (const cat of CATEGORY_ORDER) {
+    const config = categoryConfig[cat]
+    const catChecks = checks.filter(c => c.category === cat)
+    if (catChecks.length === 0) continue
+
+    md += `### ${config.label}\n\n`
+
+    for (const check of catChecks) {
+      const statusEmoji = check.status === 'passed' ? 'OK' : check.status === 'warning' ? 'AVERT.' : 'ERREUR'
+      md += `#### ${check.name} --- ${check.score}/100 [${statusEmoji}]\n\n`
+      md += `${check.report}\n\n`
+
+      if (check.bestPractices.length > 0) {
+        md += `**Bonnes pratiques 2026** :\n\n`
+        for (const bp of check.bestPractices) {
+          md += `- ${bp}\n`
+        }
+        md += '\n'
+      }
+
+      if (check.sources.length > 0) {
+        md += `**Sources** : ${check.sources.join(', ')}\n\n`
+      }
+
+      md += `---\n\n`
+    }
+  }
+
+  return md
+}
+
+function generateTextReport(data: ApiAuditData): string {
+  const date = new Date().toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })
+  const grade = getGrade(data.score)
+  const checks = data.detailedChecks || []
+
+  let txt = `RAPPORT D'AUDIT SEO\n`
+  txt += `${'='.repeat(60)}\n\n`
+  txt += `URL      : ${data.url}\n`
+  txt += `Date     : ${date}\n`
+  txt += `Score    : ${data.score}/100 (Grade ${grade})\n\n`
+  txt += `RESUME\n${'-'.repeat(40)}\n`
+  txt += `Reussis         : ${data.summary.passed}\n`
+  txt += `Avertissements  : ${data.summary.warnings}\n`
+  txt += `Erreurs         : ${data.summary.errors}\n\n`
+
+  for (const cat of CATEGORY_ORDER) {
+    const config = categoryConfig[cat]
+    const catChecks = checks.filter(c => c.category === cat)
+    if (catChecks.length === 0) continue
+
+    txt += `\n${'='.repeat(60)}\n`
+    txt += `${config.label.toUpperCase()}\n`
+    txt += `${'='.repeat(60)}\n\n`
+
+    for (const check of catChecks) {
+      const statusLabel = check.status === 'passed' ? '[OK]' : check.status === 'warning' ? '[AVERT.]' : '[ERREUR]'
+      txt += `${check.name} - ${check.score}/100 ${statusLabel}\n`
+      txt += `${'-'.repeat(40)}\n`
+      // Strip markdown bold from report
+      txt += `${check.report.replace(/\*\*/g, '')}\n\n`
+
+      if (check.bestPractices.length > 0) {
+        txt += `Bonnes pratiques 2026 :\n`
+        for (const bp of check.bestPractices) {
+          txt += `  - ${bp}\n`
+        }
+        txt += '\n'
+      }
+
+      if (check.sources.length > 0) {
+        txt += `Sources : ${check.sources.join(', ')}\n`
+      }
+      txt += '\n'
+    }
+  }
+
+  return txt
+}
+
+/* ────────────────────────────────────────────────────────────── */
+/*  Sub-components                                               */
+/* ────────────────────────────────────────────────────────────── */
+
+function ImpactBadge({ impact }: { impact: string }) {
+  const cfg = impactConfig[impact] || impactConfig.low
+  return (
+    <span className={cn('px-2 py-0.5 text-[10px] font-bold uppercase rounded-full', cfg.color, cfg.bg)}>
+      {cfg.label}
+    </span>
+  )
+}
+
+function ExpandableDetailedCheck({ check }: { check: DetailedCheck }) {
   const [isExpanded, setIsExpanded] = useState(false)
-  const sev = getSeverityFromStatus(check.status)
-  const Icon = sev.icon
 
   return (
-    <div className={cn('rounded-lg border p-4 transition-all', sev.border)}>
-      <div className="flex items-start gap-3 cursor-pointer group" onClick={() => setIsExpanded(!isExpanded)}>
-        <div className={cn('flex-shrink-0 mt-1 p-1.5 rounded-lg', sev.badge)}>
-          <Icon className={cn('h-5 w-5', sev.color)} />
-        </div>
+    <div className="border border-surface-200 dark:border-surface-700 rounded-lg bg-white dark:bg-surface-800 overflow-hidden print:break-inside-avoid">
+      {/* Header row — always visible */}
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-surface-50 dark:hover:bg-surface-700/50 transition-colors print:hover:bg-transparent"
+      >
+        {statusIcon(check.status)}
         <div className="flex-1 min-w-0">
-          <h4 className="font-semibold text-surface-900 dark:text-surface-50 group-hover:underline">
-            {check.name}
-          </h4>
-          <p className="text-sm text-surface-600 dark:text-surface-400 mt-1">{check.value}</p>
+          <span className="text-sm font-medium text-surface-900 dark:text-surface-100">{check.name}</span>
+          <span className="text-sm text-surface-500 dark:text-surface-400 ml-2 hidden sm:inline">
+            --- {check.summary}
+          </span>
         </div>
-        <div className="flex items-center gap-2">
-          <span className={cn('text-sm font-bold', getScoreColor(check.score))}>{check.score}</span>
-          <button className="flex-shrink-0 p-2 hover:bg-surface-200/50 dark:hover:bg-surface-700/50 rounded-lg transition-colors">
-            <ChevronDown className={cn('h-4 w-4 text-surface-400 transition-transform', isExpanded && 'rotate-180')} />
-          </button>
-        </div>
+        <ImpactBadge impact={check.impact} />
+        <span className={cn('text-sm font-bold tabular-nums w-8 text-right', getScoreColor(check.score))}>
+          {check.score}
+        </span>
+        <ChevronDown className={cn('h-4 w-4 text-surface-400 transition-transform flex-shrink-0 print:hidden', isExpanded && 'rotate-180')} />
+      </button>
+
+      {/* Summary on mobile */}
+      <div className="px-4 pb-2 sm:hidden">
+        <p className="text-xs text-surface-500 dark:text-surface-400">{check.summary}</p>
       </div>
+
+      {/* Expanded panel */}
       {isExpanded && (
-        <div className="mt-4 pt-4 border-t border-current border-opacity-10">
-          <div className="bg-white dark:bg-surface-800/50 rounded-lg p-4">
-            <h5 className="font-semibold text-surface-900 dark:text-surface-50 text-sm mb-2">Recommandation</h5>
-            <p className="text-sm text-surface-600 dark:text-surface-400 leading-relaxed">{check.recommendation}</p>
+        <div className="border-t border-surface-100 dark:border-surface-700 px-4 py-4 space-y-4 bg-surface-50/50 dark:bg-surface-800/50">
+          {/* Report */}
+          <div className="space-y-1.5">
+            {renderReport(check.report)}
           </div>
+
+          {/* Best practices */}
+          {check.bestPractices.length > 0 && (
+            <div>
+              <h5 className="text-xs font-bold uppercase tracking-wider text-surface-500 dark:text-surface-400 mb-2">
+                Bonnes pratiques 2026
+              </h5>
+              <ul className="space-y-1">
+                {check.bestPractices.map((bp, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm text-surface-700 dark:text-surface-300">
+                    <ChevronRight className="h-4 w-4 text-brand-500 flex-shrink-0 mt-0.5" />
+                    {bp}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Sources */}
+          {check.sources.length > 0 && (
+            <div>
+              <h5 className="text-xs font-bold uppercase tracking-wider text-surface-500 dark:text-surface-400 mb-2">
+                Sources
+              </h5>
+              <div className="flex flex-wrap gap-2">
+                {check.sources.map((src, i) => (
+                  <span key={i} className="inline-flex items-center px-2 py-1 text-xs rounded bg-surface-100 dark:bg-surface-700 text-surface-600 dark:text-surface-300">
+                    {src}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
   )
 }
 
-function PriorityBadge({ priority }: { priority: string }) {
-  const colors = {
-    critique: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300',
-    haute: 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300',
-    moyenne: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300',
-    basse: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300',
-  }
+function ScoreGauge({ score, size = 180 }: { score: number; size?: number }) {
+  const radius = (size - 16) / 2
+  const circumference = 2 * Math.PI * radius
+  const offset = circumference - (score / 100) * circumference
+  const color = getGaugeColor(score)
+  const grade = getGrade(score)
+
   return (
-    <span className={cn('px-2 py-1 text-xs font-semibold rounded-full', colors[priority as keyof typeof colors] || colors.basse)}>
-      {priority.charAt(0).toUpperCase() + priority.slice(1)}
-    </span>
+    <div className="relative" style={{ width: size, height: size }}>
+      <svg className="w-full h-full transform -rotate-90" viewBox={`0 0 ${size} ${size}`}>
+        <circle
+          cx={size / 2} cy={size / 2} r={radius}
+          fill="none" stroke="currentColor" strokeWidth="10"
+          className="text-surface-200 dark:text-surface-700"
+        />
+        <circle
+          cx={size / 2} cy={size / 2} r={radius}
+          fill="none" stroke={color} strokeWidth="10"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          className="transition-all duration-1000 ease-out"
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="text-4xl font-extrabold" style={{ color }}>{score}</span>
+        <span className="text-xs text-surface-500 dark:text-surface-400">/100</span>
+        <span className="mt-1 px-2 py-0.5 text-xs font-bold rounded-full bg-surface-100 dark:bg-surface-700 text-surface-600 dark:text-surface-300">
+          Grade {grade}
+        </span>
+      </div>
+    </div>
   )
 }
 
+/* ────────────────────────────────────────────────────────────── */
+/*  Main Page                                                    */
+/* ────────────────────────────────────────────────────────────── */
+
 export default function AuditPage() {
+  const { selectedWebsite } = useWebsite()
   const [url, setUrl] = useState('')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
-  const [activeTab, setActiveTab] = useState('tous')
+  const [result, setResult] = useState<ApiAuditData | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  // Filters
+  const [activeCategory, setActiveCategory] = useState<'all' | CategoryKey>('all')
+  const [sortByImpact, setSortByImpact] = useState(false)
   const [depth, setDepth] = useState('500')
   const [mode, setMode] = useState('rapide')
   const [userAgent, setUserAgent] = useState('googlebot')
-  const [result, setResult] = useState<ApiAuditData | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [sortBy, setSortBy] = useState<'status' | 'score' | 'name'>('status')
+
+  // Pre-fill URL from selected website
+  useEffect(() => {
+    if (selectedWebsite?.domain && !url) {
+      setUrl(`https://${selectedWebsite.domain}`)
+    }
+  }, [selectedWebsite])
+
+  /* ── API call ─────────────────────────────────────────────── */
 
   const handleAnalyze = useCallback(async () => {
     if (!url) return
@@ -241,171 +457,123 @@ export default function AuditPage() {
       const json: ApiAuditResponse = await response.json()
 
       if (!json.success || !json.data) {
-        setError(json.error || 'Erreur lors de l\'analyse')
+        setError(json.error || "Erreur lors de l'analyse")
         return
       }
 
       setResult(json.data)
-    } catch (err) {
-      setError('Impossible de se connecter au serveur. Vérifiez votre connexion.')
+    } catch {
+      setError('Impossible de se connecter au serveur. Verifiez votre connexion.')
     } finally {
       setIsAnalyzing(false)
     }
   }, [url])
 
-  const categories: DisplayCategory[] = useMemo(() => {
-    if (!result) return []
-    const grouped: Record<string, ApiCheck[]> = {}
-    for (const check of result.checks) {
-      if (!grouped[check.category]) grouped[check.category] = []
-      grouped[check.category].push(check)
+  /* ── Derived data ──────────────────────────────────────────── */
+
+  const detailedChecks = result?.detailedChecks || []
+
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, { total: number; score: number; passed: number; warnings: number; errors: number }> = {}
+    for (const c of detailedChecks) {
+      if (!counts[c.category]) counts[c.category] = { total: 0, score: 0, passed: 0, warnings: 0, errors: 0 }
+      counts[c.category].total++
+      counts[c.category].score += c.score
+      if (c.status === 'passed') counts[c.category].passed++
+      else if (c.status === 'warning') counts[c.category].warnings++
+      else counts[c.category].errors++
     }
-    return Object.entries(grouped).map(([key, checks]) => {
-      const avgScore = Math.round(checks.reduce((sum, c) => sum + c.score, 0) / checks.length)
-      const config = categoryConfig[key]
-      return { name: config?.label || key, key, score: avgScore, checks }
-    })
-  }, [result])
+    return counts
+  }, [detailedChecks])
 
-  const allChecks = result?.checks || []
+  const radarData = useMemo(() => {
+    return CATEGORY_ORDER
+      .filter(cat => categoryCounts[cat])
+      .map(cat => ({
+        name: categoryConfig[cat].label,
+        score: Math.round(categoryCounts[cat].score / categoryCounts[cat].total),
+      }))
+  }, [categoryCounts])
 
-  const issueCounts = {
-    tous: allChecks.length,
-    critiques: allChecks.filter((c) => c.status === 'error').length,
-    avertissements: allChecks.filter((c) => c.status === 'warning').length,
-    reussis: allChecks.filter((c) => c.status === 'passed').length,
-  }
+  const filteredChecks = useMemo(() => {
+    let checks = activeCategory === 'all'
+      ? [...detailedChecks]
+      : detailedChecks.filter(c => c.category === activeCategory)
 
-  let filteredChecks = activeTab === 'tous' ? allChecks
-    : activeTab === 'critiques' ? allChecks.filter((c) => c.status === 'error')
-    : activeTab === 'avertissements' ? allChecks.filter((c) => c.status === 'warning')
-    : allChecks.filter((c) => c.status === 'passed')
+    if (sortByImpact) {
+      checks.sort((a, b) => impactOrder[a.impact] - impactOrder[b.impact])
+    }
 
-  if (sortBy === 'score') {
-    filteredChecks = [...filteredChecks].sort((a, b) => b.score - a.score)
-  } else if (sortBy === 'name') {
-    filteredChecks = [...filteredChecks].sort((a, b) => a.name.localeCompare(b.name))
-  }
+    return checks
+  }, [detailedChecks, activeCategory, sortByImpact])
 
+  const summary = result?.summary || { passed: 0, warnings: 0, errors: 0, totalChecks: 0 }
   const grade = result ? getGrade(result.score) : ''
 
-  const radarData = categories.map(cat => ({
-    name: cat.name.substring(0, 8),
-    score: cat.score,
-  }))
+  /* ── Export handlers ───────────────────────────────────────── */
 
-  const distributionData = [
-    { name: 'Réussis', value: issueCounts.reussis, color: '#10b981' },
-    { name: 'Avertissements', value: issueCounts.avertissements, color: '#f59e0b' },
-    { name: 'Critiques', value: issueCounts.critiques, color: '#ef4444' },
-  ]
+  const handleExportPDF = () => window.print()
 
-  const evolutionData = DEMO_PAST_AUDITS.slice().reverse()
-
-  const issuesByCategory = categories.map(cat => ({
-    name: cat.name,
-    errors: cat.checks.filter(c => c.status === 'error').length,
-    warnings: cat.checks.filter(c => c.status === 'warning').length,
-  }))
-
-  const previousScore = DEMO_PAST_AUDITS[0].score
-  const scoreChange = result ? result.score - previousScore : 0
-  const scoreChangePercent = result ? ((scoreChange / previousScore) * 100).toFixed(1) : '0'
-
-  const exportData = {
-    title: 'Audit SEO',
-    description: `Rapport d'audit SEO pour ${result?.url || 'votre site'}`,
-    website: result?.url || '',
-    date: new Date().toLocaleDateString('fr-FR'),
-    type: 'audit' as const,
-    summary: result ? {
-      'Score global': `${result.score}/100`,
-      'Grade': grade || 'N/A',
-      'Éléments réussis': result.summary.passed || 0,
-      'Avertissements': result.summary.warnings || 0,
-      'Erreurs critiques': result.summary.errors || 0,
-      'Temps de réponse': `${result.loadTime || 0}ms`,
-      'Taille HTML': `${((result.htmlSize || 0) / 1024).toFixed(1)} KB`,
-    } : undefined,
-    columns: [
-      { key: 'name', label: 'Vérification' },
-      { key: 'category', label: 'Catégorie' },
-      { key: 'status', label: 'Statut' },
-      { key: 'score', label: 'Score' },
-      { key: 'recommendation', label: 'Recommandation' },
-    ],
-    rows: result?.checks || [],
-    recommendations: DEMO_RECOMMENDATIONS.map(r => r.title),
+  const handleExportJSON = () => {
+    if (!result) return
+    const json = JSON.stringify(result, null, 2)
+    const domain = new URL(result.url).hostname.replace(/\./g, '-')
+    downloadFile(json, `audit-seo-${domain}.json`, 'application/json')
   }
 
+  const handleExportMD = () => {
+    if (!result) return
+    const md = generateMarkdownReport(result)
+    const domain = new URL(result.url).hostname.replace(/\./g, '-')
+    downloadFile(md, `audit-seo-${domain}.md`, 'text/markdown')
+  }
+
+  const handleExportTXT = () => {
+    if (!result) return
+    const txt = generateTextReport(result)
+    const domain = new URL(result.url).hostname.replace(/\./g, '-')
+    downloadFile(txt, `audit-seo-${domain}.txt`, 'text/plain')
+  }
+
+  /* ── Render ────────────────────────────────────────────────── */
+
   return (
-    <div className="space-y-8 pb-8">
-      {/* Header with Export */}
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-gradient-to-br from-brand-400 to-brand-600 rounded-lg">
-              <Search className="h-6 w-6 text-white" />
-            </div>
-            <h1 className="text-3xl font-bold text-surface-950 dark:text-surface-50">Audit SEO</h1>
+    <div className="space-y-6 pb-8 print:space-y-4 print:pb-0">
+
+      {/* ── Header ──────────────────────────────────────────── */}
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between print:flex-row print:items-center">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 bg-gradient-to-br from-brand-400 to-brand-600 rounded-lg print:hidden">
+            <Search className="h-6 w-6 text-white" />
           </div>
-          {result && (
-            <p className="text-surface-600 dark:text-surface-400">
-              {result.url}
-            </p>
-          )}
-        </div>
-        <div className="flex gap-2 flex-wrap">
-          {result && (
-            <ExportMenu
-              data={exportData}
-              label="Exporter"
-              variant="compact"
-            />
-          )}
-          <button className="px-4 py-2.5 rounded-lg bg-surface-200 dark:bg-surface-800 text-surface-900 dark:text-surface-50 hover:bg-surface-300 dark:hover:bg-surface-700 font-medium transition-colors inline-flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
-            Historique
-          </button>
+          <div>
+            <h1 className="text-2xl font-bold text-surface-950 dark:text-surface-50">Audit SEO</h1>
+            {result && (
+              <p className="text-sm text-surface-500 dark:text-surface-400">{result.url}</p>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* URL Input */}
-      <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6 space-y-4">
+      {/* ── URL Input Form ──────────────────────────────────── */}
+      <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 space-y-4 print:hidden">
         <div>
           <label className="block text-sm font-semibold text-surface-900 dark:text-surface-100 mb-3">
             Entrez l&apos;URL de votre site
           </label>
-          <div className="flex gap-3 flex-col lg:flex-row">
-            <div className="flex-1 flex items-center gap-3 px-4 py-2.5 rounded-lg border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800">
-              <Globe className="h-5 w-5 text-surface-400" />
-              <input
-                type="url"
-                placeholder="https://exemple.com"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleAnalyze()}
-                className="flex-1 bg-transparent text-surface-900 dark:text-surface-50 outline-none placeholder-surface-400"
-              />
-            </div>
-            <button
-              onClick={handleAnalyze}
-              disabled={!url || isAnalyzing}
-              className="px-6 py-2.5 rounded-lg bg-gradient-to-r from-brand-500 to-brand-600 text-white font-medium hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all whitespace-nowrap inline-flex items-center justify-center gap-2"
-            >
-              {isAnalyzing ? (
-                <><Loader2 className="h-4 w-4 animate-spin" /> Audit en cours...</>
-              ) : (
-                'Lancer un audit'
-              )}
-            </button>
-          </div>
+          <UrlInput
+            value={url}
+            onChange={setUrl}
+            onSubmit={handleAnalyze}
+            loading={isAnalyzing}
+            submitLabel="Lancer un audit"
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-xs font-semibold text-surface-600 dark:text-surface-400 mb-2">Profondeur d&apos;audit</label>
-            <select value={depth} onChange={(e) => setDepth(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800 text-surface-900 dark:text-surface-50 text-sm outline-none">
+            <select value={depth} onChange={(e) => setDepth(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 text-surface-900 dark:text-surface-50 text-sm outline-none">
               <option value="100">100 pages</option>
               <option value="500">500 pages</option>
               <option value="1000">1000 pages</option>
@@ -415,7 +583,7 @@ export default function AuditPage() {
             <label className="block text-xs font-semibold text-surface-600 dark:text-surface-400 mb-2">Mode de crawl</label>
             <div className="flex gap-2">
               {['rapide', 'complet'].map((m) => (
-                <button key={m} onClick={() => setMode(m)} className={cn('flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors', mode === m ? 'bg-brand-500 text-white' : 'bg-surface-200 dark:bg-surface-800 text-surface-700 dark:text-surface-300')}>
+                <button key={m} onClick={() => setMode(m)} className={cn('flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors', mode === m ? 'bg-brand-500 text-white' : 'bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300')}>
                   {m.charAt(0).toUpperCase() + m.slice(1)}
                 </button>
               ))}
@@ -423,7 +591,7 @@ export default function AuditPage() {
           </div>
           <div>
             <label className="block text-xs font-semibold text-surface-600 dark:text-surface-400 mb-2">User-Agent</label>
-            <select value={userAgent} onChange={(e) => setUserAgent(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800 text-surface-900 dark:text-surface-50 text-sm outline-none">
+            <select value={userAgent} onChange={(e) => setUserAgent(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 text-surface-900 dark:text-surface-50 text-sm outline-none">
               <option value="googlebot">Googlebot (Desktop)</option>
               <option value="mobile">Googlebot (Mobile)</option>
               <option value="firefox">Firefox (Desktop)</option>
@@ -432,23 +600,25 @@ export default function AuditPage() {
         </div>
       </div>
 
+      {/* ── Error ───────────────────────────────────────────── */}
       {error && (
-        <div className="rounded-lg border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/20 p-6">
+        <div className="rounded-lg border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/20 p-6 print:hidden">
           <div className="flex items-start gap-3">
             <AlertCircle className="h-6 w-6 text-red-500 flex-shrink-0 mt-0.5" />
             <div>
               <h3 className="font-semibold text-red-800 dark:text-red-300">Erreur d&apos;analyse</h3>
               <p className="text-sm text-red-600 dark:text-red-400 mt-1">{error}</p>
               <button onClick={handleAnalyze} className="mt-3 px-4 py-2 text-sm font-medium text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900/30 rounded-lg hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors">
-                Réessayer
+                Reessayer
               </button>
             </div>
           </div>
         </div>
       )}
 
+      {/* ── Loading ─────────────────────────────────────────── */}
       {isAnalyzing && (
-        <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-12">
+        <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-12 print:hidden">
           <div className="flex flex-col items-center justify-center gap-4">
             <div className="relative">
               <div className="w-20 h-20 rounded-full border-4 border-surface-200 dark:border-surface-700" />
@@ -462,315 +632,238 @@ export default function AuditPage() {
         </div>
       )}
 
+      {/* ── Results ─────────────────────────────────────────── */}
       {result && !isAnalyzing && (
         <>
-          {/* Last Audit Summary with Score Gauge */}
-          <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-8">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="flex-shrink-0">
-                <div className="relative w-48 h-48">
-                  <svg className="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
-                    <circle cx="100" cy="100" r="90" fill="none" stroke="currentColor" strokeWidth="8" className="text-surface-200 dark:text-surface-700" />
-                    <circle cx="100" cy="100" r="90" fill="none" stroke="currentColor" strokeWidth="8" strokeDasharray={`${(result.score / 100) * 565} 565`} strokeLinecap="round"
-                      className={cn('transition-all duration-1000', result.score >= 80 && 'text-green-500', result.score >= 60 && result.score < 80 && 'text-amber-500', result.score < 60 && 'text-red-500')} />
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center">
-                      <p className={cn('text-4xl font-bold', getScoreColor(result.score))}>{result.score}</p>
-                      <p className="text-sm text-surface-500 mt-1">/100</p>
-                      <p className="text-xs font-semibold mt-2 px-2 py-1 rounded-full bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400">
-                        Grade {grade}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+          {/* Export bar */}
+          <div className="flex flex-wrap items-center gap-2 rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 px-4 py-3 print:hidden">
+            <span className="text-sm font-semibold text-surface-700 dark:text-surface-300 mr-2">Exporter :</span>
+            <button onClick={handleExportPDF} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 text-surface-700 dark:text-surface-300 transition-colors">
+              <Printer className="h-3.5 w-3.5" /> PDF
+            </button>
+            <button onClick={handleExportJSON} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 text-surface-700 dark:text-surface-300 transition-colors">
+              <FileJson className="h-3.5 w-3.5" /> JSON
+            </button>
+            <button onClick={handleExportMD} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 text-surface-700 dark:text-surface-300 transition-colors">
+              <FileDown className="h-3.5 w-3.5" /> Markdown
+            </button>
+            <button onClick={handleExportTXT} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 text-surface-700 dark:text-surface-300 transition-colors">
+              <Download className="h-3.5 w-3.5" /> TXT
+            </button>
+          </div>
 
-              <div className="col-span-2 space-y-6">
-                <div>
-                  <h2 className="text-xl font-bold text-surface-900 dark:text-surface-50 mb-4">Résumé du dernier audit</h2>
-                  <div className="grid grid-cols-3 gap-3">
-                    <div className="rounded-lg bg-white dark:bg-surface-800 p-4 text-center">
-                      <p className="text-2xl font-bold text-green-600">{result.summary.passed}</p>
-                      <p className="text-xs text-surface-600 dark:text-surface-400 mt-1">Réussis</p>
-                    </div>
-                    <div className="rounded-lg bg-white dark:bg-surface-800 p-4 text-center">
-                      <p className="text-2xl font-bold text-amber-600">{result.summary.warnings}</p>
-                      <p className="text-xs text-surface-600 dark:text-surface-400 mt-1">Avertissements</p>
-                    </div>
-                    <div className="rounded-lg bg-white dark:bg-surface-800 p-4 text-center">
-                      <p className="text-2xl font-bold text-red-600">{result.summary.errors}</p>
-                      <p className="text-xs text-surface-600 dark:text-surface-400 mt-1">Critiques</p>
-                    </div>
-                  </div>
+          {/* Score + Summary + Radar */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Score gauge */}
+            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 flex flex-col items-center justify-center print:items-start">
+              <ScoreGauge score={result.score} />
+              <div className="mt-4 grid grid-cols-3 gap-3 w-full">
+                <div className="text-center rounded-lg bg-green-50 dark:bg-green-950/30 p-2">
+                  <p className="text-lg font-bold text-green-600">{summary.passed}</p>
+                  <p className="text-[10px] text-green-700 dark:text-green-400 font-medium">Reussis</p>
                 </div>
-
-                <div>
-                  <h2 className="text-xl font-bold text-surface-900 dark:text-surface-50 mb-4">Comparaison avec l&apos;audit précédent</h2>
-                  <div className="flex items-center gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-sm font-semibold text-surface-900 dark:text-surface-50">Changement de score</span>
-                        {scoreChange > 0 ? (
-                          <TrendingUp className="h-4 w-4 text-green-600" />
-                        ) : scoreChange < 0 ? (
-                          <TrendingDown className="h-4 w-4 text-red-600" />
-                        ) : (
-                          <Minus className="h-4 w-4 text-surface-500" />
-                        )}
-                      </div>
-                      <p className={cn('text-2xl font-bold', scoreChange > 0 ? 'text-green-600' : scoreChange < 0 ? 'text-red-600' : 'text-surface-600')}>
-                        {scoreChange > 0 ? '+' : ''}{scoreChange} points ({scoreChangePercent}%)
-                      </p>
-                    </div>
-                  </div>
+                <div className="text-center rounded-lg bg-amber-50 dark:bg-amber-950/30 p-2">
+                  <p className="text-lg font-bold text-amber-600">{summary.warnings}</p>
+                  <p className="text-[10px] text-amber-700 dark:text-amber-400 font-medium">Avert.</p>
+                </div>
+                <div className="text-center rounded-lg bg-red-50 dark:bg-red-950/30 p-2">
+                  <p className="text-lg font-bold text-red-600">{summary.errors}</p>
+                  <p className="text-[10px] text-red-700 dark:text-red-400 font-medium">Erreurs</p>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Category Scores Radar */}
-          <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-8">
-            <h2 className="text-xl font-bold text-surface-900 dark:text-surface-50 mb-6">Scores par catégorie</h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="h-80 flex items-center justify-center">
-                <ResponsiveContainer width="100%" height="100%">
-                  <RadarChart data={radarData}>
-                    <PolarGrid stroke="#e5e7eb" />
-                    <PolarAngleAxis dataKey="name" tick={{ fill: '#666' }} />
-                    <PolarRadiusAxis angle={90} domain={[0, 100]} />
-                    <Radar name="Score" dataKey="score" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} />
-                  </RadarChart>
-                </ResponsiveContainer>
-              </div>
-
+            {/* Category scores list */}
+            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6">
+              <h2 className="text-sm font-bold text-surface-900 dark:text-surface-50 mb-4 uppercase tracking-wider">Scores par categorie</h2>
               <div className="space-y-3">
-                {categories.map((cat) => {
-                  const config = categoryConfig[cat.key] || { label: cat.name, icon: Settings, color: 'text-surface-500', bgColor: 'bg-surface-500/10' }
-                  const CatIcon = config.icon
-                  const issueCount = cat.checks.filter(c => c.status === 'error' || c.status === 'warning').length
+                {CATEGORY_ORDER.filter(cat => categoryCounts[cat]).map(cat => {
+                  const cfg = categoryConfig[cat]
+                  const data = categoryCounts[cat]
+                  const avgScore = Math.round(data.score / data.total)
+                  const CatIcon = cfg.icon
                   return (
-                    <div key={cat.key} className="rounded-lg bg-white dark:bg-surface-800 p-4">
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex items-center gap-3">
-                          <div className={cn('p-2 rounded-lg', config.bgColor)}>
-                            <CatIcon className={cn('h-4 w-4', config.color)} />
-                          </div>
-                          <div>
-                            <p className="font-semibold text-surface-900 dark:text-surface-50 text-sm">{config.label}</p>
-                            <p className="text-xs text-surface-500">{issueCount} problème{issueCount !== 1 ? 's' : ''}</p>
-                          </div>
+                    <div key={cat}>
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-2">
+                          <CatIcon className={cn('h-4 w-4', cfg.color)} />
+                          <span className="text-xs font-medium text-surface-700 dark:text-surface-300">{cfg.label}</span>
                         </div>
-                        <p className={cn('text-lg font-bold', getScoreColor(cat.score))}>{cat.score}</p>
+                        <span className={cn('text-sm font-bold', getScoreColor(avgScore))}>{avgScore}</span>
                       </div>
-                      <div className="w-full h-2 rounded-full bg-surface-200 dark:bg-surface-700 overflow-hidden">
-                        <div className={cn('h-full rounded-full transition-all', cat.score >= 80 && 'bg-green-500', cat.score >= 60 && cat.score < 80 && 'bg-amber-500', cat.score < 60 && 'bg-red-500')} style={{ width: `${cat.score}%` }} />
+                      <div className="w-full h-1.5 rounded-full bg-surface-100 dark:bg-surface-700 overflow-hidden">
+                        <div
+                          className={cn('h-full rounded-full transition-all duration-700', avgScore >= 80 ? 'bg-green-500' : avgScore >= 60 ? 'bg-amber-500' : 'bg-red-500')}
+                          style={{ width: `${avgScore}%` }}
+                        />
                       </div>
                     </div>
                   )
                 })}
               </div>
             </div>
-          </div>
 
-          {/* Issues Summary Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-800 p-4">
-              <div className="flex items-center gap-3 mb-2">
-                <CheckCircle className="h-5 w-5 text-green-600" />
-                <p className="text-sm text-surface-600 dark:text-surface-400">Réussis</p>
+            {/* Radar chart */}
+            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 print:hidden">
+              <h2 className="text-sm font-bold text-surface-900 dark:text-surface-50 mb-4 uppercase tracking-wider">Radar</h2>
+              <div className="h-56">
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart data={radarData}>
+                    <PolarGrid stroke="#e5e7eb" />
+                    <PolarAngleAxis dataKey="name" tick={{ fill: '#666', fontSize: 11 }} />
+                    <PolarRadiusAxis angle={90} domain={[0, 100]} tick={false} />
+                    <Radar name="Score" dataKey="score" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.5} />
+                  </RadarChart>
+                </ResponsiveContainer>
               </div>
-              <p className="text-2xl font-bold text-green-600">{issueCounts.reussis}</p>
-            </div>
-            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-800 p-4">
-              <div className="flex items-center gap-3 mb-2">
-                <AlertTriangle className="h-5 w-5 text-amber-600" />
-                <p className="text-sm text-surface-600 dark:text-surface-400">Avertissements</p>
-              </div>
-              <p className="text-2xl font-bold text-amber-600">{issueCounts.avertissements}</p>
-            </div>
-            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-800 p-4">
-              <div className="flex items-center gap-3 mb-2">
-                <AlertCircle className="h-5 w-5 text-red-600" />
-                <p className="text-sm text-surface-600 dark:text-surface-400">Critiques</p>
-              </div>
-              <p className="text-2xl font-bold text-red-600">{issueCounts.critiques}</p>
-            </div>
-            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-800 p-4">
-              <div className="flex items-center gap-3 mb-2">
-                <BarChart3 className="h-5 w-5 text-blue-600" />
-                <p className="text-sm text-surface-600 dark:text-surface-400">Total</p>
-              </div>
-              <p className="text-2xl font-bold text-blue-600">{issueCounts.tous}</p>
             </div>
           </div>
 
-          {/* Detailed Checks Table */}
-          <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-8">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
-              <h2 className="text-xl font-bold text-surface-900 dark:text-surface-50">Vérifications détaillées</h2>
-              <div className="flex gap-2">
-                <select value={sortBy} onChange={(e) => setSortBy(e.target.value as any)} className="px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800 text-surface-900 dark:text-surface-50 text-sm outline-none">
-                  <option value="status">Trier par statut</option>
-                  <option value="score">Trier par score</option>
-                  <option value="name">Trier par nom</option>
-                </select>
-              </div>
+          {/* ── Category filter tabs + sort ──────────────────── */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 print:hidden">
+            <div className="flex flex-wrap gap-1.5">
+              <button
+                onClick={() => setActiveCategory('all')}
+                className={cn(
+                  'px-3 py-1.5 text-xs font-medium rounded-lg transition-colors',
+                  activeCategory === 'all'
+                    ? 'bg-brand-500 text-white'
+                    : 'bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400 hover:bg-surface-200 dark:hover:bg-surface-700'
+                )}
+              >
+                Tous ({detailedChecks.length})
+              </button>
+              {CATEGORY_ORDER.filter(cat => categoryCounts[cat]).map(cat => {
+                const cfg = categoryConfig[cat]
+                const count = categoryCounts[cat]?.total || 0
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => setActiveCategory(cat)}
+                    className={cn(
+                      'px-3 py-1.5 text-xs font-medium rounded-lg transition-colors',
+                      activeCategory === cat
+                        ? 'bg-brand-500 text-white'
+                        : 'bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400 hover:bg-surface-200 dark:hover:bg-surface-700'
+                    )}
+                  >
+                    {cfg.label} ({count})
+                  </button>
+                )
+              })}
             </div>
-
-            <div className="flex flex-wrap gap-2 border-b border-surface-200 dark:border-surface-800 mb-6">
-              {[
-                { key: 'tous', label: 'Tous', count: issueCounts.tous },
-                { key: 'critiques', label: 'Critiques', count: issueCounts.critiques },
-                { key: 'avertissements', label: 'Avertissements', count: issueCounts.avertissements },
-                { key: 'reussis', label: 'Réussis', count: issueCounts.reussis },
-              ].map((tab) => (
-                <button
-                  key={tab.key}
-                  onClick={() => setActiveTab(tab.key)}
-                  className={cn(
-                    'px-4 py-3 font-medium text-sm border-b-2 transition-colors',
-                    activeTab === tab.key
-                      ? 'border-brand-500 text-brand-600 dark:text-brand-400'
-                      : 'border-transparent text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-surface-200'
-                  )}
-                >
-                  {tab.label}
-                  <span className="ml-2 inline-flex items-center justify-center w-5 h-5 text-xs rounded-full bg-surface-200 dark:bg-surface-700 text-surface-700 dark:text-surface-300 font-semibold">
-                    {tab.count}
-                  </span>
-                </button>
-              ))}
-            </div>
-
-            <div className="space-y-3">
-              {filteredChecks.length > 0 ? (
-                filteredChecks.map((check, idx) => <ExpandableCheck key={idx} check={check} />)
-              ) : (
-                <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-800 p-8 text-center">
-                  <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-                  <p className="text-lg font-semibold text-surface-900 dark:text-surface-50">Aucun problème détecté</p>
-                  <p className="text-sm text-surface-600 dark:text-surface-400 mt-2">Votre site respecte toutes les bonnes pratiques pour cette catégorie.</p>
-                </div>
+            <button
+              onClick={() => setSortByImpact(!sortByImpact)}
+              className={cn(
+                'inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors',
+                sortByImpact
+                  ? 'bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300'
+                  : 'bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400 hover:bg-surface-200 dark:hover:bg-surface-700'
               )}
-            </div>
+            >
+              <ArrowUpDown className="h-3.5 w-3.5" />
+              {sortByImpact ? 'Tri par impact' : 'Trier par impact'}
+            </button>
           </div>
 
-          {/* Charts Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Distribution Pie Chart */}
-            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6">
-              <h3 className="text-lg font-bold text-surface-900 dark:text-surface-50 mb-4">Distribution des résultats</h3>
-              <div className="h-80 flex items-center justify-center">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={distributionData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={100}
-                      paddingAngle={2}
-                      dataKey="value"
-                    >
-                      {distributionData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
+          {/* ── Checks grouped by category ──────────────────── */}
+          <div className="space-y-6 print:space-y-4">
+            {activeCategory === 'all' ? (
+              // Show grouped by category
+              CATEGORY_ORDER.filter(cat => {
+                const catChecks = filteredChecks.filter(c => c.category === cat)
+                return catChecks.length > 0
+              }).map(cat => {
+                const cfg = categoryConfig[cat]
+                const CatIcon = cfg.icon
+                const catChecks = filteredChecks.filter(c => c.category === cat)
+                const avgScore = Math.round(catChecks.reduce((s, c) => s + c.score, 0) / catChecks.length)
 
-            {/* Evolution Line Chart */}
-            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6">
-              <h3 className="text-lg font-bold text-surface-900 dark:text-surface-50 mb-4">Évolution des scores (10 derniers audits)</h3>
-              <div className="h-80">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={evolutionData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="date" />
-                    <YAxis domain={[0, 100]} />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="score" stroke="#3b82f6" dot={{ fill: '#3b82f6' }} strokeWidth={2} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            {/* Issues by Category Bar Chart */}
-            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6 lg:col-span-2">
-              <h3 className="text-lg font-bold text-surface-900 dark:text-surface-50 mb-4">Problèmes par catégorie</h3>
-              <div className="h-80">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={issuesByCategory}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="errors" fill="#ef4444" name="Erreurs" />
-                    <Bar dataKey="warnings" fill="#f59e0b" name="Avertissements" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </div>
-
-          {/* AI Recommendations Panel */}
-          <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <Lightbulb className="h-6 w-6 text-amber-500" />
-              <h2 className="text-xl font-bold text-surface-900 dark:text-surface-50">Recommandations prioritaires (IA)</h2>
-            </div>
-            <div className="space-y-3">
-              {DEMO_RECOMMENDATIONS.slice(0, 5).map((rec) => (
-                <div key={rec.id} className="rounded-lg bg-white dark:bg-surface-800 p-4 border border-surface-200 dark:border-surface-700">
-                  <div className="flex items-start gap-4">
-                    <PriorityBadge priority={rec.priority} />
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-surface-900 dark:text-surface-50 mb-1">{rec.title}</h4>
-                      <div className="flex gap-4 text-sm text-surface-600 dark:text-surface-400">
-                        <span className="flex items-center gap-1">
-                          <TrendingUp className="h-4 w-4" /> {rec.impact}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Clock className="h-4 w-4" /> {rec.effort}
-                        </span>
-                      </div>
+                return (
+                  <div key={cat}>
+                    {/* Category header */}
+                    <div className={cn('flex items-center gap-3 px-4 py-3 rounded-t-lg border border-b-0', cfg.bgColor, cfg.borderColor)}>
+                      <CatIcon className={cn('h-5 w-5', cfg.color)} />
+                      <h3 className="text-sm font-bold text-surface-900 dark:text-surface-100">{cfg.label}</h3>
+                      <span className={cn('ml-auto text-sm font-bold', getScoreColor(avgScore))}>{avgScore}/100</span>
                     </div>
-                    <ArrowRight className="h-5 w-5 text-surface-400" />
+                    <div className="space-y-0 border-x border-b border-surface-200 dark:border-surface-700 rounded-b-lg overflow-hidden">
+                      {catChecks.map(check => (
+                        <ExpandableDetailedCheck key={check.id} check={check} />
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              })
+            ) : (
+              // Show flat list for filtered category
+              <div className="space-y-2">
+                {filteredChecks.length > 0 ? (
+                  filteredChecks.map(check => (
+                    <ExpandableDetailedCheck key={check.id} check={check} />
+                  ))
+                ) : (
+                  <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-800 p-8 text-center">
+                    <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
+                    <p className="text-lg font-semibold text-surface-900 dark:text-surface-50">Aucun probleme detecte</p>
+                    <p className="text-sm text-surface-600 dark:text-surface-400 mt-2">Votre site respecte toutes les bonnes pratiques pour cette categorie.</p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* ── Technical Summary ────────────────────────────── */}
+          <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6">
+            <h3 className="text-sm font-bold text-surface-900 dark:text-surface-50 mb-4 uppercase tracking-wider">Resume technique</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="rounded-lg bg-surface-50 dark:bg-surface-800 p-3">
+                <p className="text-xs text-surface-500 mb-1">HTTPS</p>
+                <p className={cn('text-lg font-bold', result.url.startsWith('https') ? 'text-green-600' : 'text-red-500')}>
+                  {result.url.startsWith('https') ? 'Actif' : 'Inactif'}
+                </p>
+              </div>
+              <div className="rounded-lg bg-surface-50 dark:bg-surface-800 p-3">
+                <p className="text-xs text-surface-500 mb-1">Temps de reponse</p>
+                <p className="text-lg font-bold text-surface-900 dark:text-surface-50">{result.loadTime}ms</p>
+              </div>
+              <div className="rounded-lg bg-surface-50 dark:bg-surface-800 p-3">
+                <p className="text-xs text-surface-500 mb-1">Taille HTML</p>
+                <p className="text-lg font-bold text-surface-900 dark:text-surface-50">{(result.htmlSize / 1024).toFixed(1)} KB</p>
+              </div>
+              <div className="rounded-lg bg-surface-50 dark:bg-surface-800 p-3">
+                <p className="text-xs text-surface-500 mb-1">Verifications</p>
+                <p className="text-lg font-bold text-surface-900 dark:text-surface-50">
+                  {summary.totalChecks}
+                  <span className="text-xs font-normal text-surface-500 ml-1">({summary.passed} OK)</span>
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* Meta & Content Info */}
+          {/* ── Meta & Content panels ────────────────────────── */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6">
-              <h3 className="text-lg font-bold text-surface-900 dark:text-surface-50 mb-4">Balises Meta</h3>
+            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6">
+              <h3 className="text-sm font-bold text-surface-900 dark:text-surface-50 mb-4 uppercase tracking-wider">Balises Meta</h3>
               <div className="space-y-3">
                 {[
                   { label: 'Title', value: result.meta.title, warn: 'Manquant' },
                   { label: 'Description', value: result.meta.description, warn: 'Manquante' },
-                  { label: 'Canonical', value: result.meta.canonical, warn: 'Non défini' },
+                  { label: 'Canonical', value: result.meta.canonical, warn: 'Non defini' },
                 ].map(({ label, value, warn }) => (
-                  <div key={label} className="rounded-lg bg-white dark:bg-surface-800 p-3">
-                    <p className="text-xs font-semibold text-surface-500 mb-1">{label}</p>
+                  <div key={label} className="rounded-lg bg-surface-50 dark:bg-surface-800 p-3">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-surface-400 mb-1">{label}</p>
                     <p className="text-sm text-surface-900 dark:text-surface-50 break-all">
                       {value || <span className="text-red-500 italic">{warn}</span>}
                     </p>
-                    {value && <p className="text-xs text-surface-400 mt-1">{value.length} caractères</p>}
+                    {value && <p className="text-[10px] text-surface-400 mt-1">{value.length} caracteres</p>}
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6">
-              <h3 className="text-lg font-bold text-surface-900 dark:text-surface-50 mb-4">Analyse du contenu</h3>
+            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6">
+              <h3 className="text-sm font-bold text-surface-900 dark:text-surface-50 mb-4 uppercase tracking-wider">Analyse du contenu</h3>
               <div className="grid grid-cols-2 gap-3">
                 {[
                   { label: 'Mots', value: formatNumber(result.content.wordCount) },
@@ -780,99 +873,28 @@ export default function AuditPage() {
                   { label: 'Images', value: result.content.imageCount, sub: result.content.imageCount - result.content.imagesWithAlt > 0 ? `${result.content.imageCount - result.content.imagesWithAlt} sans alt` : undefined },
                   { label: 'Liens', value: result.content.internalLinks + result.content.externalLinks, sub: `${result.content.internalLinks} int. / ${result.content.externalLinks} ext.` },
                 ].map(({ label, value, color, sub }) => (
-                  <div key={label} className="rounded-lg bg-white dark:bg-surface-800 p-3">
-                    <p className="text-xs font-semibold text-surface-500 mb-1">{label}</p>
-                    <p className={cn('text-2xl font-bold', color || 'text-surface-900 dark:text-surface-50')}>{value}</p>
-                    {sub && <p className="text-xs text-surface-400 mt-1">{sub}</p>}
+                  <div key={label} className="rounded-lg bg-surface-50 dark:bg-surface-800 p-3">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-surface-400 mb-1">{label}</p>
+                    <p className={cn('text-xl font-bold', color || 'text-surface-900 dark:text-surface-50')}>{value}</p>
+                    {sub && <p className="text-[10px] text-surface-400 mt-1">{sub}</p>}
                   </div>
                 ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Audit History */}
-          <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-8">
-            <h2 className="text-xl font-bold text-surface-900 dark:text-surface-50 mb-6">Historique des audits</h2>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="border-b border-surface-200 dark:border-surface-800">
-                  <tr>
-                    <th className="text-left py-3 px-4 font-semibold text-surface-900 dark:text-surface-50">Date</th>
-                    <th className="text-left py-3 px-4 font-semibold text-surface-900 dark:text-surface-50">Score</th>
-                    <th className="text-left py-3 px-4 font-semibold text-surface-900 dark:text-surface-50">Réussis</th>
-                    <th className="text-left py-3 px-4 font-semibold text-surface-900 dark:text-surface-50">Avertissements</th>
-                    <th className="text-left py-3 px-4 font-semibold text-surface-900 dark:text-surface-50">Erreurs</th>
-                    <th className="text-left py-3 px-4 font-semibold text-surface-900 dark:text-surface-50">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {DEMO_PAST_AUDITS.map((audit, idx) => (
-                    <tr key={idx} className="border-b border-surface-200 dark:border-surface-800 hover:bg-white dark:hover:bg-surface-800/50 transition-colors">
-                      <td className="py-3 px-4 text-surface-600 dark:text-surface-400">{audit.date}</td>
-                      <td className="py-3 px-4">
-                        <span className={cn('font-bold', getScoreColor(audit.score))}>{audit.score}</span>
-                      </td>
-                      <td className="py-3 px-4 text-green-600">{audit.passed}</td>
-                      <td className="py-3 px-4 text-amber-600">{audit.warnings}</td>
-                      <td className="py-3 px-4 text-red-600">{audit.errors}</td>
-                      <td className="py-3 px-4">
-                        <div className="flex gap-2">
-                          <button className="text-brand-600 dark:text-brand-400 hover:underline text-xs font-medium flex items-center gap-1">
-                            <Eye className="h-3 w-3" /> Voir
-                          </button>
-                          <button className="text-surface-600 dark:text-surface-400 hover:underline text-xs font-medium">
-                            Comparer
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Technical Summary */}
-          <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6">
-            <h3 className="text-lg font-bold text-surface-900 dark:text-surface-50 mb-6">Résumé technique</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="rounded-lg bg-white dark:bg-surface-800 p-4">
-                <p className="text-sm text-surface-600 dark:text-surface-400 mb-2">HTTPS</p>
-                <p className={cn('text-2xl font-bold', result.url.startsWith('https') ? 'text-green-600' : 'text-red-500')}>
-                  {result.url.startsWith('https') ? 'Actif' : 'Inactif'}
-                </p>
-              </div>
-              <div className="rounded-lg bg-white dark:bg-surface-800 p-4">
-                <p className="text-sm text-surface-600 dark:text-surface-400 mb-2">Temps de réponse</p>
-                <p className="text-2xl font-bold text-surface-900 dark:text-surface-50">{result.loadTime}ms</p>
-              </div>
-              <div className="rounded-lg bg-white dark:bg-surface-800 p-4">
-                <p className="text-sm text-surface-600 dark:text-surface-400 mb-2">Taille HTML</p>
-                <p className="text-2xl font-bold text-surface-900 dark:text-surface-50">{(result.htmlSize / 1024).toFixed(1)} KB</p>
-              </div>
-              <div className="rounded-lg bg-white dark:bg-surface-800 p-4">
-                <p className="text-sm text-surface-600 dark:text-surface-400 mb-2">Vérifications</p>
-                <p className="text-2xl font-bold text-surface-900 dark:text-surface-50">
-                  {result.summary.totalChecks}
-                  <span className="text-sm font-normal text-surface-500 ml-1">
-                    ({result.summary.passed} OK)
-                  </span>
-                </p>
               </div>
             </div>
           </div>
         </>
       )}
 
+      {/* ── Empty state ─────────────────────────────────────── */}
       {!result && !isAnalyzing && !error && (
-        <div className="rounded-lg border border-dashed border-surface-300 dark:border-surface-700 bg-surface-50/50 dark:bg-surface-900/50 p-16">
+        <div className="rounded-lg border border-dashed border-surface-300 dark:border-surface-700 bg-white/50 dark:bg-surface-900/50 p-16 print:hidden">
           <div className="flex flex-col items-center justify-center text-center">
             <div className="p-4 rounded-full bg-brand-50 dark:bg-brand-950/30 mb-4">
               <Search className="h-8 w-8 text-brand-500" />
             </div>
             <h3 className="text-xl font-bold text-surface-900 dark:text-surface-50 mb-2">Lancez votre premier audit</h3>
             <p className="text-surface-500 dark:text-surface-400 max-w-md">
-              Entrez l&apos;URL de votre site ci-dessus pour obtenir une analyse SEO complète avec des recommandations personnalisées basées sur l&apos;IA.
+              Entrez l&apos;URL de votre site ci-dessus pour obtenir une analyse SEO complete avec des recommandations personnalisees.
             </p>
           </div>
         </div>

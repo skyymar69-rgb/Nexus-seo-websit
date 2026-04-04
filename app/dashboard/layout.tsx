@@ -9,9 +9,7 @@ import { cn } from '@/lib/utils'
 import { WebsiteProvider, useWebsite } from '@/contexts/WebsiteContext'
 import { WebsiteSelector } from '@/components/shared/WebsiteSelector'
 import {
-  LayoutDashboard,
   Search,
-  Target,
   Link as LinkIcon,
   TrendingUp,
   Sparkles,
@@ -27,47 +25,18 @@ import {
   CreditCard,
   LogOut,
   Command,
-  HelpCircle,
-  Bug,
   Gauge,
-  Type,
   Wand2,
-  Brain,
-  Shield,
-  FileCode,
-  RefreshCw,
-  Network,
-  Code,
-  Smartphone,
-  Clock,
-  FileText,
-  FileSearch,
-  Heading,
-  Image,
-  BookOpen,
-  Skull,
-  Telescope,
   Lightbulb,
-  ShoppingCart,
-  Users,
+  FileText,
   LineChart,
-  Eye,
-  Siren,
-  History,
-  ArrowLeftRight,
-  Layers,
   Zap,
-  Key,
   X,
   Menu,
-  Plus,
   Home,
-  Compass,
-  MapPin,
-  Database,
-  Download,
-  Check,
   Globe,
+  FolderOpen,
+  Users,
 } from 'lucide-react'
 
 interface CategoryItem {
@@ -90,51 +59,24 @@ const navigationCategories = [
   {
     id: 'technical-seo',
     label: 'SEO Technique',
-    icon: Bug,
+    icon: Gauge,
     isCategory: true,
     items: [
       { label: 'Audit de Site', href: '/dashboard/audit', icon: Search, badge: undefined },
-      { label: 'Crawleur de Site', href: '/dashboard/crawler', icon: Bug, badge: undefined },
-      { label: 'Core Web Vitals', href: '/dashboard/core-web-vitals', icon: Zap, badge: undefined },
-      { label: 'Robots.txt Analyzer', href: '/dashboard/robots-analyzer', icon: Shield, badge: undefined },
-      { label: 'Sitemap Analyzer', href: '/dashboard/sitemap-analyzer', icon: FileCode, badge: undefined },
-      { label: 'SSL Checker', href: '/dashboard/ssl-checker', icon: Shield, badge: undefined },
-      { label: 'Redirects', href: '/dashboard/redirects', icon: RefreshCw, badge: undefined },
-      { label: 'HTTP Headers', href: '/dashboard/headers', icon: Network, badge: undefined },
-      { label: 'Canonical Tags', href: '/dashboard/canonical', icon: Code, badge: undefined },
-      { label: 'Mobile Test', href: '/dashboard/mobile-test', icon: Smartphone, badge: undefined },
-      { label: 'Page Speed', href: '/dashboard/page-speed', icon: Clock, badge: undefined },
-      { label: 'Uptime Monitor', href: '/dashboard/uptime', icon: Eye, badge: 'PRO' },
-    ],
-  },
-  {
-    id: 'on-page-seo',
-    label: 'SEO On-Page',
-    icon: FileText,
-    isCategory: true,
-    items: [
-      { label: 'Meta Tags Analyzer', href: '/dashboard/meta-analyzer', icon: FileSearch, badge: undefined },
-      { label: 'Title & Description', href: '/dashboard/title-description', icon: Heading, badge: undefined },
-      { label: 'Heading Structure', href: '/dashboard/headings', icon: Heading, badge: undefined },
-      { label: 'Image Optimizer', href: '/dashboard/image-optimizer', icon: Image, badge: undefined },
-      { label: 'Internal Links', href: '/dashboard/internal-links', icon: Network, badge: undefined },
-      { label: 'Schema Generator', href: '/dashboard/schema-generator', icon: Code, badge: undefined },
-      { label: 'Content Optimizer', href: '/dashboard/content-optimizer', icon: Wand2, badge: undefined },
-      { label: 'Readability Score', href: '/dashboard/readability', icon: BookOpen, badge: undefined },
+      { label: 'Crawleur Web', href: '/dashboard/crawl', icon: Globe, badge: undefined },
+      { label: 'Performance', href: '/dashboard/performance', icon: Zap, badge: undefined },
+      { label: 'Analyse Sémantique', href: '/dashboard/semantic', icon: FileText, badge: undefined },
+      { label: 'Optimisation Contenu', href: '/dashboard/content-optimizer', icon: Wand2, badge: undefined },
     ],
   },
   {
     id: 'keywords',
     label: 'Mots-clés',
-    icon: Target,
+    icon: Search,
     isCategory: true,
     items: [
-      { label: 'Keyword Research', href: '/dashboard/keywords', icon: Search, badge: undefined },
-      { label: 'Keyword Density', href: '/dashboard/keyword-density', icon: Target, badge: undefined },
-      { label: 'LSI Keywords', href: '/dashboard/lsi-keywords', icon: Type, badge: 'PRO' },
-      { label: 'Keyword Gap', href: '/dashboard/keyword-gap', icon: Compass, badge: 'PRO' },
-      { label: 'Long Tail Keywords', href: '/dashboard/long-tail', icon: Target, badge: undefined },
-      { label: 'Keyword Intent', href: '/dashboard/keyword-intent', icon: Brain, badge: 'NEW' },
+      { label: 'Suivi Mots-clés', href: '/dashboard/keywords', icon: Search, badge: undefined },
+      { label: 'Classements', href: '/dashboard/rank-tracker', icon: TrendingUp, badge: undefined },
     ],
   },
   {
@@ -143,54 +85,8 @@ const navigationCategories = [
     icon: LinkIcon,
     isCategory: true,
     items: [
-      { label: 'Backlink Profile', href: '/dashboard/backlinks', icon: LinkIcon, badge: undefined },
-      { label: 'Toxic Links', href: '/dashboard/toxic-links', icon: Skull, badge: undefined },
-      { label: 'Disavow Manager', href: '/dashboard/disavow', icon: FileText, badge: undefined },
-      { label: 'Competitor Spy', href: '/dashboard/backlink-spy', icon: Telescope, badge: 'PRO' },
-      { label: 'Link Opportunities', href: '/dashboard/link-opportunities', icon: Lightbulb, badge: 'PRO' },
-      { label: 'Link Quality Score', href: '/dashboard/link-quality', icon: Gauge, badge: undefined },
-    ],
-  },
-  {
-    id: 'content',
-    label: 'Contenu',
-    icon: Wand2,
-    isCategory: true,
-    items: [
-      { label: 'Content Generator', href: '/dashboard/ai-content', icon: Wand2, badge: 'PRO' },
-      { label: 'FAQ Generator', href: '/dashboard/faq-generator', icon: HelpCircle, badge: 'NEW' },
-      { label: 'Content Brief', href: '/dashboard/content-brief', icon: FileText, badge: 'PRO' },
-      { label: 'Semantic Analysis', href: '/dashboard/semantic', icon: Type, badge: undefined },
-      { label: 'Plagiarism Check', href: '/dashboard/plagiarism', icon: Search, badge: 'PRO' },
-      { label: 'Content Calendar', href: '/dashboard/content-calendar', icon: Clock, badge: 'NEW' },
-    ],
-  },
-  {
-    id: 'competitors',
-    label: 'Concurrents',
-    icon: Users,
-    isCategory: true,
-    items: [
-      { label: 'Competitor Analysis', href: '/dashboard/competitors', icon: Users, badge: undefined },
-      { label: 'Market Share', href: '/dashboard/market-share', icon: BarChart3, badge: 'PRO' },
-      { label: 'Competitor Tracking', href: '/dashboard/competitor-tracking', icon: TrendingUp, badge: 'PRO' },
-      { label: 'SERP Comparison', href: '/dashboard/serp-compare', icon: LineChart, badge: undefined },
-      { label: 'Competitor Content', href: '/dashboard/competitor-content', icon: FileText, badge: 'PRO' },
-      { label: 'Domain Comparison', href: '/dashboard/domain-compare', icon: ArrowLeftRight, badge: undefined },
-    ],
-  },
-  {
-    id: 'local-seo',
-    label: 'SEO Local',
-    icon: MapPin,
-    isCategory: true,
-    items: [
-      { label: 'Local Pack Analysis', href: '/dashboard/local-pack', icon: MapPin, badge: 'PRO' },
-      { label: 'Google Business', href: '/dashboard/google-business', icon: Search, badge: undefined },
-      { label: 'Local Citations', href: '/dashboard/local-citations', icon: Database, badge: 'PRO' },
-      { label: 'Review Monitoring', href: '/dashboard/reviews', icon: Eye, badge: 'NEW' },
-      { label: 'Local Competitors', href: '/dashboard/local-competitors', icon: Users, badge: 'PRO' },
-      { label: 'NAP Consistency', href: '/dashboard/nap-check', icon: Check, badge: undefined },
+      { label: 'Profil Backlinks', href: '/dashboard/backlinks', icon: LinkIcon, badge: undefined },
+      { label: 'Concurrents', href: '/dashboard/competitors', icon: Users, badge: undefined },
     ],
   },
   {
@@ -198,13 +94,14 @@ const navigationCategories = [
     label: 'IA & GEO',
     icon: Sparkles,
     isCategory: true,
+    badge: 'NEW' as const,
     items: [
-      { label: 'AI Visibility', href: '/dashboard/ai-visibility', icon: Sparkles, badge: 'NEW' },
-      { label: 'Audit GEO', href: '/dashboard/geo-audit', icon: Globe, badge: 'NEW' },
-      { label: 'Score AEO', href: '/dashboard/aeo-score', icon: Zap, badge: 'NEW' },
-      { label: 'Score LLMO', href: '/dashboard/llmo-score', icon: TrendingUp, badge: 'PRO' },
+      { label: 'Visibilité IA', href: '/dashboard/ai-visibility', icon: Sparkles, badge: 'NEW' as const },
+      { label: 'Audit GEO', href: '/dashboard/geo-audit', icon: Globe, badge: 'NEW' as const },
+      { label: 'Score AEO', href: '/dashboard/aeo-score', icon: Zap, badge: 'NEW' as const },
+      { label: 'Score LLMO', href: '/dashboard/llmo-score', icon: TrendingUp, badge: 'PRO' as const },
       { label: 'AI Advisor', href: '/dashboard/ai-advisor', icon: Lightbulb, badge: undefined },
-      { label: 'AI Content', href: '/dashboard/ai-content', icon: FileText, badge: undefined },
+      { label: 'Génération Contenu', href: '/dashboard/ai-content', icon: Wand2, badge: undefined },
     ],
   },
   {
@@ -213,28 +110,19 @@ const navigationCategories = [
     icon: BarChart3,
     isCategory: true,
     items: [
-      { label: 'Rank Tracker', href: '/dashboard/rank-tracker', icon: TrendingUp, badge: undefined },
-      { label: 'Analytics Import', href: '/dashboard/analytics', icon: LineChart, badge: undefined },
-      { label: 'Traffic Analysis', href: '/dashboard/traffic', icon: TrendingUp, badge: undefined },
-      { label: 'Conversion Tracking', href: '/dashboard/conversions', icon: BarChart3, badge: 'PRO' },
-      { label: 'SERP Monitor', href: '/dashboard/serp-monitor', icon: Eye, badge: undefined },
-      { label: 'Alerts', href: '/dashboard/alerts', icon: Siren, badge: undefined },
-      { label: 'Reporting', href: '/dashboard/reports', icon: FileText, badge: undefined },
-      { label: 'History', href: '/dashboard/history', icon: History, badge: undefined },
+      { label: "Vue d'ensemble", href: '/dashboard/analytics', icon: LineChart, badge: undefined },
+      { label: 'Évolution', href: '/dashboard/evolution', icon: TrendingUp, badge: undefined },
+      { label: 'Rapports', href: '/dashboard/reports', icon: FileText, badge: undefined },
     ],
   },
   {
-    id: 'utilities',
-    label: 'Utilitaires',
-    icon: Zap,
+    id: 'config',
+    label: 'Configuration',
+    icon: Settings,
     isCategory: true,
     items: [
-      { label: 'Bulk Analysis', href: '/dashboard/bulk-analysis', icon: Layers, badge: undefined },
-      { label: 'API & SDK', href: '/dashboard/api', icon: Code, badge: 'PRO' },
-      { label: 'Data Export', href: '/dashboard/export', icon: Download, badge: undefined },
-      { label: 'White Label', href: '/dashboard/white-label', icon: Sparkles, badge: 'PRO' },
-      { label: 'Integrations', href: '/dashboard/integrations', icon: Network, badge: undefined },
-      { label: 'Settings', href: '/dashboard/settings', icon: Settings, badge: undefined },
+      { label: 'Paramètres', href: '/dashboard/settings', icon: Settings, badge: undefined },
+      { label: 'Mes Sites', href: '/dashboard/projects', icon: FolderOpen, badge: undefined },
     ],
   },
 ]
@@ -359,6 +247,11 @@ function SidebarContent() {
                     <div className="flex items-center gap-3">
                       <Icon className="h-5 w-5 flex-shrink-0" />
                       <span className="truncate">{cat.label}</span>
+                      {(cat as any).badge && (
+                        <span className="px-1.5 py-0.5 text-[8px] font-bold rounded whitespace-nowrap bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400">
+                          {(cat as any).badge}
+                        </span>
+                      )}
                     </div>
                     <ChevronDown
                       className={cn(
@@ -420,33 +313,7 @@ function SidebarContent() {
           })}
         </nav>
 
-        {/* Bottom Section */}
-        <div className="border-t border-surface-200 dark:border-surface-800 px-3 py-3 space-y-2">
-          {sidebarOpen && (
-            <>
-              <Link
-                href="/dashboard/ai-advisor"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800 transition-all"
-              >
-                <Sparkles className="h-5 w-5" />
-                <span>AI Advisor</span>
-              </Link>
-              <Link
-                href="/dashboard/help"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800 transition-all"
-              >
-                <HelpCircle className="h-5 w-5" />
-                <span>Help & Docs</span>
-              </Link>
-            </>
-          )}
-
-          {sidebarOpen && (
-            <div className="rounded-lg bg-gradient-to-br from-brand-50 to-brand-100 dark:from-brand-950 dark:to-brand-900 px-3 py-2.5 border border-brand-200 dark:border-brand-800">
-              <p className="text-xs font-bold text-brand-900 dark:text-brand-100 uppercase">50+ Tools</p>
-            </div>
-          )}
-        </div>
+        {/* Bottom Section - intentionally minimal */}
       </aside>
 
       {/* Mobile toggle button */}
