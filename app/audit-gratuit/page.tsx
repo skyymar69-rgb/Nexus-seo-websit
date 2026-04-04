@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
 import { ArrowRight, Check, AlertCircle, X, Zap, TrendingUp, BarChart3, Search } from 'lucide-react'
 import { useAudit, type AuditCheck, type AuditResults } from '@/hooks/useAudit'
 import { UrlInput } from '@/components/shared/UrlInput'
@@ -252,21 +251,19 @@ export default function AuditGratuitPage() {
   const { url, setUrl, loading, error, results, runAudit, clearResults } = useAudit()
   const [expandedCheck, setExpandedCheck] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<'tous' | 'meta' | 'contenu' | 'technique' | 'performance'>('tous')
-  const searchParams = useSearchParams()
   const [autoLaunched, setAutoLaunched] = useState(false)
 
   // Auto-fill and auto-launch from Hero URL param
   useEffect(() => {
-    const urlParam = searchParams.get('url')
-    if (urlParam && !autoLaunched && !results) {
+    if (autoLaunched || results) return
+    const params = new URLSearchParams(window.location.search)
+    const urlParam = params.get('url')
+    if (urlParam) {
       setUrl(urlParam)
       setAutoLaunched(true)
-      // Small delay to let state settle
-      setTimeout(() => {
-        runAudit()
-      }, 100)
+      setTimeout(() => runAudit(), 200)
     }
-  }, [searchParams, autoLaunched, results, setUrl, runAudit])
+  }, [autoLaunched, results, setUrl, runAudit])
 
   const handleSubmit = () => {
     runAudit()

@@ -52,7 +52,8 @@
       "Bash(unzip -o \"C:/Users/Maison/Downloads/marketingskills-main.zip\")",
       "Bash(npx vitest:*)",
       "Bash(taskkill //F //IM node.exe)",
-      "Bash(wc -l /c/Users/Maison/Desktop/1x/nexus-clean/components/landing/*.tsx)"
+      "Bash(wc -l /c/Users/Maison/Desktop/1x/nexus-clean/components/landing/*.tsx)",
+      "Bash(vercel inspect:*)"
     ]
   }
 }
