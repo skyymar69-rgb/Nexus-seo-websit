@@ -152,9 +152,8 @@ function SignupForm() {
       });
 
       if (signInResult?.ok) {
-        router.push('/dashboard');
+        router.push('/dashboard/onboarding');
       } else {
-        // Redirect to login if auto-login fails
         router.push('/login');
       }
     } catch (error) {
@@ -169,7 +168,7 @@ function SignupForm() {
   const handleGoogleSignup = async () => {
     setIsLoading(true);
     try {
-      await signIn('google');
+      await signIn('google', { callbackUrl: '/dashboard/onboarding' });
     } catch (error) {
       setErrors({
         general: 'Une erreur s\'est produite lors de l\'inscription Google. Veuillez réessayer.',
@@ -181,7 +180,7 @@ function SignupForm() {
   const handleGitHubSignup = async () => {
     setIsLoading(true);
     try {
-      await signIn('github');
+      await signIn('github', { callbackUrl: '/dashboard/onboarding' });
     } catch (error) {
       setErrors({
         general: 'Une erreur s\'est produite lors de l\'inscription GitHub. Veuillez réessayer.',

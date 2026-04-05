@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     // Hash password
     const hashedPassword = await bcryptjs.hash(password, 10)
 
-    // Create user with default Website
+    // Create user
     const user = await prisma.user.create({
       data: {
         name,
@@ -39,13 +39,6 @@ export async function POST(request: NextRequest) {
         password: hashedPassword,
         plan: 'free',
         role: 'user',
-        websites: {
-          create: {
-            domain: new URL(`https://${email.split('@')[0]}.example.com`).hostname,
-            name: 'My Website',
-            verified: false,
-          },
-        },
       },
       select: {
         id: true,

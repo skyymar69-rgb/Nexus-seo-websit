@@ -73,7 +73,7 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     setIsLoading(true);
     try {
-      await signIn('google');
+      await signIn('google', { callbackUrl: '/dashboard' });
     } catch (error) {
       setErrors({
         general: 'Une erreur s\'est produite lors de la connexion Google. Veuillez réessayer.',
@@ -85,7 +85,7 @@ export default function LoginPage() {
   const handleGitHubLogin = async () => {
     setIsLoading(true);
     try {
-      await signIn('github');
+      await signIn('github', { callbackUrl: '/dashboard' });
     } catch (error) {
       setErrors({
         general: 'Une erreur s\'est produite lors de la connexion GitHub. Veuillez réessayer.',
