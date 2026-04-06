@@ -10,19 +10,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Brand: Deep Purple — couleur signature Nexus
+        // Brand: Blue — couleur signature Nexus (inspire seoptimer)
         brand: {
-          50:  '#f5f0ff',
-          100: '#ebe0ff',
-          200: '#d4bfff',
-          300: '#b794ff',
-          400: '#9b6dff',
-          500: '#7c3aed',
-          600: '#6d28d9',
-          700: '#5b21b6',
-          800: '#4c1d95',
-          900: '#3b1281',
-          950: '#2B124C',
+          50:  '#eff6ff',
+          100: '#dbeafe',
+          200: '#bfdbfe',
+          300: '#93c5fd',
+          400: '#60a5fa',
+          500: '#3b82f6',
+          600: '#2563eb',
+          700: '#1d4ed8',
+          800: '#1e40af',
+          900: '#1e3a8a',
+          950: '#172554',
         },
         // Gold — accent premium
         gold: {
@@ -95,14 +95,16 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans:    ['Inter', 'system-ui', 'sans-serif'],
-        display: ['Inter', 'system-ui', 'sans-serif'],
+        sans:    ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-playfair)', 'Georgia', 'serif'],
+        heading: ['var(--font-playfair)', 'Georgia', 'serif'],
+        body:    ['var(--font-inter)', 'system-ui', 'sans-serif'],
         mono:    ['JetBrains Mono', 'monospace'],
       },
       backgroundImage: {
-        'gradient-brand':  'linear-gradient(135deg, #2B124C 0%, #4c1d95 50%, #7c3aed 100%)',
+        'gradient-brand':  'linear-gradient(135deg, #172554 0%, #1e3a8a 50%, #2563eb 100%)',
         'gradient-gold':   'linear-gradient(135deg, #FECD4D 0%, #eab308 100%)',
-        'gradient-hero':   'linear-gradient(180deg, #2B124C 0%, #1e0a3a 60%, #0f0520 100%)',
+        'gradient-hero':   'linear-gradient(180deg, #172554 0%, #1e3a8a 60%, #0c1a3d 100%)',
         'gradient-radial':  'radial-gradient(var(--tw-gradient-stops))',
         'grid-dot': 'radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)',
         'grid-line': 'linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px)',
@@ -146,14 +148,14 @@ const config: Config = {
         marquee:     { '0%': { transform: 'translateX(0)' }, '100%': { transform: 'translateX(-50%)' } },
         marqueeRev:  { '0%': { transform: 'translateX(-50%)' }, '100%': { transform: 'translateX(0)' } },
         countUp:     { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
-        glowPulse:   { '0%, 100%': { boxShadow: '0 0 20px rgba(124,58,237,0.3)' }, '50%': { boxShadow: '0 0 40px rgba(124,58,237,0.6)' } },
+        glowPulse:   { '0%, 100%': { boxShadow: '0 0 20px rgba(37,99,235,0.3)' }, '50%': { boxShadow: '0 0 40px rgba(37,99,235,0.6)' } },
         bounceSoft:  { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-6px)' } },
       },
       boxShadow: {
-        'brand':    '0 0 30px rgba(124,58,237,0.25)',
-        'brand-lg': '0 0 60px rgba(124,58,237,0.2)',
+        'brand':    '0 0 30px rgba(37,99,235,0.25)',
+        'brand-lg': '0 0 60px rgba(37,99,235,0.2)',
         'gold':     '0 0 30px rgba(254,205,77,0.3)',
-        'glow':     '0 0 40px rgba(124,58,237,0.15)',
+        'glow':     '0 0 40px rgba(37,99,235,0.15)',
         'card':     '0 4px 20px rgba(0,0,0,0.08)',
         'card-lg':  '0 8px 40px rgba(0,0,0,0.12)',
       },

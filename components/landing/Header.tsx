@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import { Menu, X, Sun, Moon, Zap, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { AnimatedLogo } from '@/components/shared/AnimatedLogo'
 
 const navItems = [
   { label: 'Produit', href: '#', children: [
@@ -119,16 +120,8 @@ export function Header() {
         <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group shrink-0">
-            <div className="w-8 h-8 rounded-xl bg-brand-600 flex items-center justify-center">
-              <Zap className="w-4 h-4 text-white fill-white" />
-            </div>
-            <span className={cn(
-              'text-lg font-bold tracking-tight transition-colors',
-              scrolled ? 'text-surface-900 dark:text-white' : 'text-white'
-            )}>
-              NEXUS<span className="text-gold-400">.</span>
-            </span>
+          <Link href="/" className="shrink-0">
+            <AnimatedLogo size={36} lightText={!scrolled} />
           </Link>
 
           {/* Desktop Nav */}
@@ -215,7 +208,12 @@ export function Header() {
             <div className="hidden sm:flex items-center gap-2">
               <Link
                 href="/login"
-                className="px-4 py-2 text-sm font-medium text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-white rounded-xl hover:bg-surface-100 dark:hover:bg-surface-800 transition-all"
+                className={cn(
+                  'px-4 py-2 text-sm font-medium rounded-xl transition-all',
+                  scrolled
+                    ? 'text-surface-700 dark:text-surface-300 hover:text-surface-900 dark:hover:text-white hover:bg-surface-100 dark:hover:bg-surface-800'
+                    : 'text-white hover:text-white hover:bg-white/10'
+                )}
               >
                 Connexion
               </Link>

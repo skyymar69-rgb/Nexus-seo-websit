@@ -41,7 +41,7 @@ export function AISection() {
               <span className="gradient-text">visible là où vos clients cherchent</span>{' '}
               — même sans Google
             </h2>
-            <p className="text-lg text-surface-500 dark:text-surface-400 mb-8 leading-relaxed">
+            <p className="text-lg text-surface-700 dark:text-surface-400 mb-8 leading-relaxed">
               ChatGPT reçoit 1 milliard de requêtes par jour. Perplexity est le moteur de recherche qui monte. Claude répond à des milliers de questions sur votre secteur — chaque minute. Nexus est le seul outil qui surveille et optimise votre présence sur tous ces canaux en même temps.
             </p>
 
@@ -56,7 +56,7 @@ export function AISection() {
                   <div key={s.label} className="card p-4 text-center">
                     <Icon className="w-5 h-5 text-brand-500 mx-auto mb-2" />
                     <p className="text-xl font-black text-surface-900 dark:text-white">{s.value}</p>
-                    <p className="text-xs text-surface-400 mt-0.5">{s.label}</p>
+                    <p className="text-xs text-surface-600 dark:text-surface-400 mt-0.5">{s.label}</p>
                   </div>
                 )
               })}
@@ -77,7 +77,7 @@ export function AISection() {
                 <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
                 <div className="w-2.5 h-2.5 rounded-full bg-accent-400" />
               </div>
-              <span className="text-xs font-mono text-surface-400">AI Visibility Dashboard</span>
+              <span className="text-xs font-mono text-surface-600 dark:text-surface-400">AI Visibility Dashboard</span>
               <div className="ml-auto flex items-center gap-1.5 text-xs text-accent-500 font-semibold">
                 <div className="w-2 h-2 rounded-full bg-accent-500 animate-pulse" />
                 Live
@@ -88,11 +88,11 @@ export function AISection() {
               {/* Score global */}
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <p className="text-xs text-surface-400 mb-0.5">Score de visibilité IA</p>
-                  <p className="text-5xl font-black gradient-text">79<span className="text-2xl text-surface-400">/100</span></p>
+                  <p className="text-xs text-surface-600 dark:text-surface-400 mb-0.5">Score de visibilité IA</p>
+                  <p className="text-5xl font-black gradient-text">79<span className="text-2xl text-surface-600 dark:text-surface-400">/100</span></p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs text-surface-400 mb-0.5">Mentions ce mois</p>
+                  <p className="text-xs text-surface-600 dark:text-surface-400 mb-0.5">Mentions ce mois</p>
                   <p className="text-3xl font-black text-surface-900 dark:text-white">+{count.toLocaleString('fr-FR')}</p>
                 </div>
               </div>
@@ -121,7 +121,7 @@ export function AISection() {
                 <div className="space-y-3">
                   {mentions.map((m, i) => (
                     <div key={i} className="flex items-start gap-3">
-                      <span className="text-xs text-surface-400 shrink-0 mt-0.5">{m.time}</span>
+                      <span className="text-xs text-surface-600 dark:text-surface-400 shrink-0 mt-0.5">{m.time}</span>
                       <div>
                         <span className="text-xs font-bold text-brand-500">{m.llm}</span>
                         <p className="text-xs text-surface-500 dark:text-surface-400 mt-0.5 italic">{m.text}</p>

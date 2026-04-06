@@ -2,13 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+/* Fonts loaded via <link> in layout.tsx for non-blocking render */
 
 /* ============================================================
    DESIGN TOKENS — Nexus 2026
    ============================================================ */
 @layer base {
   :root {
+    /* Typography */
+    --font-heading: var(--font-playfair), Georgia, serif;
+    --font-body: var(--font-inter), system-ui, sans-serif;
+
     /* Surfaces (light) */
     --bg:        250 250 250;
     --bg-card:   255 255 255;
@@ -63,9 +67,38 @@
   body {
     background-color: rgb(var(--bg));
     color: rgb(var(--fg));
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: var(--font-inter), system-ui, sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Headings — Playfair Display for prestige */
+  h1, h2, h3, h4 {
+    font-family: var(--font-playfair), Georgia, serif;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+
+  h1 { font-weight: 900; }
+  h2 { font-weight: 700; }
+  h3, h4 { font-weight: 700; }
+
+  /* Body elements — Inter for clarity */
+  p, li, span, td, th, label, textarea {
+    line-height: 1.6;
+  }
+
+  input, select, textarea, button {
+    font-family: var(--font-inter), system-ui, sans-serif;
+    font-weight: 400;
+  }
+
+  /* Interface elements: semibold for UI weight */
+  button, [role="button"], a.btn-primary, a.btn-outline {
+    font-weight: 600;
   }
 }
 
@@ -76,7 +109,7 @@
 
   /* ---------- Texte dégradé ---------- */
   .gradient-text {
-    @apply bg-gradient-to-r from-indigo-400 via-violet-400 to-cyan-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-blue-500 via-brand-600 to-cyan-500 bg-clip-text text-transparent;
   }
   .gradient-text-brand {
     @apply bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent;
@@ -120,12 +153,12 @@
   .card {
     @apply bg-white dark:bg-surface-900
            border border-surface-200 dark:border-surface-800
-           rounded-2xl;
+           rounded-2xl shadow-sm;
   }
   .card-hover {
     @apply card transition-all duration-200
-           hover:border-surface-300 dark:hover:border-surface-700
-           hover:shadow-lg dark:hover:shadow-surface-950/50;
+           hover:border-brand-300 dark:hover:border-brand-700
+           hover:shadow-md dark:hover:shadow-surface-950/50;
   }
   .card-gradient {
     @apply bg-white dark:bg-surface-900 rounded-2xl

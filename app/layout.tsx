@@ -1,7 +1,22 @@
 import type { Metadata } from 'next'
+import { Inter, Playfair_Display } from 'next/font/google'
 import { Providers } from '@/app/providers'
 import dynamic from 'next/dynamic'
 import { ErrorBoundary } from '@/components/shared/ErrorBoundary'
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800', '900'],
+  display: 'swap',
+  variable: '--font-inter',
+})
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800', '900'],
+  display: 'swap',
+  variable: '--font-playfair',
+})
 
 const CookieBanner = dynamic(() => import('@/components/shared/CookieBanner'), { ssr: false })
 const AccessibilityToggle = dynamic(() => import('@/components/shared/AccessibilityToggle'), { ssr: false })
@@ -46,7 +61,7 @@ export const metadata: Metadata = {
     title: 'Nexus SEO — La référence mondiale du SEO IA en 2026',
     description:
       'Dominez Google, ChatGPT et tous les moteurs IA avec la seule plateforme SEO qui couvre GEO, AEO et LLMO.',
-    images: [{ url: `${BASE_URL}/api/og`, width: 1200, height: 630, alt: 'Nexus SEO' }],
+    images: [{ url: `${BASE_URL}/og-image.png`, width: 1200, height: 630, alt: 'Nexus SEO by Kayzen — Plateforme SEO et visibilite IA gratuite' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -94,17 +109,10 @@ const jsonLd = {
       applicationCategory: 'BusinessApplication',
       operatingSystem: 'Web',
       offers: {
-        '@type': 'AggregateOffer',
-        lowPrice: '0',
-        highPrice: '99.99',
+        '@type': 'Offer',
+        price: '0',
         priceCurrency: 'EUR',
-        offerCount: '3',
-      },
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: '4.9',
-        reviewCount: '847',
-        bestRating: '5',
+        description: 'Tous les outils SEO gratuits et sans limitation',
       },
       featureList: 'GEO Audit, AEO Scoring, LLMO Analysis, Technical SEO, Keyword Tracking, Backlink Analysis',
     },
@@ -142,18 +150,6 @@ const jsonLd = {
       areaServed: 'Worldwide',
       serviceType: 'SEO Optimization',
     },
-    {
-      '@type': 'Review',
-      '@id': `${BASE_URL}/#review`,
-      itemReviewed: { '@id': `${BASE_URL}/#organization` },
-      reviewRating: {
-        '@type': 'Rating',
-        ratingValue: '4.9',
-        bestRating: '5',
-      },
-      author: { '@type': 'Organization', name: 'Utilisateurs Nexus SEO' },
-      reviewBody: 'Plateforme SEO IA de reference avec 847 avis verifies.',
-    },
   ],
 }
 
@@ -161,14 +157,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        {/* Fonts self-hosted via next/font for maximum PageSpeed */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-screen bg-zinc-50 dark:bg-surface-950 text-surface-900 dark:text-surface-100 antialiased">
+      <body className={`${inter.variable} ${playfair.variable} min-h-screen bg-zinc-50 dark:bg-surface-950 text-surface-900 dark:text-surface-100 antialiased`}>
         <a href="#main-content" className="skip-to-main">
           Aller au contenu principal
         </a>

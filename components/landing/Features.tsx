@@ -154,7 +154,7 @@ export function Features() {
             Nexus couvre{' '}
             <span className="gradient-text">tout le spectre SEO</span>
           </h2>
-          <p className="text-lg text-surface-500 dark:text-surface-400">
+          <p className="text-lg text-surface-700 dark:text-surface-400">
             De l&apos;audit technique au LLMO, en passant par les mots-clés et les backlinks — une seule plateforme pour dominer tous les canaux de découverte.
           </p>
         </div>
@@ -195,7 +195,7 @@ export function Features() {
             <h3 className="text-2xl sm:text-3xl font-bold text-surface-900 dark:text-white mb-2">
               {tab.title}
             </h3>
-            <p className="text-base font-medium text-surface-500 dark:text-surface-400 mb-4">
+            <p className="text-base font-medium text-surface-700 dark:text-surface-400 mb-4">
               {tab.subtitle}
             </p>
             <p className="text-surface-600 dark:text-surface-400 leading-relaxed mb-8">
@@ -220,7 +220,7 @@ export function Features() {
 
           {/* Right: mockup */}
           <div className="card-gradient p-6 sm:p-8 rounded-3xl animate-fade-in">
-            <p className="text-xs font-semibold text-surface-400 uppercase tracking-wider mb-2">{tab.mockup.title}</p>
+            <p className="text-xs font-semibold text-surface-600 dark:text-surface-400 uppercase tracking-wider mb-2">{tab.mockup.title}</p>
             <p className="text-4xl font-black text-surface-900 dark:text-white mb-8">{tab.mockup.value}</p>
             <div className="space-y-5">
               {tab.mockup.bars.map((b) => (
@@ -239,7 +239,7 @@ export function Features() {
               ))}
             </div>
 
-            <div className="mt-8 pt-6 border-t border-surface-200 dark:border-surface-700 flex items-center justify-between text-xs text-surface-400">
+            <div className="mt-8 pt-6 border-t border-surface-200 dark:border-surface-700 flex items-center justify-between text-xs text-surface-600 dark:text-surface-400">
               <span>Mis à jour il y a 3 min</span>
               <div className="flex items-center gap-1.5 text-accent-500 font-semibold">
                 <div className="w-2 h-2 rounded-full bg-accent-500 animate-pulse" />

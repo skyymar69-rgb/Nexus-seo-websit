@@ -7,43 +7,35 @@ import { cn } from '@/lib/utils'
 const faqs = [
   {
     question: "Qu'est-ce que le GEO, l'AEO et le LLMO ?",
-    answer: "Le GEO (Generative Engine Optimization) optimise votre contenu pour apparaître dans les réponses générées par IA de Google SGE et Bing Copilot. L'AEO (Answer Engine Optimization) vous positionne sur les featured snippets et la voice search. Le LLMO (Large Language Model Optimization) fait en sorte que ChatGPT, Claude, Gemini et Perplexity recommandent naturellement votre marque dans leurs réponses.",
+    answer: "Le GEO (Generative Engine Optimization) optimise votre contenu pour apparaitre dans les reponses generees par IA de Google SGE et Bing Copilot. L'AEO (Answer Engine Optimization) vous positionne sur les featured snippets et la voice search. Le LLMO (Large Language Model Optimization) fait en sorte que ChatGPT, Claude, Gemini et Perplexity recommandent naturellement votre marque dans leurs reponses.",
   },
   {
-    question: "Nexus remplace-t-il Semrush ou Ahrefs ?",
-    answer: "Nexus couvre tout ce que font Semrush et Ahrefs (audit technique, suivi mots-clés, backlinks, analyse concurrents) et va bien au-delà avec le GEO, l'AEO et le LLMO. Si vous utilisez déjà un de ces outils, Nexus peut soit le remplacer entièrement, soit s'y intégrer via notre API. La plupart de nos clients consolident en une seule plateforme et économisent en moyenne 180€/mois.",
+    question: "Nexus est-il vraiment 100% gratuit ?",
+    answer: "Oui, tous les outils Nexus sont gratuits et sans limitation : audits illimites, suivi de mots-cles, backlinks, generateur de contenu SEO, scores GEO/AEO/LLMO. Aucune carte bancaire n'est requise. L'inscription sert uniquement a sauvegarder vos sites et suivre l'evolution de vos resultats dans le temps.",
   },
   {
-    question: "Comment fonctionne l'essai gratuit ?",
-    answer: "Vous bénéficiez de 14 jours d'accès complet au plan que vous choisissez, sans carte bancaire. À la fin de l'essai, vous êtes invité à souscrire ou votre compte passe automatiquement en plan Free (fonctionnalités limitées). Aucun prélèvement surpris, aucun engagement.",
+    question: "Pourquoi Nexus est-il gratuit ?",
+    answer: "Nexus est developpe par Kayzen Web, agence de creation de sites a Lyon. L'outil gratuit permet aux entreprises de diagnostiquer leurs problemes SEO. Pour ceux qui souhaitent aller plus loin avec une refonte ou creation de site optimise, Kayzen Web propose ses services d'agence.",
   },
   {
-    question: "En combien de temps voit-on les premiers résultats ?",
-    answer: "Les premiers insights sont disponibles immédiatement après l'audit initial (5 minutes). Pour les résultats concrets — amélioration des positions, nouvelles mentions LLM — nos clients observent en moyenne des changements significatifs dès la 4ème semaine pour le SEO technique et l'AEO, et après 6 à 12 semaines pour le GEO et le LLMO (ces disciplines nécessitent que les moteurs IA re-crawlent et ré-indexent votre contenu).",
+    question: "En combien de temps voit-on les premiers resultats ?",
+    answer: "Les premiers insights sont disponibles immediatement apres l'audit initial (quelques minutes). Pour les resultats concrets — amelioration des positions, meilleures pratiques SEO — les changements significatifs arrivent generalement des la 4eme semaine pour le SEO technique, et apres 6 a 12 semaines pour le GEO et le LLMO.",
   },
   {
     question: "Nexus est-il compatible avec mon CMS (WordPress, Shopify, etc.) ?",
-    answer: "Oui, Nexus est 100% compatible avec tous les CMS : WordPress, Shopify, Webflow, Squarespace, Wix, Prestashop, et les sites custom. L'intégration se fait en ajoutant votre domaine et en connectant Google Search Console en un clic. Aucune installation de plugin ou de code n'est requise pour commencer.",
-  },
-  {
-    question: "Je suis une agence — puis-je gérer plusieurs clients sur Nexus ?",
-    answer: "Absolument. Les plans Entreprise et Souveraine sont conçus pour les agences : sites illimités, rapports PDF white-label entièrement brandés aux couleurs de votre agence, accès multi-utilisateurs avec gestion des rôles, et API pour intégrer Nexus dans vos propres outils. Plusieurs agences gèrent plus de 50 clients sur Nexus.",
+    answer: "Oui, Nexus analyse n'importe quel site web, quel que soit le CMS : WordPress, Shopify, Webflow, Squarespace, Wix, Prestashop, ou les sites custom en React/Next.js. Il suffit d'entrer votre domaine pour lancer un audit complet.",
   },
   {
     question: "Comment Nexus surveille-t-il les mentions dans les LLMs ?",
-    answer: "Nexus envoie régulièrement des requêtes automatisées aux APIs de ChatGPT, Claude, Gemini, Perplexity, Copilot et 5+ autres LLMs avec les questions-types de votre secteur. Il analyse si votre marque est citée, avec quel sentiment, et comment vous vous comparez à vos concurrents. Vous recevez des alertes en temps réel dès qu'une nouvelle mention (positive ou négative) est détectée.",
+    answer: "Nexus envoie des requetes aux APIs de ChatGPT, Claude, Gemini, Perplexity et d'autres LLMs avec les questions-types de votre secteur. Il analyse si votre marque est citee, avec quel sentiment, et comment vous vous comparez a vos concurrents.",
   },
   {
-    question: "Mes données sont-elles sécurisées et conformes RGPD ?",
-    answer: "Oui. Nexus est hébergé sur des serveurs en Europe (France/Allemagne), conforme RGPD, et certifié ISO 27001. Vos données ne sont jamais partagées avec des tiers ni utilisées pour entraîner des modèles IA. Le plan Souveraine offre un déploiement on-premise si vous souhaitez garder toutes les données dans votre infrastructure.",
+    question: "Mes donnees sont-elles securisees ?",
+    answer: "Oui. Nexus est heberge sur des serveurs en Europe via Vercel et Railway, et respecte le RGPD. Vos donnees ne sont jamais partagees avec des tiers ni utilisees pour entrainer des modeles IA.",
   },
   {
-    question: "Y a-t-il une API pour intégrer Nexus dans nos outils ?",
-    answer: "Oui, une API REST complète est disponible sur les plans Entreprise et Souveraine. Elle vous permet de déclencher des audits, récupérer les scores, exporter les données et déclencher des alertes depuis vos propres systèmes (CRM, BI tools, Slack, Zapier, Make, etc.). La documentation complète est accessible dans votre dashboard.",
-  },
-  {
-    question: "Que se passe-t-il si je veux changer de plan ou résilier ?",
-    answer: "Vous pouvez upgrader, downgrader ou résilier à tout moment depuis votre dashboard, en un clic. Aucun frais de résiliation. Si vous résiliez avant la fin d'une période payée, vous continuez à bénéficier du service jusqu'à la fin de cette période. Vos données sont exportables et conservées 90 jours après résiliation.",
+    question: "Quel est le lien entre Nexus et Kayzen Web ?",
+    answer: "Nexus est un outil gratuit developpe par Kayzen Web (internet.kayzen-lyon.fr), agence web lyonnaise specialisee dans la creation de sites performants et eco-responsables en React/Next.js. Nexus diagnostique les problemes, Kayzen Web les resout avec des sites optimises des la conception.",
   },
 ]
 
@@ -97,7 +89,7 @@ export function FAQ() {
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-surface-900 dark:text-white mb-4">
             Questions fréquentes
           </h2>
-          <p className="text-lg text-surface-500 dark:text-surface-400">
+          <p className="text-lg text-surface-700 dark:text-surface-400">
             Tout ce que vous voulez savoir sur Nexus, le GEO, l&apos;AEO et le LLMO.
           </p>
         </div>
@@ -137,7 +129,7 @@ export function FAQ() {
                       'w-4 h-4 flex-shrink-0 transition-transform duration-200',
                       open === i
                         ? 'rotate-180 text-brand-500'
-                        : 'text-surface-400'
+                        : 'text-surface-600'
                     )}
                     aria-hidden="true"
                   />
@@ -155,7 +147,7 @@ export function FAQ() {
           })}
         </div>
 
-        <p className="text-center text-sm text-surface-400 mt-10">
+        <p className="text-center text-sm text-surface-600 dark:text-surface-400 mt-10">
           Vous n&apos;avez pas trouvé votre réponse ?{' '}
           <a href="/contact" className="text-brand-600 dark:text-brand-400 font-semibold hover:underline">
             Contactez-nous

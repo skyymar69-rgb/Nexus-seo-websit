@@ -18,7 +18,7 @@ const features = [
 ]
 
 const tools = [
-  { name: 'Nexus',   price: 'Dès 99€', highlight: true  },
+  { name: 'Nexus',   price: 'Gratuit', highlight: true  },
   { name: 'Semrush', price: 'Dès 119€', highlight: false },
   { name: 'Ahrefs',  price: 'Dès 99€', highlight: false },
   { name: 'Moz',     price: 'Dès 99€', highlight: false },
@@ -43,7 +43,7 @@ export function Comparison() {
             La seule plateforme qui couvre{' '}
             <span className="gradient-text">l&apos;ère de l&apos;IA</span>
           </h2>
-          <p className="text-lg text-surface-500 dark:text-surface-400">
+          <p className="text-lg text-surface-700 dark:text-surface-400">
             Semrush, Ahrefs, Moz — des outils pensés pour 2015. Nexus est conçu pour 2026.
           </p>
         </div>
@@ -57,7 +57,7 @@ export function Comparison() {
             <table className="w-full" role="table" aria-label="Comparaison des fonctionnalites entre Nexus et ses concurrents">
               <thead>
                 <tr className="border-b border-surface-200 dark:border-surface-700">
-                  <th className="text-left p-5 text-sm font-semibold text-surface-500 w-1/2">Fonctionnalité</th>
+                  <th className="text-left p-5 text-sm font-semibold text-surface-700 dark:text-surface-400 w-1/2">Fonctionnalité</th>
                   {tools.map((tool) => (
                     <th key={tool.name} className="p-5 text-center">
                       {tool.highlight ? (
@@ -70,8 +70,8 @@ export function Comparison() {
                         </div>
                       ) : (
                         <div className="inline-flex flex-col items-center gap-1">
-                          <span className="text-sm font-bold text-surface-600 dark:text-surface-400">{tool.name}</span>
-                          <span className="text-xs text-surface-400">{tool.price}</span>
+                          <span className="text-sm font-bold text-surface-900 dark:text-surface-300">{tool.name}</span>
+                          <span className="text-xs text-surface-600 dark:text-surface-400">{tool.price}</span>
                         </div>
                       )}
                     </th>
@@ -104,10 +104,10 @@ export function Comparison() {
           </div>
           </div>
 
-          <div className="p-5 border-t border-surface-200 dark:border-surface-700 flex flex-wrap items-center gap-4 text-xs text-surface-400">
+          <div className="p-5 border-t border-surface-200 dark:border-surface-700 flex flex-wrap items-center gap-4 text-xs text-surface-600 dark:text-surface-400">
             <div className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-brand-500" /> Disponible</div>
             <div className="flex items-center gap-1.5"><Minus className="w-3.5 h-3.5 text-amber-400" /> Partiel</div>
-            <div className="flex items-center gap-1.5"><X className="w-3.5 h-3.5 text-surface-400" /> Non disponible</div>
+            <div className="flex items-center gap-1.5"><X className="w-3.5 h-3.5 text-surface-500 dark:text-surface-400" /> Non disponible</div>
           </div>
         </div>
       </div>

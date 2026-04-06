@@ -4,12 +4,12 @@ import { useEffect, useRef, useState } from 'react'
 import { TrendingUp, Globe, Zap, Users, Star, Layers } from 'lucide-react'
 
 const stats = [
-  { icon: TrendingUp, value: 340,  suffix: '%',  label: 'Trafic organique moyen',          desc: "En 6 mois d'accompagnement" },
-  { icon: Globe,      value: 2.4,  suffix: '×',  label: 'Visibilité dans les LLMs',         desc: 'vs avant Nexus' },
-  { icon: Users,      value: 2500, suffix: '+',  label: 'Équipes qui nous font confiance',   desc: 'Dans 45 pays' },
-  { icon: Zap,        value: 56,   suffix: '+',  label: 'Outils SEO intégrés',               desc: 'Tout en une plateforme' },
-  { icon: Star,       value: 4.9,  suffix: '/5', label: 'Note G2 & Trustpilot',              desc: 'Sur 847 avis vérifiés' },
-  { icon: Layers,     value: 98,   suffix: '%',  label: 'Clients satisfaits',                desc: 'Taux de rétention annuel' },
+  { icon: Zap,        value: 30,   suffix: '+',  label: 'Outils SEO integres',               desc: 'Tout en une plateforme gratuite' },
+  { icon: Globe,      value: 10,   suffix: '+',  label: 'LLMs surveilles',                   desc: 'ChatGPT, Claude, Gemini, Perplexity...' },
+  { icon: TrendingUp, value: 6,    suffix: '',    label: 'Categories d\'analyse',              desc: 'SEO, Mots-cles, Backlinks, Contenu, IA, Rapports' },
+  { icon: Layers,     value: 100,  suffix: '%',  label: 'Gratuit',                           desc: 'Aucune carte bancaire requise' },
+  { icon: Star,       value: 8,    suffix: '',    label: 'Clients Kayzen Web',                desc: 'Sites optimises en production' },
+  { icon: Users,      value: 0,    suffix: '€',  label: 'Cout pour l\'utilisateur',           desc: 'Tous les outils, zero euro' },
 ]
 
 function Counter({ target, suffix, isFloat }: { target: number; suffix: string; isFloat?: boolean }) {
@@ -58,9 +58,9 @@ export function Stats() {
     <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white dark:bg-surface-950">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-14">
-          <div className="section-badge mx-auto mb-4">Résultats prouvés</div>
+          <div className="section-badge mx-auto mb-4">Nexus en chiffres</div>
           <h2 className="text-3xl sm:text-4xl font-bold text-surface-900 dark:text-white">
-            Des chiffres qui parlent d&apos;eux-mêmes
+            Une plateforme complete et gratuite
           </h2>
         </div>
 
@@ -76,7 +76,7 @@ export function Stats() {
                   <Counter target={stat.value} suffix={stat.suffix} isFloat={!Number.isInteger(stat.value)} />
                 </p>
                 <p className="font-semibold text-surface-700 dark:text-surface-200 mb-1">{stat.label}</p>
-                <p className="text-sm text-surface-400 dark:text-surface-500">{stat.desc}</p>
+                <p className="text-sm text-surface-600 dark:text-surface-500">{stat.desc}</p>
               </div>
             )
           })}

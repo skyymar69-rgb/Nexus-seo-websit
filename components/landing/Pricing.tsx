@@ -183,7 +183,7 @@ export function Pricing() {
             Simple, transparent,{' '}
             <span className="gradient-text">sans surprise</span>
           </h2>
-          <p className="text-lg text-surface-500 dark:text-surface-400 mb-8">
+          <p className="text-lg text-surface-700 dark:text-surface-400 mb-8">
             Plan gratuit inclus &middot; Sans carte bancaire &middot; Annulation a tout moment
           </p>
 
@@ -273,7 +273,7 @@ export function Pricing() {
                   <h3 className={cn('text-lg font-bold mb-1', isPopular ? 'text-white' : 'text-surface-900 dark:text-white')}>
                     {plan.name}
                   </h3>
-                  <p className={cn('text-xs', isPopular ? 'text-white/70' : 'text-surface-400')}>
+                  <p className={cn('text-xs', isPopular ? 'text-white/70' : 'text-surface-600 dark:text-surface-400')}>
                     {plan.description}
                   </p>
                 </div>
@@ -283,15 +283,15 @@ export function Pricing() {
                     <span className={cn('text-4xl font-black', isPopular ? 'text-white' : 'text-surface-900 dark:text-white')}>
                       {displayPrice === 0 ? '0' : `${displayPrice.toFixed(2).replace('.', ',')}`}&euro;
                     </span>
-                    <span className={cn('text-sm', isPopular ? 'text-white/60' : 'text-surface-400')}>/mois</span>
+                    <span className={cn('text-sm', isPopular ? 'text-white/60' : 'text-surface-600 dark:text-surface-400')}>/mois</span>
                   </div>
                   {isAnnual && displayPrice > 0 && (
-                    <p className={cn('text-xs mt-1', isPopular ? 'text-white/60' : 'text-surface-400')}>
+                    <p className={cn('text-xs mt-1', isPopular ? 'text-white/60' : 'text-surface-600 dark:text-surface-400')}>
                       Facture {(plan.priceAnnual * 12).toFixed(2).replace('.', ',')}&euro;/an
                     </p>
                   )}
                   {!isAnnual && displayPrice > 0 && (
-                    <p className={cn('text-xs mt-1', isPopular ? 'text-white/60' : 'text-surface-400')}>
+                    <p className={cn('text-xs mt-1', isPopular ? 'text-white/60' : 'text-surface-600 dark:text-surface-400')}>
                       ou {plan.priceAnnual.toFixed(2).replace('.', ',')}&euro;/mois en annuel
                     </p>
                   )}
@@ -347,7 +347,7 @@ export function Pricing() {
           </a>
         </div>
 
-        <p className="text-center text-surface-400 dark:text-surface-500 text-sm mt-10">
+        <p className="text-center text-surface-600 dark:text-surface-500 text-sm mt-10">
           Toutes taxes comprises &middot; Facture TVA disponible &middot; Support RGPD inclus
         </p>
       </div>

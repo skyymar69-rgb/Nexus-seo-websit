@@ -1,9 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight, Zap, Star } from 'lucide-react'
-
-const avatars = ['SR', 'TL', 'CD', 'MB', 'JM']
+import { ArrowRight, Zap, Leaf } from 'lucide-react'
 
 export function CTA() {
   return (
@@ -20,63 +18,39 @@ export function CTA() {
             <div className="relative z-10">
               <div className="section-badge mx-auto mb-6 flex items-center gap-1.5 w-fit">
                 <Zap className="w-3.5 h-3.5" />
-                Rejoignez 2 500+ équipes
+                100% gratuit
               </div>
 
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-surface-900 dark:text-white mb-6 leading-tight">
-                Prêt à dominer{' '}
-                <span className="gradient-text">les moteurs IA</span>{' '}
-                de 2026 ?
+                Pret a optimiser{' '}
+                <span className="gradient-text">votre visibilite</span>{' '}
+                ?
               </h2>
 
-              <p className="text-lg text-surface-500 dark:text-surface-400 mb-10 max-w-2xl mx-auto">
-                Obtenez votre audit SEO IA gratuit et complet en 5 minutes. Découvrez exactement pourquoi vos concurrents vous devancent dans ChatGPT et Google SGE.
+              <p className="text-lg text-surface-700 dark:text-surface-400 mb-10 max-w-2xl mx-auto">
+                Lancez votre audit SEO gratuit en 5 minutes. 30+ outils, zero euro, aucune carte bancaire.
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
                 <Link href="/signup" className="btn-primary px-10 py-4 text-base rounded-2xl">
-                  Créer mon compte gratuit
+                  Creer mon compte gratuit
                   <ArrowRight className="w-5 h-5" />
                 </Link>
-                <Link href="/contact" className="btn-outline px-8 py-4 text-base rounded-2xl">
-                  Parler à un expert
-                </Link>
+                <a href="https://internet.kayzen-lyon.fr" target="_blank" rel="noopener noreferrer" className="btn-outline px-8 py-4 text-base rounded-2xl">
+                  Faire creer mon site par Kayzen
+                </a>
               </div>
 
-              {/* Social proof */}
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-                <div className="flex items-center gap-3">
-                  <div className="flex -space-x-2">
-                    {avatars.map((initials, i) => (
-                      <div
-                        key={i}
-                        className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-violet-500 flex items-center justify-center text-xs font-bold text-white ring-2 ring-white dark:ring-surface-950"
-                      >
-                        {initials}
-                      </div>
-                    ))}
-                  </div>
-                  <span className="text-sm text-surface-500 dark:text-surface-400">
-                    <strong className="text-surface-900 dark:text-white">2 500+</strong> équipes actives
-                  </span>
-                </div>
-
-                <div className="hidden sm:block w-px h-6 bg-surface-200 dark:bg-surface-700" />
-
-                <div className="flex items-center gap-2">
-                  <div className="flex gap-0.5">
-                    {[1,2,3,4,5].map((s) => <Star key={s} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
-                  </div>
-                  <span className="text-sm text-surface-500 dark:text-surface-400">
-                    <strong className="text-surface-900 dark:text-white">4,9/5</strong> sur G2 &amp; Trustpilot
-                  </span>
-                </div>
-
-                <div className="hidden sm:block w-px h-6 bg-surface-200 dark:bg-surface-700" />
-
-                <span className="text-sm text-surface-400">
-                  Sans carte bancaire · Résiliation libre
+              {/* Real info */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-surface-600 dark:text-surface-400">
+                <span className="flex items-center gap-1.5">
+                  <Leaf className="w-4 h-4 text-green-500" />
+                  Web eco-responsable
                 </span>
+                <div className="hidden sm:block w-px h-4 bg-surface-200 dark:bg-surface-700" />
+                <span>Sans carte bancaire</span>
+                <div className="hidden sm:block w-px h-4 bg-surface-200 dark:bg-surface-700" />
+                <span>Developpe par Kayzen Web — Lyon</span>
               </div>
             </div>
           </div>

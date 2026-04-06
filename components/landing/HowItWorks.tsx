@@ -44,7 +44,7 @@ export function HowItWorks() {
             Opérationnel en{' '}
             <span className="gradient-text">moins de 10 minutes</span>
           </h2>
-          <p className="text-lg text-surface-500 dark:text-surface-400">
+          <p className="text-lg text-surface-700 dark:text-surface-400">
             Pas d&apos;agence. Pas de consultant. Nexus fait le travail à votre place et vous montre exactement quoi faire.
           </p>
         </div>
@@ -89,7 +89,7 @@ export function HowItWorks() {
             Commencer maintenant — C&apos;est gratuit
             <ArrowRight className="w-5 h-5" />
           </Link>
-          <p className="mt-3 text-sm text-surface-400">Aucune carte bancaire requise · Configuration en 5 min</p>
+          <p className="mt-3 text-sm text-surface-600 dark:text-surface-400">Aucune carte bancaire requise · Configuration en 5 min</p>
         </div>
       </div>
     </section>
