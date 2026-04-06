@@ -20,6 +20,7 @@ const playfair = Playfair_Display({
 
 const CookieBanner = dynamic(() => import('@/components/shared/CookieBanner'), { ssr: false })
 const AccessibilityToggle = dynamic(() => import('@/components/shared/AccessibilityToggle'), { ssr: false })
+const ScrollProgress = dynamic(() => import('@/components/shared/ScrollProgress'), { ssr: false })
 const AIChatWidget = dynamic(() => import('@/components/shared/AIChatWidget'), { ssr: false })
 const SocialProofToast = dynamic(() => import('@/components/shared/SocialProofToast'), { ssr: false })
 import './globals.css'
@@ -174,6 +175,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="animate-fade-in">
           {children}
           </div>
+          <ErrorBoundary><ScrollProgress /></ErrorBoundary>
           <ErrorBoundary><CookieBanner /></ErrorBoundary>
           <ErrorBoundary><AccessibilityToggle /></ErrorBoundary>
           <ErrorBoundary><AIChatWidget /></ErrorBoundary>
