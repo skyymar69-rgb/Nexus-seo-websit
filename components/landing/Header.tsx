@@ -39,6 +39,10 @@ export function Header() {
   const dropdownRef = useRef<HTMLDivElement>(null)
   const mobileMenuRef = useRef<HTMLDivElement>(null)
 
+  // Only use transparent header on homepage hero
+  const isHomepage = pathname === '/'
+  const solid = scrolled || !isHomepage
+
   const closeAll = useCallback(() => {
     setDropdown(null)
     setMobile(false)
@@ -111,7 +115,7 @@ export function Header() {
     <header
       className={cn(
         'fixed top-0 inset-x-0 z-50 transition-all duration-300',
-        scrolled
+        solid
           ? 'bg-white dark:bg-surface-950 border-b border-surface-200 dark:border-surface-800 shadow-sm'
           : 'bg-transparent border-b border-transparent'
       )}
@@ -121,7 +125,7 @@ export function Header() {
 
           {/* Logo */}
           <Link href="/" className="shrink-0">
-            <AnimatedLogo size={36} lightText={!scrolled} />
+            <AnimatedLogo size={36} lightText={!solid} />
           </Link>
 
           {/* Desktop Nav */}
@@ -137,7 +141,7 @@ export function Header() {
                     aria-haspopup="true"
                     className={cn(
                       'flex items-center gap-1 px-4 py-2 text-sm font-medium rounded-lg transition-all',
-                      scrolled
+                      solid
                         ? 'text-surface-600 hover:text-surface-900 hover:bg-surface-100'
                         : 'text-white/80 hover:text-white hover:bg-white/10'
                     )}
@@ -151,10 +155,10 @@ export function Header() {
                     className={cn(
                       'px-4 py-2 text-sm font-medium rounded-lg transition-all block',
                       isActive(pathname, item.href)
-                        ? scrolled
+                        ? solid
                           ? 'text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/30'
                           : 'text-white bg-white/15 underline underline-offset-4 decoration-2'
-                        : scrolled
+                        : solid
                           ? 'text-surface-600 hover:text-surface-900 hover:bg-surface-100'
                           : 'text-white/80 hover:text-white hover:bg-white/10'
                     )}
@@ -210,7 +214,7 @@ export function Header() {
                 href="/login"
                 className={cn(
                   'px-4 py-2 text-sm font-medium rounded-xl transition-all',
-                  scrolled
+                  solid
                     ? 'text-surface-700 dark:text-surface-300 hover:text-surface-900 dark:hover:text-white hover:bg-surface-100 dark:hover:bg-surface-800'
                     : 'text-white hover:text-white hover:bg-white/10'
                 )}
