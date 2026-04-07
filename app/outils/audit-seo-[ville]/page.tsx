@@ -30,6 +30,8 @@ const CITIES: Record<string, { name: string; region: string; population: string;
   'le-mans': { name: 'Le Mans', region: 'Pays de la Loire', population: '146K', description: 'ville des 24 heures' },
 }
 
+export const dynamicParams = true
+
 export async function generateStaticParams() {
   return Object.keys(CITIES).map(ville => ({ ville }))
 }
