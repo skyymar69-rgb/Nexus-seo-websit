@@ -47,6 +47,11 @@ interface GeoResult {
     technicalAI: GeoCategory
   }
   recommendations: string[]
+  // GEO Engine enrichment (optional)
+  eeat?: { total: number; experience: { score: number; recommendations: string[] }; expertise: { score: number; recommendations: string[] }; authority: { score: number; recommendations: string[] }; trust: { score: number; recommendations: string[] } }
+  schema?: { score: number; found: Array<{ type: string; valid: boolean; issues: string[] }>; missing: string[]; recommendations: string[] }
+  faq?: { detected: boolean; questionsFound: number; hasSchema: boolean; score: number; recommendations: string[] }
+  geoRecommendations?: string[]
 }
 
 /* ------------------------------------------------------------------ */
@@ -231,6 +236,24 @@ export default function GeoAuditPage() {
         throw new Error(data.error || 'Erreur lors de l\'analyse')
       }
 
+      // Enrich with GEO Engine (E-E-A-T, Schema, FAQ) — non-blocking
+      try {
+        const geoRes = await fetch('/api/geo-engine', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: url.trim() }),
+        })
+        if (geoRes.ok) {
+          const geoData = await geoRes.json()
+          if (geoData.success) {
+            data.eeat = geoData.eeat
+            data.schema = geoData.schema
+            data.faq = geoData.faq
+            data.geoRecommendations = geoData.recommendations
+          }
+        }
+      } catch { /* GEO engine enrichment is optional */ }
+
       setResult(data)
     } catch (err: any) {
       setError(err.message || 'Une erreur inattendue est survenue')
@@ -411,6 +434,80 @@ export default function GeoAuditPage() {
                     </span>
                     <p className="text-sm text-surface-700 dark:text-surface-300 leading-relaxed">{rec}</p>
                   </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* E-E-A-T Score (from GEO Engine) */}
+          {result.eeat && (
+            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6">
+              <h2 className="text-lg font-bold text-surface-900 dark:text-white mb-4 flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-brand-500" /> Score E-E-A-T — {result.eeat.total}/100
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                {[
+                  { label: 'Experience', score: result.eeat.experience.score },
+                  { label: 'Expertise', score: result.eeat.expertise.score },
+                  { label: 'Autorite', score: result.eeat.authority.score },
+                  { label: 'Confiance', score: result.eeat.trust.score },
+                ].map(item => (
+                  <div key={item.label} className="text-center p-3 rounded-lg bg-surface-50 dark:bg-surface-800">
+                    <p className="text-xs text-surface-500 mb-1">{item.label}</p>
+                    <p className={cn('text-2xl font-black', item.score >= 60 ? 'text-green-600' : item.score >= 40 ? 'text-amber-500' : 'text-red-500')}>
+                      {item.score}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              {result.eeat.experience.recommendations.length > 0 && (
+                <div className="space-y-1 mt-3">
+                  <p className="text-xs font-bold uppercase text-surface-500">Recommandations E-E-A-T</p>
+                  {[...result.eeat.experience.recommendations, ...result.eeat.expertise.recommendations, ...result.eeat.authority.recommendations, ...result.eeat.trust.recommendations].slice(0, 5).map((rec: string, i: number) => (
+                    <p key={i} className="text-sm text-surface-700 dark:text-surface-300 flex items-start gap-2">
+                      <AlertTriangle className="w-3.5 h-3.5 text-amber-500 mt-0.5 shrink-0" /> {rec}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Schema Validation (from GEO Engine) */}
+          {result.schema && (
+            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6">
+              <h2 className="text-lg font-bold text-surface-900 dark:text-white mb-4 flex items-center gap-2">
+                <Database className="w-5 h-5 text-violet-500" /> Validation Schema — {result.schema.score}/100
+              </h2>
+              {result.schema.found.length > 0 && (
+                <div className="space-y-2 mb-3">
+                  {result.schema.found.map((s: any, i: number) => (
+                    <div key={i} className="flex items-center gap-2 text-sm">
+                      {s.valid ? <CheckCircle className="w-4 h-4 text-green-500" /> : <AlertCircle className="w-4 h-4 text-amber-500" />}
+                      <span className="font-medium text-surface-900 dark:text-white">{s.type}</span>
+                      {s.issues.length > 0 && <span className="text-xs text-amber-600">({s.issues.join(', ')})</span>}
+                    </div>
+                  ))}
+                </div>
+              )}
+              {result.schema.missing.length > 0 && (
+                <div className="mt-3 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800">
+                  <p className="text-xs font-bold text-amber-700 dark:text-amber-400 mb-1">Schemas manquants</p>
+                  <p className="text-sm text-amber-600 dark:text-amber-300">{result.schema.missing.join(', ')}</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* GEO Engine Recommendations */}
+          {result.geoRecommendations && result.geoRecommendations.length > 0 && (
+            <div className="rounded-lg border border-brand-200 dark:border-brand-800 bg-brand-50 dark:bg-brand-950/20 p-6">
+              <h2 className="text-lg font-bold text-brand-800 dark:text-brand-300 mb-3">Recommandations GEO avancees</h2>
+              <div className="space-y-2">
+                {result.geoRecommendations.map((rec: string, i: number) => (
+                  <p key={i} className="text-sm text-brand-700 dark:text-brand-400 flex items-start gap-2">
+                    <Lightbulb className="w-4 h-4 mt-0.5 shrink-0" /> {rec}
+                  </p>
                 ))}
               </div>
             </div>

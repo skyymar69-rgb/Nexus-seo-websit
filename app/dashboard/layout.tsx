@@ -112,6 +112,7 @@ const navigationCategories = [
       { label: 'Content Template', href: '/dashboard/content-template', icon: LayoutTemplate, badge: 'NEW' as const },
       { label: 'Génération IA', href: '/dashboard/ai-content', icon: Sparkles, badge: undefined },
       { label: 'Crawleur Web', href: '/dashboard/crawl', icon: Globe, badge: undefined },
+      { label: 'Content Analyzer', href: '/dashboard/content-analyzer', icon: Sparkles, badge: 'NEW' as const },
     ],
   },
   {

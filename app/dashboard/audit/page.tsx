@@ -1005,6 +1005,11 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
         </>
       )}
 
+      {/* ── Audit History ──────────────────────────────────── */}
+      {selectedWebsite && !isAnalyzing && (
+        <AuditHistory websiteId={selectedWebsite.id} />
+      )}
+
       {/* ── Empty state ─────────────────────────────────────── */}
       {!result && !isAnalyzing && !error && (
         <div className="rounded-lg border border-dashed border-surface-300 dark:border-surface-700 bg-white/50 dark:bg-surface-900/50 p-16 print:hidden">
@@ -1019,6 +1024,55 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
           </div>
         </div>
       )}
+    </div>
+  )
+}
+
+/* ────────────────────────────────────────────────────────────── */
+/*  Audit History Sub-component                                   */
+/* ────────────────────────────────────────────────────────────── */
+
+function AuditHistory({ websiteId }: { websiteId: string }) {
+  const [audits, setAudits] = useState<Array<{ id: string; url: string; score: number; grade: string; createdAt: string }>>([])
+  const [loadingH, setLoadingH] = useState(false)
+
+  useEffect(() => {
+    if (!websiteId) return
+    setLoadingH(true)
+    fetch(`/api/audit?websiteId=${websiteId}`)
+      .then(r => r.ok ? r.json() : { data: [] })
+      .then(json => setAudits(json.data || []))
+      .catch(() => {})
+      .finally(() => setLoadingH(false))
+  }, [websiteId])
+
+  if (loadingH || audits.length === 0) return null
+
+  return (
+    <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 print:hidden">
+      <h3 className="text-sm font-bold text-surface-900 dark:text-surface-50 mb-4 uppercase tracking-wider flex items-center gap-2">
+        <ChevronRight className="w-4 h-4" /> Historique des audits ({audits.length})
+      </h3>
+      <div className="space-y-2">
+        {audits.slice(0, 10).map((audit) => {
+          const date = new Date(audit.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+          const scoreColor = audit.score >= 80 ? 'text-green-600' : audit.score >= 60 ? 'text-amber-500' : 'text-red-500'
+          return (
+            <div key={audit.id} className="flex items-center justify-between px-4 py-3 rounded-lg bg-surface-50 dark:bg-surface-800">
+              <div className="flex items-center gap-3 min-w-0">
+                <span className={cn('text-lg font-black tabular-nums w-10', scoreColor)}>{audit.score}</span>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-surface-900 dark:text-white truncate">{audit.url}</p>
+                  <p className="text-xs text-surface-500">{date}</p>
+                </div>
+              </div>
+              <span className={cn('px-2 py-0.5 text-xs font-bold rounded',
+                audit.score >= 80 ? 'bg-green-100 text-green-700' : audit.score >= 60 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'
+              )}>{audit.grade || getGrade(audit.score)}</span>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
