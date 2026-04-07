@@ -60,7 +60,7 @@ export const aiVisibilityCheckSchema = z.object({
 
 // AI Content generation
 export const aiContentSchema = z.object({
-  type: z.enum(['article', 'meta-description', 'title', 'faq', 'product-description']),
+  type: z.enum(['article', 'meta-description', 'title', 'faq', 'product-description', 'landing-page', 'category-description']),
   keyword: z.string().min(1).max(200),
   tone: z.enum(['professional', 'casual', 'academic', 'persuasive']).default('professional'),
   language: z.string().default('fr'),

@@ -7,7 +7,9 @@ import { Problem } from '@/components/landing/Problem'
 import { Features } from '@/components/landing/Features'
 import { AISection } from '@/components/landing/AISection'
 import { HowItWorks } from '@/components/landing/HowItWorks'
-import { Pricing } from '@/components/landing/Pricing'
+// Pricing supprimé — tout est 100% gratuit
+import { ToolsGrid } from '@/components/landing/ToolsGrid'
+import { EcoImpact } from '@/components/landing/EcoImpact'
 import { Footer } from '@/components/landing/Footer'
 
 // Below-the-fold components — lazy-loaded for performance
@@ -44,15 +46,28 @@ export default function HomePage() {
         <Problem />
         <Features />
         <AISection />
+        <ToolsGrid />
         <HowItWorks />
+
+        {/* Eco / Raison d'etre */}
+        <EcoImpact />
 
         {/* Proof */}
         <CaseStudies />
         <Comparison />
         <Testimonials />
 
-        {/* BOFU — Convertir */}
-        <Pricing />
+        {/* BOFU — Convertir — 100% Gratuit */}
+        <section className="py-16 px-4 sm:px-6 lg:px-8 bg-brand-950 text-center">
+          <div className="max-w-3xl mx-auto">
+            <span className="text-gold-400 text-sm font-bold uppercase tracking-widest">100% Gratuit</span>
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mt-3 mb-4">Tous les outils SEO, sans aucune limite</h2>
+            <p className="text-white/70 text-lg mb-8">Audit technique, GEO, AEO, LLMO, mots-clés, backlinks, contenu IA — tout est accessible gratuitement. Aucune carte bancaire requise.</p>
+            <a href="/dashboard/audit" className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gold-400 text-brand-950 font-bold text-base hover:bg-gold-300 transition-all">
+              Lancer mon audit gratuit
+            </a>
+          </div>
+        </section>
         <FAQ />
         <CTA />
       </main>

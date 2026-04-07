@@ -95,7 +95,7 @@ export function Hero() {
                 const input = (e.target as HTMLFormElement).querySelector('input') as HTMLInputElement
                 const url = input?.value?.trim()
                 if (url) {
-                  window.location.href = `/audit-gratuit?url=${encodeURIComponent(url)}`
+                  window.location.href = `/dashboard/audit?url=${encodeURIComponent(url)}`
                 }
               }}
               className="flex flex-col sm:flex-row gap-3"
@@ -129,9 +129,9 @@ export function Hero() {
           <div className="mb-10" role="region" aria-label="Statistiques cl&#233;s">
             <div className="inline-flex flex-col sm:flex-row flex-wrap items-center justify-center lg:justify-start gap-6 sm:gap-10 px-8 py-5 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm">
               {[
-                { value: '+340%', label: 'trafic organique', icon: TrendingUp },
-                { value: '2.4\u00d7', label: 'visibilite IA', icon: Globe },
-                { value: '98%', label: 'satisfaction', icon: Zap },
+                { value: '30+', label: 'outils gratuits', icon: TrendingUp },
+                { value: '10+', label: 'LLMs surveilles', icon: Globe },
+                { value: '0€', label: 'pour toujours', icon: Zap },
               ].map((stat) => {
                 const Icon = stat.icon
                 return (
@@ -151,7 +151,7 @@ export function Hero() {
 
           {/* Trust signal */}
           <p className="text-sm text-white/70 font-medium">
-            Utilise par <span className="text-white/75">+2 500 equipes</span> dans 45 pays
+            Developpe par <a href="https://internet.kayzen-lyon.fr" target="_blank" rel="noopener noreferrer" className="text-white/90 hover:text-gold-400 transition-colors">Kayzen Web</a> — Agence web Lyon
           </p>
         </div>
 
@@ -210,7 +210,7 @@ export function Hero() {
             {/* ── Bar chart (bottom-left) ── */}
             <g transform="translate(30, 185)">
               <text x="0" y="10" fill="rgba(255,255,255,0.4)" fontSize="8" fontWeight="600" fontFamily="system-ui" letterSpacing="0.5">TRAFIC ORGANIQUE</text>
-              <text x="170" y="10" textAnchor="end" fill="#22c55e" fontSize="8" fontWeight="700" fontFamily="system-ui">+340%</text>
+              <text x="170" y="10" textAnchor="end" fill="#22c55e" fontSize="8" fontWeight="700" fontFamily="system-ui">SEO</text>
               {/* Grid lines */}
               {[0, 1, 2, 3].map(i => (
                 <line key={i} x1="0" y1={25 + i * 30} x2="170" y2={25 + i * 30} stroke="rgba(255,255,255,0.04)" strokeWidth="0.5" />

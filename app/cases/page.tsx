@@ -6,6 +6,11 @@ import { ArrowRight, TrendingUp } from 'lucide-react'
 export const metadata = {
   title: 'Cas clients — Résultats prouvés | Nexus SEO',
   description: 'Découvrez comment nos clients ont multiplié leur trafic organique et leur visibilité dans les LLMs grâce à Nexus GEO, AEO et LLMO.',
+  openGraph: {
+    title: 'Cas clients',
+    description: 'Découvrez comment nos clients ont multiplié leur trafic organique et leur visibilité dans les LLMs grâce à Nexus GEO, AEO et LLMO.',
+    images: ['/api/og?title=Cas%20clients&subtitle=Resultats%20concrets'],
+  },
 }
 
 const cases = [

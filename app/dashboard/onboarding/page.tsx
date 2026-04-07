@@ -4,9 +4,25 @@ import { useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useWebsite } from '@/contexts/WebsiteContext'
-import { User, Globe, ArrowRight, Check, Loader2 } from 'lucide-react'
+import { User, Globe, ArrowRight, Check, Loader2, AlertCircle } from 'lucide-react'
 
 type Step = 'profile' | 'website' | 'done'
+
+const DOMAIN_REGEX = /^([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/
+
+function cleanDomain(input: string): string {
+  return input.trim()
+    .replace(/^https?:\/\//, '')
+    .replace(/^www\./, '')
+    .replace(/\/.*$/, '')
+    .replace(/^.*@/, '') // Remove email prefix if present
+}
+
+function isValidDomain(domain: string): boolean {
+  if (!domain) return false
+  if (domain.includes('@')) return false
+  return DOMAIN_REGEX.test(domain)
+}
 
 export default function OnboardingPage() {
   const { data: session, update: updateSession } = useSession()
@@ -24,6 +40,11 @@ export default function OnboardingPage() {
   // Website form
   const [domain, setDomain] = useState('')
   const [siteName, setSiteName] = useState('')
+  const [domainTouched, setDomainTouched] = useState(false)
+
+  const cleaned = cleanDomain(domain)
+  const domainValid = isValidDomain(cleaned)
+  const domainHasError = domainTouched && domain.trim().length > 0 && !domainValid
 
   const handleProfileSubmit = async () => {
     if (!name.trim()) {
@@ -35,8 +56,20 @@ export default function OnboardingPage() {
   }
 
   const handleWebsiteSubmit = async () => {
+    setDomainTouched(true)
+
     if (!domain.trim()) {
       setError('Veuillez renseigner le domaine de votre site.')
+      return
+    }
+
+    if (domain.includes('@')) {
+      setError('Entrez un domaine (ex: monsite.fr), pas une adresse email.')
+      return
+    }
+
+    if (!domainValid) {
+      setError('Format de domaine invalide. Exemple : monsite.fr')
       return
     }
 
@@ -44,18 +77,12 @@ export default function OnboardingPage() {
     setError('')
 
     try {
-      // Clean domain
-      let cleanDomain = domain.trim()
-        .replace(/^https?:\/\//, '')
-        .replace(/^www\./, '')
-        .replace(/\/.*$/, '')
-
       const res = await fetch('/api/websites', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          domain: cleanDomain,
-          name: siteName || cleanDomain,
+          domain: cleaned,
+          name: siteName || cleaned,
         }),
       })
 
@@ -67,9 +94,9 @@ export default function OnboardingPage() {
       await refreshWebsites()
       setStep('done')
 
-      // Redirect to dashboard after 2s
+      // Redirect to audit with auto-launch after 2s
       setTimeout(() => {
-        router.push('/dashboard')
+        router.push(`/dashboard/audit?url=${encodeURIComponent('https://' + cleaned)}`)
       }, 2000)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur inconnue')
@@ -134,7 +161,7 @@ export default function OnboardingPage() {
                     type="text"
                     value={company}
                     onChange={(e) => setCompany(e.target.value)}
-                    placeholder="Kayzen Lyon"
+                    placeholder="Mon Entreprise"
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-surface-700 bg-white dark:bg-surface-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500/50"
                   />
                 </div>
@@ -169,14 +196,37 @@ export default function OnboardingPage() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-surface-300 mb-1.5">
                     Domaine du site *
                   </label>
-                  <input
-                    type="text"
-                    value={domain}
-                    onChange={(e) => setDomain(e.target.value)}
-                    placeholder="www.kayzen-lyon.fr"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-surface-700 bg-white dark:bg-surface-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500/50"
-                  />
-                  <p className="mt-1 text-xs text-gray-400">Sans https:// — exemple : kayzen-lyon.fr</p>
+                  <div className="relative">
+                    <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <input
+                      type="text"
+                      value={domain}
+                      onChange={(e) => { setDomain(e.target.value); setDomainTouched(true) }}
+                      onBlur={() => setDomainTouched(true)}
+                      placeholder="monsite.fr"
+                      className={`w-full pl-10 pr-4 py-3 rounded-xl border bg-white dark:bg-surface-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 transition-colors ${
+                        domainHasError
+                          ? 'border-red-400 focus:ring-red-500/50'
+                          : domainTouched && domainValid
+                          ? 'border-green-400 focus:ring-green-500/50'
+                          : 'border-gray-200 dark:border-surface-700 focus:ring-brand-500/50'
+                      }`}
+                    />
+                  </div>
+                  {domainHasError ? (
+                    <p className="mt-1.5 text-xs text-red-500 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      {domain.includes('@')
+                        ? 'Entrez un domaine, pas une adresse email. Exemple : monsite.fr'
+                        : 'Format invalide. Exemple : monsite.fr ou mon-site.com'}
+                    </p>
+                  ) : domainTouched && domainValid ? (
+                    <p className="mt-1.5 text-xs text-green-600 flex items-center gap-1">
+                      <Check className="w-3 h-3" /> {cleaned}
+                    </p>
+                  ) : (
+                    <p className="mt-1 text-xs text-gray-400">Entrez votre domaine sans https:// — ex: monsite.fr</p>
+                  )}
                 </div>
 
                 <div>
@@ -187,7 +237,7 @@ export default function OnboardingPage() {
                     type="text"
                     value={siteName}
                     onChange={(e) => setSiteName(e.target.value)}
-                    placeholder="Kayzen Lyon"
+                    placeholder="Mon Site"
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-surface-700 bg-white dark:bg-surface-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500/50"
                   />
                 </div>
@@ -208,7 +258,7 @@ export default function OnboardingPage() {
               </button>
 
               <button
-                onClick={() => setStep('profile')}
+                onClick={() => { setStep('profile'); setError('') }}
                 className="w-full mt-2 py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
               >
                 Retour
@@ -222,9 +272,9 @@ export default function OnboardingPage() {
               <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-950/30 flex items-center justify-center mx-auto mb-4">
                 <Check className="w-8 h-8 text-green-600" />
               </div>
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Tout est prêt !</h1>
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Tout est pret !</h1>
               <p className="text-gray-500 mb-6">
-                Votre site a été ajouté. Redirection vers le dashboard...
+                Votre site a ete ajoute. Lancement de votre premier audit...
               </p>
               <div className="flex items-center justify-center">
                 <Loader2 className="w-5 h-5 animate-spin text-brand-600" />
@@ -240,7 +290,7 @@ export default function OnboardingPage() {
               onClick={() => router.push('/dashboard')}
               className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
             >
-              Passer cette étape
+              Passer cette etape
             </button>
           </p>
         )}

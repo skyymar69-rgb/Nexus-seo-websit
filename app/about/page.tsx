@@ -6,6 +6,11 @@ import { Breadcrumb } from '@/components/shared/Breadcrumb'
 export const metadata = {
   title: 'À propos — Nexus SEO',
   description: 'Nexus est né d\'une conviction : les outils SEO du passé ne suffisent plus à l\'ère de l\'IA. Découvrez notre mission et notre équipe.',
+  openGraph: {
+    title: 'A propos',
+    description: 'Nexus est né d\'une conviction : les outils SEO du passé ne suffisent plus à l\'ère de l\'IA. Découvrez notre mission et notre équipe.',
+    images: ['/api/og?title=A%20propos&subtitle=Kayzen%20Web%20x%20Nexus'],
+  },
 }
 
 const values = [

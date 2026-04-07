@@ -6,7 +6,7 @@ import { getPlan, type PlanId } from '@/lib/plans'
 
 interface UpgradePromptProps {
   feature: string
-  requiredPlan: 'free' | 'pro' | 'expert'
+  requiredPlan: string
 }
 
 const featureDescriptions: Record<string, string> = {
@@ -26,7 +26,7 @@ const featureDescriptions: Record<string, string> = {
 }
 
 export function UpgradePrompt({ feature, requiredPlan }: UpgradePromptProps) {
-  const plan = getPlan(requiredPlan)
+  const plan = getPlan('free')
   const description = featureDescriptions[feature] || 'Acceder a cette fonctionnalite'
   const isAgencyFeature = feature === 'agencyAccess'
 

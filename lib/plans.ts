@@ -1,22 +1,19 @@
 /**
- * Nexus SEO — Plans tarifaires
- * Stratégie : Tunnel de vente vers l'Agence Web Kayzen
- *
- * Gratuit → découverte (audit complet, outils de base)
- * Pro 49,99€ → professionnels autonomes (tous les outils IA)
- * Expert 99,99€ → entreprises + accès prioritaire agence Kayzen
+ * Nexus SEO — 100% Gratuit
+ * Tous les outils sont accessibles sans limitation.
+ * Les plans payants seront ajoutés quand il y aura des clients.
  */
 
-export type PlanId = 'free' | 'pro' | 'expert'
+export type PlanId = 'free'
 
 export interface PlanConfig {
   id: PlanId
   name: string
   price: number | null
-  priceAnnual: number | null  // prix mensuel en facturation annuelle
+  priceAnnual: number | null
   tagline: string
   limits: {
-    auditsPerMonth: number        // -1 = illimité
+    auditsPerMonth: number
     keywordsTracked: number
     backlinkChecks: number
     sitesMax: number
@@ -32,7 +29,7 @@ export interface PlanConfig {
     supportLevel: 'community' | 'email' | 'priority' | 'dedicated'
     customDashboard: boolean
     aiChat: boolean
-    agencyAccess: boolean         // accès services Agence Kayzen
+    agencyAccess: boolean
   }
 }
 
@@ -42,59 +39,7 @@ const plansConfig: Record<PlanId, PlanConfig> = {
     name: 'Gratuit',
     price: 0,
     priceAnnual: 0,
-    tagline: 'Auditez votre site gratuitement',
-    limits: {
-      auditsPerMonth: 5,
-      keywordsTracked: 10,
-      backlinkChecks: 5,
-      sitesMax: 1,
-      aiVisibility: true,
-      geoReports: true,
-      aeoReports: true,
-      llmoReports: false,
-      competitorAnalysis: 1,
-      exportPDF: false,
-      apiAccess: false,
-      whiteLabel: false,
-      llmMonitoring: 2,
-      supportLevel: 'community',
-      customDashboard: false,
-      aiChat: true,
-      agencyAccess: false,
-    },
-  },
-  pro: {
-    id: 'pro',
-    name: 'Pro',
-    price: 49.99,
-    priceAnnual: 39.99,
-    tagline: 'Pour les professionnels du SEO',
-    limits: {
-      auditsPerMonth: -1,
-      keywordsTracked: 100,
-      backlinkChecks: -1,
-      sitesMax: 5,
-      aiVisibility: true,
-      geoReports: true,
-      aeoReports: true,
-      llmoReports: true,
-      competitorAnalysis: 10,
-      exportPDF: true,
-      apiAccess: false,
-      whiteLabel: false,
-      llmMonitoring: 4,
-      supportLevel: 'email',
-      customDashboard: false,
-      aiChat: true,
-      agencyAccess: false,
-    },
-  },
-  expert: {
-    id: 'expert',
-    name: 'Expert',
-    price: 99.99,
-    priceAnnual: 79.99,
-    tagline: 'SEO avancé + accès Agence Kayzen',
+    tagline: 'Tous les outils SEO, 100% gratuit',
     limits: {
       auditsPerMonth: -1,
       keywordsTracked: -1,
@@ -107,56 +52,34 @@ const plansConfig: Record<PlanId, PlanConfig> = {
       competitorAnalysis: -1,
       exportPDF: true,
       apiAccess: true,
-      whiteLabel: true,
+      whiteLabel: false,
       llmMonitoring: -1,
-      supportLevel: 'dedicated',
-      customDashboard: true,
+      supportLevel: 'email',
+      customDashboard: false,
       aiChat: true,
-      agencyAccess: true,
+      agencyAccess: false,
     },
   },
 }
 
 export function getPlan(planId: PlanId): PlanConfig {
-  return plansConfig[planId] || plansConfig.free
+  return plansConfig.free
 }
 
-export function canAccess(planId: PlanId, feature: keyof PlanConfig['limits']): boolean {
-  const plan = getPlan(planId)
-  const value = plan.limits[feature]
-
-  if (typeof value === 'boolean') return value
-  if (typeof value === 'number') return value !== 0
-  return false
+export function canAccess(_planId: PlanId, _feature: keyof PlanConfig['limits']): boolean {
+  return true // Tout est gratuit
 }
 
-export function getLimit(planId: PlanId, feature: keyof PlanConfig['limits']): number | boolean | string {
-  const plan = getPlan(planId)
-  return plan.limits[feature]
+export function getLimit(_planId: PlanId, feature: keyof PlanConfig['limits']): number | boolean | string {
+  return plansConfig.free.limits[feature]
 }
 
-export function isFeatureLocked(planId: PlanId, feature: string): boolean {
-  const plan = getPlan(planId)
-  const limits = plan.limits as Record<string, unknown>
-  const value = limits[feature]
-
-  if (value === undefined) return false
-  if (typeof value === 'boolean') return !value
-  if (typeof value === 'number') return value === 0
-
-  return false
+export function isFeatureLocked(_planId: PlanId, _feature: string): boolean {
+  return false // Rien n'est verrouillé
 }
 
-export function getMinPlanForFeature(feature: keyof PlanConfig['limits']): PlanId {
-  const plans: PlanId[] = ['free', 'pro', 'expert']
-
-  for (const planId of plans) {
-    if (canAccess(planId, feature)) {
-      return planId
-    }
-  }
-
-  return 'expert'
+export function getMinPlanForFeature(_feature: keyof PlanConfig['limits']): PlanId {
+  return 'free'
 }
 
 export const allPlans: PlanConfig[] = Object.values(plansConfig)

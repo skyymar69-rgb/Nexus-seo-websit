@@ -28,6 +28,10 @@ export function WebsiteSelector() {
 
   const handleAdd = async () => {
     if (!newDomain.trim()) return
+    const cleaned = newDomain.trim().replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/.*$/, '').replace(/^.*@/, '')
+    if (cleaned.includes('@')) { setError('Entrez un domaine, pas un email'); return }
+    const domainRegex = /^([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/
+    if (!domainRegex.test(cleaned)) { setError('Domaine invalide (ex: monsite.fr)'); return }
     setIsAdding(true)
     setError('')
     try {

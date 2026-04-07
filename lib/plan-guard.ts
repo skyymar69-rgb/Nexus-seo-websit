@@ -9,7 +9,7 @@ export interface PlanCheckResult {
   upgradeRequired: PlanId | null
 }
 
-const PLAN_ORDER: PlanId[] = ['free', 'pro', 'expert']
+const PLAN_ORDER: PlanId[] = ['free']
 
 function isValidPlan(plan: unknown): plan is PlanId {
   return typeof plan === 'string' && PLAN_ORDER.includes(plan as PlanId)

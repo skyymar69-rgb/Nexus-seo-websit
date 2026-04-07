@@ -4,7 +4,7 @@ import { useMemo, useCallback } from 'react'
 import { useSession } from '@/hooks/useSession'
 import { type PlanId, canAccess, getLimit, isFeatureLocked, getMinPlanForFeature, type PlanConfig } from '@/lib/plans'
 
-const VALID_PLANS: PlanId[] = ['free', 'pro', 'expert']
+const VALID_PLANS: PlanId[] = ['free']
 
 function isValidPlan(plan: unknown): plan is PlanId {
   return typeof plan === 'string' && VALID_PLANS.includes(plan as PlanId)

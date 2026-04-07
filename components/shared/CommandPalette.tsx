@@ -47,8 +47,12 @@ const tools: Tool[] = [
   { label: 'Analytics', href: '/dashboard/analytics', icon: LineChart, category: 'Rapports', keywords: ['statistiques', 'donnees'] },
   { label: 'Evolution', href: '/dashboard/evolution', icon: TrendingUp, category: 'Rapports', keywords: ['historique', 'tendance'] },
   { label: 'Rapports', href: '/dashboard/reports', icon: BarChart3, category: 'Rapports', keywords: ['rapport', 'export'] },
+  { label: 'Prompt Tester', href: '/dashboard/prompt-tester', icon: Sparkles, category: 'IA & GEO', keywords: ['prompt', 'tester', 'chatgpt'] },
+  { label: 'Content Analyzer', href: '/dashboard/content-analyzer', icon: FileSearch, category: 'Contenu', keywords: ['analyser', 'citabilite', 'eeat'] },
+  { label: 'Achat de Liens', href: '/dashboard/link-buying', icon: ShieldCheck, category: 'Backlinks', keywords: ['liens', 'marketplace', 'guest post'] },
   { label: 'Parametres', href: '/dashboard/settings', icon: Settings, category: 'Configuration', keywords: ['config', 'compte'] },
   { label: 'Mes Sites', href: '/dashboard/projects', icon: FolderOpen, category: 'Configuration', keywords: ['sites', 'projets'] },
+  { label: 'Parrainage', href: '/dashboard/referral', icon: Users, category: 'Configuration', keywords: ['referral', 'ambassadeur', 'partager'] },
 ]
 
 export function CommandPalette() {
