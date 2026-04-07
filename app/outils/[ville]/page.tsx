@@ -33,11 +33,15 @@ const CITIES: Record<string, { name: string; region: string; population: string;
 export const dynamicParams = true
 
 export async function generateStaticParams() {
-  return Object.keys(CITIES).map(ville => ({ ville }))
+  return Object.keys(CITIES).map(ville => ({ ville: `audit-seo-${ville}` }))
+}
+
+function extractCity(slug: string): string {
+  return slug.replace(/^audit-seo-/, '')
 }
 
 export async function generateMetadata({ params }: { params: { ville: string } }): Promise<Metadata> {
-  const city = CITIES[params.ville]
+  const city = CITIES[extractCity(params.ville)]
   if (!city) return { title: 'Page non trouvee' }
 
   return {
@@ -51,7 +55,7 @@ export async function generateMetadata({ params }: { params: { ville: string } }
 }
 
 export default function AuditSEOVillePage({ params }: { params: { ville: string } }) {
-  const city = CITIES[params.ville]
+  const city = CITIES[extractCity(params.ville)]
   if (!city) notFound()
 
   const features = [
@@ -174,7 +178,7 @@ export default function AuditSEOVillePage({ params }: { params: { ville: string 
             </h2>
             <div className="flex flex-wrap justify-center gap-2">
               {Object.entries(CITIES)
-                .filter(([slug]) => slug !== params.ville)
+                .filter(([slug]) => slug !== extractCity(params.ville))
                 .slice(0, 15)
                 .map(([slug, c]) => (
                   <Link
