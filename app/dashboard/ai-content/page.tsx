@@ -21,11 +21,13 @@ import {
 
 const CONTENT_TYPES = [
   { id: 'blog', label: 'Article de blog', icon: '📝', apiValue: 'article' },
+  { id: 'guide', label: 'Guide complet', icon: '📖', apiValue: 'guide' },
+  { id: 'listicle', label: 'Article liste', icon: '📋', apiValue: 'listicle' },
+  { id: 'comparison', label: 'Comparatif', icon: '⚖️', apiValue: 'comparison' },
   { id: 'product', label: 'Page produit', icon: '🛍️', apiValue: 'product-description' },
-  { id: 'meta', label: 'Meta descriptions', icon: '📋', apiValue: 'meta-description' },
   { id: 'faq', label: 'FAQ', icon: '❓', apiValue: 'faq' },
-  { id: 'landing', label: 'Landing page', icon: '🚀', apiValue: 'title' },
-  { id: 'category', label: 'Description categorie', icon: '📂', apiValue: 'product-description' },
+  { id: 'landing', label: 'Landing page', icon: '🚀', apiValue: 'landing-page' },
+  { id: 'category', label: 'Description categorie', icon: '📂', apiValue: 'category-description' },
 ];
 
 const TONES = [
@@ -73,7 +75,6 @@ export default function AIContentPage() {
   const [showSEO, setShowSEO] = useState(false);
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
   const [charCount, setCharCount] = useState(0);
-  const [isDemo, setIsDemo] = useState(false);
   const [error, setError] = useState('');
   const abortRef = useRef<AbortController | null>(null);
 
@@ -99,7 +100,6 @@ export default function AIContentPage() {
     setIsGenerating(true);
     setContent('');
     setShowSEO(false);
-    setIsDemo(false);
     setError('');
 
     const contentType = CONTENT_TYPES.find(t => t.id === selectedType);
@@ -119,15 +119,10 @@ export default function AIContentPage() {
         signal: controller.signal,
       });
 
-      // Handle JSON responses (demo mode or errors)
+      // Handle JSON responses (errors)
       const contentTypeHeader = res.headers.get('content-type') || '';
       if (contentTypeHeader.includes('application/json')) {
         const data = await res.json();
-        if (data.demo) {
-          setIsDemo(true);
-          setIsGenerating(false);
-          return;
-        }
         if (data.error) {
           setError(data.error);
           setIsGenerating(false);
@@ -229,33 +224,16 @@ export default function AIContentPage() {
           <div className="flex items-center gap-3 mb-2">
             <Sparkles className="w-8 h-8 text-brand-600" />
             <h1 className="text-3xl font-bold text-surface-900 dark:text-white">
-              Generation de Contenu IA
+              Generateur de Contenu SEO
             </h1>
           </div>
           <p className="text-surface-600 dark:text-surface-400">
-            Creez du contenu SEO-optimise en quelques secondes avec notre editeur IA
+            Creez du contenu SEO-optimise en quelques secondes — 100% gratuit, sans cle API
           </p>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Demo Banner */}
-        {isDemo && (
-          <div className="mb-6 rounded-xl border-2 border-amber-400 dark:border-amber-600 bg-amber-50 dark:bg-amber-950/30 p-5">
-            <div className="flex items-center gap-3">
-              <AlertCircle className="w-6 h-6 text-amber-600 flex-shrink-0" />
-              <div>
-                <p className="font-semibold text-amber-800 dark:text-amber-300 text-lg">
-                  MODE DEMO
-                </p>
-                <p className="text-amber-700 dark:text-amber-400 text-sm mt-1">
-                  Configurez la variable d&apos;environnement <code className="px-1.5 py-0.5 rounded bg-amber-200 dark:bg-amber-900 font-mono text-xs">OPENAI_API_KEY</code> pour activer la generation IA reelle.
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Error Banner */}
         {error && (
           <div className="mb-6 rounded-xl border border-red-300 dark:border-red-800 bg-red-50 dark:bg-red-950/30 p-4">
@@ -425,7 +403,7 @@ export default function AIContentPage() {
                 <div className="flex items-center gap-3 mb-4">
                   <Loader2 className="w-5 h-5 animate-spin text-brand-600" />
                   <span className="text-sm font-medium text-surface-600 dark:text-surface-400">
-                    L&apos;IA genere votre contenu...
+                    Generation de votre contenu en cours...
                   </span>
                 </div>
                 <div className="space-y-3 animate-pulse">
