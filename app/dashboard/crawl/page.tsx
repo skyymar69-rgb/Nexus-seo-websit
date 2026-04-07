@@ -61,6 +61,8 @@ export default function CrawlPage() {
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<CrawlData | null>(null);
   const [maxPages, setMaxPages] = useState(10);
+  const [progress, setProgress] = useState<{ pagesCrawled: number; pagesFound: number; currentUrl: string } | null>(null);
+  const [streamPages, setStreamPages] = useState<CrawledPage[]>([]);
 
   // Pre-fill URL from selected website
   useEffect(() => {
@@ -82,23 +84,92 @@ export default function CrawlPage() {
 
     setLoading(true);
     setError(null);
+    setData(null);
+    setProgress(null);
+    setStreamPages([]);
 
     try {
-      const response = await fetch('/api/crawl', {
+      // Use SSE streaming endpoint for real-time progress
+      const response = await fetch('/api/crawl-stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: crawlUrl, maxPages }),
       });
 
-      if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.error || 'Erreur lors du crawl');
+      if (!response.ok || !response.body) {
+        throw new Error('Erreur lors du crawl');
       }
 
-      const result = await response.json();
-      setData(result);
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      const collectedPages: CrawledPage[] = [];
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          if (line.startsWith('event: ')) {
+            const eventType = line.slice(7).trim();
+            const nextLine = lines[lines.indexOf(line) + 1];
+            if (nextLine?.startsWith('data: ')) {
+              try {
+                const eventData = JSON.parse(nextLine.slice(6));
+                if (eventType === 'progress') {
+                  setProgress(eventData);
+                } else if (eventType === 'page') {
+                  const page: CrawledPage = {
+                    url: eventData.url,
+                    statusCode: eventData.statusCode,
+                    contentType: 'text/html',
+                    contentLength: 0,
+                    responseTime: eventData.responseTime,
+                    title: eventData.title,
+                    description: '',
+                    h1Count: eventData.h1Count,
+                    h2Count: 0,
+                    internalLinks: eventData.internalLinks,
+                    externalLinks: eventData.externalLinks,
+                    imageCount: 0,
+                    imagesWithoutAlt: eventData.imagesNoAlt,
+                    issues: eventData.issues || [],
+                  };
+                  collectedPages.push(page);
+                  setStreamPages([...collectedPages]);
+                } else if (eventType === 'complete') {
+                  const stats: CrawlStats = {
+                    totalPages: eventData.totalPages,
+                    statusCodes: {},
+                    totalInternalLinks: collectedPages.reduce((s, p) => s + p.internalLinks, 0),
+                    totalExternalLinks: collectedPages.reduce((s, p) => s + p.externalLinks, 0),
+                    totalImages: collectedPages.reduce((s, p) => s + p.imageCount, 0),
+                    totalImagesWithoutAlt: collectedPages.reduce((s, p) => s + p.imagesWithoutAlt, 0),
+                    avgResponseTime: collectedPages.length > 0
+                      ? Math.round(collectedPages.reduce((s, p) => s + p.responseTime, 0) / collectedPages.length)
+                      : 0,
+                  };
+                  // Count status codes
+                  collectedPages.forEach(p => {
+                    const cat = `${Math.floor(p.statusCode / 100)}xx`;
+                    stats.statusCodes[cat] = (stats.statusCodes[cat] || 0) + 1;
+                  });
+                  setData({ url: crawlUrl, stats, pages: collectedPages });
+                  setProgress(null);
+                } else if (eventType === 'error') {
+                  setError(eventData.message);
+                }
+              } catch { /* parse error, skip */ }
+            }
+          }
+        }
+      }
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Erreur réseau';
+      const message = err instanceof Error ? err.message : 'Erreur reseau';
       setError(message);
     } finally {
       setLoading(false);
@@ -169,18 +240,54 @@ export default function CrawlPage() {
           </div>
         </div>
 
-        {/* Loading State */}
+        {/* Loading State with SSE Progress */}
         {loading && (
-          <div className="border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-800 rounded-xl p-12 text-center">
-            <div className="flex flex-col items-center gap-4">
-              <Loader2 className="w-12 h-12 animate-spin text-brand-600 dark:text-brand-400" />
-              <p className="text-lg font-medium text-surface-700 dark:text-surface-300">
-                Crawl en cours... Veuillez patienter
-              </p>
-              <p className="text-sm text-surface-500 dark:text-surface-400">
-                Exploration des pages et analyse du contenu
+          <div className="border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 rounded-xl p-8 space-y-4">
+            <div className="flex items-center gap-3">
+              <Loader2 className="w-6 h-6 animate-spin text-brand-600" />
+              <p className="text-lg font-medium text-surface-900 dark:text-white">
+                Crawl en cours...
               </p>
             </div>
+
+            {progress && (
+              <>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-surface-600 dark:text-surface-400">
+                    {progress.pagesCrawled}/{progress.pagesFound} pages crawlees
+                  </span>
+                  <span className="text-brand-600 font-mono text-xs truncate max-w-xs">
+                    {progress.currentUrl}
+                  </span>
+                </div>
+                <div className="w-full bg-surface-200 dark:bg-surface-700 rounded-full h-2.5">
+                  <div
+                    className="bg-gradient-to-r from-brand-500 to-cyan-500 h-2.5 rounded-full transition-all duration-300"
+                    style={{ width: `${Math.min(100, (progress.pagesCrawled / Math.max(1, maxPages)) * 100)}%` }}
+                  />
+                </div>
+              </>
+            )}
+
+            {/* Live pages feed */}
+            {streamPages.length > 0 && (
+              <div className="mt-4 max-h-48 overflow-y-auto space-y-1 scrollbar-thin">
+                {streamPages.slice(-8).map((p, i) => (
+                  <div key={i} className="flex items-center gap-2 text-xs">
+                    <span className={cn(
+                      'w-8 text-center font-mono rounded px-1 py-0.5 text-white',
+                      p.statusCode >= 200 && p.statusCode < 300 ? 'bg-emerald-500' : p.statusCode >= 300 && p.statusCode < 400 ? 'bg-amber-500' : 'bg-red-500'
+                    )}>
+                      {p.statusCode}
+                    </span>
+                    <span className="text-surface-600 dark:text-surface-400 truncate flex-1">{p.url}</span>
+                    {p.issues.length > 0 && (
+                      <span className="text-amber-500 text-[10px] font-medium">{p.issues.length} issues</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 

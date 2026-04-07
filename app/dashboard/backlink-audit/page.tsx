@@ -171,6 +171,99 @@ export default function BacklinkAuditPage() {
               </table>
             </div>
           </div>
+
+          {/* Toxic links disavow section */}
+          {stats.toxic > 0 && (
+            <div className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-xl p-6 space-y-4">
+              <div className="flex items-center gap-3">
+                <AlertTriangle className="w-6 h-6 text-red-500" />
+                <div>
+                  <h3 className="font-bold text-red-800 dark:text-red-300">
+                    {stats.toxic} lien{stats.toxic > 1 ? 's' : ''} toxique{stats.toxic > 1 ? 's' : ''} detecte{stats.toxic > 1 ? 's' : ''}
+                  </h3>
+                  <p className="text-sm text-red-700 dark:text-red-400">
+                    Ces liens peuvent nuire a votre classement. Utilisez l&apos;outil de desaveu de Google.
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <h4 className="text-sm font-semibold text-red-800 dark:text-red-300">Liens a desavouer :</h4>
+                {scored.filter(b => b.quality === 'toxic').map(b => (
+                  <div key={b.id} className="flex items-center justify-between bg-white dark:bg-surface-900 rounded-lg px-4 py-2 border border-red-100 dark:border-red-900">
+                    <span className="text-sm text-red-700 dark:text-red-400 truncate">{b.sourceDomain}</span>
+                    <span className="text-xs text-red-500">Spam: {b.spamScore}% | DA: {b.da}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    const lines = scored.filter(b => b.quality === 'toxic').map(b => `domain:${b.sourceDomain}`)
+                    const content = `# Fichier de desaveu Google\n# Genere par Nexus SEO — ${new Date().toLocaleDateString('fr-FR')}\n# Soumettez ce fichier sur https://search.google.com/search-console/disavow-links\n\n${lines.join('\n')}`
+                    const blob = new Blob([content], { type: 'text/plain' })
+                    const a = document.createElement('a'); a.href = URL.createObjectURL(blob)
+                    a.download = `disavow-${selectedWebsite?.domain || 'site'}.txt`
+                    a.click()
+                  }}
+                  className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors"
+                >
+                  Telecharger le fichier de desaveu (.txt)
+                </button>
+                <a
+                  href="https://search.google.com/search-console/disavow-links"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-red-300 text-red-700 hover:bg-red-50 transition-colors"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" /> Ouvrir l&apos;outil Google Disavow
+                </a>
+              </div>
+
+              <div className="bg-white dark:bg-surface-900 rounded-lg p-4 border border-red-100 dark:border-red-900">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-red-500 mb-2">Comment utiliser le fichier de desaveu</h4>
+                <ol className="text-sm text-red-700 dark:text-red-400 space-y-1 list-decimal pl-4">
+                  <li>Telecharger le fichier .txt ci-dessus</li>
+                  <li>Aller sur Google Search Console &gt; Desavouer des liens</li>
+                  <li>Selectionner votre propriete</li>
+                  <li>Importer le fichier .txt</li>
+                  <li>Attendre quelques semaines que Google traite le desaveu</li>
+                </ol>
+              </div>
+            </div>
+          )}
+
+          {/* Health recommendations */}
+          <div className="bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 rounded-xl p-6">
+            <h3 className="font-bold text-surface-900 dark:text-white mb-4">Recommandations</h3>
+            <ul className="space-y-2">
+              {stats.overallScore < 50 && (
+                <li className="flex items-start gap-2 text-sm text-surface-700 dark:text-surface-300">
+                  <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
+                  Votre profil de backlinks est de mauvaise qualite. Priorisez le desaveu des liens toxiques.
+                </li>
+              )}
+              {stats.dofollowPct < 50 && (
+                <li className="flex items-start gap-2 text-sm text-surface-700 dark:text-surface-300">
+                  <AlertTriangle className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
+                  Ratio dofollow faible ({stats.dofollowPct}%). Cherchez des opportunites de liens dofollow.
+                </li>
+              )}
+              {stats.good < stats.total * 0.5 && (
+                <li className="flex items-start gap-2 text-sm text-surface-700 dark:text-surface-300">
+                  <AlertTriangle className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
+                  Moins de 50% de vos liens sont de bonne qualite. Focalisez-vous sur le guest blogging et les liens editoriaux.
+                </li>
+              )}
+              {stats.overallScore >= 70 && (
+                <li className="flex items-start gap-2 text-sm text-surface-700 dark:text-surface-300">
+                  <CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
+                  Bon profil de backlinks ! Continuez a developper des liens de qualite.
+                </li>
+              )}
+            </ul>
+          </div>
         </>
       )}
     </div>

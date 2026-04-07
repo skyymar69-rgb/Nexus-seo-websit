@@ -121,6 +121,7 @@ const navigationCategories = [
       { label: 'Score AEO', href: '/dashboard/aeo-score', icon: Zap, badge: undefined },
       { label: 'Score LLMO', href: '/dashboard/llmo-score', icon: TrendingUp, badge: undefined },
       { label: 'AI Advisor', href: '/dashboard/ai-advisor', icon: Lightbulb, badge: undefined },
+      { label: 'Prompt Tester', href: '/dashboard/prompt-tester', icon: Wand2, badge: 'NEW' as const },
     ],
   },
   {
