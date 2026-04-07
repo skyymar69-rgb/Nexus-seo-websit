@@ -94,6 +94,7 @@ model Website {
   aiQueries       AIVisibilityQuery[]
   contentPages    ContentPage[]
   performanceData PerformanceData[]
+  scanSessions    ScanSession[]
 
   @@unique([domain, userId])
   @@index([userId])
@@ -337,6 +338,34 @@ model Notification {
 
   @@index([userId])
   @@index([read])
+}
+
+// ==================== SCAN ====================
+
+model ScanSession {
+  id             String   @id @default(cuid())
+  websiteId      String
+  url            String
+  status         String   @default("pending") // pending | running | completed | failed
+  progress       Int      @default(0)
+  totalSteps     Int      @default(6)
+  currentStep    String?  // nom de l'etape en cours
+  results        String?  // JSON — AEO, GEO, GEO engine scores
+  auditScore     Int?
+  auditGrade     String?
+  aeoScore       Int?
+  geoScore       Int?
+  perfScore      Int?
+  crawlPages     Int?
+  error          String?
+  startedAt      DateTime @default(now())
+  completedAt    DateTime?
+
+  website Website @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+
+  @@index([websiteId])
+  @@index([status])
+  @@index([startedAt])
 }
 
 // ==================== SUBSCRIPTION ====================

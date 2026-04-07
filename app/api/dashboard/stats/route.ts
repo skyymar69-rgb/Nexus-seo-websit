@@ -77,6 +77,24 @@ export async function GET(request: NextRequest) {
 
     const mentionRate = aiQueriesCount > 0 ? ((mentionedCount / aiQueriesCount) * 100).toFixed(1) : '0'
 
+    // Get latest scan session for the selected website (or any user website)
+    const { searchParams } = new URL(request.url)
+    const websiteId = searchParams.get('websiteId')
+
+    let latestScanId: string | null = null
+    try {
+      const latestScan = await (prisma as any).scanSession.findFirst({
+        where: websiteId
+          ? { websiteId, website: { userId } }
+          : { website: { userId } },
+        orderBy: { startedAt: 'desc' },
+        select: { id: true, status: true },
+      })
+      if (latestScan && latestScan.status === 'completed') {
+        latestScanId = latestScan.id
+      }
+    } catch { /* ScanSession model may not exist yet */ }
+
     // Get unread notifications count
     const unreadNotifications = await prisma.notification.count({
       where: {
@@ -115,6 +133,7 @@ export async function GET(request: NextRequest) {
     })
 
     return NextResponse.json({
+      latestScanId,
       websites: {
         total: websitesCount,
       },

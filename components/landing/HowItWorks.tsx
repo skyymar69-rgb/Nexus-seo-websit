@@ -52,7 +52,7 @@ export function HowItWorks() {
         {/* Steps */}
         <div className="relative">
           {/* Connecting line (desktop) */}
-          <div className="hidden lg:block absolute top-16 left-0 right-0 h-px bg-gradient-to-r from-transparent via-surface-200 dark:via-surface-700 to-transparent" />
+          <div className="hidden lg:block absolute top-16 left-0 right-0 h-0.5 bg-gradient-to-r from-brand-500/0 via-brand-500/40 to-brand-500/0" />
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
             {steps.map((step, i) => {
