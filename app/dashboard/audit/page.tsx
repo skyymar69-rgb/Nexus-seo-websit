@@ -2,6 +2,8 @@
 
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { cn, getScoreColor, formatNumber } from '@/lib/utils'
+import { generateAuditRecommendations, exportRecommendationsAsMarkdown, exportRecommendationsAsHTML } from '@/lib/actionable-recommendations'
+import { ActionPlan } from '@/components/shared/ActionPlan'
 import {
   Search,
   Settings,
@@ -975,6 +977,31 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
               </div>
             </div>
           </div>
+
+          {/* ── Plan d'action SEO ──────────────────────────────── */}
+          {result && result.checks && (
+            <ActionPlan
+              recommendations={generateAuditRecommendations(result.checks)}
+              siteName={result.url}
+              onPrint={() => window.print()}
+              onExportMD={() => {
+                const recs = generateAuditRecommendations(result.checks)
+                const md = exportRecommendationsAsMarkdown(recs, result.url)
+                const blob = new Blob([md], { type: 'text/markdown' })
+                const a = document.createElement('a'); a.href = URL.createObjectURL(blob)
+                a.download = `plan-action-seo-${new URL(result.url).hostname}.md`
+                a.click(); URL.revokeObjectURL(a.href)
+              }}
+              onExportHTML={() => {
+                const recs = generateAuditRecommendations(result.checks)
+                const html = exportRecommendationsAsHTML(recs, result.url)
+                const blob = new Blob([html], { type: 'text/html' })
+                const a = document.createElement('a'); a.href = URL.createObjectURL(blob)
+                a.download = `plan-action-seo-${new URL(result.url).hostname}.html`
+                a.click(); URL.revokeObjectURL(a.href)
+              }}
+            />
+          )}
         </>
       )}
 
