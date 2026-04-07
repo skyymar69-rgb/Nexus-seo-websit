@@ -2,33 +2,48 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { aiContentSchema } from '@/lib/validations'
-import OpenAI from 'openai'
+import { generateContent } from '@/lib/content-engine'
+import { generateStructuredArticle } from '@/lib/structured-content'
 
 export const runtime = 'nodejs'
 
-function buildSystemPrompt(type: string, tone: string, language: string, wordCount: number): string {
-  const langMap: Record<string, string> = {
-    fr: 'francais',
-    en: 'anglais',
-    es: 'espagnol',
-    de: 'allemand',
+// GET: Generate structured article (non-streaming, JSON response)
+export async function GET(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions)
+    if (!session?.user) {
+      return NextResponse.json({ error: 'Non autorise' }, { status: 401 })
+    }
+
+    const { searchParams } = new URL(request.url)
+    const keyword = searchParams.get('keyword')
+    const type = searchParams.get('type') || 'article'
+    const tone = searchParams.get('tone') || 'professionnel'
+    const language = searchParams.get('language') || 'fr'
+    const wordCount = parseInt(searchParams.get('wordCount') || '1200')
+
+    if (!keyword) {
+      return NextResponse.json({ error: 'Mot-cle requis' }, { status: 400 })
+    }
+
+    const article = await generateStructuredArticle({
+      keyword,
+      type: type as any,
+      tone,
+      language,
+      wordCount,
+    })
+
+    return NextResponse.json({ success: true, article })
+  } catch (error) {
+    return NextResponse.json(
+      { error: `Erreur: ${error instanceof Error ? error.message : 'Inconnue'}` },
+      { status: 500 }
+    )
   }
-  const langLabel = langMap[language] || language
-
-  return `Tu es un redacteur SEO expert. Genere du contenu optimise pour les moteurs de recherche.
-
-Regles:
-- Type de contenu: ${type}
-- Ton: ${tone}
-- Langue: ${langLabel}
-- Longueur cible: environ ${wordCount} mots
-- Utilise des balises Markdown (titres H2/H3, listes, gras)
-- Integre le mot-cle principal naturellement (densite 1-3%)
-- Structure le contenu avec une introduction, des sections claires et une conclusion
-- Optimise pour le SEO: titres descriptifs, paragraphes courts, maillage semantique
-- Reponds UNIQUEMENT avec le contenu genere, sans commentaire additionnel.`
 }
 
+// POST: Stream content (existing behavior)
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
@@ -48,43 +63,34 @@ export async function POST(request: NextRequest) {
 
     const { type, keyword, tone, language, wordCount, instructions } = parsed.data
 
-    // --- Demo mode when no API key ---
-    if (!process.env.OPENAI_API_KEY) {
-      return NextResponse.json({
-        demo: true,
-        message: 'Mode demo — configurez OPENAI_API_KEY pour la generation IA reelle',
-      })
-    }
+    // Generate content using the local template engine (no API key needed)
+    const fullContent = generateContent({ type, keyword, tone, language, wordCount, instructions })
 
-    // --- Real OpenAI streaming ---
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-
-    const systemPrompt = buildSystemPrompt(type, tone, language, wordCount)
-    let userPrompt = `Genere un contenu de type "${type}" optimise SEO pour le mot-cle: "${keyword}".`
-    if (instructions) {
-      userPrompt += `\n\nInstructions supplementaires: ${instructions}`
-    }
-
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt },
-      ],
-      stream: true,
-      max_tokens: Math.min(wordCount * 3, 16000),
-      temperature: 0.7,
-    })
-
+    // Stream the content via SSE for a smooth typing UX
     const stream = new ReadableStream({
       async start(controller) {
         const encoder = new TextEncoder()
         try {
-          for await (const chunk of completion) {
-            const text = chunk.choices[0]?.delta?.content
-            if (text) {
-              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text })}\n\n`))
+          const words = fullContent.split(/(\s+)/)
+          let buffer = ''
+
+          for (const word of words) {
+            buffer += word
+            // Send chunks of ~20-40 chars for natural streaming
+            if (buffer.length >= 15 + Math.floor(Math.random() * 25)) {
+              controller.enqueue(
+                encoder.encode(`data: ${JSON.stringify({ text: buffer })}\n\n`)
+              )
+              buffer = ''
+              // Small delay for typing effect
+              await new Promise(r => setTimeout(r, 15 + Math.floor(Math.random() * 25)))
             }
+          }
+          // Flush remaining buffer
+          if (buffer) {
+            controller.enqueue(
+              encoder.encode(`data: ${JSON.stringify({ text: buffer })}\n\n`)
+            )
           }
           controller.enqueue(encoder.encode(`data: ${JSON.stringify({ done: true })}\n\n`))
           controller.close()

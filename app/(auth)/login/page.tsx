@@ -94,34 +94,6 @@ export default function LoginPage() {
     }
   };
 
-  const handleDemoLogin = async () => {
-    setEmail('demo@nexus.io');
-    setPassword('demo1234');
-    setIsLoading(true);
-    setErrors({});
-
-    try {
-      const result = await signIn('credentials', {
-        email: 'demo@nexus.io',
-        password: 'demo1234',
-        redirect: false,
-      });
-
-      if (result?.error) {
-        setErrors({
-          general: 'Erreur lors de la connexion démo. Veuillez réessayer.',
-        });
-      } else if (result?.ok) {
-        router.push('/dashboard');
-      }
-    } catch (error) {
-      setErrors({
-        general: 'Une erreur s\'est produite lors de la connexion. Veuillez réessayer.',
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -131,7 +103,10 @@ export default function LoginPage() {
           Se connecter
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-400">
-          Bienvenue sur Nexus SEO
+          Accedez a vos outils SEO — 100% gratuit
+        </p>
+        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+          L&apos;inscription permet de sauvegarder vos audits, suivre vos positions et mesurer vos progres.
         </p>
       </div>
 
@@ -170,16 +145,6 @@ export default function LoginPage() {
           </span>
         </button>
 
-        <button
-          type="button"
-          onClick={handleDemoLogin}
-          disabled={isLoading}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border-2 border-blue-600 dark:border-blue-500 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-950 transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-blue-50 dark:bg-blue-950/30"
-        >
-          <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
-            Connexion Démo
-          </span>
-        </button>
       </div>
 
       {/* Divider */}
@@ -217,7 +182,7 @@ export default function LoginPage() {
                 }
               }}
               placeholder="vous@example.com"
-              className={`w-full pl-10 pr-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white dark:border-gray-600 transition-colors ${
+              className={`w-full pl-10 pr-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:bg-gray-800 dark:text-white dark:border-gray-600 transition-colors ${
                 errors.email
                   ? 'border-red-500 dark:border-red-500 focus:ring-red-500'
                   : 'border-gray-300 dark:border-gray-600'
@@ -242,7 +207,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className={`w-full pl-10 pr-10 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white dark:border-gray-600 transition-colors ${
+              className={`w-full pl-10 pr-10 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:bg-gray-800 dark:text-white dark:border-gray-600 transition-colors ${
                 errors.password
                   ? 'border-red-500 dark:border-red-500 focus:ring-red-500'
                   : 'border-gray-300 dark:border-gray-600'
@@ -269,7 +234,7 @@ export default function LoginPage() {
         <div className="flex justify-end">
           <Link
             href="/forgot-password"
-            className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+            className="text-sm text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 font-medium"
           >
             Mot de passe oublie?
           </Link>
@@ -279,7 +244,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-2.5 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="w-full bg-gradient-to-r from-brand-600 to-accent-600 hover:from-brand-700 hover:to-accent-700 text-white font-semibold py-2.5 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {isLoading ? (
             <>
@@ -303,7 +268,7 @@ export default function LoginPage() {
         Pas encore de compte?{' '}
         <Link
           href="/signup"
-          className="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+          className="font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300"
         >
           S'inscrire
         </Link>

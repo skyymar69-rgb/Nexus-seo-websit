@@ -43,6 +43,7 @@ const tools: Tool[] = [
   { label: 'Score AEO', href: '/dashboard/aeo-score', icon: Zap, category: 'IA & GEO', keywords: ['aeo', 'answer engine'] },
   { label: 'Score LLMO', href: '/dashboard/llmo-score', icon: TrendingUp, category: 'IA & GEO', keywords: ['llmo', 'llm optimization'] },
   { label: 'AI Advisor', href: '/dashboard/ai-advisor', icon: Lightbulb, category: 'IA & GEO', keywords: ['conseils', 'recommandations'] },
+  { label: 'Comparaison de sites', href: '/dashboard/compare', icon: Eye, category: 'SEO', keywords: ['comparer', 'versus', 'vs'] },
   { label: 'Analytics', href: '/dashboard/analytics', icon: LineChart, category: 'Rapports', keywords: ['statistiques', 'donnees'] },
   { label: 'Evolution', href: '/dashboard/evolution', icon: TrendingUp, category: 'Rapports', keywords: ['historique', 'tendance'] },
   { label: 'Rapports', href: '/dashboard/reports', icon: BarChart3, category: 'Rapports', keywords: ['rapport', 'export'] },
