@@ -22,7 +22,6 @@ import {
   Moon,
   Bell,
   User,
-  CreditCard,
   LogOut,
   Command,
   Gauge,
@@ -37,6 +36,13 @@ import {
   Globe,
   FolderOpen,
   Users,
+  Eye,
+  FileSearch,
+  BookOpen,
+  LayoutTemplate,
+  ShieldCheck,
+  ShoppingCart,
+  Tag,
 } from 'lucide-react'
 
 interface CategoryItem {
@@ -50,23 +56,17 @@ interface CategoryItem {
 // Define navigation categories with their tools
 const navigationCategories = [
   {
-    id: 'home',
-    label: 'Dashboard',
-    icon: Home,
-    href: '/dashboard',
-    isCategory: false,
-  },
-  {
-    id: 'technical-seo',
-    label: 'SEO Technique',
+    id: 'seo',
+    label: 'SEO',
     icon: Gauge,
     isCategory: true,
     items: [
+      { label: 'Dashboard', href: '/dashboard', icon: Home, badge: undefined },
       { label: 'Audit de Site', href: '/dashboard/audit', icon: Search, badge: undefined },
-      { label: 'Crawleur Web', href: '/dashboard/crawl', icon: Globe, badge: undefined },
       { label: 'Performance', href: '/dashboard/performance', icon: Zap, badge: undefined },
-      { label: 'Analyse Sémantique', href: '/dashboard/semantic', icon: FileText, badge: undefined },
-      { label: 'Optimisation Contenu', href: '/dashboard/content-optimizer', icon: Wand2, badge: undefined },
+      { label: 'Domain Overview', href: '/dashboard/domain-overview', icon: Globe, badge: 'NEW' as const },
+      { label: 'Top Pages', href: '/dashboard/top-pages', icon: FileSearch, badge: 'NEW' as const },
+      { label: 'On-Page Checker', href: '/dashboard/on-page-checker', icon: FileText, badge: 'NEW' as const },
     ],
   },
   {
@@ -75,8 +75,11 @@ const navigationCategories = [
     icon: Search,
     isCategory: true,
     items: [
-      { label: 'Suivi Mots-clés', href: '/dashboard/keywords', icon: Search, badge: undefined },
-      { label: 'Classements', href: '/dashboard/rank-tracker', icon: TrendingUp, badge: undefined },
+      { label: 'Suivi de Positions', href: '/dashboard/rank-tracker', icon: TrendingUp, badge: undefined },
+      { label: 'Keyword Magic', href: '/dashboard/keyword-magic', icon: Wand2, badge: 'NEW' as const },
+      { label: 'Keyword Gap', href: '/dashboard/keyword-gap', icon: Eye, badge: 'NEW' as const },
+      { label: 'Recherche Sémantique', href: '/dashboard/semantic', icon: BookOpen, badge: undefined },
+      { label: 'Mes Mots-clés', href: '/dashboard/keywords', icon: Tag, badge: undefined },
     ],
   },
   {
@@ -86,7 +89,22 @@ const navigationCategories = [
     isCategory: true,
     items: [
       { label: 'Profil Backlinks', href: '/dashboard/backlinks', icon: LinkIcon, badge: undefined },
+      { label: 'Backlink Audit', href: '/dashboard/backlink-audit', icon: ShieldCheck, badge: 'NEW' as const },
       { label: 'Concurrents', href: '/dashboard/competitors', icon: Users, badge: undefined },
+      { label: 'Achat de Liens', href: '/dashboard/link-buying', icon: ShoppingCart, badge: 'NEW' as const },
+    ],
+  },
+  {
+    id: 'content',
+    label: 'Contenu',
+    icon: FileText,
+    isCategory: true,
+    items: [
+      { label: 'Optimisation Contenu', href: '/dashboard/content-optimizer', icon: Wand2, badge: undefined },
+      { label: 'Topic Research', href: '/dashboard/topic-research', icon: Lightbulb, badge: 'NEW' as const },
+      { label: 'Content Template', href: '/dashboard/content-template', icon: LayoutTemplate, badge: 'NEW' as const },
+      { label: 'Génération IA', href: '/dashboard/ai-content', icon: Sparkles, badge: undefined },
+      { label: 'Crawleur Web', href: '/dashboard/crawl', icon: Globe, badge: undefined },
     ],
   },
   {
@@ -96,21 +114,20 @@ const navigationCategories = [
     isCategory: true,
     badge: 'NEW' as const,
     items: [
-      { label: 'Visibilité IA', href: '/dashboard/ai-visibility', icon: Sparkles, badge: 'NEW' as const },
-      { label: 'Audit GEO', href: '/dashboard/geo-audit', icon: Globe, badge: 'NEW' as const },
-      { label: 'Score AEO', href: '/dashboard/aeo-score', icon: Zap, badge: 'NEW' as const },
-      { label: 'Score LLMO', href: '/dashboard/llmo-score', icon: TrendingUp, badge: 'PRO' as const },
+      { label: 'Visibilité IA', href: '/dashboard/ai-visibility', icon: Sparkles, badge: undefined },
+      { label: 'Audit GEO', href: '/dashboard/geo-audit', icon: Globe, badge: undefined },
+      { label: 'Score AEO', href: '/dashboard/aeo-score', icon: Zap, badge: undefined },
+      { label: 'Score LLMO', href: '/dashboard/llmo-score', icon: TrendingUp, badge: undefined },
       { label: 'AI Advisor', href: '/dashboard/ai-advisor', icon: Lightbulb, badge: undefined },
-      { label: 'Génération Contenu', href: '/dashboard/ai-content', icon: Wand2, badge: undefined },
     ],
   },
   {
-    id: 'analytics',
-    label: 'Analytique',
+    id: 'reports',
+    label: 'Rapports',
     icon: BarChart3,
     isCategory: true,
     items: [
-      { label: "Vue d'ensemble", href: '/dashboard/analytics', icon: LineChart, badge: undefined },
+      { label: 'Analytics', href: '/dashboard/analytics', icon: LineChart, badge: undefined },
       { label: 'Évolution', href: '/dashboard/evolution', icon: TrendingUp, badge: undefined },
       { label: 'Rapports', href: '/dashboard/reports', icon: FileText, badge: undefined },
     ],
@@ -130,7 +147,9 @@ const navigationCategories = [
 // Helper component for the sidebar content
 function SidebarContent() {
   const pathname = usePathname()
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set(['technical-seo']))
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
+      new Set(['seo', 'keywords', 'backlinks', 'content', 'ai-geo', 'reports', 'config'])
+    )
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -171,13 +190,22 @@ function SidebarContent() {
         <div className="border-b border-surface-200 dark:border-surface-800 px-4 py-4">
           <div className="flex items-center justify-between">
             <Link
-              href="/dashboard"
-              className={cn(
-                'font-bold bg-gradient-to-r from-brand-600 to-brand-700 bg-clip-text text-transparent transition-all',
-                sidebarOpen ? 'text-2xl' : 'text-xl'
-              )}
+              href="/"
+              className="flex items-center gap-2 transition-all"
+              title="Retour a l'accueil"
             >
-              {sidebarOpen ? 'Nexus' : 'N'}
+              <img
+                src="/logo-48.webp"
+                alt="Nexus SEO by Kayzen"
+                width={sidebarOpen ? 32 : 28}
+                height={sidebarOpen ? 32 : 28}
+                className="rounded-lg"
+              />
+              {sidebarOpen && (
+                <span className="font-bold text-xl bg-gradient-to-r from-brand-600 to-brand-700 bg-clip-text text-transparent">
+                  Nexus
+                </span>
+              )}
             </Link>
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -210,29 +238,6 @@ function SidebarContent() {
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto px-2 py-4 space-y-1 scrollbar-thin scrollbar-thumb-surface-300 dark:scrollbar-thumb-surface-700">
           {navigationCategories.map((cat) => {
-            if (!cat.isCategory) {
-              // Simple link (Dashboard)
-              const Icon = cat.icon
-              const active = isActive(cat.href || '/dashboard')
-              return (
-                <Link
-                  key={cat.id}
-                  href={cat.href || '/dashboard'}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={cn(
-                    'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all',
-                    active
-                      ? 'bg-brand-50 dark:bg-brand-950 text-brand-700 dark:text-brand-400'
-                      : 'text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800'
-                  )}
-                  title={sidebarOpen ? undefined : cat.label}
-                >
-                  <Icon className="h-5 w-5 flex-shrink-0" />
-                  {sidebarOpen && <span className="truncate">{cat.label}</span>}
-                </Link>
-              )
-            }
-
             // Category with items
             const Icon = cat.icon
             const isExpanded = expandedCategories.has(cat.id)
@@ -295,7 +300,7 @@ function SidebarContent() {
                             <span
                               className={cn(
                                 'px-1.5 py-0.5 text-[8px] font-bold rounded whitespace-nowrap flex-shrink-0',
-                                item.badge === 'PRO'
+                                (item.badge as string) === 'PRO'
                                   ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400'
                                   : 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400'
                               )}
@@ -396,7 +401,7 @@ function DashboardLayoutContent({
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          <p className="text-surface-600 dark:text-surface-400">Loading...</p>
+          <p className="text-surface-600 dark:text-surface-400">Chargement...</p>
         </div>
       </div>
     )
@@ -407,7 +412,7 @@ function DashboardLayoutContent({
   const userName = session.user?.name || 'User'
   const userEmail = session.user?.email || ''
   const userInitials = userName.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)
-  const userPlan = (session.user as any)?.plan || 'pro'
+  const userPlan = 'Gratuit'
 
   return (
     <div className="min-h-screen bg-surface-50 dark:bg-surface-950 text-surface-900 dark:text-surface-100">
@@ -445,7 +450,7 @@ function DashboardLayoutContent({
                   <Command className="h-4 w-4 text-surface-400" />
                   <input
                     type="text"
-                    placeholder="Search tools... (Cmd+K)"
+                    placeholder="Rechercher un outil... (Cmd+K)"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full bg-transparent outline-none placeholder-surface-400 text-sm dark:text-surface-100"
@@ -476,16 +481,16 @@ function DashboardLayoutContent({
                     </div>
                     <div className="py-2 max-h-96 overflow-y-auto">
                       <div className="px-4 py-2 border-b border-surface-100 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-700">
-                        <p className="text-sm font-medium text-surface-900 dark:text-surface-100">Audit completed</p>
-                        <p className="text-xs text-surface-500 dark:text-surface-400">5 minutes ago</p>
+                        <p className="text-sm font-medium text-surface-900 dark:text-surface-100">Audit termine</p>
+                        <p className="text-xs text-surface-500 dark:text-surface-400">Il y a 5 minutes</p>
                       </div>
                       <div className="px-4 py-2 border-b border-surface-100 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-700">
-                        <p className="text-sm font-medium text-surface-900 dark:text-surface-100">Rank tracker updated</p>
-                        <p className="text-xs text-surface-500 dark:text-surface-400">2 hours ago</p>
+                        <p className="text-sm font-medium text-surface-900 dark:text-surface-100">Positions mises a jour</p>
+                        <p className="text-xs text-surface-500 dark:text-surface-400">Il y a 2 heures</p>
                       </div>
                       <div className="px-4 py-2 hover:bg-surface-50 dark:hover:bg-surface-700">
-                        <p className="text-sm font-medium text-surface-900 dark:text-surface-100">New backlink detected</p>
-                        <p className="text-xs text-surface-500 dark:text-surface-400">1 day ago</p>
+                        <p className="text-sm font-medium text-surface-900 dark:text-surface-100">Nouveau backlink detecte</p>
+                        <p className="text-xs text-surface-500 dark:text-surface-400">Il y a 1 jour</p>
                       </div>
                     </div>
                   </div>
@@ -523,29 +528,22 @@ function DashboardLayoutContent({
                     <div className="border-b border-surface-200 dark:border-surface-700 px-4 py-3">
                       <p className="text-sm font-semibold text-surface-900 dark:text-surface-100">{userName}</p>
                       <p className="text-xs text-surface-500 dark:text-surface-400">{userEmail}</p>
-                      <p className="text-xs font-medium text-brand-600 dark:text-brand-400 mt-1 uppercase">{userPlan} Plan</p>
+                      <p className="text-xs font-medium text-green-600 dark:text-green-400 mt-1">100% {userPlan} — Tous les outils</p>
                     </div>
                     <nav className="py-1">
                       <Link
-                        href="/dashboard/profile"
+                        href="/dashboard/settings"
                         className="flex items-center gap-3 px-4 py-2 text-sm text-surface-700 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-700"
                       >
                         <User className="h-4 w-4" />
-                        Profile Settings
-                      </Link>
-                      <Link
-                        href="/dashboard/billing"
-                        className="flex items-center gap-3 px-4 py-2 text-sm text-surface-700 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-700"
-                      >
-                        <CreditCard className="h-4 w-4" />
-                        Billing & Plans
+                        Mon profil
                       </Link>
                       <Link
                         href="/dashboard/settings"
                         className="flex items-center gap-3 px-4 py-2 text-sm text-surface-700 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-700"
                       >
                         <Settings className="h-4 w-4" />
-                        Settings
+                        Parametres
                       </Link>
                     </nav>
                     <div className="border-t border-surface-200 dark:border-surface-700 py-1">
@@ -556,7 +554,7 @@ function DashboardLayoutContent({
                         className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30"
                       >
                         <LogOut className="h-4 w-4" />
-                        Logout
+                        Deconnexion
                       </button>
                     </div>
                   </div>
