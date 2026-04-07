@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Lottie from 'lottie-react'
 import { cn } from '@/lib/utils'
 
 interface AnimatedLogoProps {
@@ -11,19 +10,11 @@ interface AnimatedLogoProps {
 }
 
 export function AnimatedLogo({ size = 36, className, lightText = false }: AnimatedLogoProps) {
-  const [animData, setAnimData] = useState<object | null>(null)
   const [nexus, setNexus] = useState('Nexus SEO')
   const [kayzen, setKayzen] = useState('By Kayzen')
   const [phase, setPhase] = useState<'idle' | 'typing-nexus' | 'typing-kayzen' | 'done'>('idle')
 
   useEffect(() => {
-    // Fetch lottie data
-    fetch('/logo-animation.json')
-      .then(r => r.json())
-      .then(data => setAnimData(data))
-      .catch(() => {})
-
-    // Start typewriter
     setNexus('')
     setKayzen('')
     setPhase('typing-nexus')
@@ -52,33 +43,23 @@ export function AnimatedLogo({ size = 36, className, lightText = false }: Animat
     return () => clearInterval(t1)
   }, [])
 
+  const dotSize = Math.max(4, size / 6)
+
   return (
     <div className={cn('flex items-center gap-2', className)}>
-      {/* Lottie animation */}
-      <div className="shrink-0" style={{ width: size, height: size }}>
-        {animData ? (
-          <Lottie
-            animationData={animData}
-            loop
-            autoplay
-            style={{ width: size, height: size }}
+      {/* Animated colored dots logo */}
+      <div className="shrink-0 flex items-center justify-center gap-[3px]" style={{ width: size, height: size }}>
+        {['bg-blue-500', 'bg-red-500', 'bg-yellow-400', 'bg-green-500'].map((color, idx) => (
+          <span
+            key={idx}
+            className={cn('rounded-full', color)}
+            style={{
+              width: dotSize,
+              height: dotSize,
+              animation: `bounceSoft 1.2s ease-in-out ${idx * 0.15}s infinite`,
+            }}
           />
-        ) : (
-          /* Fallback: bouncing dots while loading */
-          <div className="flex items-center justify-center gap-[3px] h-full">
-            {['bg-blue-500', 'bg-red-500', 'bg-yellow-400', 'bg-green-500'].map((color, idx) => (
-              <span
-                key={idx}
-                className={cn('rounded-full', color)}
-                style={{
-                  width: size / 5,
-                  height: size / 5,
-                  animation: `bounceSoft 1.2s ease-in-out ${idx * 0.15}s infinite`,
-                }}
-              />
-            ))}
-          </div>
-        )}
+        ))}
       </div>
 
       {/* Animated text */}
