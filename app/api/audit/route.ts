@@ -248,6 +248,17 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
       )
     }
 
+    // Check cache — return cached result if same URL audited within 1 hour
+    let _cacheKey: string | undefined = undefined
+    try {
+      const { cacheGet, cacheSet, cacheKey } = await import('@/lib/cache')
+      _cacheKey = cacheKey('audit', url.trim().toLowerCase())
+      const cached = await cacheGet(_cacheKey)
+      if (cached) {
+        return NextResponse.json(cached, { headers: corsHeaders() })
+      }
+    } catch { _cacheKey = undefined }
+
     // Validate and normalize URL
     let normalizedUrl = url
     if (!normalizedUrl.startsWith('http://') && !normalizedUrl.startsWith('https://')) {
@@ -647,6 +658,14 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
           externalLinks: linkData.external,
         },
       },
+    }
+
+    // Cache the result for 1 hour
+    if (_cacheKey) {
+      try {
+        const { cacheSet } = await import('@/lib/cache')
+        await cacheSet(_cacheKey, result, 3600)
+      } catch { /* cache is non-critical */ }
     }
 
     return NextResponse.json(result, {

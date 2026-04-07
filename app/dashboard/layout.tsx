@@ -149,6 +149,7 @@ const navigationCategories = [
     items: [
       { label: 'Paramètres', href: '/dashboard/settings', icon: Settings, badge: undefined },
       { label: 'Mes Sites', href: '/dashboard/projects', icon: FolderOpen, badge: undefined },
+      { label: 'Parrainage', href: '/dashboard/referral', icon: Users, badge: 'NEW' as const },
     ],
   },
 ]
