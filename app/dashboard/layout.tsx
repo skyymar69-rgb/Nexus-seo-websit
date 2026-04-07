@@ -8,7 +8,12 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { WebsiteProvider, useWebsite } from '@/contexts/WebsiteContext'
 import { WebsiteSelector } from '@/components/shared/WebsiteSelector'
-import { CommandPalette } from '@/components/shared/CommandPalette'
+import dynamic from 'next/dynamic'
+
+const CommandPalette = dynamic(
+  () => import('@/components/shared/CommandPalette').then(m => ({ default: m.CommandPalette })),
+  { ssr: false }
+)
 import {
   Search,
   Link as LinkIcon,
