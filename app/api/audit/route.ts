@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import * as cheerio from 'cheerio'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
+import { prisma } from '@/lib/prisma'
 import { corsHeaders, corsOptionsResponse } from '@/lib/cors'
 import { checkPlanLimit } from '@/lib/plan-guard'
 import {
@@ -677,6 +678,46 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuditResu
           ? 'Request timeout exceeded 15 seconds. Ensure the URL is correct and the server is responsive.'
           : `Audit analysis error: ${errorMessage}`,
       },
+      { status: 500, headers: corsHeaders() }
+    )
+  }
+}
+
+// GET: retrieve audit history for a website
+export async function GET(request: NextRequest): Promise<NextResponse> {
+  try {
+    const session = await getServerSession(authOptions)
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Non authentifie' }, { status: 401, headers: corsHeaders() })
+    }
+
+    const { searchParams } = new URL(request.url)
+    const websiteId = searchParams.get('websiteId')
+
+    if (!websiteId) {
+      return NextResponse.json({ error: 'websiteId requis' }, { status: 400, headers: corsHeaders() })
+    }
+
+    const audits = await (prisma as any).audit.findMany({
+      where: { websiteId },
+      orderBy: { createdAt: 'desc' },
+      take: 20,
+      select: {
+        id: true,
+        url: true,
+        score: true,
+        grade: true,
+        status: true,
+        createdAt: true,
+        categories: true,
+        checks: true,
+      },
+    })
+
+    return NextResponse.json({ success: true, data: audits }, { headers: corsHeaders() })
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, error: 'Erreur lors de la recuperation de l\'historique' },
       { status: 500, headers: corsHeaders() }
     )
   }

@@ -8,11 +8,24 @@ export const metadata = {
   description: 'Tout ce que vous devez savoir sur Nexus, le GEO, l\'AEO, le LLMO et notre plateforme SEO IA.',
 }
 
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: "Qu'est-ce que le GEO, l'AEO et le LLMO ?", acceptedAnswer: { '@type': 'Answer', text: "Le GEO optimise votre contenu pour les reponses IA de Google SGE. L'AEO vous positionne sur les featured snippets. Le LLMO fait en sorte que ChatGPT, Claude et Gemini recommandent votre marque." } },
+    { '@type': 'Question', name: 'Nexus est-il vraiment 100% gratuit ?', acceptedAnswer: { '@type': 'Answer', text: "Oui, tous les outils sont gratuits et sans limitation. Aucune carte bancaire requise. L'inscription sert a sauvegarder vos sites et suivis." } },
+    { '@type': 'Question', name: 'Nexus est-il compatible avec mon CMS ?', acceptedAnswer: { '@type': 'Answer', text: "Oui, Nexus analyse n'importe quel site web : WordPress, Shopify, Webflow, Wix, Prestashop, ou sites custom React/Next.js." } },
+    { '@type': 'Question', name: 'Comment Nexus surveille-t-il les mentions dans les LLMs ?', acceptedAnswer: { '@type': 'Answer', text: "Nexus envoie des requetes aux APIs de ChatGPT, Claude, Gemini et Perplexity avec les questions-types de votre secteur et analyse les citations." } },
+    { '@type': 'Question', name: 'Mes donnees sont-elles securisees ?', acceptedAnswer: { '@type': 'Answer', text: "Oui. Nexus est heberge en Europe via Vercel et Railway, respecte le RGPD. Vos donnees ne sont jamais partagees." } },
+  ],
+}
+
 export default function FAQPage() {
   return (
     <>
       <Header />
       <main id="main-content" className="bg-white dark:bg-surface-950 pt-8">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-4">
           <Breadcrumb items={[{ label: 'Accueil', href: '/' }, { label: 'FAQ' }]} />
           <div className="text-center">
