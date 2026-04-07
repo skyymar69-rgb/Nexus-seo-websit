@@ -300,12 +300,20 @@ function ImpactBadge({ impact }: { impact: string }) {
 
 function ExpandableDetailedCheck({ check }: { check: DetailedCheck }) {
   const [isExpanded, setIsExpanded] = useState(false)
+  const [showTooltip, setShowTooltip] = useState(false)
+
+  // Build tooltip content: first best practice or report excerpt
+  const tooltipText = check.status !== 'passed'
+    ? (check.bestPractices[0] || check.report.replace(/\*\*/g, '').split('\n')[0]).slice(0, 200)
+    : ''
 
   return (
-    <div className="border border-surface-200 dark:border-surface-700 rounded-lg bg-white dark:bg-surface-800 overflow-hidden print:break-inside-avoid">
+    <div className="border border-surface-200 dark:border-surface-700 rounded-lg bg-white dark:bg-surface-800 overflow-hidden print:break-inside-avoid relative">
       {/* Header row — always visible */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
+        onMouseEnter={() => tooltipText && setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
         className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-surface-50 dark:hover:bg-surface-700/50 transition-colors print:hover:bg-transparent"
       >
         {statusIcon(check.status)}
@@ -321,6 +329,14 @@ function ExpandableDetailedCheck({ check }: { check: DetailedCheck }) {
         </span>
         <ChevronDown className={cn('h-4 w-4 text-surface-400 transition-transform flex-shrink-0 print:hidden', isExpanded && 'rotate-180')} />
       </button>
+
+      {/* Tooltip on hover — shows solution preview */}
+      {showTooltip && !isExpanded && tooltipText && (
+        <div className="absolute left-4 right-4 top-full z-30 mt-1 p-3 rounded-lg bg-surface-900 dark:bg-surface-100 text-white dark:text-surface-900 text-xs leading-relaxed shadow-xl pointer-events-none animate-fade-in">
+          <div className="font-semibold mb-1 text-amber-300 dark:text-amber-600">Solution preconisee :</div>
+          {tooltipText}
+        </div>
+      )}
 
       {/* Summary on mobile */}
       <div className="px-4 pb-2 sm:hidden">
@@ -426,12 +442,25 @@ export default function AuditPage() {
   const [mode, setMode] = useState('rapide')
   const [userAgent, setUserAgent] = useState('googlebot')
 
+  // Auto-launch audit from URL query param (e.g. from homepage hero)
+  const [autoLaunched, setAutoLaunched] = useState(false)
+
+  useEffect(() => {
+    if (autoLaunched || result) return
+    const params = new URLSearchParams(window.location.search)
+    const urlParam = params.get('url')
+    if (urlParam) {
+      setUrl(urlParam)
+      setAutoLaunched(true)
+    }
+  }, [autoLaunched, result])
+
   // Pre-fill URL from selected website
   useEffect(() => {
-    if (selectedWebsite?.domain && !url) {
+    if (selectedWebsite?.domain && !url && !autoLaunched) {
       setUrl(`https://${selectedWebsite.domain}`)
     }
-  }, [selectedWebsite])
+  }, [selectedWebsite, autoLaunched])
 
   /* ── API call ─────────────────────────────────────────────── */
 
@@ -468,6 +497,14 @@ export default function AuditPage() {
       setIsAnalyzing(false)
     }
   }, [url])
+
+  // Trigger audit after URL is set from query param
+  useEffect(() => {
+    if (autoLaunched && url && !isAnalyzing && !result) {
+      handleAnalyze()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoLaunched, url])
 
   /* ── Derived data ──────────────────────────────────────────── */
 
@@ -533,6 +570,56 @@ export default function AuditPage() {
     const txt = generateTextReport(result)
     const domain = new URL(result.url).hostname.replace(/\./g, '-')
     downloadFile(txt, `audit-seo-${domain}.txt`, 'text/plain')
+  }
+
+  const handleExportCSV = () => {
+    if (!result) return
+    const checks = result.detailedChecks || []
+    const header = 'Categorie;Nom;Statut;Score;Impact;Resume;Solution\n'
+    const rows = checks.map(c => {
+      const solution = (c.bestPractices[0] || '').replace(/"/g, '""')
+      const summary = c.summary.replace(/"/g, '""')
+      const cat = categoryConfig[c.category as CategoryKey]?.label || c.category
+      return `"${cat}";"${c.name}";"${c.status}";"${c.score}";"${c.impact}";"${summary}";"${solution}"`
+    }).join('\n')
+    const domain = new URL(result.url).hostname.replace(/\./g, '-')
+    downloadFile('\uFEFF' + header + rows, `audit-seo-${domain}.csv`, 'text/csv;charset=utf-8')
+  }
+
+  const handleExportHTML = () => {
+    if (!result) return
+    const checks = result.detailedChecks || []
+    const date = new Date().toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })
+    let html = `<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><title>Audit SEO — ${result.url}</title>
+<style>body{font-family:Inter,system-ui,sans-serif;max-width:900px;margin:0 auto;padding:2rem;color:#1a1a1a}
+h1{color:#2563eb}h2{border-bottom:2px solid #e5e7eb;padding-bottom:.5rem;margin-top:2rem}
+.score{font-size:3rem;font-weight:900;text-align:center;margin:1rem 0}
+.passed{color:#22c55e}.warning{color:#f59e0b}.error{color:#ef4444}
+table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{border:1px solid #e5e7eb;padding:.5rem .75rem;text-align:left;font-size:.875rem}
+th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.7rem;font-weight:700}
+.critical{background:#fee2e2;color:#dc2626}.high{background:#ffedd5;color:#ea580c}.medium{background:#fef9c3;color:#ca8a04}.low{background:#dbeafe;color:#2563eb}
+</style></head><body>
+<h1>Rapport d&apos;Audit SEO</h1>
+<p><strong>URL</strong> : ${result.url}<br><strong>Date</strong> : ${date}<br><strong>Score</strong> : ${result.score}/100</p>
+<div class="score ${result.score >= 80 ? 'passed' : result.score >= 60 ? 'warning' : 'error'}">${result.score}/100</div>
+<p>${result.summary.passed} reussis | ${result.summary.warnings} avertissements | ${result.summary.errors} erreurs</p>`
+
+    for (const cat of CATEGORY_ORDER) {
+      const catChecks = checks.filter(c => c.category === cat)
+      if (catChecks.length === 0) continue
+      const cfg = categoryConfig[cat]
+      html += `<h2>${cfg.label}</h2><table><tr><th>Controle</th><th>Statut</th><th>Score</th><th>Impact</th><th>Solution</th></tr>`
+      for (const c of catChecks) {
+        const statusClass = c.status === 'passed' ? 'passed' : c.status === 'warning' ? 'warning' : 'error'
+        const solution = c.bestPractices[0] || c.summary
+        html += `<tr><td>${c.name}</td><td class="${statusClass}">${c.status.toUpperCase()}</td><td>${c.score}/100</td><td><span class="badge ${c.impact}">${c.impact}</span></td><td>${solution}</td></tr>`
+      }
+      html += `</table>`
+    }
+
+    html += `<p style="margin-top:2rem;color:#888;font-size:.75rem">Genere par Nexus SEO — nexus.kayzen-lyon.fr</p></body></html>`
+    const domain = new URL(result.url).hostname.replace(/\./g, '-')
+    downloadFile(html, `audit-seo-${domain}.html`, 'text/html')
   }
 
   /* ── Render ────────────────────────────────────────────────── */
@@ -649,6 +736,12 @@ export default function AuditPage() {
             </button>
             <button onClick={handleExportTXT} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 text-surface-700 dark:text-surface-300 transition-colors">
               <Download className="h-3.5 w-3.5" /> TXT
+            </button>
+            <button onClick={handleExportCSV} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 text-surface-700 dark:text-surface-300 transition-colors">
+              <ArrowUpDown className="h-3.5 w-3.5" /> CSV
+            </button>
+            <button onClick={handleExportHTML} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 text-surface-700 dark:text-surface-300 transition-colors">
+              <Globe className="h-3.5 w-3.5" /> HTML
             </button>
           </div>
 
