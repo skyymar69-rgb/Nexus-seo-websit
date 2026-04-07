@@ -1,221 +1,182 @@
 'use client'
 
-import { Globe, Plus, Zap, Link2, BarChart3 } from 'lucide-react'
-import { formatNumber, cn } from '@/lib/utils'
-
-interface Site {
-  id: string
-  domain: string
-  status: 'active' | 'paused'
-  seoScore: number
-  trackedKeywords: number
-  backlinks: number
-  lastAudit: string
-}
-
-const sites: Site[] = [
-  {
-    id: '1',
-    domain: 'monsite.fr',
-    status: 'active',
-    seoScore: 73,
-    trackedKeywords: 1247,
-    backlinks: 3892,
-    lastAudit: '28 mar 2026',
-  },
-  {
-    id: '2',
-    domain: 'blog.monsite.fr',
-    status: 'active',
-    seoScore: 68,
-    trackedKeywords: 342,
-    backlinks: 1245,
-    lastAudit: '25 mar 2026',
-  },
-  {
-    id: '3',
-    domain: 'shop.monsite.fr',
-    status: 'paused',
-    seoScore: 55,
-    trackedKeywords: 89,
-    backlinks: 456,
-    lastAudit: '15 mar 2026',
-  },
-]
-
-function ScoreBadge({ score }: { score: number }) {
-  const getScoreColor = (score: number) => {
-    if (score >= 75) return 'text-accent-400'
-    if (score >= 60) return 'text-amber-400'
-    if (score >= 45) return 'text-orange-400'
-    return 'text-red-400'
-  }
-
-  const getScoreBg = (score: number) => {
-    if (score >= 75) return 'bg-accent-500/10 border-accent-500/20'
-    if (score >= 60) return 'bg-amber-500/10 border-amber-500/20'
-    if (score >= 45) return 'bg-orange-500/10 border-orange-500/20'
-    return 'bg-red-500/10 border-red-500/20'
-  }
-
-  return (
-    <div
-      className={cn(
-        'rounded-lg border px-3 py-2 text-sm font-semibold',
-        getScoreBg(score),
-        getScoreColor(score)
-      )}
-    >
-      {score}
-    </div>
-  )
-}
+import { useState } from 'react'
+import { Globe, Plus, Zap, Link2, BarChart3, Trash2, ExternalLink, Loader2, Search, AlertTriangle } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { useWebsite } from '@/contexts/WebsiteContext'
+import { useRouter } from 'next/navigation'
 
 export default function ProjectsPage() {
+  const { websites, selectedWebsite, selectWebsite, addWebsite, refreshWebsites } = useWebsite()
+  const router = useRouter()
+  const [newDomain, setNewDomain] = useState('')
+  const [newName, setNewName] = useState('')
+  const [adding, setAdding] = useState(false)
+  const [showForm, setShowForm] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleAdd = async () => {
+    if (!newDomain.trim()) { setError('Domaine requis'); return }
+    const domain = newDomain.trim().replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/.*/, '')
+    setAdding(true)
+    setError('')
+    try {
+      await addWebsite(domain, newName || domain)
+      setNewDomain('')
+      setNewName('')
+      setShowForm(false)
+      await refreshWebsites()
+    } catch (e: any) {
+      setError(e.message || 'Erreur lors de l\'ajout')
+    } finally {
+      setAdding(false)
+    }
+  }
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Supprimer ce site ? Cette action est irreversible.')) return
+    try {
+      await fetch(`/api/websites?id=${id}`, { method: 'DELETE' })
+      await refreshWebsites()
+    } catch { /* ignore */ }
+  }
+
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-6 pb-12">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 rounded-lg bg-brand-500/15">
-              <Globe className="h-6 w-6 text-brand-400" />
+            <div className="p-2.5 rounded-lg bg-brand-50 dark:bg-brand-950/30">
+              <Globe className="h-6 w-6 text-brand-600" />
             </div>
-            <h1 className="text-4xl font-bold tracking-tight">
-              Projets & Sites
-            </h1>
+            <h1 className="text-2xl font-bold text-surface-900 dark:text-white">Mes Sites</h1>
           </div>
-          <p className="text-surface-400 mt-1 max-w-xl">
-            Gerez vos sites web et vos projets SEO
+          <p className="text-sm text-surface-500">
+            Gerez vos sites web. Selectionnez un site pour voir ses donnees dans le dashboard.
           </p>
         </div>
-        <button className="px-4 py-2 rounded-lg bg-brand-500 text-white hover:bg-brand-600 transition-colors font-medium flex items-center gap-2">
-          <Plus className="h-4 w-4" />
-          Ajouter un site
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="btn-primary px-4 py-2.5 rounded-xl flex items-center gap-2"
+        >
+          <Plus className="h-4 w-4" /> Ajouter un site
         </button>
       </div>
 
-      {/* Sites Grid */}
-      {sites.length > 0 ? (
-        <div className="grid grid-cols-3 gap-6">
-          {sites.map((site) => (
-            <div
-              key={site.id}
-              className="rounded-xl border border-surface-700 bg-surface-900/50 backdrop-blur overflow-hidden shadow-sm hover:border-surface-600 transition-colors"
-            >
-              {/* Header */}
-              <div className="p-6 border-b border-surface-700 bg-surface-800/20">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3 flex-1">
-                    <div className="w-8 h-8 rounded-lg bg-brand-500/20 border border-brand-500/30 flex items-center justify-center text-sm font-bold text-brand-400">
-                      {site.domain.charAt(0).toUpperCase()}
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-surface-100 text-sm">
-                        {site.domain}
-                      </h3>
-                    </div>
-                  </div>
-                  <div
-                    className={cn(
-                      'w-2.5 h-2.5 rounded-full',
-                      site.status === 'active'
-                        ? 'bg-accent-500'
-                        : 'bg-amber-500'
-                    )}
-                  />
-                </div>
-                <p className="text-xs text-surface-500">
-                  {site.status === 'active' ? 'Actif' : 'En pause'}
-                </p>
-              </div>
-
-              {/* Score Progress */}
-              <div className="p-6 border-b border-surface-700">
-                <div className="flex items-end justify-between mb-3">
-                  <p className="text-xs text-surface-500 font-medium uppercase tracking-wide">
-                    Score SEO
-                  </p>
-                  <ScoreBadge score={site.seoScore} />
-                </div>
-                <div className="w-full h-2 rounded-full bg-surface-700 overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-brand-500 to-brand-400 rounded-full transition-all"
-                    style={{ width: `${site.seoScore}%` }}
-                  />
-                </div>
-              </div>
-
-              {/* Metrics */}
-              <div className="p-6 border-b border-surface-700 space-y-3">
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2 text-surface-400">
-                    <Zap className="h-4 w-4" />
-                    Mots-cles suivis
-                  </div>
-                  <span className="font-semibold text-surface-100">
-                    {formatNumber(site.trackedKeywords)}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2 text-surface-400">
-                    <Link2 className="h-4 w-4" />
-                    Backlinks
-                  </div>
-                  <span className="font-semibold text-surface-100">
-                    {formatNumber(site.backlinks)}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2 text-surface-400">
-                    <BarChart3 className="h-4 w-4" />
-                    Dernier audit
-                  </div>
-                  <span className="font-semibold text-surface-100">
-                    {site.lastAudit}
-                  </span>
-                </div>
-              </div>
-
-              {/* Actions */}
-              <div className="p-6 flex gap-2">
-                <button className="flex-1 px-3 py-2 rounded-lg text-brand-400 hover:bg-brand-500/10 transition-colors text-sm font-medium">
-                  Auditer
-                </button>
-                <button className="flex-1 px-3 py-2 rounded-lg text-brand-400 hover:bg-brand-500/10 transition-colors text-sm font-medium">
-                  Mots-cles
-                </button>
-                <button className="flex-1 px-3 py-2 rounded-lg text-brand-400 hover:bg-brand-500/10 transition-colors text-sm font-medium">
-                  Rapports
-                </button>
-              </div>
+      {/* Add form */}
+      {showForm && (
+        <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
+          <h3 className="font-bold text-surface-900 dark:text-white mb-4">Ajouter un site</h3>
+          {error && (
+            <div className="flex items-center gap-2 p-3 mb-4 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm">
+              <AlertTriangle className="w-4 h-4 shrink-0" /> {error}
             </div>
-          ))}
+          )}
+          <div className="flex gap-3">
+            <div className="flex-1">
+              <label className="block text-xs font-medium text-surface-500 mb-1">Domaine</label>
+              <input
+                type="text"
+                value={newDomain}
+                onChange={e => setNewDomain(e.target.value)}
+                placeholder="exemple.fr"
+                className="w-full px-4 py-2.5 rounded-xl border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 text-sm outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500"
+                onKeyDown={e => e.key === 'Enter' && handleAdd()}
+              />
+            </div>
+            <div className="flex-1">
+              <label className="block text-xs font-medium text-surface-500 mb-1">Nom (optionnel)</label>
+              <input
+                type="text"
+                value={newName}
+                onChange={e => setNewName(e.target.value)}
+                placeholder="Mon site principal"
+                className="w-full px-4 py-2.5 rounded-xl border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 text-sm outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500"
+              />
+            </div>
+            <div className="flex items-end">
+              <button onClick={handleAdd} disabled={adding} className="btn-primary px-6 py-2.5 rounded-xl disabled:opacity-50">
+                {adding ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Ajouter'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Sites list */}
+      {websites.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {websites.map((site) => {
+            const isSelected = selectedWebsite?.id === site.id
+            return (
+              <div
+                key={site.id}
+                onClick={() => selectWebsite(site.id)}
+                className={cn(
+                  'rounded-xl border bg-white dark:bg-surface-900 overflow-hidden cursor-pointer transition-all hover:shadow-md',
+                  isSelected
+                    ? 'border-brand-400 dark:border-brand-600 ring-2 ring-brand-400/20'
+                    : 'border-surface-200 dark:border-surface-800 hover:border-surface-300 dark:hover:border-surface-700'
+                )}
+              >
+                {/* Header */}
+                <div className="p-5 border-b border-surface-100 dark:border-surface-800">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={cn(
+                        'w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold',
+                        isSelected ? 'bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400' : 'bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400'
+                      )}>
+                        {site.domain.charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-surface-900 dark:text-white text-sm">{site.name || site.domain}</h3>
+                        <p className="text-xs text-surface-500">{site.domain}</p>
+                      </div>
+                    </div>
+                    {isSelected && <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400">Actif</span>}
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="p-4 flex gap-2">
+                  <button
+                    onClick={(e) => { e.stopPropagation(); selectWebsite(site.id); router.push('/dashboard/audit') }}
+                    className="flex-1 px-3 py-2 rounded-lg text-xs font-medium text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/30 transition-colors"
+                  >
+                    Auditer
+                  </button>
+                  <a
+                    href={`https://${site.domain}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={e => e.stopPropagation()}
+                    className="px-3 py-2 rounded-lg text-xs font-medium text-surface-500 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); handleDelete(site.id) }}
+                    className="px-3 py-2 rounded-lg text-xs font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            )
+          })}
         </div>
       ) : (
-        <div className="rounded-xl border border-surface-700 bg-surface-900/50 backdrop-blur p-12 text-center">
-          <div className="flex justify-center mb-6">
-            <div className="p-3 rounded-lg bg-brand-500/15">
-              <Globe className="h-12 w-12 text-brand-400" />
-            </div>
-          </div>
-          <h2 className="text-xl font-semibold text-surface-100 mb-2">
-            Ajoutez votre premier site
-          </h2>
-          <p className="text-surface-400 mb-8 max-w-sm mx-auto">
-            Ajoutez votre premier site pour commencer l'analyse SEO
+        <div className="bg-white dark:bg-surface-900 rounded-xl border border-dashed border-surface-300 dark:border-surface-700 p-16 text-center">
+          <Globe className="w-12 h-12 text-surface-300 dark:text-surface-600 mx-auto mb-4" />
+          <h3 className="text-lg font-bold text-surface-900 dark:text-white mb-2">Aucun site ajoute</h3>
+          <p className="text-sm text-surface-500 mb-6 max-w-sm mx-auto">
+            Ajoutez votre premier site pour commencer a auditer et suivre votre SEO.
           </p>
-          <div className="flex flex-col gap-3 max-w-xs mx-auto">
-            <input
-              type="text"
-              placeholder="https://votresite.fr"
-              className="px-4 py-3 rounded-lg bg-surface-900 border border-surface-700 text-surface-100 placeholder:text-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none transition-all text-sm"
-            />
-            <button className="px-4 py-3 rounded-lg bg-brand-500 text-white hover:bg-brand-600 transition-colors font-medium flex items-center justify-center gap-2">
-              <Plus className="h-4 w-4" />
-              Ajouter
-            </button>
-          </div>
+          <button onClick={() => setShowForm(true)} className="btn-primary px-6 py-3 rounded-xl">
+            <Plus className="w-4 h-4" /> Ajouter un site
+          </button>
         </div>
       )}
     </div>

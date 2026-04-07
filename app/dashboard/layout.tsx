@@ -128,6 +128,8 @@ const navigationCategories = [
       { label: 'Score LLMO', href: '/dashboard/llmo-score', icon: TrendingUp, badge: undefined },
       { label: 'AI Advisor', href: '/dashboard/ai-advisor', icon: Lightbulb, badge: undefined },
       { label: 'Prompt Tester', href: '/dashboard/prompt-tester', icon: Wand2, badge: 'NEW' as const },
+      { label: 'Generateur llms.txt', href: '/dashboard/llms-txt', icon: FileText, badge: 'NEW' as const },
+      { label: 'Google My Business', href: '/dashboard/gmb-config', icon: Globe, badge: 'NEW' as const },
     ],
   },
   {
