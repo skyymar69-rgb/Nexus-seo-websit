@@ -19,9 +19,7 @@ import {
 } from 'lucide-react'
 
 const PLAN_LABELS: Record<string, { label: string; price: string }> = {
-  free: { label: 'Gratuit', price: '0 €/mois' },
-  pro: { label: 'Pro', price: '49,99 €/mois' },
-  expert: { label: 'Expert', price: '99,99 €/mois' },
+  free: { label: 'Gratuit', price: '100% Gratuit' },
 }
 
 export default function SettingsPage() {

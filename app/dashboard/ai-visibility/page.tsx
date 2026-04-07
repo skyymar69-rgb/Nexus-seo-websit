@@ -23,8 +23,6 @@ import {
   Send,
   RefreshCw,
 } from 'lucide-react'
-import { usePlan } from '@/hooks/usePlan'
-import { UpgradePrompt } from '@/components/shared/UpgradePrompt'
 import { useWebsite } from '@/contexts/WebsiteContext'
 import { formatDistanceToNow } from 'date-fns'
 import { fr } from 'date-fns/locale'
@@ -377,7 +375,6 @@ function NewQueryForm({
 // ---- Main Page ----
 
 export default function AIVisibilityPage() {
-  const { checkAccess } = usePlan()
   const { selectedWebsite } = useWebsite()
   const [timeRange, setTimeRange] = useState('30j')
   const [searchQuery, setSearchQuery] = useState('')
@@ -387,26 +384,6 @@ export default function AIVisibilityPage() {
     selectedWebsite?.id,
     timeRange
   )
-
-  // Feature gating: AI Visibility is Pro+ only
-  if (!checkAccess('aiVisibility')) {
-    return (
-      <div className="space-y-8 pb-8">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-gradient-to-br from-brand-400 to-brand-600 rounded-lg">
-              <Sparkles className="h-6 w-6 text-white" />
-            </div>
-            <h1 className="text-3xl font-bold text-surface-950 dark:text-surface-50">AI Visibility</h1>
-          </div>
-          <p className="text-surface-600 dark:text-surface-400">
-            Suivez votre visibilite dans les reponses des IA generatives
-          </p>
-        </div>
-        <UpgradePrompt feature="aiVisibility" requiredPlan="pro" />
-      </div>
-    )
-  }
 
   if (isLoading) {
     return <LoadingSkeleton />

@@ -13,8 +13,6 @@ import {
   LayoutList,
   Zap,
 } from 'lucide-react'
-import { usePlan } from '@/hooks/usePlan'
-import { UpgradePrompt } from '@/components/shared/UpgradePrompt'
 import { useWebsite } from '@/contexts/WebsiteContext'
 import { UrlInput } from '@/components/shared/UrlInput'
 
@@ -210,7 +208,6 @@ function LoadingSkeleton() {
 // ---- Main Page ----
 
 export default function AEOScorePage() {
-  const { checkAccess } = usePlan()
   const { selectedWebsite } = useWebsite()
 
   const [url, setUrl] = useState('')
@@ -224,26 +221,6 @@ export default function AEOScorePage() {
       setUrl(`https://${selectedWebsite.domain}`)
     }
   }, [selectedWebsite])
-
-  // Feature gating
-  if (!checkAccess('aeoReports')) {
-    return (
-      <div className="space-y-8 pb-8">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-lg">
-              <FileSearch className="h-6 w-6 text-white" />
-            </div>
-            <h1 className="text-3xl font-bold text-surface-950 dark:text-surface-50">Score AEO</h1>
-          </div>
-          <p className="text-surface-600 dark:text-surface-400">
-            Evaluez votre optimisation pour les moteurs de reponses IA
-          </p>
-        </div>
-        <UpgradePrompt feature="aeoReports" requiredPlan="pro" />
-      </div>
-    )
-  }
 
   if (!selectedWebsite) {
     return (

@@ -14,8 +14,6 @@ import {
   CheckCircle2,
   XCircle,
 } from 'lucide-react'
-import { usePlan } from '@/hooks/usePlan'
-import { UpgradePrompt } from '@/components/shared/UpgradePrompt'
 import { useWebsite } from '@/contexts/WebsiteContext'
 
 // ---- Types ----
@@ -193,7 +191,6 @@ function LoadingSkeleton() {
 // ---- Main Page ----
 
 export default function LLMOScorePage() {
-  const { checkAccess } = usePlan()
   const { selectedWebsite } = useWebsite()
 
   const [brand, setBrand] = useState('')
@@ -210,26 +207,6 @@ export default function LLMOScorePage() {
     setBrand(selectedWebsite.name || selectedWebsite.domain)
     setDomain(selectedWebsite.domain)
     setFormInitialized(true)
-  }
-
-  // Feature gating
-  if (!checkAccess('llmoReports')) {
-    return (
-      <div className="space-y-8 pb-8">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg">
-              <Brain className="h-6 w-6 text-white" />
-            </div>
-            <h1 className="text-3xl font-bold text-surface-950 dark:text-surface-50">Score LLMO</h1>
-          </div>
-          <p className="text-surface-600 dark:text-surface-400">
-            Mesurez votre visibilite dans les reponses des grands modeles de langage
-          </p>
-        </div>
-        <UpgradePrompt feature="llmoReports" requiredPlan="expert" />
-      </div>
-    )
   }
 
   if (!selectedWebsite) {

@@ -17,8 +17,6 @@ import {
 } from 'lucide-react'
 import { useWebsite } from '@/contexts/WebsiteContext'
 import { UrlInput } from '@/components/shared/UrlInput'
-import { usePlan } from '@/hooks/usePlan'
-import { UpgradePrompt } from '@/components/shared/UpgradePrompt'
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -201,8 +199,6 @@ function CategoryCard({
 
 export default function GeoAuditPage() {
   const { selectedWebsite } = useWebsite()
-  const { checkAccess, getRequiredPlan } = usePlan()
-
   const [url, setUrl] = useState('')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [result, setResult] = useState<GeoResult | null>(null)
@@ -214,26 +210,6 @@ export default function GeoAuditPage() {
       setUrl(`https://${selectedWebsite.domain}`)
     }
   }, [selectedWebsite])
-
-  // Plan gating
-  const hasAccess = checkAccess('geoReports')
-
-  if (!hasAccess) {
-    const required = getRequiredPlan('geoReports')
-    return (
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-display font-bold text-surface-900 dark:text-surface-50">
-            Audit GEO
-          </h1>
-          <p className="text-surface-600 dark:text-surface-400 mt-1">
-            Analysez votre site pour la Generative Engine Optimization
-          </p>
-        </div>
-        <UpgradePrompt feature="geoReports" requiredPlan={required as any} />
-      </div>
-    )
-  }
 
   async function handleAnalyze() {
     if (!url.trim() || isAnalyzing) return

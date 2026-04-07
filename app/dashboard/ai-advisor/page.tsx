@@ -43,8 +43,6 @@ import {
   AlertOctagon,
 } from 'lucide-react'
 import { useWebsite } from '@/contexts/WebsiteContext'
-import { usePlan } from '@/hooks/usePlan'
-import { UpgradePrompt } from '@/components/shared/UpgradePrompt'
 
 // ============= TYPES =============
 
@@ -879,8 +877,6 @@ function EmptyState({ message }: { message: string }) {
 
 export default function AIAdvisorPage() {
   const { selectedWebsite, isLoading: websiteLoading } = useWebsite()
-  const { checkAccess } = usePlan()
-
   const [data, setData] = useState<AdvisorData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -957,31 +953,6 @@ export default function AIAdvisorPage() {
   }
 
   // Plan gating - require at least explorer plan
-  if (!checkAccess('aiVisibility')) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-        <div className="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50">
-          <div className="max-w-7xl mx-auto px-6 py-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-lg">
-                <Brain size={28} className="text-white" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-white">Conseiller IA Nexus</h1>
-                <p className="text-sm text-slate-400 mt-1">
-                  Optimisation SEO intelligente et recommandations personnalisees
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="max-w-7xl mx-auto px-6 py-12">
-          <UpgradePrompt feature="aiVisibility" requiredPlan="pro" />
-        </div>
-      </div>
-    )
-  }
-
   // Loading states
   if (websiteLoading || isLoading) {
     return <LoadingSkeleton />

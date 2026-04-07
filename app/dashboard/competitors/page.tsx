@@ -2,9 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
-import { usePlan } from '@/hooks/usePlan'
 import { useWebsite } from '@/contexts/WebsiteContext'
-import { UpgradePrompt } from '@/components/shared/UpgradePrompt'
 import {
   Users,
   Plus,
@@ -174,7 +172,6 @@ function CompareArrow({
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function CompetitorsPage() {
-  const { checkAccess } = usePlan()
   const { selectedWebsite } = useWebsite()
 
   const [competitors, setCompetitors] = useState<CompetitorEntry[]>([])
@@ -196,29 +193,6 @@ export default function CompetitorsPage() {
     },
     [selectedWebsite?.id],
   )
-
-  // ─── Plan gating ──────────────────────────────────────────────────────────
-
-  if (!checkAccess('competitorAnalysis')) {
-    return (
-      <div className="space-y-8 pb-8">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-gradient-to-br from-brand-400 to-brand-600 rounded-lg">
-              <Users className="h-6 w-6 text-white" />
-            </div>
-            <h1 className="text-3xl font-bold text-surface-950 dark:text-surface-50">
-              Analyse des Concurrents
-            </h1>
-          </div>
-          <p className="text-surface-600 dark:text-surface-400">
-            Analysez et comparez votre performance avec vos concurrents
-          </p>
-        </div>
-        <UpgradePrompt feature="competitorAnalysis" requiredPlan="pro" />
-      </div>
-    )
-  }
 
   // ─── Crawl a URL ──────────────────────────────────────────────────────────
 

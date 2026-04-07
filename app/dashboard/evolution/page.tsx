@@ -2,9 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { cn, formatNumber } from '@/lib/utils'
-import { usePlan } from '@/hooks/usePlan'
 import { useWebsite } from '@/contexts/WebsiteContext'
-import { UpgradePrompt } from '@/components/shared/UpgradePrompt'
 import {
   TrendingUp,
   Award,
@@ -67,7 +65,6 @@ function EmptyState({ message }: { message: string }) {
 }
 
 export default function EvolutionPage() {
-  const { checkAccess } = usePlan()
   const { selectedWebsite } = useWebsite()
   const [dateRange, setDateRange] = useState<DateRange>('90d')
   const [data, setData] = useState<EvolutionData | null>(null)
@@ -97,27 +94,6 @@ export default function EvolutionPage() {
 
     fetchData()
   }, [selectedWebsite?.id])
-
-  if (!checkAccess('auditsPerMonth')) {
-    return (
-      <div className="space-y-8 pb-8">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-blue-100 rounded-lg">
-              <TrendingUp className="h-6 w-6 text-blue-600" />
-            </div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              Suivi d&apos;Evolution
-            </h1>
-          </div>
-          <p className="text-gray-500">
-            Suivi et analyse de l&apos;evolution de votre SEO au fil du temps
-          </p>
-        </div>
-        <UpgradePrompt feature="seoAnalysis" requiredPlan="pro" />
-      </div>
-    )
-  }
 
   const audits = data ? filterByRange(data.audits, dateRange) : []
   const keywords = data ? filterByRange(data.keywords, dateRange) : []
