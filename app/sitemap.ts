@@ -4,6 +4,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://nexus.kayzen-lyon.f
 
 const casesSlugs = ['maison-lumiere', 'flowstack', 'lefort-associes', 'techflow-saas', 'agence-digitale-lyon', 'ecommerce-sante']
 const blogSlugs = ['geo-guide-complet-2026', 'llmo-chatgpt-recommande-votre-marque', 'aeo-featured-snippets-voice-search', 'core-web-vitals-2026-guide', 'eeat-seo-ia-2026', 'semrush-vs-nexus-comparaison']
+const citySlugs = ['paris', 'lyon', 'marseille', 'toulouse', 'nice', 'nantes', 'strasbourg', 'montpellier', 'bordeaux', 'lille', 'rennes', 'grenoble', 'rouen', 'toulon', 'clermont-ferrand', 'dijon', 'angers', 'saint-etienne', 'brest', 'le-mans']
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date()
@@ -39,5 +40,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: now,
   }))
 
-  return [...staticPages, ...casePages, ...blogPages]
+  const cityPages = citySlugs.map((slug) => ({
+    url: `${BASE_URL}/outils/audit-seo-${slug}`,
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+    lastModified: now,
+  }))
+
+  return [...staticPages, ...casePages, ...blogPages, ...cityPages]
 }
