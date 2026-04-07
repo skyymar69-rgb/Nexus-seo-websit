@@ -584,3 +584,191 @@ export function checkSecurityHeaders(csp: string | null, xFrame: string | null, 
     ],
   }
 }
+
+// ─── NEW CHECKS (10 additional) ───────────────────────────────
+
+export function checkRobotsTxt(hasRobots: boolean, content?: string): DetailedCheck {
+  const hasDisallow = content?.includes('Disallow') || false
+  const hasSitemap = content?.includes('Sitemap') || false
+  const score = hasRobots ? (hasSitemap ? 100 : 70) : 20
+
+  return {
+    id: 'tech_robots',
+    category: 'technical',
+    name: 'Fichier robots.txt',
+    status: hasRobots ? 'passed' : 'error',
+    score,
+    value: hasRobots ? `Present${hasSitemap ? ' + Sitemap' : ''}${hasDisallow ? ' + Disallow' : ''}` : 'Absent',
+    summary: hasRobots ? 'robots.txt detecte et configure.' : 'robots.txt manquant — les moteurs de recherche ne connaissent pas vos regles de crawl.',
+    report: hasRobots ? 'Votre fichier robots.txt est present et guide les crawlers.' : 'Le fichier robots.txt est essentiel pour controler quelles pages Google et les LLMs peuvent explorer. Sans lui, toutes les pages sont crawlees sans priorite.',
+    bestPractices: ['Ajoutez un lien vers votre sitemap.xml dans robots.txt', 'Bloquez les pages admin, API, et duplicats', 'Ne bloquez pas les CSS/JS necessaires au rendu', 'Testez avec Google Search Console > robots.txt Tester'],
+    impact: hasRobots ? 'low' : 'high',
+    sources: ['Google — robots.txt Specifications (2026)', 'Yoast — robots.txt Guide'],
+  }
+}
+
+export function checkSitemapXml(hasSitemap: boolean, urlCount?: number): DetailedCheck {
+  const score = hasSitemap ? (urlCount && urlCount > 10 ? 100 : 70) : 15
+
+  return {
+    id: 'tech_sitemap',
+    category: 'technical',
+    name: 'Sitemap XML',
+    status: hasSitemap ? 'passed' : 'error',
+    score,
+    value: hasSitemap ? `Present${urlCount ? ` (${urlCount} URLs)` : ''}` : 'Absent',
+    summary: hasSitemap ? `Sitemap XML detecte${urlCount ? ` avec ${urlCount} URLs` : ''}.` : 'Sitemap XML manquant — Google ne connait pas toutes vos pages.',
+    report: hasSitemap ? 'Votre sitemap XML aide les moteurs a decouvrir toutes vos pages efficacement.' : 'Sans sitemap.xml, Google doit decouvrir vos pages uniquement via les liens. Les pages orphelines ne seront jamais indexees.',
+    bestPractices: ['Generez un sitemap dynamique (Next.js: app/sitemap.ts)', 'Incluez toutes les pages publiques avec priorite et lastmod', 'Soumettez-le dans Google Search Console', 'Limitez a 50 000 URLs par sitemap'],
+    impact: hasSitemap ? 'low' : 'high',
+    sources: ['Google — Sitemap Protocol', 'Sitemaps.org — Protocol Specification'],
+  }
+}
+
+export function checkHreflang(hasHreflang: boolean, languages?: string[]): DetailedCheck {
+  const score = hasHreflang ? 100 : 50
+
+  return {
+    id: 'meta_hreflang',
+    category: 'meta',
+    name: 'Balises Hreflang',
+    status: hasHreflang ? 'passed' : 'warning',
+    score,
+    value: hasHreflang ? `Present (${languages?.join(', ') || 'detecte'})` : 'Absent',
+    summary: hasHreflang ? 'Hreflang configure pour le ciblage international.' : 'Pas de balise hreflang — OK si votre site cible un seul pays.',
+    report: 'Les balises hreflang indiquent aux moteurs de recherche quelle version linguistique servir selon la localisation de l\'utilisateur.',
+    bestPractices: ['Ajoutez hreflang si vous avez plusieurs versions linguistiques', 'Chaque page doit referencer toutes ses alternatives', 'Incluez un x-default pour la version par defaut', 'Coherence avec le canonical'],
+    impact: 'low',
+    sources: ['Google — Hreflang pour les resultats de recherche regionaux'],
+  }
+}
+
+export function checkFavicon(hasFavicon: boolean): DetailedCheck {
+  return {
+    id: 'meta_favicon',
+    category: 'meta',
+    name: 'Favicon',
+    status: hasFavicon ? 'passed' : 'warning',
+    score: hasFavicon ? 100 : 40,
+    value: hasFavicon ? 'Present' : 'Absent',
+    summary: hasFavicon ? 'Favicon detecte.' : 'Aucun favicon — impact sur la reconnaissance de marque dans les onglets et favoris.',
+    report: 'Le favicon apparait dans les onglets du navigateur, les favoris, et les resultats Google mobile. C\'est un signal de professionnalisme.',
+    bestPractices: ['Fournissez un favicon.ico + PNG 32x32 + 16x16', 'Ajoutez un apple-touch-icon 180x180 pour iOS', 'Utilisez un format SVG pour la nettete sur tous les ecrans'],
+    impact: 'low',
+    sources: ['Favicon.io — Favicon Generator'],
+  }
+}
+
+export function checkMetaRobots(content: string | null): DetailedCheck {
+  const isNoindex = content?.includes('noindex') || false
+  const isNofollow = content?.includes('nofollow') || false
+  const score = isNoindex ? 20 : 100
+
+  return {
+    id: 'meta_robots',
+    category: 'meta',
+    name: 'Meta Robots',
+    status: isNoindex ? 'error' : 'passed',
+    score,
+    value: content || 'Non defini (index, follow par defaut)',
+    summary: isNoindex ? 'ATTENTION: meta robots noindex detecte — cette page ne sera PAS indexee par Google.' : 'Meta robots OK — la page est indexable.',
+    report: isNoindex ? 'La directive noindex empeche Google d\'indexer cette page. Si c\'est intentionnel (page admin, merci), c\'est correct. Sinon, supprimez-la immediatement.' : 'Votre page est correctement configuree pour etre indexee et suivie par les moteurs.',
+    bestPractices: ['Utilisez noindex uniquement sur les pages privees ou dupliquees', 'Ne mettez jamais noindex sur vos pages principales', 'Preferez le canonical pour gerer les doublons', 'Verifiez dans Google Search Console > Couverture'],
+    impact: isNoindex ? 'critical' : 'low',
+    sources: ['Google — Meta robots specifications'],
+  }
+}
+
+export function checkLanguageAttr(lang: string | null): DetailedCheck {
+  const hasLang = !!lang && lang.length >= 2
+  return {
+    id: 'tech_lang',
+    category: 'technical',
+    name: 'Attribut lang HTML',
+    status: hasLang ? 'passed' : 'warning',
+    score: hasLang ? 100 : 40,
+    value: lang || 'Non defini',
+    summary: hasLang ? `Langue ${lang} declaree — aide les moteurs et l'accessibilite.` : 'Attribut lang manquant sur la balise <html>.',
+    report: 'L\'attribut lang aide les moteurs de recherche a comprendre la langue de votre contenu et ameliore l\'accessibilite pour les lecteurs d\'ecran.',
+    bestPractices: ['Ajoutez lang="fr" sur <html> pour un site francais', 'Utilisez le code ISO 639-1 (fr, en, es, de, etc.)', 'Coherent avec vos balises hreflang si elles existent'],
+    impact: 'medium',
+    sources: ['W3C — Language Tags in HTML', 'MDN — lang attribute'],
+  }
+}
+
+export function checkImageDimensions(withDimensions: number, total: number): DetailedCheck {
+  const withoutDimensions = total - withDimensions
+  const ratio = total > 0 ? withDimensions / total : 1
+  const score = Math.round(ratio * 100)
+
+  return {
+    id: 'perf_img_dimensions',
+    category: 'performance',
+    name: 'Dimensions des images',
+    status: ratio >= 0.9 ? 'passed' : ratio >= 0.5 ? 'warning' : 'error',
+    score,
+    value: `${withDimensions}/${total} images avec width/height`,
+    summary: withoutDimensions > 0 ? `${withoutDimensions} images sans dimensions explicites — cause de Cumulative Layout Shift (CLS).` : 'Toutes les images ont des dimensions — excellent pour le CLS.',
+    report: 'Les images sans attributs width et height causent des sauts de mise en page (CLS) quand elles se chargent. C\'est un des 3 Core Web Vitals mesures par Google.',
+    bestPractices: ['Ajoutez width et height a TOUTES les balises <img>', 'Utilisez aspect-ratio en CSS comme fallback', 'Next.js Image component ajoute les dimensions automatiquement'],
+    impact: withoutDimensions > 5 ? 'high' : 'medium',
+    sources: ['Google — Cumulative Layout Shift (CLS)', 'web.dev — Optimize CLS'],
+  }
+}
+
+export function checkLazyLoading(lazyImages: number, totalImages: number): DetailedCheck {
+  const belowFoldEstimate = Math.max(0, totalImages - 1) // First image is usually above fold
+  const ratio = belowFoldEstimate > 0 ? lazyImages / belowFoldEstimate : 1
+  const score = totalImages <= 1 ? 100 : Math.round(ratio * 100)
+
+  return {
+    id: 'perf_lazy_loading',
+    category: 'performance',
+    name: 'Lazy Loading Images',
+    status: ratio >= 0.7 ? 'passed' : ratio >= 0.3 ? 'warning' : totalImages > 3 ? 'error' : 'passed',
+    score: Math.max(30, score),
+    value: `${lazyImages}/${totalImages} images avec loading="lazy"`,
+    summary: lazyImages > 0 ? `${lazyImages} images en lazy loading — bon pour la performance.` : totalImages > 3 ? 'Aucune image en lazy loading — les images hors ecran ralentissent le chargement.' : 'Peu d\'images detectees.',
+    report: 'Le lazy loading differe le chargement des images hors ecran, accelerant le First Contentful Paint et reduisant la bande passante.',
+    bestPractices: ['Ajoutez loading="lazy" a toutes les images sauf la hero/LCP', 'Ne mettez PAS lazy sur la premiere image visible (LCP)', 'Les navigateurs modernes supportent nativement loading="lazy"'],
+    impact: totalImages > 5 && lazyImages === 0 ? 'high' : 'low',
+    sources: ['web.dev — Lazy Loading Images', 'MDN — loading attribute'],
+  }
+}
+
+export function checkInternalLinking(internalLinks: number): DetailedCheck {
+  const score = internalLinks >= 10 ? 100 : internalLinks >= 5 ? 80 : internalLinks >= 2 ? 50 : 20
+
+  return {
+    id: 'content_internal_links',
+    category: 'content',
+    name: 'Maillage Interne',
+    status: internalLinks >= 5 ? 'passed' : internalLinks >= 2 ? 'warning' : 'error',
+    score,
+    value: `${internalLinks} liens internes`,
+    summary: internalLinks >= 5 ? `${internalLinks} liens internes — bon maillage.` : `Seulement ${internalLinks} liens internes — le maillage est insuffisant.`,
+    report: 'Le maillage interne distribue le "link juice" entre vos pages et aide Google a comprendre votre architecture. Les LLMs suivent aussi les liens internes pour comprendre la structure de votre site.',
+    bestPractices: ['Visez 5-10 liens internes par page', 'Utilisez des ancres descriptives (pas "cliquez ici")', 'Liez vers vos pages les plus importantes', 'Creez des pages piliers avec beaucoup de liens entrants'],
+    impact: internalLinks < 3 ? 'high' : 'medium',
+    sources: ['Moz — Internal Linking for SEO', 'Ahrefs — Internal Links Guide'],
+  }
+}
+
+export function checkSocialPresence(hasTwitter: boolean, hasLinkedIn: boolean, hasFacebook: boolean): DetailedCheck {
+  const count = [hasTwitter, hasLinkedIn, hasFacebook].filter(Boolean).length
+  const score = count >= 2 ? 100 : count === 1 ? 60 : 30
+
+  return {
+    id: 'content_social',
+    category: 'content',
+    name: 'Presence Reseaux Sociaux',
+    status: count >= 2 ? 'passed' : count >= 1 ? 'warning' : 'error',
+    score,
+    value: `${count}/3 reseaux detectes (Twitter: ${hasTwitter ? 'oui' : 'non'}, LinkedIn: ${hasLinkedIn ? 'oui' : 'non'}, Facebook: ${hasFacebook ? 'oui' : 'non'})`,
+    summary: count >= 2 ? 'Bonne presence sur les reseaux sociaux.' : 'Presence sociale insuffisante — les LLMs considerent la presence sociale comme signal d\'autorite.',
+    report: 'Les liens vers vos profils sociaux renforcent votre E-E-A-T (Expertise, Experience, Authority, Trust). Les LLMs utilisent ces signaux pour evaluer la legitimite d\'une source.',
+    bestPractices: ['Ajoutez des liens vers vos profils LinkedIn, Twitter/X, Facebook', 'Incluez-les dans le footer de toutes vos pages', 'Ajoutez les URLs dans votre schema Organization (sameAs)', 'Publiez regulierement pour montrer que les comptes sont actifs'],
+    impact: 'medium',
+    sources: ['Google — E-E-A-T Guidelines', 'Schema.org — sameAs property'],
+  }
+}

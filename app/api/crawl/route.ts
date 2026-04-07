@@ -54,6 +54,55 @@ const MAX_PAGES_LIMIT = 50
 
 import { withCors, corsOptionsResponse } from '@/lib/cors'
 
+// GET: Retrieve latest crawl results for a website
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const websiteId = searchParams.get('websiteId')
+
+    if (!websiteId) {
+      return NextResponse.json({ error: 'websiteId requis' }, { status: 400 })
+    }
+
+    // Find the latest completed crawl session
+    const crawlSession = await prisma.crawlSession.findFirst({
+      where: { websiteId, status: 'completed' },
+      orderBy: { startedAt: 'desc' },
+      include: {
+        pages: {
+          orderBy: { internalLinks: 'desc' },
+          take: 100,
+        },
+      },
+    })
+
+    if (!crawlSession || crawlSession.pages.length === 0) {
+      return NextResponse.json({ pages: [], message: 'Aucun crawl disponible. Lancez un crawl depuis la page Crawleur Web.' }, { status: 200 })
+    }
+
+    const pages = crawlSession.pages.map(p => ({
+      url: p.url,
+      statusCode: p.statusCode,
+      responseTime: p.responseTime,
+      title: p.title || '',
+      h1Count: p.h1Count,
+      internalLinks: p.internalLinks,
+      externalLinks: p.externalLinks,
+      wordCount: 0,
+      issues: p.issues ? (Array.isArray(p.issues) ? p.issues : []) : [],
+    }))
+
+    return NextResponse.json({
+      pages,
+      crawlDate: crawlSession.startedAt,
+      totalPages: crawlSession.pagesFound,
+    })
+  } catch (error) {
+    console.error('Crawl GET error:', error)
+    return NextResponse.json({ error: 'Erreur lors du chargement' }, { status: 500 })
+  }
+}
+
 // Handle preflight
 export async function OPTIONS() {
   return corsOptionsResponse()
