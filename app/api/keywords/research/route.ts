@@ -228,14 +228,54 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const results = generateKeywordVariations(query)
-    const suggestions = generateSuggestions(query)
+    // Try DataForSEO first for real data
+    let results: KeywordResult[] = []
+    let suggestions: SuggestionResult[] = []
+    let dataSource: 'dataforseo' | 'estimated' = 'estimated'
 
-    const response: KeywordResponse = {
+    if (process.env.DATAFORSEO_LOGIN && process.env.DATAFORSEO_PASSWORD) {
+      try {
+        const { getKeywordVolumes, getKeywordSuggestions } = await import('@/lib/dataforseo')
+        const [volumes, suggs] = await Promise.all([
+          getKeywordVolumes([query], language),
+          getKeywordSuggestions(query, language),
+        ])
+        if (volumes.length > 0 || suggs.length > 0) {
+          dataSource = 'dataforseo'
+          results = suggs.slice(0, 20).map(s => ({
+            keyword: s.keyword,
+            volume: s.volume,
+            difficulty: s.difficulty,
+            cpc: s.cpc,
+            trend: s.volume > 500 ? 'up' as const : 'stable' as const,
+            intent: s.intent as any,
+            serpFeatures: [],
+            competition: s.difficulty > 70 ? 'high' as const : s.difficulty > 40 ? 'medium' as const : 'low' as const,
+          }))
+          suggestions = suggs.slice(20, 40).map(s => ({
+            keyword: s.keyword,
+            volume: s.volume,
+            difficulty: s.difficulty,
+            type: s.intent,
+          }))
+        }
+      } catch (e) {
+        console.error('DataForSEO failed, using estimates:', e)
+      }
+    }
+
+    // Fallback to estimated data
+    if (results.length === 0) {
+      results = generateKeywordVariations(query)
+      suggestions = generateSuggestions(query)
+    }
+
+    const response: KeywordResponse & { dataSource?: string } = {
       query,
       language,
       results,
       suggestions,
+      dataSource,
     }
 
     return NextResponse.json(response, {
