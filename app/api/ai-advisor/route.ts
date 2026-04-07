@@ -218,6 +218,46 @@ export async function GET(request: NextRequest) {
       industry: 68,
     }))
 
+    // ── RAG: GPT-powered personalized insight ──
+    let aiInsight: string | null = null
+    try {
+      if (process.env.OPENAI_API_KEY) {
+        const OpenAI = (await import('openai')).default
+        const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+
+        const context = `
+Site: ${website.domain}
+Score SEO: ${latestAudit.score}/100 (${latestAudit.grade})
+Performance: LCP=${auditData.performance.lcp}ms, CLS=${auditData.performance.cls}, TTFB=${auditData.performance.ttfb}ms
+Contenu: ${auditData.content.wordCount} mots, ${auditData.content.h1Count} H1, ${auditData.content.imagesWithoutAlt} images sans alt
+Backlinks: ${backlinkCount} total, ${qualityBacklinks} de qualite (DA>40), ${toxicBacklinks} toxiques
+Visibilite IA: ${mentionRate}% de mentions dans les LLMs
+Problemes detectes: ${checks.filter((c: any) => c.status === 'error').map((c: any) => c.name).join(', ') || 'aucun critique'}
+Avertissements: ${checks.filter((c: any) => c.status === 'warning').map((c: any) => c.name).join(', ') || 'aucun'}
+`.trim()
+
+        const completion = await openai.chat.completions.create({
+          model: 'gpt-4o-mini',
+          max_tokens: 600,
+          temperature: 0.7,
+          messages: [
+            {
+              role: 'system',
+              content: 'Tu es un expert SEO senior. Analyse les donnees d\'audit fournies et donne 3 recommandations prioritaires ultra-specifiques au site. Sois direct, concis, actionnable. Reponds en francais. Format: 3 paragraphes courts numerotes.',
+            },
+            {
+              role: 'user',
+              content: `Voici les donnees d'audit de mon site. Donne-moi tes 3 recommandations prioritaires les plus impactantes :\n\n${context}`,
+            },
+          ],
+        })
+
+        aiInsight = completion.choices[0]?.message?.content || null
+      }
+    } catch (gptError) {
+      console.error('GPT insight generation failed (non-blocking):', gptError)
+    }
+
     return NextResponse.json({
       empty: false,
       scoreBreakdown,
@@ -228,6 +268,7 @@ export async function GET(request: NextRequest) {
       timeline,
       benchmarks,
       evolutionData,
+      aiInsight,
       lastAuditDate: latestAudit.createdAt,
       websiteDomain: website.domain,
     })
