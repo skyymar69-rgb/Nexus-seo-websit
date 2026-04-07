@@ -70,12 +70,12 @@ function generateToolsByCategory() {
       name: 'Mots-cles',
       icon: Search,
       tools: [
-        { id: 'keyword-research', name: 'Recherche Mots-cles', isPro: true },
+        { id: 'keyword-research', name: 'Recherche Mots-cles', isPro: false },
         { id: 'rank-tracker', name: 'Classements', isPro: false },
-        { id: 'long-tail', name: 'Longue traine', isPro: true },
-        { id: 'keyword-gap', name: 'Ecart Mots-cles', isPro: true },
-        { id: 'intent', name: 'Analyse Intent', isPro: true },
-        { id: 'clustering', name: 'Clustering', isPro: true },
+        { id: 'long-tail', name: 'Longue traine', isPro: false },
+        { id: 'keyword-gap', name: 'Ecart Mots-cles', isPro: false },
+        { id: 'intent', name: 'Analyse Intent', isPro: false },
+        { id: 'clustering', name: 'Clustering', isPro: false },
       ],
     },
     {
@@ -84,11 +84,11 @@ function generateToolsByCategory() {
       icon: Link,
       tools: [
         { id: 'backlink-analysis', name: 'Analyse Backlinks', isPro: false },
-        { id: 'link-gap', name: 'Ecart de Liens', isPro: true },
-        { id: 'competitor-links', name: 'Liens Concurrents', isPro: true },
-        { id: 'link-quality', name: 'Qualite des Liens', isPro: true },
-        { id: 'anchor-text', name: 'Anchor Text', isPro: true },
-        { id: 'link-building', name: 'Opportunites', isPro: true },
+        { id: 'link-gap', name: 'Ecart de Liens', isPro: false },
+        { id: 'competitor-links', name: 'Liens Concurrents', isPro: false },
+        { id: 'link-quality', name: 'Qualite des Liens', isPro: false },
+        { id: 'anchor-text', name: 'Anchor Text', isPro: false },
+        { id: 'link-building', name: 'Opportunites', isPro: false },
       ],
     },
     {
@@ -97,11 +97,11 @@ function generateToolsByCategory() {
       icon: Settings,
       tools: [
         { id: 'content-audit', name: 'Audit Contenu', isPro: false },
-        { id: 'content-gap', name: 'Ecart Contenu', isPro: true },
-        { id: 'ai-content', name: 'Generateur IA', isPro: true },
+        { id: 'content-gap', name: 'Ecart Contenu', isPro: false },
+        { id: 'ai-content', name: 'Generateur IA', isPro: false },
         { id: 'readability', name: 'Lisibilite', isPro: false },
-        { id: 'seo-brief', name: 'Brief SEO', isPro: true },
-        { id: 'content-calendar', name: 'Calendrier', isPro: true },
+        { id: 'seo-brief', name: 'Brief SEO', isPro: false },
+        { id: 'content-calendar', name: 'Calendrier', isPro: false },
       ],
     },
     {
@@ -110,11 +110,11 @@ function generateToolsByCategory() {
       icon: Users,
       tools: [
         { id: 'competitor-analysis', name: 'Analyse', isPro: false },
-        { id: 'competitor-keywords', name: 'Mots-cles', isPro: true },
-        { id: 'competitor-backlinks', name: 'Backlinks', isPro: true },
-        { id: 'competitor-content', name: 'Contenu', isPro: true },
-        { id: 'competitor-traffic', name: 'Trafic', isPro: true },
-        { id: 'competitor-ranking', name: 'Classements', isPro: true },
+        { id: 'competitor-keywords', name: 'Mots-cles', isPro: false },
+        { id: 'competitor-backlinks', name: 'Backlinks', isPro: false },
+        { id: 'competitor-content', name: 'Contenu', isPro: false },
+        { id: 'competitor-traffic', name: 'Trafic', isPro: false },
+        { id: 'competitor-ranking', name: 'Classements', isPro: false },
       ],
     },
     {
@@ -123,11 +123,11 @@ function generateToolsByCategory() {
       icon: Globe,
       tools: [
         { id: 'local-audit', name: 'Audit Local', isPro: false },
-        { id: 'gmb-optimizer', name: 'Google My Business', isPro: true },
-        { id: 'local-keywords', name: 'Mots-cles Locaux', isPro: true },
-        { id: 'review-monitor', name: 'Avis', isPro: true },
-        { id: 'citation-audit', name: 'Citations', isPro: true },
-        { id: 'local-competitors', name: 'Concurrents Locaux', isPro: true },
+        { id: 'gmb-optimizer', name: 'Google My Business', isPro: false },
+        { id: 'local-keywords', name: 'Mots-cles Locaux', isPro: false },
+        { id: 'review-monitor', name: 'Avis', isPro: false },
+        { id: 'citation-audit', name: 'Citations', isPro: false },
+        { id: 'local-competitors', name: 'Concurrents Locaux', isPro: false },
       ],
     },
     {
@@ -137,10 +137,10 @@ function generateToolsByCategory() {
       tools: [
         { id: 'analytics-audit', name: 'Audit Analytics', isPro: false },
         { id: 'traffic-source', name: 'Sources Trafic', isPro: false },
-        { id: 'conversion-tracking', name: 'Conversions', isPro: true },
-        { id: 'user-behavior', name: 'Comportement', isPro: true },
-        { id: 'cohort-analysis', name: 'Cohortes', isPro: true },
-        { id: 'attribution', name: 'Attribution', isPro: true },
+        { id: 'conversion-tracking', name: 'Conversions', isPro: false },
+        { id: 'user-behavior', name: 'Comportement', isPro: false },
+        { id: 'cohort-analysis', name: 'Cohortes', isPro: false },
+        { id: 'attribution', name: 'Attribution', isPro: false },
       ],
     },
     {
@@ -148,10 +148,10 @@ function generateToolsByCategory() {
       name: 'Visibilite',
       icon: Eye,
       tools: [
-        { id: 'ai-visibility', name: 'Visibilite IA', isPro: true },
-        { id: 'featured-snippets', name: 'Featured Snippets', isPro: true },
-        { id: 'serp-features', name: 'Fonctionnalites SERP', isPro: true },
-        { id: 'brand-monitoring', name: 'Marque', isPro: true },
+        { id: 'ai-visibility', name: 'Visibilite IA', isPro: false },
+        { id: 'featured-snippets', name: 'Featured Snippets', isPro: false },
+        { id: 'serp-features', name: 'Fonctionnalites SERP', isPro: false },
+        { id: 'brand-monitoring', name: 'Marque', isPro: false },
         { id: 'visibility-score', name: 'Score Visibilite', isPro: false },
         { id: 'visibility-history', name: 'Historique', isPro: false },
       ],
@@ -164,9 +164,9 @@ function generateToolsByCategory() {
         { id: 'url-inspector', name: 'Inspecteur URL', isPro: false },
         { id: 'schema-validator', name: 'Schema Validation', isPro: false },
         { id: 'redirect-checker', name: 'Redirections', isPro: false },
-        { id: 'api-tools', name: 'API Tools', isPro: true },
-        { id: 'bulk-tools', name: 'Outils Batch', isPro: true },
-        { id: 'integrations', name: 'Integrations', isPro: true },
+        { id: 'api-tools', name: 'API Tools', isPro: false },
+        { id: 'bulk-tools', name: 'Outils Batch', isPro: false },
+        { id: 'integrations', name: 'Integrations', isPro: false },
       ],
     },
   ]
@@ -210,17 +210,17 @@ function KPICard({
   color?: string
 }) {
   return (
-    <div className="bg-surface-800 rounded-lg border border-surface-700 p-6 hover:border-surface-600 transition-colors">
+    <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6 hover:border-brand-300 dark:hover:border-brand-700 hover:shadow-md transition-all shadow-sm">
       <div className="flex items-start justify-between mb-4">
         <div>
-          <p className="text-surface-400 text-sm font-medium">{title}</p>
+          <p className="text-surface-500 dark:text-surface-400 text-sm font-medium">{title}</p>
           <div className="flex items-baseline gap-2 mt-2">
-            <span className="text-3xl font-bold text-surface-100">{value}</span>
+            <span className="text-3xl font-bold text-surface-900 dark:text-white">{value}</span>
             {unit && <span className="text-surface-400 text-sm">{unit}</span>}
           </div>
         </div>
-        <div className={cn('p-3 rounded-lg', color, 'opacity-20')}>
-          <Icon className="w-5 h-5 text-white" />
+        <div className={cn('p-3 rounded-xl', color, 'bg-opacity-10 dark:bg-opacity-20')}>
+          <Icon className="w-5 h-5" />
         </div>
       </div>
 
@@ -268,7 +268,7 @@ function ScoreGauge({ score = 0, grade = '-' }: { score?: number; grade?: string
       case 'C':
         return 'bg-orange-500/20 text-orange-400'
       case '-':
-        return 'bg-surface-700 text-surface-400'
+        return 'bg-surface-200 dark:bg-surface-700 text-surface-500 dark:text-surface-400'
       default:
         return 'bg-red-500/20 text-red-400'
     }
@@ -329,8 +329,8 @@ function AuditRow({ audit }: { audit: DashboardAudit }) {
   })
 
   return (
-    <tr className="border-b border-surface-700 hover:bg-surface-800/50 transition-colors">
-      <td className="px-6 py-4 text-sm text-surface-200">{formattedDate}</td>
+    <tr className="border-b border-surface-200 dark:border-surface-700 hover:bg-surface-100 dark:hover:bg-surface-800/50 transition-colors">
+      <td className="px-6 py-4 text-sm text-surface-700 dark:text-surface-200">{formattedDate}</td>
       <td className="px-6 py-4">
         <div className="flex items-center gap-3">
           <span className={cn('px-3 py-1 rounded-full font-bold text-sm', getScoreColor(audit.score))}>
@@ -338,13 +338,13 @@ function AuditRow({ audit }: { audit: DashboardAudit }) {
           </span>
         </div>
       </td>
-      <td className="px-6 py-4 text-sm text-surface-300">
-        <span className="px-2 py-1 bg-surface-700 rounded font-medium">{audit.grade}</span>
+      <td className="px-6 py-4 text-sm text-surface-600 dark:text-surface-300">
+        <span className="px-2 py-1 bg-surface-200 dark:bg-surface-700 rounded font-medium">{audit.grade}</span>
       </td>
       <td className="px-6 py-4 text-sm text-surface-400">{audit.website.domain}</td>
       <td className="px-6 py-4 text-sm text-surface-400">{timeAgo}</td>
       <td className="px-6 py-4 text-right">
-        <button className="p-2 hover:bg-surface-700 rounded-lg transition-colors">
+        <button className="p-2 hover:bg-surface-100 dark:hover:bg-surface-700 rounded-lg transition-colors">
           <MoreHorizontal className="w-4 h-4 text-surface-400" />
         </button>
       </td>
@@ -390,10 +390,10 @@ function RecommendationCard({
   }
 
   return (
-    <div className="bg-surface-800 rounded-lg border border-surface-700 p-4 hover:border-surface-600 transition-colors">
+    <div className="bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-4 hover:border-surface-300 dark:hover:border-surface-600 transition-colors">
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
-          <h4 className="text-sm font-bold text-surface-100 mb-1">{rec.title}</h4>
+          <h4 className="text-sm font-bold text-surface-900 dark:text-surface-100 mb-1">{rec.title}</h4>
           <p className="text-xs text-surface-400">{rec.description}</p>
         </div>
         <span className={cn('px-2 py-1 rounded text-xs font-semibold border whitespace-nowrap ml-2', getPriorityColor(rec.priority))}>
@@ -405,7 +405,7 @@ function RecommendationCard({
       <div className="flex items-center gap-4 text-xs">
         <div className="flex items-center gap-1">
           <Zap className="w-3 h-3 text-yellow-500" />
-          <span className="text-surface-400">Impact: <span className="text-surface-200 font-semibold">{rec.impact}%</span></span>
+          <span className="text-surface-400">Impact: <span className="text-surface-700 dark:text-surface-200 font-semibold">{rec.impact}%</span></span>
         </div>
         <div className={cn('px-2 py-1 rounded', getEffortColor(rec.effort))}>
           {rec.effort === 'easy' && 'Facile'}
@@ -426,7 +426,7 @@ function ToolCard({
 }) {
   const Icon = category.icon
   return (
-    <div className="bg-surface-800 rounded-lg border border-surface-700 p-4 hover:border-surface-600 transition-all hover:shadow-lg cursor-pointer group">
+    <div className="bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-4 hover:border-surface-300 dark:hover:border-surface-600 transition-all hover:shadow-lg cursor-pointer group">
       <div className="flex items-start justify-between mb-3">
         <Icon className="w-5 h-5 text-surface-400 group-hover:text-indigo-400 transition-colors" />
         {tool.isPro && (
@@ -435,7 +435,7 @@ function ToolCard({
           </span>
         )}
       </div>
-      <h4 className="text-sm font-semibold text-surface-200 group-hover:text-indigo-400 transition-colors">
+      <h4 className="text-sm font-semibold text-surface-700 dark:text-surface-200 group-hover:text-indigo-400 transition-colors">
         {tool.name}
       </h4>
       <p className="text-xs text-surface-500 mt-1">{category.name}</p>
@@ -467,12 +467,12 @@ function ActivityItem({ notification }: { notification: DashboardNotification })
   })
 
   return (
-    <div className="flex gap-4 pb-4 border-b border-surface-700 last:border-b-0 last:pb-0">
+    <div className="flex gap-4 pb-4 border-b border-surface-200 dark:border-surface-700 last:border-b-0 last:pb-0">
       <div className={cn('p-2 rounded-lg h-fit', color)}>
         <Icon className="w-4 h-4" />
       </div>
       <div className="flex-1">
-        <h4 className="text-sm font-semibold text-surface-200">{notification.title}</h4>
+        <h4 className="text-sm font-semibold text-surface-700 dark:text-surface-200">{notification.title}</h4>
         <p className="text-xs text-surface-400 mt-1">{notification.message}</p>
         <p className="text-xs text-surface-500 mt-2">{timeAgo}</p>
       </div>
@@ -489,9 +489,9 @@ function ActivityItem({ notification }: { notification: DashboardNotification })
 
 function DashboardSkeleton() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-surface-900 via-surface-900 to-surface-950 text-surface-100">
+    <div className="min-h-screen bg-surface-50 dark:bg-surface-950 text-surface-900 dark:text-surface-100">
       {/* Top bar skeleton */}
-      <div className="sticky top-0 z-40 border-b border-surface-800 bg-surface-900/80 backdrop-blur-xl">
+      <div className="sticky top-0 z-40 border-b border-surface-200 dark:border-surface-800 bg-white/80 dark:bg-surface-900/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
@@ -573,10 +573,10 @@ function EmptyStateCard({
 }) {
   return (
     <div className="flex flex-col items-center justify-center py-12 text-center">
-      <div className="p-4 rounded-full bg-surface-700/50 mb-4">
+      <div className="p-4 rounded-full bg-surface-100 dark:bg-surface-700/50 mb-4">
         <Icon className="w-8 h-8 text-surface-500" />
       </div>
-      <h3 className="text-sm font-semibold text-surface-300 mb-1">{title}</h3>
+      <h3 className="text-sm font-semibold text-surface-600 dark:text-surface-300 mb-1">{title}</h3>
       <p className="text-xs text-surface-500 max-w-xs">{description}</p>
     </div>
   )
@@ -677,7 +677,7 @@ export default function DashboardPage() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <Globe className="w-16 h-16 text-surface-600 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-surface-200 mb-2">Aucun site selectionne</h2>
+          <h2 className="text-2xl font-bold text-surface-700 dark:text-surface-200 mb-2">Aucun site selectionne</h2>
           <p className="text-surface-400">Veuillez selectionner ou ajouter un site pour commencer</p>
         </div>
       </div>
@@ -695,7 +695,7 @@ export default function DashboardPage() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <AlertCircle className="w-16 h-16 text-red-500/60 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-surface-200 mb-2">Erreur de chargement</h2>
+          <h2 className="text-2xl font-bold text-surface-700 dark:text-surface-200 mb-2">Erreur de chargement</h2>
           <p className="text-surface-400 mb-6">{error}</p>
           <button
             onClick={refetch}
@@ -724,16 +724,16 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-surface-900 via-surface-900 to-surface-950 text-surface-100">
+    <div className="min-h-screen bg-surface-50 dark:bg-gradient-to-b dark:from-surface-900 dark:via-surface-900 dark:to-surface-950 text-surface-900 dark:text-surface-100">
       {/* TOP BAR */}
-      <div className="sticky top-0 z-40 border-b border-surface-800 bg-surface-900/80 backdrop-blur-xl">
+      <div className="sticky top-0 z-40 border-b border-surface-200 dark:border-surface-800 bg-white/80 dark:bg-surface-900/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between gap-4">
             <div className="flex-1">
               <div className="flex items-center gap-3">
                 <Globe className="w-5 h-5 text-indigo-500" />
                 <div>
-                  <h1 className="text-lg font-bold text-surface-100">{selectedWebsite.domain}</h1>
+                  <h1 className="text-lg font-bold text-surface-900 dark:text-surface-100">{selectedWebsite.domain}</h1>
                   <p className="text-xs text-surface-400">
                     {lastAuditTime
                       ? `Dernier audit: ${lastAuditTime}`
@@ -748,7 +748,7 @@ export default function DashboardPage() {
               <select
                 value={dateRange}
                 onChange={(e) => setDateRange(e.target.value)}
-                className="px-3 py-2 bg-surface-800 border border-surface-700 rounded-lg text-sm text-surface-300 focus:outline-none focus:border-indigo-500 transition-colors"
+                className="px-3 py-2 bg-white dark:bg-surface-800 border border-surface-200 dark:border-surface-700 rounded-lg text-sm text-surface-600 dark:text-surface-300 focus:outline-none focus:border-indigo-500 transition-colors"
               >
                 <option value="7">7 jours</option>
                 <option value="30">30 jours</option>
@@ -766,7 +766,7 @@ export default function DashboardPage() {
               />
               <button
                 onClick={refetch}
-                className="p-2 hover:bg-surface-800 rounded-lg transition-colors text-surface-400 hover:text-surface-200"
+                className="p-2 hover:bg-surface-100 dark:hover:bg-surface-800 rounded-lg transition-colors text-surface-400 hover:text-surface-700 dark:hover:text-surface-200"
                 title="Rafraichir"
               >
                 <RefreshCw className="w-5 h-5" />
@@ -795,13 +795,13 @@ export default function DashboardPage() {
 
         {/* SEO HEALTH SCORE SECTION */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1 bg-surface-800 rounded-lg border border-surface-700 p-8">
-            <h2 className="text-lg font-bold text-surface-100 mb-6">Score SEO</h2>
+          <div className="lg:col-span-1 bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-8">
+            <h2 className="text-lg font-bold text-surface-900 dark:text-surface-100 mb-6">Score SEO</h2>
             <ScoreGauge score={currentScore} grade={currentGrade} />
           </div>
 
-          <div className="lg:col-span-2 bg-surface-800 rounded-lg border border-surface-700 p-6">
-            <h2 className="text-lg font-bold text-surface-100 mb-6">Evolution du Score</h2>
+          <div className="lg:col-span-2 bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-6">
+            <h2 className="text-lg font-bold text-surface-900 dark:text-surface-100 mb-6">Evolution du Score</h2>
             {scoreTrendData.length > 1 ? (
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={scoreTrendData}>
@@ -848,19 +848,19 @@ export default function DashboardPage() {
 
         {/* QUICK ACTIONS */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <button className="bg-surface-800 hover:bg-surface-700 border border-surface-700 rounded-lg p-4 transition-colors flex flex-col items-center gap-3">
+          <button className="bg-white dark:bg-surface-800 hover:bg-surface-100 dark:hover:bg-surface-700 border border-surface-200 dark:border-surface-700 rounded-lg p-4 transition-colors flex flex-col items-center gap-3">
             <Play className="w-5 h-5 text-indigo-500" />
             <span className="text-sm font-semibold text-center">Nouvel Audit</span>
           </button>
-          <button className="bg-surface-800 hover:bg-surface-700 border border-surface-700 rounded-lg p-4 transition-colors flex flex-col items-center gap-3">
+          <button className="bg-white dark:bg-surface-800 hover:bg-surface-100 dark:hover:bg-surface-700 border border-surface-200 dark:border-surface-700 rounded-lg p-4 transition-colors flex flex-col items-center gap-3">
             <Target className="w-5 h-5 text-green-500" />
             <span className="text-sm font-semibold text-center">Classements</span>
           </button>
-          <button className="bg-surface-800 hover:bg-surface-700 border border-surface-700 rounded-lg p-4 transition-colors flex flex-col items-center gap-3">
+          <button className="bg-white dark:bg-surface-800 hover:bg-surface-100 dark:hover:bg-surface-700 border border-surface-200 dark:border-surface-700 rounded-lg p-4 transition-colors flex flex-col items-center gap-3">
             <Users className="w-5 h-5 text-purple-500" />
             <span className="text-sm font-semibold text-center">Concurrents</span>
           </button>
-          <button className="bg-surface-800 hover:bg-surface-700 border border-surface-700 rounded-lg p-4 transition-colors flex flex-col items-center gap-3">
+          <button className="bg-white dark:bg-surface-800 hover:bg-surface-100 dark:hover:bg-surface-700 border border-surface-200 dark:border-surface-700 rounded-lg p-4 transition-colors flex flex-col items-center gap-3">
             <Download className="w-5 h-5 text-orange-500" />
             <span className="text-sm font-semibold text-center">Rapport</span>
           </button>
@@ -869,16 +869,16 @@ export default function DashboardPage() {
         {/* KEYWORDS & STATS */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Keyword Stats */}
-          <div className="bg-surface-800 rounded-lg border border-surface-700 p-6">
-            <h2 className="text-lg font-bold text-surface-100 mb-6">Mots-cles</h2>
+          <div className="bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-6">
+            <h2 className="text-lg font-bold text-surface-900 dark:text-surface-100 mb-6">Mots-cles</h2>
             {stats && stats.keywords.total > 0 ? (
               <div className="grid grid-cols-2 gap-6">
-                <div className="text-center p-6 bg-surface-900/50 rounded-lg">
-                  <p className="text-4xl font-bold text-surface-100">{formatNumber(stats.keywords.total)}</p>
+                <div className="text-center p-6 bg-surface-50 dark:bg-surface-900/50 rounded-lg">
+                  <p className="text-4xl font-bold text-surface-900 dark:text-surface-100">{formatNumber(stats.keywords.total)}</p>
                   <p className="text-sm text-surface-400 mt-2">Mots-cles suivis</p>
                 </div>
-                <div className="text-center p-6 bg-surface-900/50 rounded-lg">
-                  <p className="text-4xl font-bold text-surface-100">
+                <div className="text-center p-6 bg-surface-50 dark:bg-surface-900/50 rounded-lg">
+                  <p className="text-4xl font-bold text-surface-900 dark:text-surface-100">
                     {stats.keywords.avgPosition !== null ? stats.keywords.avgPosition.toFixed(1) : '--'}
                   </p>
                   <p className="text-sm text-surface-400 mt-2">Position moyenne</p>
@@ -894,16 +894,16 @@ export default function DashboardPage() {
           </div>
 
           {/* Backlinks Stats */}
-          <div className="bg-surface-800 rounded-lg border border-surface-700 p-6">
-            <h2 className="text-lg font-bold text-surface-100 mb-6">Backlinks</h2>
+          <div className="bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-6">
+            <h2 className="text-lg font-bold text-surface-900 dark:text-surface-100 mb-6">Backlinks</h2>
             {stats && stats.backlinks.total > 0 ? (
               <div className="grid grid-cols-2 gap-6">
-                <div className="text-center p-6 bg-surface-900/50 rounded-lg">
-                  <p className="text-4xl font-bold text-surface-100">{formatNumber(stats.backlinks.total)}</p>
+                <div className="text-center p-6 bg-surface-50 dark:bg-surface-900/50 rounded-lg">
+                  <p className="text-4xl font-bold text-surface-900 dark:text-surface-100">{formatNumber(stats.backlinks.total)}</p>
                   <p className="text-sm text-surface-400 mt-2">Liens entrants</p>
                 </div>
-                <div className="text-center p-6 bg-surface-900/50 rounded-lg">
-                  <p className="text-4xl font-bold text-surface-100">{stats.backlinks.dofollowRatio.toFixed(0)}%</p>
+                <div className="text-center p-6 bg-surface-50 dark:bg-surface-900/50 rounded-lg">
+                  <p className="text-4xl font-bold text-surface-900 dark:text-surface-100">{stats.backlinks.dofollowRatio.toFixed(0)}%</p>
                   <p className="text-sm text-surface-400 mt-2">Dofollow</p>
                 </div>
               </div>
@@ -918,14 +918,14 @@ export default function DashboardPage() {
         </div>
 
         {/* RECENT AUDITS TABLE */}
-        <div className="bg-surface-800 rounded-lg border border-surface-700 overflow-hidden">
-          <div className="px-6 py-4 border-b border-surface-700">
-            <h2 className="text-lg font-bold text-surface-100">Audits Recents</h2>
+        <div className="bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 overflow-hidden">
+          <div className="px-6 py-4 border-b border-surface-200 dark:border-surface-700">
+            <h2 className="text-lg font-bold text-surface-900 dark:text-surface-100">Audits Recents</h2>
           </div>
           {recentAudits.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-surface-900 border-b border-surface-700">
+                <thead className="bg-surface-50 dark:bg-surface-900 border-b border-surface-200 dark:border-surface-700">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-bold text-surface-400 uppercase">Date</th>
                     <th className="px-6 py-3 text-left text-xs font-bold text-surface-400 uppercase">Score</th>
@@ -953,9 +953,9 @@ export default function DashboardPage() {
 
         {/* AI ADVISOR PANEL */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 bg-surface-800 rounded-lg border border-surface-700 p-6">
+          <div className="lg:col-span-2 bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-surface-100 flex items-center gap-2">
+              <h2 className="text-lg font-bold text-surface-900 dark:text-surface-100 flex items-center gap-2">
                 <Lightbulb className="w-5 h-5 text-yellow-500" />
                 Recommandations IA
               </h2>
@@ -979,9 +979,9 @@ export default function DashboardPage() {
           </div>
 
           {/* CHECKLIST PROGRESS */}
-          <div className="bg-surface-800 rounded-lg border border-surface-700 p-6">
+          <div className="bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-surface-100 flex items-center gap-2">
+              <h2 className="text-lg font-bold text-surface-900 dark:text-surface-100 flex items-center gap-2">
                 <ListTodo className="w-5 h-5 text-blue-500" />
                 Checklist
               </h2>
@@ -990,7 +990,7 @@ export default function DashboardPage() {
 
             {/* Progress Bar */}
             <div className="mb-6">
-              <div className="h-2 bg-surface-700 rounded-full overflow-hidden">
+              <div className="h-2 bg-surface-200 dark:bg-surface-700 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-500"
                   style={{ width: `${checklistPercent}%` }}
@@ -1013,7 +1013,7 @@ export default function DashboardPage() {
                   )}>
                     {item.completed && <CheckCircle2 className="w-3 h-3 text-white" />}
                   </div>
-                  <span className={item.completed ? 'text-surface-500 line-through' : 'text-surface-300'}>
+                  <span className={item.completed ? 'text-surface-500 line-through' : 'text-surface-600 dark:text-surface-300'}>
                     {item.title}
                   </span>
                 </div>
@@ -1028,7 +1028,7 @@ export default function DashboardPage() {
         {/* TOOL GRID */}
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-surface-100">Acces Outils ({allTools})</h2>
+            <h2 className="text-2xl font-bold text-surface-900 dark:text-surface-100">Acces Outils ({allTools})</h2>
             <button className="text-indigo-400 hover:text-indigo-300 text-sm font-semibold flex items-center gap-1">
               Voir tous <ChevronRight className="w-4 h-4" />
             </button>
@@ -1036,7 +1036,7 @@ export default function DashboardPage() {
 
           {toolCategories.map((category) => (
             <div key={category.id}>
-              <h3 className="text-sm font-bold text-surface-200 mb-3 flex items-center gap-2">
+              <h3 className="text-sm font-bold text-surface-700 dark:text-surface-200 mb-3 flex items-center gap-2">
                 <category.icon className="w-4 h-4 text-indigo-500" />
                 {category.name}
               </h3>
@@ -1051,8 +1051,8 @@ export default function DashboardPage() {
 
         {/* ACTIVITY FEED */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 bg-surface-800 rounded-lg border border-surface-700 p-6">
-            <h2 className="text-lg font-bold text-surface-100 mb-6 flex items-center gap-2">
+          <div className="lg:col-span-2 bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-6">
+            <h2 className="text-lg font-bold text-surface-900 dark:text-surface-100 mb-6 flex items-center gap-2">
               <Activity className="w-5 h-5 text-blue-500" />
               Activite Recente
             </h2>
@@ -1072,45 +1072,45 @@ export default function DashboardPage() {
           </div>
 
           {/* STATS SUMMARY */}
-          <div className="bg-surface-800 rounded-lg border border-surface-700 p-6 space-y-6">
+          <div className="bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-6 space-y-6">
             <div>
-              <h3 className="text-sm font-bold text-surface-200 mb-3 flex items-center gap-2">
+              <h3 className="text-sm font-bold text-surface-700 dark:text-surface-200 mb-3 flex items-center gap-2">
                 <Zap className="w-4 h-4 text-yellow-500" />
                 Resume
               </h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-surface-400">Sites web</span>
-                  <span className="font-bold text-surface-200">{stats?.websites.total ?? 0}</span>
+                  <span className="font-bold text-surface-700 dark:text-surface-200">{stats?.websites.total ?? 0}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-surface-400">Audits realises</span>
-                  <span className="font-bold text-surface-200">{stats?.audits.total ?? 0}</span>
+                  <span className="font-bold text-surface-700 dark:text-surface-200">{stats?.audits.total ?? 0}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-surface-400">Mots-cles suivis</span>
-                  <span className="font-bold text-surface-200">{stats?.keywords.total ?? 0}</span>
+                  <span className="font-bold text-surface-700 dark:text-surface-200">{stats?.keywords.total ?? 0}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-surface-400">Backlinks</span>
-                  <span className="font-bold text-surface-200">{stats?.backlinks.total ?? 0}</span>
+                  <span className="font-bold text-surface-700 dark:text-surface-200">{stats?.backlinks.total ?? 0}</span>
                 </div>
               </div>
             </div>
 
-            <div className="border-t border-surface-700 pt-6">
-              <h3 className="text-sm font-bold text-surface-200 mb-3 flex items-center gap-2">
+            <div className="border-t border-surface-200 dark:border-surface-700 pt-6">
+              <h3 className="text-sm font-bold text-surface-700 dark:text-surface-200 mb-3 flex items-center gap-2">
                 <Eye className="w-4 h-4 text-indigo-500" />
                 Visibilite IA
               </h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-surface-400">Requetes analysees</span>
-                  <span className="font-bold text-surface-200">{stats?.aiVisibility.totalQueries ?? 0}</span>
+                  <span className="font-bold text-surface-700 dark:text-surface-200">{stats?.aiVisibility.totalQueries ?? 0}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-surface-400">Taux de mention</span>
-                  <span className="font-bold text-surface-200">{stats?.aiVisibility.mentionRate.toFixed(0) ?? 0}%</span>
+                  <span className="font-bold text-surface-700 dark:text-surface-200">{stats?.aiVisibility.mentionRate.toFixed(0) ?? 0}%</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-surface-400">Notifications non lues</span>

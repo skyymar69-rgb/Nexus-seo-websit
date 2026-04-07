@@ -195,15 +195,15 @@ function SidebarContent() {
               className="flex items-center gap-2 transition-all"
               title="Retour a l'accueil"
             >
-              <img
-                src="/logo-48.webp"
-                alt="Nexus SEO by Kayzen"
-                width={sidebarOpen ? 32 : 28}
-                height={sidebarOpen ? 32 : 28}
-                className="rounded-lg"
-              />
+              {/* Colored dots logo */}
+              <div className="flex items-center gap-[3px] shrink-0">
+                <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
+                <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
+                <span className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
+                <span className="w-2.5 h-2.5 rounded-full bg-green-500" />
+              </div>
               {sidebarOpen && (
-                <span className="font-bold text-xl bg-gradient-to-r from-brand-600 to-brand-700 bg-clip-text text-transparent">
+                <span className="font-black text-xl tracking-tight text-surface-900 dark:text-white">
                   Nexus
                 </span>
               )}
