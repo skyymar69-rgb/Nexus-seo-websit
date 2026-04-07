@@ -131,7 +131,7 @@ function SignupForm() {
           name,
           email,
           password,
-          plan: planParam || 'starter',
+          plan: 'free',
         }),
       });
 
