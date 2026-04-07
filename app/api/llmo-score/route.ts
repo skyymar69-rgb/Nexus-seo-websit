@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { checkPlanLimit } from '@/lib/plan-guard'
 import { analyzeLLMO } from '@/lib/llmo-score'
 import type { LLMProvider } from '@/lib/llm-clients'
 
@@ -13,15 +12,6 @@ export async function POST(request: NextRequest) {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
-    }
-
-    // Check plan access
-    const planCheck = await checkPlanLimit(session.user.id, 'llmoReports', session.user.plan)
-    if (!planCheck.allowed) {
-      return NextResponse.json(
-        { error: 'Score LLMO non disponible avec votre plan. Passez au plan Entreprise ou supérieur.' },
-        { status: 403 }
-      )
     }
 
     const body = await request.json()

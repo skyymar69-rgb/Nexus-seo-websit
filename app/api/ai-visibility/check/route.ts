@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { checkPlanLimit } from '@/lib/plan-guard';
 import OpenAI from 'openai';
 
 // Sentiment analysis helper (reused from main route)
@@ -171,15 +170,6 @@ export async function POST(request: NextRequest) {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    // Check plan access
-    const planCheck = await checkPlanLimit(session.user.id, 'aiVisibility', session.user.plan);
-    if (!planCheck.allowed) {
-      return NextResponse.json(
-        { error: 'Fonctionnalité Visibilité IA non disponible avec votre plan. Passez au plan Explorer ou supérieur.' },
-        { status: 403 }
-      );
     }
 
     const body = await request.json();

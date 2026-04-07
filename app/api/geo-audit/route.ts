@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { checkPlanLimit } from '@/lib/plan-guard'
 import { analyzeGEO } from '@/lib/geo-audit'
 
 export async function POST(request: NextRequest) {
@@ -9,15 +8,6 @@ export async function POST(request: NextRequest) {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
-    }
-
-    // Check plan access
-    const planCheck = await checkPlanLimit(session.user.id, 'geoReports', session.user.plan)
-    if (!planCheck.allowed) {
-      return NextResponse.json(
-        { error: 'Rapport GEO non disponible avec votre plan. Passez au plan Explorer ou supérieur.' },
-        { status: 403 }
-      )
     }
 
     const body = await request.json()

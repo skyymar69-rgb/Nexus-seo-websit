@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { checkPlanLimit } from '@/lib/plan-guard'
 import { ensureUserExists } from '@/lib/ensure-user'
 
 export async function GET(request: NextRequest) {
@@ -59,21 +58,35 @@ export async function POST(request: NextRequest) {
     // Ensure user exists in DB (demo user is hardcoded in auth)
     await ensureUserExists(userId, session)
 
-    // Check plan limit for number of sites
-    const planCheck = await checkPlanLimit(userId, 'sitesMax', (session.user as any).plan)
-    if (!planCheck.allowed) {
-      return NextResponse.json(
-        { error: `Limite de sites atteinte (${planCheck.used}/${planCheck.limit}). Passez au plan supérieur.` },
-        { status: 429 }
-      )
-    }
-
     const body = await request.json()
     const { domain, name } = body
 
     if (!domain || typeof domain !== 'string') {
       return NextResponse.json(
-        { error: 'Domain is required and must be a string' },
+        { error: 'Le domaine est requis.' },
+        { status: 400 }
+      )
+    }
+
+    // Clean domain: remove protocol, www, path, and email prefix
+    let cleanedDomain = domain.trim()
+      .replace(/^https?:\/\//, '')
+      .replace(/^www\./, '')
+      .replace(/\/.*$/, '')
+
+    // If it looks like an email, reject it
+    if (cleanedDomain.includes('@')) {
+      return NextResponse.json(
+        { error: 'Entrez un domaine (ex: monsite.fr), pas une adresse email.' },
+        { status: 400 }
+      )
+    }
+
+    // Validate domain format
+    const domainRegex = /^([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/
+    if (!domainRegex.test(cleanedDomain)) {
+      return NextResponse.json(
+        { error: 'Format de domaine invalide. Exemple : monsite.fr' },
         { status: 400 }
       )
     }
@@ -82,7 +95,7 @@ export async function POST(request: NextRequest) {
     const existing = await prisma.website.findUnique({
       where: {
         domain_userId: {
-          domain,
+          domain: cleanedDomain,
           userId,
         },
       },
@@ -90,15 +103,15 @@ export async function POST(request: NextRequest) {
 
     if (existing) {
       return NextResponse.json(
-        { error: 'This website is already in your account' },
+        { error: 'Ce site est deja dans votre compte.' },
         { status: 409 }
       )
     }
 
     const website = await prisma.website.create({
       data: {
-        domain,
-        name: name || domain,
+        domain: cleanedDomain,
+        name: name || cleanedDomain,
         userId,
       },
     })

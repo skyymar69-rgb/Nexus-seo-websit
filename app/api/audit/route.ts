@@ -4,7 +4,6 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { corsHeaders, corsOptionsResponse } from '@/lib/cors'
-import { checkPlanLimit } from '@/lib/plan-guard'
 import {
   type DetailedCheck,
   checkTitleTag,
@@ -236,21 +235,6 @@ function parseHTML($: cheerio.CheerioAPI) {
 
 export async function POST(request: NextRequest): Promise<NextResponse<AuditResult>> {
   try {
-    // Check plan limits for authenticated users
-    const session = await getServerSession(authOptions)
-    if (session?.user?.id) {
-      const planCheck = await checkPlanLimit(session.user.id, 'auditsPerMonth', session.user.plan)
-      if (!planCheck.allowed) {
-        return NextResponse.json(
-          {
-            success: false,
-            error: `Limite d'audits atteinte (${planCheck.used}/${planCheck.limit}). Passez au plan supérieur.`,
-          },
-          { status: 429, headers: corsHeaders() }
-        )
-      }
-    }
-
     const body = await request.json()
     const { url, websiteId } = body
 

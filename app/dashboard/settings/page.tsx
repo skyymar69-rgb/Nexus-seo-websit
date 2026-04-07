@@ -236,17 +236,9 @@ export default function SettingsPage() {
         </p>
 
         <button
-          disabled={currentPlan === 'free'}
-          className={cn(
-            'w-full px-4 py-3 rounded-lg border font-medium transition-colors',
-            currentPlan === 'free'
-              ? 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
-              : 'border-gray-200 bg-white hover:bg-gray-50 text-gray-700'
-          )}
+          className="w-full px-4 py-3 rounded-lg border font-medium transition-colors border-gray-200 bg-white hover:bg-gray-50 text-gray-700"
         >
-          {currentPlan === 'free'
-            ? 'Passez a un plan superieur pour generer une cle API'
-            : 'Generer une cle API'}
+          Generez votre cle API pour integrer Nexus
         </button>
       </div>
 
