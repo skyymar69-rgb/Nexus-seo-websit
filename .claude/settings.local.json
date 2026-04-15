@@ -125,7 +125,12 @@
       "Bash(DATABASE_URL=\"postgresql://neondb_owner:npg_6doekIMjw2rO@ep-purple-dream-anjeb191.c-6.us-east-1.aws.neon.tech/neondb?sslmode=require\" npx prisma db push)",
       "Bash(vercel whoami:*)",
       "Bash(vercel link:*)",
-      "Bash(vercel --prod --yes)"
+      "Bash(vercel --prod --yes)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --repo skyymar69-rgb/Nexus-seo-websit --title \"fix: corrections critiques v1\" --body \"Corrections 30→50+, OAuth supprimé, compteurs, toasts, accents\" --base main --head claude/elastic-maxwell)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 4 --repo skyymar69-rgb/Nexus-seo-websit --squash)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr close 4 --repo skyymar69-rgb/Nexus-seo-websit)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --title \"fix: corrections critiques v2\" --body \"Toutes corrections: 30→50+, OAuth supprimé, compteurs, toasts, accents, merge main\" --base main --head claude/elastic-maxwell)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 5 --repo skyymar69-rgb/Nexus-seo-websit --merge)"
     ]
   }
 }
