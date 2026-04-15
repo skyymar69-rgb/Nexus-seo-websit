@@ -34,6 +34,7 @@ import {
 } from 'recharts'
 import { useWebsite } from '@/contexts/WebsiteContext'
 import { UrlInput } from '@/components/shared/UrlInput'
+import { PageHeader } from '@/components/dashboard/ui/PageHeader'
 
 /* ────────────────────────────────────────────────────────────── */
 /*  Types                                                        */

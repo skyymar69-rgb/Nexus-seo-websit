@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Shield, CheckCircle2, AlertTriangle, XCircle, ChevronDown } from 'lucide-react'
+import Link from 'next/link'
+import { Shield, CheckCircle2, AlertTriangle, XCircle, ChevronDown, ArrowRight } from 'lucide-react'
 
 interface AuditCheck {
   id: string
@@ -71,14 +72,19 @@ export function AuditSection({ score, grade, checks, summary }: AuditSectionProp
             )}
           </div>
         </div>
-        {score !== null && (
-          <div className="text-right">
-            <div className={`text-2xl font-bold ${score >= 75 ? 'text-emerald-400' : score >= 50 ? 'text-amber-400' : 'text-rose-400'}`}>
-              {score}/100
+        <div className="flex items-center gap-3">
+          {score !== null && (
+            <div className="text-right">
+              <div className={`text-2xl font-bold ${score >= 75 ? 'text-emerald-400' : score >= 50 ? 'text-amber-400' : 'text-rose-400'}`}>
+                {score}/100
+              </div>
+              <div className="text-xs text-white/40">Note {grade}</div>
             </div>
-            <div className="text-xs text-white/40">Note {grade}</div>
-          </div>
-        )}
+          )}
+          <Link href="/dashboard/audit" className="hidden sm:flex items-center gap-1 text-xs text-brand-400 hover:text-brand-300 transition-colors">
+            Detail <ArrowRight className="w-3 h-3" />
+          </Link>
+        </div>
       </div>
 
       {/* Categories */}

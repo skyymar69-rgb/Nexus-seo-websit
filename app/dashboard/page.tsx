@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react'
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { useWebsite } from '@/contexts/WebsiteContext'
+import { useDashboardData } from '@/hooks/useDashboardData'
 import {
   RefreshCw,
   Play,
@@ -11,12 +12,24 @@ import {
   Globe,
   Calendar,
   ExternalLink,
+  Shield,
+  Target,
+  Link as LinkIcon,
+  Sparkles,
+  Search,
+  FileText,
+  BarChart3,
+  Eye,
 } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { fr } from 'date-fns/locale'
 
+// UI components
+import { KpiCard } from '@/components/dashboard/ui/KpiCard'
+
 // Report components
 import { ScoreOverview } from '@/components/dashboard/report/ScoreOverview'
+import { ScoreTrendChart } from '@/components/dashboard/report/ScoreTrendChart'
 import { AuditSection } from '@/components/dashboard/report/AuditSection'
 import { AEOSection } from '@/components/dashboard/report/AEOSection'
 import { GEOSection } from '@/components/dashboard/report/GEOSection'
@@ -79,12 +92,48 @@ interface ScanData {
   website: { domain: string; name: string | null }
 }
 
+// ── Quick Actions ────────────────────────────────────────────
+
+function QuickActions({ onScan, scanning }: { onScan: () => void; scanning: boolean }) {
+  const router = useRouter()
+  const actions = [
+    { icon: RefreshCw, label: 'Relancer scan', onClick: onScan, primary: true },
+    { icon: Shield, label: 'Audit detail', onClick: () => router.push('/dashboard/audit') },
+    { icon: Eye, label: 'Visibilite IA', onClick: () => router.push('/dashboard/ai-visibility') },
+    { icon: BarChart3, label: 'Rapports', onClick: () => router.push('/dashboard/reports') },
+  ]
+
+  return (
+    <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+      {actions.map((a, i) => {
+        const Icon = a.icon
+        return (
+          <button
+            key={i}
+            onClick={a.onClick}
+            disabled={i === 0 && scanning}
+            className={`flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+              a.primary
+                ? 'bg-brand-500 text-white hover:bg-brand-400 disabled:opacity-50'
+                : 'bg-white/[0.03] border border-white/5 text-white/60 hover:text-white hover:bg-white/[0.05]'
+            }`}
+          >
+            {i === 0 && scanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Icon className="w-4 h-4" />}
+            {a.label}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 // ── Main Dashboard ───────────────────────────────────────────
 
 export default function DashboardPage() {
   const { data: session } = useSession()
   const { selectedWebsite, websites } = useWebsite()
   const router = useRouter()
+  const dashboardData = useDashboardData(selectedWebsite?.id)
 
   const [latestScan, setLatestScan] = useState<ScanData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -164,7 +213,6 @@ export default function DashboardPage() {
 
   const results = latestScan?.results
 
-  // Loading
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -173,7 +221,6 @@ export default function DashboardPage() {
     )
   }
 
-  // No website selected
   if (!selectedWebsite) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -192,7 +239,6 @@ export default function DashboardPage() {
     )
   }
 
-  // No scan yet
   if (!latestScan || !results) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -221,6 +267,11 @@ export default function DashboardPage() {
   }
 
   // ── Full Report View ────────────────────────────────────
+
+  // Compute audit summary stats
+  const auditErrors = results.audit?.summary?.errors ?? 0
+  const auditWarnings = results.audit?.summary?.warnings ?? 0
+  const crawlIssues = results.crawl?.issues?.length ?? 0
 
   return (
     <div className="space-y-6">
@@ -252,20 +303,46 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleNewScan}
-            disabled={scanning}
-            className="px-4 py-2 rounded-xl bg-brand-500 text-white text-sm font-medium hover:bg-brand-400 transition-colors disabled:opacity-50 flex items-center gap-2"
-          >
-            {scanning ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <RefreshCw className="w-4 h-4" />
-            )}
-            Relancer le scan
-          </button>
-        </div>
+        <QuickActions onScan={handleNewScan} scanning={scanning} />
+      </div>
+
+      {/* KPI Summary Bar */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <KpiCard
+          icon={<Shield className="w-4 h-4 text-blue-400" />}
+          label="Score SEO"
+          value={latestScan.auditScore ?? '—'}
+          subtitle="/100"
+        />
+        <KpiCard
+          icon={<Sparkles className="w-4 h-4 text-violet-400" />}
+          label="Score AEO"
+          value={latestScan.aeoScore ?? '—'}
+          subtitle="/100"
+        />
+        <KpiCard
+          icon={<Globe className="w-4 h-4 text-emerald-400" />}
+          label="Score GEO"
+          value={latestScan.geoScore ?? '—'}
+          subtitle="/100"
+        />
+        <KpiCard
+          icon={<Target className="w-4 h-4 text-rose-400" />}
+          label="Erreurs critiques"
+          value={auditErrors}
+          subtitle={`+ ${auditWarnings} avertissements`}
+        />
+        <KpiCard
+          icon={<Search className="w-4 h-4 text-cyan-400" />}
+          label="Pages crawlees"
+          value={latestScan.crawlPages ?? '—'}
+          subtitle={`${crawlIssues} problemes`}
+        />
+        <KpiCard
+          icon={<FileText className="w-4 h-4 text-amber-400" />}
+          label="Mots du contenu"
+          value={results.audit?.content?.wordCount ?? '—'}
+        />
       </div>
 
       {/* Score overview */}
@@ -275,6 +352,9 @@ export default function DashboardPage() {
         geoScore={latestScan.geoScore}
         perfScore={latestScan.perfScore}
       />
+
+      {/* Score trends */}
+      <ScoreTrendChart websiteId={selectedWebsite.id} />
 
       {/* Report content with sidebar nav */}
       <div className="flex gap-6">

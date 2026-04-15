@@ -1,6 +1,7 @@
 'use client'
 
-import { Globe, CheckCircle2, AlertTriangle, XCircle } from 'lucide-react'
+import Link from 'next/link'
+import { Globe, CheckCircle2, AlertTriangle, XCircle, ArrowRight } from 'lucide-react'
 
 interface GEOCheck {
   name: string
@@ -82,6 +83,9 @@ export function GEOSection({ score, grade, categories, eeat, recommendations }: 
           </div>
           <div className="text-xs text-white/40">Note {grade}</div>
         </div>
+        <Link href="/dashboard/geo-audit" className="hidden sm:flex items-center gap-1 text-xs text-brand-400 hover:text-brand-300 transition-colors">
+          Detail <ArrowRight className="w-3 h-3" />
+        </Link>
       </div>
 
       <div className="p-6 space-y-6">

@@ -1,6 +1,7 @@
 'use client'
 
-import { Search, FileWarning, CheckCircle2 } from 'lucide-react'
+import Link from 'next/link'
+import { Search, FileWarning, CheckCircle2, ArrowRight } from 'lucide-react'
 
 interface CrawlSectionProps {
   pagesFound: number | null
@@ -30,6 +31,9 @@ export function CrawlSection({ pagesFound, pagesCrawled, statusCodes, issues }: 
             <p className="text-xs text-white/40">{pagesCrawled} pages analysees sur {pagesFound} trouvees</p>
           </div>
         </div>
+        <Link href="/dashboard/crawl" className="hidden sm:flex items-center gap-1 text-xs text-brand-400 hover:text-brand-300 transition-colors">
+          Detail <ArrowRight className="w-3 h-3" />
+        </Link>
       </div>
 
       <div className="p-6 space-y-5">

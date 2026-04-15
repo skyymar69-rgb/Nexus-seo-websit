@@ -1,6 +1,7 @@
 'use client'
 
-import { Gauge } from 'lucide-react'
+import Link from 'next/link'
+import { Gauge, ArrowRight } from 'lucide-react'
 
 interface PerformanceSectionProps {
   score: number | null
@@ -59,6 +60,9 @@ export function PerformanceSection({ score, grade, lcp, fid, cls, ttfb }: Perfor
             <div className="text-xs text-white/40">Note {grade}</div>
           </div>
         )}
+        <Link href="/dashboard/performance" className="hidden sm:flex items-center gap-1 text-xs text-brand-400 hover:text-brand-300 transition-colors">
+          Detail <ArrowRight className="w-3 h-3" />
+        </Link>
       </div>
 
       <div className="p-6">
