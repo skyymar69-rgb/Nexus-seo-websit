@@ -17,10 +17,10 @@ interface GEOCategory {
 
 interface EEATScore {
   total: number
-  experience: number
-  expertise: number
-  authority: number
-  trust: number
+  experience: number | { score: number }
+  expertise: number | { score: number }
+  authority: number | { score: number }
+  trust: number | { score: number }
 }
 
 interface GEOSectionProps {
@@ -94,10 +94,10 @@ export function GEOSection({ score, grade, categories, eeat, recommendations }: 
           <div>
             <h3 className="text-sm font-medium text-white mb-3">Score E-E-A-T</h3>
             <div className="grid grid-cols-2 gap-3">
-              <EEATBar label="Experience" score={eeat.experience} />
-              <EEATBar label="Expertise" score={eeat.expertise} />
-              <EEATBar label="Autorite" score={eeat.authority} />
-              <EEATBar label="Fiabilite" score={eeat.trust} />
+              <EEATBar label="Expérience" score={typeof eeat.experience === 'object' ? eeat.experience.score : eeat.experience} />
+              <EEATBar label="Expertise" score={typeof eeat.expertise === 'object' ? eeat.expertise.score : eeat.expertise} />
+              <EEATBar label="Autorité" score={typeof eeat.authority === 'object' ? eeat.authority.score : eeat.authority} />
+              <EEATBar label="Fiabilité" score={typeof eeat.trust === 'object' ? eeat.trust.score : eeat.trust} />
             </div>
           </div>
         )}

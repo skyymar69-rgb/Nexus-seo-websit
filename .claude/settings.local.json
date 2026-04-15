@@ -167,7 +167,9 @@
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --repo skyymar69-rgb/Nexus-seo-websit --title \"feat: TIER 2 Content Suggestions API\" --body \"Analyse contenu complete avec suggestions priorisees\" --base main --head claude/elastic-maxwell)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 17 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --repo skyymar69-rgb/Nexus-seo-websit --title \"feat: Competitor Compare + Content Suggestions APIs\" --body \"Compare concurrents, analyse contenu, schema generator\" --base main --head claude/elastic-maxwell)",
-      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 18 --repo skyymar69-rgb/Nexus-seo-websit --merge)"
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 18 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --repo skyymar69-rgb/Nexus-seo-websit --title \"feat: compare page dark + APIs\" --body \"Compare page dark theme\" --base main --head claude/elastic-maxwell)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 19 --repo skyymar69-rgb/Nexus-seo-websit --merge)"
     ]
   }
 }
