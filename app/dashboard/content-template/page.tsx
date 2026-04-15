@@ -60,18 +60,18 @@ export default function ContentTemplatePage() {
     <div className="p-6 max-w-4xl mx-auto space-y-6">
       <div className="flex items-center gap-3">
         <LayoutTemplate className="w-6 h-6 text-blue-600" />
-        <h1 className="text-2xl font-bold text-gray-900">Générateur de Brief Contenu</h1>
+        <h1 className="text-2xl font-bold text-white">Générateur de Brief Contenu</h1>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-lg p-6 space-y-4">
+      <form onSubmit={handleSubmit} className="bg-white border border-white/5 rounded-lg p-6 space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Mot-clé cible *</label>
-          <input type="text" value={keyword} onChange={e => setKeyword(e.target.value)} placeholder="Ex: référencement naturel" className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" required />
+          <label className="block text-sm font-medium text-white/70 mb-1">Mot-clé cible *</label>
+          <input type="text" value={keyword} onChange={e => setKeyword(e.target.value)} placeholder="Ex: référencement naturel" className="w-full border border-white/10 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" required />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">URL à analyser (optionnel)</label>
-          <input type="url" value={url} onChange={e => setUrl(e.target.value)} placeholder="https://exemple.com/page-concurrente" className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" />
-          <p className="text-xs text-gray-400 mt-1">Fournissez une URL concurrente pour un brief plus précis.</p>
+          <label className="block text-sm font-medium text-white/70 mb-1">URL à analyser (optionnel)</label>
+          <input type="url" value={url} onChange={e => setUrl(e.target.value)} placeholder="https://exemple.com/page-concurrente" className="w-full border border-white/10 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" />
+          <p className="text-xs text-white/30 mt-1">Fournissez une URL concurrente pour un brief plus précis.</p>
         </div>
         <button type="submit" disabled={loading} className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors">
           {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
@@ -84,29 +84,29 @@ export default function ContentTemplatePage() {
       {loading && (
         <div className="flex items-center justify-center py-16">
           <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-          <span className="ml-3 text-gray-500">Génération du brief en cours...</span>
+          <span className="ml-3 text-white/40">Génération du brief en cours...</span>
         </div>
       )}
 
       {brief && (
         <div className="space-y-4">
           <div className="flex justify-end">
-            <button onClick={handleCopy} className="flex items-center gap-2 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-gray-50 transition-colors">
+            <button onClick={handleCopy} className="flex items-center gap-2 border border-white/10 text-white/70 px-4 py-2 rounded-lg text-sm hover:bg-white/[0.03] transition-colors">
               {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
               {copied ? 'Copié !' : 'Copier le brief'}
             </button>
           </div>
 
-          <div ref={briefRef} className="bg-white border border-gray-200 rounded-lg divide-y divide-gray-100">
+          <div ref={briefRef} className="bg-white border border-white/5 rounded-lg divide-y divide-white/5">
             {/* Header */}
             <div className="p-5">
-              <h2 className="text-lg font-bold text-gray-900">Brief : {brief.keyword}</h2>
-              <p className="text-sm text-gray-500 mt-1">Nombre de mots recommandé : <span className="font-semibold text-gray-900">{brief.recommendedWordCount}</span></p>
+              <h2 className="text-lg font-bold text-white">Brief : {brief.keyword}</h2>
+              <p className="text-sm text-white/40 mt-1">Nombre de mots recommandé : <span className="font-semibold text-white">{brief.recommendedWordCount}</span></p>
               {brief.analyzedUrl && (
-                <p className="text-xs text-gray-400 mt-1 flex items-center gap-1"><Link className="w-3 h-3" /> Basé sur l&apos;analyse de : {brief.analyzedUrl}</p>
+                <p className="text-xs text-white/30 mt-1 flex items-center gap-1"><Link className="w-3 h-3" /> Basé sur l&apos;analyse de : {brief.analyzedUrl}</p>
               )}
               {brief.existingWordCount && (
-                <p className="text-xs text-gray-400">Contenu existant : {brief.existingWordCount} mots</p>
+                <p className="text-xs text-white/30">Contenu existant : {brief.existingWordCount} mots</p>
               )}
             </div>
 
@@ -114,19 +114,19 @@ export default function ContentTemplatePage() {
             <div className="p-5">
               <div className="flex items-center gap-2 mb-3">
                 <List className="w-4 h-4 text-blue-600" />
-                <h3 className="text-sm font-semibold text-gray-900">Titres H2 suggérés</h3>
+                <h3 className="text-sm font-semibold text-white">Titres H2 suggérés</h3>
               </div>
               <ol className="space-y-1.5 list-decimal list-inside">
-                {brief.suggestedH2.map((h2, i) => <li key={i} className="text-sm text-gray-700">{h2}</li>)}
+                {brief.suggestedH2.map((h2, i) => <li key={i} className="text-sm text-white/70">{h2}</li>)}
               </ol>
             </div>
 
             {/* Existing H2s */}
             {brief.existingH2 && brief.existingH2.length > 0 && (
               <div className="p-5">
-                <h3 className="text-sm font-semibold text-gray-900 mb-3">H2 existants sur la page analysée</h3>
+                <h3 className="text-sm font-semibold text-white mb-3">H2 existants sur la page analysée</h3>
                 <ul className="space-y-1">
-                  {brief.existingH2.map((h2, i) => <li key={i} className="text-sm text-gray-500">- {h2}</li>)}
+                  {brief.existingH2.map((h2, i) => <li key={i} className="text-sm text-white/40">- {h2}</li>)}
                 </ul>
               </div>
             )}
@@ -135,7 +135,7 @@ export default function ContentTemplatePage() {
             <div className="p-5">
               <div className="flex items-center gap-2 mb-3">
                 <FileText className="w-4 h-4 text-blue-600" />
-                <h3 className="text-sm font-semibold text-gray-900">Mots-clés secondaires à inclure</h3>
+                <h3 className="text-sm font-semibold text-white">Mots-clés secondaires à inclure</h3>
               </div>
               <div className="flex flex-wrap gap-2">
                 {brief.secondaryKeywords.map((kw, i) => (
@@ -148,10 +148,10 @@ export default function ContentTemplatePage() {
             <div className="p-5">
               <div className="flex items-center gap-2 mb-3">
                 <HelpCircle className="w-4 h-4 text-blue-600" />
-                <h3 className="text-sm font-semibold text-gray-900">Questions à répondre</h3>
+                <h3 className="text-sm font-semibold text-white">Questions à répondre</h3>
               </div>
               <ul className="space-y-1.5">
-                {brief.questionsToAnswer.map((q, i) => <li key={i} className="text-sm text-gray-700">- {q}</li>)}
+                {brief.questionsToAnswer.map((q, i) => <li key={i} className="text-sm text-white/70">- {q}</li>)}
               </ul>
             </div>
 
@@ -159,10 +159,10 @@ export default function ContentTemplatePage() {
             <div className="p-5">
               <div className="flex items-center gap-2 mb-3">
                 <LayoutTemplate className="w-4 h-4 text-blue-600" />
-                <h3 className="text-sm font-semibold text-gray-900">Structure recommandée</h3>
+                <h3 className="text-sm font-semibold text-white">Structure recommandée</h3>
               </div>
               <ol className="space-y-2 list-decimal list-inside">
-                {brief.contentStructure.map((s, i) => <li key={i} className="text-sm text-gray-700">{s}</li>)}
+                {brief.contentStructure.map((s, i) => <li key={i} className="text-sm text-white/70">{s}</li>)}
               </ol>
             </div>
           </div>

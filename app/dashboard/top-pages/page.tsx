@@ -81,7 +81,7 @@ export default function TopPagesPage() {
   }
 
   const SortIcon = ({ col }: { col: SortKey }) => {
-    if (sortKey !== col) return <ArrowUpDown className="w-3 h-3 text-gray-300" />
+    if (sortKey !== col) return <ArrowUpDown className="w-3 h-3 text-white/30" />
     return sortAsc ? <ChevronUp className="w-3 h-3 text-blue-600" /> : <ChevronDown className="w-3 h-3 text-blue-600" />
   }
 
@@ -89,12 +89,12 @@ export default function TopPagesPage() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Top Pages</h1>
-          <p className="text-gray-500 mt-1">Pages les plus importantes de votre site</p>
+          <h1 className="text-2xl font-bold text-white">Top Pages</h1>
+          <p className="text-white/40 mt-1">Pages les plus importantes de votre site</p>
         </div>
         <div className="flex items-center justify-center py-20">
           <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-          <span className="ml-3 text-gray-500">Chargement des donnees...</span>
+          <span className="ml-3 text-white/40">Chargement des donnees...</span>
         </div>
       </div>
     )
@@ -103,8 +103,8 @@ export default function TopPagesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Top Pages</h1>
-        <p className="text-gray-500 mt-1">
+        <h1 className="text-2xl font-bold text-white">Top Pages</h1>
+        <p className="text-white/40 mt-1">
           Pages les plus importantes de votre site
           {selectedWebsite && <span className="text-blue-600 ml-1 font-medium">{selectedWebsite.domain}</span>}
         </p>
@@ -118,10 +118,10 @@ export default function TopPagesPage() {
       )}
 
       {!error && pages.length === 0 && (
-        <div className="bg-white border border-gray-200 rounded-xl p-10 text-center">
-          <FileText className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Aucune donnee de crawl</h3>
-          <p className="text-gray-500 mb-4">Lancez un crawl pour voir vos top pages</p>
+        <div className="bg-white border border-white/5 rounded-xl p-10 text-center">
+          <FileText className="w-12 h-12 text-white/30 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-white mb-2">Aucune donnee de crawl</h3>
+          <p className="text-white/40 mb-4">Lancez un crawl pour voir vos top pages</p>
           <Link
             href="/dashboard/crawl"
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
@@ -133,43 +133,43 @@ export default function TopPagesPage() {
       )}
 
       {pages.length > 0 && (
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-          <div className="px-5 py-3 border-b border-gray-100 flex items-center justify-between">
-            <span className="text-sm text-gray-500">{pages.length} pages analysees</span>
+        <div className="bg-white border border-white/5 rounded-xl overflow-hidden">
+          <div className="px-5 py-3 border-b border-white/5 flex items-center justify-between">
+            <span className="text-sm text-white/40">{pages.length} pages analysees</span>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-100 bg-gray-50/50">
-                  <th className="text-left px-4 py-3 font-medium text-gray-500">URL</th>
-                  <th className="text-center px-3 py-3 font-medium text-gray-500">
-                    <button onClick={() => handleSort('statusCode')} className="inline-flex items-center gap-1 hover:text-gray-900">
+                <tr className="border-b border-white/5 bg-white/[0.02]">
+                  <th className="text-left px-4 py-3 font-medium text-white/40">URL</th>
+                  <th className="text-center px-3 py-3 font-medium text-white/40">
+                    <button onClick={() => handleSort('statusCode')} className="inline-flex items-center gap-1 hover:text-white">
                       Status <SortIcon col="statusCode" />
                     </button>
                   </th>
-                  <th className="text-center px-3 py-3 font-medium text-gray-500">
-                    <button onClick={() => handleSort('responseTime')} className="inline-flex items-center gap-1 hover:text-gray-900">
+                  <th className="text-center px-3 py-3 font-medium text-white/40">
+                    <button onClick={() => handleSort('responseTime')} className="inline-flex items-center gap-1 hover:text-white">
                       <Clock className="w-3 h-3" /> Temps <SortIcon col="responseTime" />
                     </button>
                   </th>
-                  <th className="text-left px-3 py-3 font-medium text-gray-500">Title</th>
-                  <th className="text-center px-3 py-3 font-medium text-gray-500">H1</th>
-                  <th className="text-center px-3 py-3 font-medium text-gray-500">
-                    <button onClick={() => handleSort('internalLinks')} className="inline-flex items-center gap-1 hover:text-gray-900">
+                  <th className="text-left px-3 py-3 font-medium text-white/40">Title</th>
+                  <th className="text-center px-3 py-3 font-medium text-white/40">H1</th>
+                  <th className="text-center px-3 py-3 font-medium text-white/40">
+                    <button onClick={() => handleSort('internalLinks')} className="inline-flex items-center gap-1 hover:text-white">
                       <Link2 className="w-3 h-3" /> Liens <SortIcon col="internalLinks" />
                     </button>
                   </th>
-                  <th className="text-center px-3 py-3 font-medium text-gray-500">
-                    <button onClick={() => handleSort('wordCount')} className="inline-flex items-center gap-1 hover:text-gray-900">
+                  <th className="text-center px-3 py-3 font-medium text-white/40">
+                    <button onClick={() => handleSort('wordCount')} className="inline-flex items-center gap-1 hover:text-white">
                       Mots <SortIcon col="wordCount" />
                     </button>
                   </th>
-                  <th className="text-left px-3 py-3 font-medium text-gray-500">Problemes</th>
+                  <th className="text-left px-3 py-3 font-medium text-white/40">Problemes</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody className="divide-y divide-white/5">
                 {sorted.map((page, i) => (
-                  <tr key={i} className="hover:bg-gray-50/50 transition-colors">
+                  <tr key={i} className="hover:bg-white/[0.03] transition-colors">
                     <td className="px-4 py-2.5 max-w-[240px]">
                       <a href={page.url} target="_blank" rel="noopener noreferrer"
                         className="text-blue-600 hover:underline truncate block text-xs font-mono">
@@ -177,11 +177,11 @@ export default function TopPagesPage() {
                       </a>
                     </td>
                     <td className="px-3 py-2.5 text-center"><StatusBadge code={page.statusCode} /></td>
-                    <td className="px-3 py-2.5 text-center text-gray-600">{page.responseTime} ms</td>
-                    <td className="px-3 py-2.5 text-gray-700 max-w-[200px] truncate text-xs">{page.title || '-'}</td>
-                    <td className="px-3 py-2.5 text-center text-gray-600">{page.h1Count}</td>
-                    <td className="px-3 py-2.5 text-center text-gray-600">{page.internalLinks}</td>
-                    <td className="px-3 py-2.5 text-center text-gray-600">{page.wordCount?.toLocaleString('fr-FR') ?? '-'}</td>
+                    <td className="px-3 py-2.5 text-center text-white/50">{page.responseTime} ms</td>
+                    <td className="px-3 py-2.5 text-white/70 max-w-[200px] truncate text-xs">{page.title || '-'}</td>
+                    <td className="px-3 py-2.5 text-center text-white/50">{page.h1Count}</td>
+                    <td className="px-3 py-2.5 text-center text-white/50">{page.internalLinks}</td>
+                    <td className="px-3 py-2.5 text-center text-white/50">{page.wordCount?.toLocaleString('fr-FR') ?? '-'}</td>
                     <td className="px-3 py-2.5">
                       {page.issues.length > 0 ? (
                         <div className="flex flex-wrap gap-1">
@@ -191,7 +191,7 @@ export default function TopPagesPage() {
                             </span>
                           ))}
                           {page.issues.length > 2 && (
-                            <span className="text-[10px] text-gray-400">+{page.issues.length - 2}</span>
+                            <span className="text-[10px] text-white/30">+{page.issues.length - 2}</span>
                           )}
                         </div>
                       ) : (

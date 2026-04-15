@@ -26,10 +26,10 @@ function DifficultyBar({ value }: { value: number }) {
   const color = value >= 70 ? 'bg-red-500' : value >= 40 ? 'bg-amber-500' : 'bg-emerald-500'
   return (
     <div className="flex items-center gap-2">
-      <div className="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden" role="progressbar" aria-label="Difficulte" aria-valuenow={value} aria-valuemin={0} aria-valuemax={100}>
+      <div className="w-16 h-1.5 bg-white/[0.03] rounded-full overflow-hidden" role="progressbar" aria-label="Difficulte" aria-valuenow={value} aria-valuemin={0} aria-valuemax={100}>
         <div className={`h-full rounded-full ${color}`} style={{ width: `${value}%` }} />
       </div>
-      <span className="text-xs text-gray-600">{value}</span>
+      <span className="text-xs text-white/50">{value}</span>
     </div>
   )
 }
@@ -84,15 +84,15 @@ export default function KeywordMagicPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Keyword Magic Tool</h1>
-        <p className="text-gray-500 mt-1">Recherche de mots-cles a partir d'un terme initial</p>
+        <h1 className="text-2xl font-bold text-white">Keyword Magic Tool</h1>
+        <p className="text-white/40 mt-1">Recherche de mots-cles a partir d'un terme initial</p>
       </div>
 
       {/* Search input */}
-      <div className="bg-white border border-gray-200 rounded-xl p-5">
+      <div className="bg-white border border-white/5 rounded-xl p-5">
         <div className="flex gap-2">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
             <input
               type="text"
               value={seed}
@@ -100,7 +100,7 @@ export default function KeywordMagicPage() {
               onKeyDown={(e) => e.key === 'Enter' && !loading && handleSearch()}
               placeholder="Entrez un mot-cle (ex: referencement naturel)"
               aria-label="Mot-cle a rechercher"
-              className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 text-sm"
+              className="w-full pl-10 pr-4 py-3 rounded-xl border border-white/5 bg-white text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 text-sm"
             />
           </div>
           <button
@@ -127,7 +127,7 @@ export default function KeywordMagicPage() {
       {loading && (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-          <span className="ml-3 text-gray-500">Recherche en cours...</span>
+          <span className="ml-3 text-white/40">Recherche en cours...</span>
         </div>
       )}
 
@@ -142,7 +142,7 @@ export default function KeywordMagicPage() {
               </span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Filter className="w-4 h-4 text-gray-400" />
+              <Filter className="w-4 h-4 text-white/30" />
               {['all', 'informational', 'transactional', 'commercial', 'navigational'].map((intent) => (
                 <button
                   key={intent}
@@ -150,7 +150,7 @@ export default function KeywordMagicPage() {
                   className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                     intentFilter === intent
                       ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      : 'bg-white/[0.03] text-white/50 hover:bg-white/[0.05]'
                   }`}
                 >
                   {intent === 'all' ? 'Tous' : INTENT_CONFIG[intent]?.label || intent}
@@ -160,33 +160,33 @@ export default function KeywordMagicPage() {
           </div>
 
           {/* Results table */}
-          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+          <div className="bg-white border border-white/5 rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-100 bg-gray-50/50">
-                    <th className="text-left px-4 py-3 font-medium text-gray-500">Mot-cle</th>
-                    <th className="text-center px-3 py-3 font-medium text-gray-500">Volume</th>
-                    <th className="text-center px-3 py-3 font-medium text-gray-500">Difficulte</th>
-                    <th className="text-center px-3 py-3 font-medium text-gray-500">CPC</th>
-                    <th className="text-center px-3 py-3 font-medium text-gray-500">Intention</th>
-                    <th className="text-center px-3 py-3 font-medium text-gray-500">Action</th>
+                  <tr className="border-b border-white/5 bg-white/[0.02]">
+                    <th className="text-left px-4 py-3 font-medium text-white/40">Mot-cle</th>
+                    <th className="text-center px-3 py-3 font-medium text-white/40">Volume</th>
+                    <th className="text-center px-3 py-3 font-medium text-white/40">Difficulte</th>
+                    <th className="text-center px-3 py-3 font-medium text-white/40">CPC</th>
+                    <th className="text-center px-3 py-3 font-medium text-white/40">Intention</th>
+                    <th className="text-center px-3 py-3 font-medium text-white/40">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-50">
+                <tbody className="divide-y divide-white/5">
                   {filtered.map((kw, i) => {
                     const intentCfg = INTENT_CONFIG[kw.intent] || INTENT_CONFIG.informational
                     const IntentIcon = intentCfg.icon
                     return (
-                      <tr key={i} className="hover:bg-gray-50/50 transition-colors">
-                        <td className="px-4 py-2.5 font-medium text-gray-900">{kw.keyword}</td>
-                        <td className="px-3 py-2.5 text-center text-gray-600">
+                      <tr key={i} className="hover:bg-white/[0.03] transition-colors">
+                        <td className="px-4 py-2.5 font-medium text-white">{kw.keyword}</td>
+                        <td className="px-3 py-2.5 text-center text-white/50">
                           {kw.volume.toLocaleString('fr-FR')}
                         </td>
                         <td className="px-3 py-2.5 text-center">
                           <DifficultyBar value={kw.difficulty} />
                         </td>
-                        <td className="px-3 py-2.5 text-center text-gray-600">
+                        <td className="px-3 py-2.5 text-center text-white/50">
                           {kw.cpc.toFixed(2)} &euro;
                         </td>
                         <td className="px-3 py-2.5 text-center">
@@ -215,7 +215,7 @@ export default function KeywordMagicPage() {
               </table>
             </div>
             {filtered.length === 0 && (
-              <div className="p-8 text-center text-gray-400 text-sm">
+              <div className="p-8 text-center text-white/30 text-sm">
                 Aucun resultat pour ce filtre d'intention
               </div>
             )}

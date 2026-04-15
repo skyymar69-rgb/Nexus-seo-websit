@@ -98,11 +98,11 @@ export default function ReportsPage() {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="text-center">
-          <FileText className="mx-auto h-12 w-12 text-gray-300" />
-          <h2 className="mt-4 text-lg font-semibold text-gray-900">
+          <FileText className="mx-auto h-12 w-12 text-white/30" />
+          <h2 className="mt-4 text-lg font-semibold text-white">
             Aucun site selectionne
           </h2>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-white/40">
             Selectionnez un site web pour generer des rapports.
           </p>
         </div>
@@ -111,15 +111,15 @@ export default function ReportsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white/[0.02]">
       {/* Header */}
-      <div className="border-b border-gray-200 bg-white px-8 py-6">
+      <div className="border-b border-white/5 bg-white px-8 py-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Rapports</h1>
-            <p className="mt-1 text-sm text-gray-500">
+            <h1 className="text-2xl font-bold text-white">Rapports</h1>
+            <p className="mt-1 text-sm text-white/40">
               Generez et consultez vos rapports SEO pour{' '}
-              <span className="font-medium text-gray-700">
+              <span className="font-medium text-white/70">
                 {selectedWebsite.domain}
               </span>
             </p>
@@ -152,7 +152,7 @@ export default function ReportsPage() {
         {loading && (
           <div className="flex items-center justify-center py-20">
             <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-            <span className="ml-3 text-gray-600">
+            <span className="ml-3 text-white/50">
               Chargement des rapports...
             </span>
           </div>
@@ -161,11 +161,11 @@ export default function ReportsPage() {
         {/* Empty state */}
         {!loading && reports.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20">
-            <FileText className="h-16 w-16 text-gray-300" />
-            <h3 className="mt-4 text-lg font-semibold text-gray-900">
+            <FileText className="h-16 w-16 text-white/30" />
+            <h3 className="mt-4 text-lg font-semibold text-white">
               Aucun rapport
             </h3>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-white/40">
               Cliquez sur &quot;Generer un rapport&quot; pour creer votre
               premier rapport SEO.
             </p>
@@ -180,7 +180,7 @@ export default function ReportsPage() {
               return (
                 <div
                   key={report.id}
-                  className="rounded-lg border border-gray-200 bg-white shadow-sm"
+                  className="rounded-lg border border-white/5 bg-white shadow-sm"
                 >
                   {/* Report header */}
                   <button
@@ -192,10 +192,10 @@ export default function ReportsPage() {
                     <div className="flex items-center gap-3">
                       <FileText className="h-5 w-5 text-blue-600" />
                       <div>
-                        <p className="font-medium text-gray-900">
+                        <p className="font-medium text-white">
                           {report.title}
                         </p>
-                        <div className="mt-0.5 flex items-center gap-3 text-xs text-gray-500">
+                        <div className="mt-0.5 flex items-center gap-3 text-xs text-white/40">
                           <span className="flex items-center gap-1">
                             <Calendar className="h-3 w-3" />
                             {new Date(report.createdAt).toLocaleDateString(
@@ -219,15 +219,15 @@ export default function ReportsPage() {
                       </div>
                     </div>
                     {isExpanded ? (
-                      <ChevronUp className="h-5 w-5 text-gray-400" />
+                      <ChevronUp className="h-5 w-5 text-white/30" />
                     ) : (
-                      <ChevronDown className="h-5 w-5 text-gray-400" />
+                      <ChevronDown className="h-5 w-5 text-white/30" />
                     )}
                   </button>
 
                   {/* Expanded report data */}
                   {isExpanded && report.data && (
-                    <div className="border-t border-gray-100 px-6 py-5">
+                    <div className="border-t border-white/5 px-6 py-5">
                       <ReportDetail data={report.data} />
                     </div>
                   )}
@@ -245,36 +245,36 @@ function ReportDetail({ data }: { data: ReportData }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {/* Audit */}
-      <div className="rounded-lg border border-gray-100 bg-gray-50 p-4">
+      <div className="rounded-lg border border-white/5 bg-white/[0.02] p-4">
         <div className="mb-2 flex items-center gap-2">
           <BarChart3 className="h-4 w-4 text-blue-600" />
-          <h4 className="text-sm font-semibold text-gray-900">Audit SEO</h4>
+          <h4 className="text-sm font-semibold text-white">Audit SEO</h4>
         </div>
         {data.audit ? (
           <div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-2xl font-bold text-white">
               {data.audit.score}/100
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-white/40">
               Grade {data.audit.grade} -{' '}
               {new Date(data.audit.date).toLocaleDateString('fr-FR')}
             </p>
           </div>
         ) : (
-          <p className="text-sm text-gray-400">Aucun audit disponible</p>
+          <p className="text-sm text-white/30">Aucun audit disponible</p>
         )}
       </div>
 
       {/* Keywords */}
-      <div className="rounded-lg border border-gray-100 bg-gray-50 p-4">
+      <div className="rounded-lg border border-white/5 bg-white/[0.02] p-4">
         <div className="mb-2 flex items-center gap-2">
           <Key className="h-4 w-4 text-green-600" />
-          <h4 className="text-sm font-semibold text-gray-900">Mots-cles</h4>
+          <h4 className="text-sm font-semibold text-white">Mots-cles</h4>
         </div>
-        <p className="text-2xl font-bold text-gray-900">
+        <p className="text-2xl font-bold text-white">
           {data.keywords.count}
         </p>
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-white/40">
           {data.keywords.avgPosition != null
             ? `Position moyenne : ${data.keywords.avgPosition}`
             : 'Aucune position trackee'}
@@ -282,56 +282,56 @@ function ReportDetail({ data }: { data: ReportData }) {
       </div>
 
       {/* Backlinks */}
-      <div className="rounded-lg border border-gray-100 bg-gray-50 p-4">
+      <div className="rounded-lg border border-white/5 bg-white/[0.02] p-4">
         <div className="mb-2 flex items-center gap-2">
           <Link2 className="h-4 w-4 text-yellow-600" />
-          <h4 className="text-sm font-semibold text-gray-900">Backlinks</h4>
+          <h4 className="text-sm font-semibold text-white">Backlinks</h4>
         </div>
-        <p className="text-2xl font-bold text-gray-900">
+        <p className="text-2xl font-bold text-white">
           {data.backlinks.count}
         </p>
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-white/40">
           {data.backlinks.dofollowRatio}% dofollow
         </p>
       </div>
 
       {/* AI Visibility */}
-      <div className="rounded-lg border border-gray-100 bg-gray-50 p-4">
+      <div className="rounded-lg border border-white/5 bg-white/[0.02] p-4">
         <div className="mb-2 flex items-center gap-2">
           <Bot className="h-4 w-4 text-purple-600" />
-          <h4 className="text-sm font-semibold text-gray-900">
+          <h4 className="text-sm font-semibold text-white">
             Visibilite IA
           </h4>
         </div>
-        <p className="text-2xl font-bold text-gray-900">
+        <p className="text-2xl font-bold text-white">
           {data.aiVisibility.mentionRate != null
             ? `${data.aiVisibility.mentionRate}%`
             : '-'}
         </p>
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-white/40">
           {data.aiVisibility.queriesAnalyzed} requetes analysees
         </p>
       </div>
 
       {/* Performance */}
-      <div className="rounded-lg border border-gray-100 bg-gray-50 p-4">
+      <div className="rounded-lg border border-white/5 bg-white/[0.02] p-4">
         <div className="mb-2 flex items-center gap-2">
           <Gauge className="h-4 w-4 text-teal-600" />
-          <h4 className="text-sm font-semibold text-gray-900">Performance</h4>
+          <h4 className="text-sm font-semibold text-white">Performance</h4>
         </div>
         {data.performance ? (
           <div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-2xl font-bold text-white">
               {data.performance.score}/100
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-white/40">
               LCP: {data.performance.lcp?.toFixed(1) ?? '-'}s | FCP:{' '}
               {data.performance.fcp?.toFixed(1) ?? '-'}s | CLS:{' '}
               {data.performance.cls?.toFixed(3) ?? '-'}
             </p>
           </div>
         ) : (
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-white/30">
             Aucune donnee de performance
           </p>
         )}

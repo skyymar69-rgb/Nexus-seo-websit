@@ -141,11 +141,11 @@ export default function RankTrackerPage() {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="text-center">
-          <Search className="mx-auto h-12 w-12 text-gray-300" />
-          <h2 className="mt-4 text-lg font-semibold text-gray-900">
+          <Search className="mx-auto h-12 w-12 text-white/30" />
+          <h2 className="mt-4 text-lg font-semibold text-white">
             Aucun site selectionne
           </h2>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-white/40">
             Selectionnez un site web pour suivre vos positions.
           </p>
         </div>
@@ -158,7 +158,7 @@ export default function RankTrackerPage() {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <span className="ml-3 text-gray-600">
+        <span className="ml-3 text-white/50">
           Chargement des mots-cles...
         </span>
       </div>
@@ -171,8 +171,8 @@ export default function RankTrackerPage() {
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="text-center">
           <AlertCircle className="mx-auto h-12 w-12 text-red-400" />
-          <h2 className="mt-4 text-lg font-semibold text-gray-900">Erreur</h2>
-          <p className="mt-1 text-sm text-gray-500">{error}</p>
+          <h2 className="mt-4 text-lg font-semibold text-white">Erreur</h2>
+          <p className="mt-1 text-sm text-white/40">{error}</p>
         </div>
       </div>
     )
@@ -183,11 +183,11 @@ export default function RankTrackerPage() {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="text-center">
-          <Search className="mx-auto h-12 w-12 text-gray-300" />
-          <h2 className="mt-4 text-lg font-semibold text-gray-900">
+          <Search className="mx-auto h-12 w-12 text-white/30" />
+          <h2 className="mt-4 text-lg font-semibold text-white">
             Aucun mot-cle suivi
           </h2>
-          <p className="mt-1 max-w-md text-sm text-gray-500">
+          <p className="mt-1 max-w-md text-sm text-white/40">
             Ajoutez des mots-cles dans la section Mots-cles pour commencer le
             suivi.
           </p>
@@ -199,15 +199,15 @@ export default function RankTrackerPage() {
   const selectedKeyword = keywords.find((k) => k.id === selectedKeywordId)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white/[0.02]">
       {/* Header */}
-      <div className="border-b border-gray-200 bg-white px-8 py-6">
-        <h1 className="text-2xl font-bold text-gray-900">
+      <div className="border-b border-white/5 bg-white px-8 py-6">
+        <h1 className="text-2xl font-bold text-white">
           Suivi des positions
         </h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="mt-1 text-sm text-white/40">
           Suivez le classement de vos mots-cles pour{' '}
-          <span className="font-medium text-gray-700">
+          <span className="font-medium text-white/70">
             {selectedWebsite.domain}
           </span>
         </p>
@@ -216,14 +216,14 @@ export default function RankTrackerPage() {
       <div className="p-8">
         {/* Position history chart */}
         {selectedKeyword && history.length > 0 && (
-          <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-base font-semibold text-gray-900">
+          <div className="mb-8 rounded-lg border border-white/5 bg-white p-6 shadow-sm">
+            <h2 className="mb-4 text-base font-semibold text-white">
               Historique de position :{' '}
               <span className="text-blue-600">{selectedKeyword.term}</span>
             </h2>
             {historyLoading ? (
               <div className="flex items-center justify-center py-10">
-                <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+                <Loader2 className="h-6 w-6 animate-spin text-white/30" />
               </div>
             ) : (
               <ResponsiveContainer width="100%" height={220}>
@@ -247,9 +247,9 @@ export default function RankTrackerPage() {
         )}
 
         {/* Keywords table */}
-        <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
-          <div className="border-b border-gray-100 px-6 py-4">
-            <h2 className="text-base font-semibold text-gray-900">
+        <div className="rounded-lg border border-white/5 bg-white shadow-sm">
+          <div className="border-b border-white/5 px-6 py-4">
+            <h2 className="text-base font-semibold text-white">
               {keywords.length} mot{keywords.length > 1 ? 's' : ''}-cle
               {keywords.length > 1 ? 's' : ''} suivi
               {keywords.length > 1 ? 's' : ''}
@@ -258,23 +258,23 @@ export default function RankTrackerPage() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-100 bg-gray-50">
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600">
+                <tr className="border-b border-white/5 bg-white/[0.02]">
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-white/50">
                     Mot-cle
                   </th>
-                  <th className="px-6 py-3 text-center text-xs font-semibold text-gray-600">
+                  <th className="px-6 py-3 text-center text-xs font-semibold text-white/50">
                     Position
                   </th>
-                  <th className="px-6 py-3 text-center text-xs font-semibold text-gray-600">
+                  <th className="px-6 py-3 text-center text-xs font-semibold text-white/50">
                     Precedente
                   </th>
-                  <th className="px-6 py-3 text-center text-xs font-semibold text-gray-600">
+                  <th className="px-6 py-3 text-center text-xs font-semibold text-white/50">
                     Variation
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600">
+                  <th className="px-6 py-3 text-right text-xs font-semibold text-white/50">
                     Volume
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600">
+                  <th className="px-6 py-3 text-right text-xs font-semibold text-white/50">
                     Difficulte
                   </th>
                 </tr>
@@ -291,33 +291,33 @@ export default function RankTrackerPage() {
                     <tr
                       key={kw.id}
                       onClick={() => setSelectedKeywordId(kw.id)}
-                      className={`cursor-pointer border-b border-gray-50 transition-colors ${
+                      className={`cursor-pointer border-b border-white/5 transition-colors ${
                         isSelected
                           ? 'bg-blue-50'
-                          : 'hover:bg-gray-50'
+                          : 'hover:bg-white/[0.03]'
                       }`}
                     >
                       <td className="px-6 py-3.5">
-                        <span className="text-sm font-medium text-gray-900">
+                        <span className="text-sm font-medium text-white">
                           {kw.term}
                         </span>
                       </td>
                       <td className="px-6 py-3.5 text-center">
                         {pos != null ? (
-                          <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-sm font-bold text-gray-900">
+                          <span className="inline-flex items-center rounded-full bg-white/[0.03] px-2.5 py-0.5 text-sm font-bold text-white">
                             #{pos}
                           </span>
                         ) : (
-                          <span className="text-sm text-gray-400">-</span>
+                          <span className="text-sm text-white/30">-</span>
                         )}
                       </td>
-                      <td className="px-6 py-3.5 text-center text-sm text-gray-500">
+                      <td className="px-6 py-3.5 text-center text-sm text-white/40">
                         {prev != null ? `#${prev}` : '-'}
                       </td>
                       <td className="px-6 py-3.5 text-center">
                         <ChangeIndicator change={change} />
                       </td>
-                      <td className="px-6 py-3.5 text-right text-sm text-gray-600">
+                      <td className="px-6 py-3.5 text-right text-sm text-white/50">
                         {kw.volume != null
                           ? kw.volume.toLocaleString('fr-FR')
                           : '-'}
@@ -326,7 +326,7 @@ export default function RankTrackerPage() {
                         {kw.difficulty != null ? (
                           <DifficultyBadge value={kw.difficulty} />
                         ) : (
-                          <span className="text-sm text-gray-400">-</span>
+                          <span className="text-sm text-white/30">-</span>
                         )}
                       </td>
                     </tr>
@@ -343,7 +343,7 @@ export default function RankTrackerPage() {
 
 function ChangeIndicator({ change }: { change: number | null }) {
   if (change == null) {
-    return <span className="text-sm text-gray-400">-</span>
+    return <span className="text-sm text-white/30">-</span>
   }
 
   if (change > 0) {
@@ -364,7 +364,7 @@ function ChangeIndicator({ change }: { change: number | null }) {
   }
 
   return (
-    <span className="inline-flex items-center gap-0.5 text-sm text-gray-500">
+    <span className="inline-flex items-center gap-0.5 text-sm text-white/40">
       <Minus className="h-3.5 w-3.5" />
       stable
     </span>
