@@ -153,7 +153,9 @@
       "Bash(DATABASE_URL=\"postgresql://neondb_owner:npg_6doekIMjw2rO@ep-purple-dream-anjeb191.c-6.us-east-1.aws.neon.tech/neondb?sslmode=require\" npx prisma db execute --stdin <<< \"SELECT id, url, status, error, progress FROM \\\\\"ScanSession\\\\\" ORDER BY \\\\\"startedAt\\\\\" DESC LIMIT 3;\")",
       "Bash(node -e ':*)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --repo skyymar69-rgb/Nexus-seo-websit --title \"fix: scan synchrone Vercel\" --body \"Scan synchrone + maxDuration 60s\" --base main --head claude/elastic-maxwell)",
-      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 11 --repo skyymar69-rgb/Nexus-seo-websit --merge)"
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 11 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --repo skyymar69-rgb/Nexus-seo-websit --title \"feat: dashboard dark + homepage polish\" --body \"Dashboard layout full dark glassmorphique, homepage améliorée\" --base main --head claude/elastic-maxwell)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 12 --repo skyymar69-rgb/Nexus-seo-websit --merge)"
     ]
   }
 }
