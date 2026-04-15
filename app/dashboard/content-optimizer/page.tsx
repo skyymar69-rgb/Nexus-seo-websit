@@ -142,8 +142,29 @@ export default function ContentOptimizerPage() {
         description: text,
       }))
 
-      // Also call AEO API if URL mode
+      // Also call AEO + Content Suggestions APIs if URL mode
       if (inputType === 'url' && urlInput) {
+        // Content suggestions (our new API)
+        try {
+          const csRes = await fetch('/api/content-suggestions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: urlInput }),
+          })
+          if (csRes.ok) {
+            const csData = await csRes.json()
+            if (csData.success && csData.data?.suggestions) {
+              const csRecs: Recommendation[] = csData.data.suggestions.map((s: any, i: number) => ({
+                id: `cs-${i}`,
+                type: s.priority === 'critical' ? 'high' : s.priority === 'high' ? 'high' : s.priority === 'medium' ? 'medium' : 'low',
+                title: s.title,
+                description: s.description + (s.impact ? ` (Impact: ${s.impact})` : ''),
+              }))
+              allRecs.push(...csRecs)
+            }
+          }
+        } catch { /* optional */ }
+
         try {
           const aeoRes = await fetch('/api/aeo-score', {
             method: 'POST',
@@ -188,16 +209,16 @@ export default function ContentOptimizerPage() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Optimisation de Contenu</h1>
-        <p className="text-gray-500 mt-1">
+        <h1 className="text-3xl font-bold text-white">Optimisation de Contenu</h1>
+        <p className="text-white/40 mt-1">
           Analysez et optimisez le contenu de vos pages
         </p>
       </div>
 
       {/* Input Section */}
-      <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="rounded-lg border border-white/5 bg-white p-6 shadow-sm">
         <div className="mb-6">
-          <p className="text-sm font-medium mb-4 text-gray-700">Choisissez comment analyser</p>
+          <p className="text-sm font-medium mb-4 text-white/70">Choisissez comment analyser</p>
           <div className="flex gap-4">
             <button
               onClick={() => setInputType('url')}
@@ -205,7 +226,7 @@ export default function ContentOptimizerPage() {
                 'flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors',
                 inputType === 'url'
                   ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                  : 'bg-gray-100 text-white/40 hover:bg-gray-200'
               )}
             >
               <FileText className="h-4 w-4" />
@@ -217,7 +238,7 @@ export default function ContentOptimizerPage() {
                 'flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors',
                 inputType === 'text'
                   ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                  : 'bg-gray-100 text-white/40 hover:bg-gray-200'
               )}
             >
               <FileText className="h-4 w-4" />
@@ -229,19 +250,19 @@ export default function ContentOptimizerPage() {
         <div className="space-y-3">
           {/* Keyword input (always shown) */}
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">Mot-cle cible</label>
+            <label className="block text-sm font-medium mb-1 text-white/70">Mot-cle cible</label>
             <input
               type="text"
               placeholder="Ex: optimisation SEO"
               value={keywordInput}
               onChange={(e) => setKeywordInput(e.target.value)}
-              className="w-full rounded-lg bg-white border border-gray-200 px-4 py-2 text-gray-900 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="w-full rounded-lg bg-white border border-white/5 px-4 py-2 text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             />
           </div>
 
           {inputType === 'url' ? (
             <div>
-              <label className="block text-sm font-medium mb-1 text-gray-700">URL de la page</label>
+              <label className="block text-sm font-medium mb-1 text-white/70">URL de la page</label>
               <UrlInput
                 value={urlInput}
                 onChange={setUrlInput}
@@ -252,13 +273,13 @@ export default function ContentOptimizerPage() {
             </div>
           ) : (
             <div>
-              <label className="block text-sm font-medium mb-1 text-gray-700">Collez votre contenu</label>
+              <label className="block text-sm font-medium mb-1 text-white/70">Collez votre contenu</label>
               <textarea
                 placeholder="Collez le texte de votre page ici..."
                 value={textInput}
                 onChange={(e) => setTextInput(e.target.value)}
                 rows={6}
-                className="w-full rounded-lg bg-white border border-gray-200 px-4 py-2 text-gray-900 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+                className="w-full rounded-lg bg-white border border-white/5 px-4 py-2 text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
               />
               <button
                 onClick={handleAnalyze}
@@ -286,14 +307,14 @@ export default function ContentOptimizerPage() {
       {loading && (
         <div className="flex items-center justify-center py-16">
           <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-          <span className="ml-3 text-gray-500">Analyse en cours...</span>
+          <span className="ml-3 text-white/40">Analyse en cours...</span>
         </div>
       )}
 
       {!loading && semanticResult && (
         <>
           {/* Content Score */}
-          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="rounded-lg border border-white/5 bg-white p-6 shadow-sm">
             <div className="flex items-start gap-8">
               <div className="flex-shrink-0">
                 <div className="relative w-48 h-48">
@@ -328,19 +349,19 @@ export default function ContentOptimizerPage() {
                       )}>
                         {score}
                       </p>
-                      <p className="text-sm text-gray-400">/100</p>
+                      <p className="text-sm text-white/30">/100</p>
                     </div>
                   </div>
                 </div>
               </div>
 
               <div className="flex-1">
-                <h2 className="text-xl font-bold mb-6 text-gray-900">Resultats de l&apos;analyse</h2>
+                <h2 className="text-xl font-bold mb-6 text-white">Resultats de l&apos;analyse</h2>
                 <div className="space-y-4">
                   {/* Keyword density */}
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-700">Densite du mot-cle</span>
+                      <span className="text-sm font-medium text-white/70">Densite du mot-cle</span>
                       <span className="text-blue-600 font-bold">
                         {semanticResult.keywordAnalysis.density}%
                       </span>
@@ -356,8 +377,8 @@ export default function ContentOptimizerPage() {
                   {/* Word count */}
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-700">Longueur du contenu</span>
-                      <span className="text-gray-700 font-bold">
+                      <span className="text-sm font-medium text-white/70">Longueur du contenu</span>
+                      <span className="text-white/70 font-bold">
                         {semanticResult.content.wordCount} mots
                       </span>
                     </div>
@@ -377,8 +398,8 @@ export default function ContentOptimizerPage() {
                   {/* Readability */}
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-700">Lisibilite</span>
-                      <span className="text-gray-700 font-bold">
+                      <span className="text-sm font-medium text-white/70">Lisibilite</span>
+                      <span className="text-white/70 font-bold">
                         {semanticResult.content.readingLevel}
                       </span>
                     </div>
@@ -418,24 +439,24 @@ export default function ContentOptimizerPage() {
 
           {/* AEO Score (if available) */}
           {aeoResult && (
-            <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-              <h2 className="text-lg font-bold mb-4 text-gray-900">Score AEO (Answer Engine Optimization)</h2>
+            <div className="rounded-lg border border-white/5 bg-white p-6 shadow-sm">
+              <h2 className="text-lg font-bold mb-4 text-white">Score AEO (Answer Engine Optimization)</h2>
               <div className="grid grid-cols-4 gap-4">
-                <div className="text-center p-4 rounded-lg bg-gray-50">
+                <div className="text-center p-4 rounded-lg bg-white/[0.02]">
                   <p className="text-2xl font-bold text-blue-600">{aeoResult.overallScore}</p>
-                  <p className="text-xs text-gray-500 mt-1">Score global</p>
+                  <p className="text-xs text-white/40 mt-1">Score global</p>
                 </div>
-                <div className="text-center p-4 rounded-lg bg-gray-50">
+                <div className="text-center p-4 rounded-lg bg-white/[0.02]">
                   <p className="text-2xl font-bold text-green-600">{aeoResult.snippetReadiness?.score ?? '-'}</p>
-                  <p className="text-xs text-gray-500 mt-1">Snippets</p>
+                  <p className="text-xs text-white/40 mt-1">Snippets</p>
                 </div>
-                <div className="text-center p-4 rounded-lg bg-gray-50">
+                <div className="text-center p-4 rounded-lg bg-white/[0.02]">
                   <p className="text-2xl font-bold text-amber-600">{aeoResult.qaPatterns?.score ?? '-'}</p>
-                  <p className="text-xs text-gray-500 mt-1">Q&A Patterns</p>
+                  <p className="text-xs text-white/40 mt-1">Q&A Patterns</p>
                 </div>
-                <div className="text-center p-4 rounded-lg bg-gray-50">
+                <div className="text-center p-4 rounded-lg bg-white/[0.02]">
                   <p className="text-2xl font-bold text-purple-600">{aeoResult.voiceReadiness?.score ?? '-'}</p>
-                  <p className="text-xs text-gray-500 mt-1">Voice Ready</p>
+                  <p className="text-xs text-white/40 mt-1">Voice Ready</p>
                 </div>
               </div>
             </div>
@@ -443,8 +464,8 @@ export default function ContentOptimizerPage() {
 
           {/* Top Terms */}
           {semanticResult.topTerms.length > 0 && (
-            <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-              <h2 className="text-lg font-bold mb-4 text-gray-900">Termes principaux detectes</h2>
+            <div className="rounded-lg border border-white/5 bg-white p-6 shadow-sm">
+              <h2 className="text-lg font-bold mb-4 text-white">Termes principaux detectes</h2>
               <div className="flex flex-wrap gap-2">
                 {semanticResult.topTerms.slice(0, 15).map((term) => (
                   <span
@@ -453,7 +474,7 @@ export default function ContentOptimizerPage() {
                       'px-3 py-1.5 rounded-full text-sm font-medium',
                       term.status === 'present'
                         ? 'bg-green-100 text-green-700'
-                        : 'bg-gray-100 text-gray-500'
+                        : 'bg-gray-100 text-white/40'
                     )}
                   >
                     {term.term}
@@ -467,7 +488,7 @@ export default function ContentOptimizerPage() {
           {/* Recommendations */}
           {recommendations.length > 0 && (
             <div className="space-y-4">
-              <h2 className="text-lg font-bold text-gray-900">Recommandations</h2>
+              <h2 className="text-lg font-bold text-white">Recommandations</h2>
 
               {/* High Priority */}
               {recommendations

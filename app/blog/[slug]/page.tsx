@@ -61,8 +61,25 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const post = posts[params.slug]
   if (!post) return {}
   return {
-    title: `${post.title} | Nexus SEO Blog`,
+    title: post.title,
     description: post.excerpt,
+    alternates: {
+      canonical: `/blog/${params.slug}`,
+    },
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      type: 'article',
+      publishedTime: post.date,
+      authors: ['Nexus SEO'],
+      tags: [post.category, 'SEO', 'IA'],
+      images: [`/api/og?title=${encodeURIComponent(post.title)}&subtitle=${encodeURIComponent(post.category)}`],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.excerpt,
+    },
   }
 }
 

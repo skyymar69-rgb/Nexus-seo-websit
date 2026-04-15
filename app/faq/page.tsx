@@ -4,10 +4,13 @@ import { FAQ } from '@/components/landing/FAQ'
 import { Breadcrumb } from '@/components/shared/Breadcrumb'
 
 export const metadata = {
-  title: 'FAQ — Questions fréquentes sur Nexus SEO',
-  description: 'Tout ce que vous devez savoir sur Nexus, le GEO, l\'AEO, le LLMO et notre plateforme SEO IA.',
+  title: 'FAQ — Questions frequentes',
+  description: 'Tout ce que vous devez savoir sur Nexus, le GEO, l\'AEO, le LLMO et notre plateforme SEO IA. Reponses rapides et completes.',
+  alternates: {
+    canonical: '/faq',
+  },
   openGraph: {
-    title: 'FAQ',
+    title: 'FAQ | Nexus SEO',
     description: 'Tout ce que vous devez savoir sur Nexus, le GEO, l\'AEO, le LLMO et notre plateforme SEO IA.',
     images: ['/api/og?title=FAQ&subtitle=Questions%20frequentes'],
   },

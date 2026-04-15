@@ -5,11 +5,14 @@ import { ArrowRight, Clock, Tag } from 'lucide-react'
 import { Breadcrumb } from '@/components/shared/Breadcrumb'
 
 export const metadata = {
-  title: 'Blog SEO IA — GEO, AEO, LLMO | Nexus SEO',
-  description: 'Les dernières tendances et stratégies SEO pour l\'ère de l\'IA : GEO, AEO, LLMO, ChatGPT SEO, Google SGE. Guides pratiques et études de cas.',
+  title: 'Blog SEO IA — GEO, AEO, LLMO',
+  description: 'Les dernieres tendances et strategies SEO pour l\'ere de l\'IA : GEO, AEO, LLMO, ChatGPT SEO, Google SGE. Guides pratiques et etudes de cas.',
+  alternates: {
+    canonical: '/blog',
+  },
   openGraph: {
-    title: 'Blog SEO & IA',
-    description: 'Les dernières tendances et stratégies SEO pour l\'ère de l\'IA : GEO, AEO, LLMO, ChatGPT SEO, Google SGE. Guides pratiques et études de cas.',
+    title: 'Blog SEO & IA | Nexus SEO',
+    description: 'Les dernieres tendances et strategies SEO pour l\'ere de l\'IA : GEO, AEO, LLMO, ChatGPT SEO, Google SGE. Guides pratiques et etudes de cas.',
     images: ['/api/og?title=Blog%20SEO%20%26%20IA&subtitle=Articles%20et%20guides'],
   },
 }

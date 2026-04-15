@@ -6,11 +6,14 @@ import Link from 'next/link'
 import { Breadcrumb } from '@/components/shared/Breadcrumb'
 
 export const metadata: Metadata = {
-  title: 'Tarifs — Nexus SEO',
+  title: 'Tarifs — 100% Gratuit, Tous les Outils SEO & IA',
   description:
     'Nexus SEO est 100% gratuit. Tous les outils SEO, GEO, AEO, LLMO sans aucune limitation. Aucune carte bancaire requise.',
+  alternates: {
+    canonical: '/pricing',
+  },
   openGraph: {
-    title: '100% Gratuit',
+    title: 'Tarifs — 100% Gratuit | Nexus SEO',
     description:
       'Nexus SEO est 100% gratuit. Tous les outils SEO, GEO, AEO, LLMO sans aucune limitation. Aucune carte bancaire requise.',
     images: ['/api/og?title=100%25%20Gratuit&subtitle=30%2B%20outils%20SEO%20%26%20IA'],

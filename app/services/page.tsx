@@ -15,11 +15,14 @@ import {
 import { Breadcrumb } from '@/components/shared/Breadcrumb'
 
 export const metadata: Metadata = {
-  title: 'Services — GEO, AEO, LLMO, SEO Technique | Nexus SEO',
+  title: 'Services — GEO, AEO, LLMO, SEO Technique',
   description:
     'Decouvrez toutes les fonctionnalites de Nexus : GEO pour Google SGE, AEO pour les featured snippets, LLMO pour ChatGPT et Claude, et audit SEO technique complet.',
+  alternates: {
+    canonical: '/services',
+  },
   openGraph: {
-    title: 'Services',
+    title: 'Services — GEO, AEO, LLMO | Nexus SEO',
     description:
       'Decouvrez toutes les fonctionnalites de Nexus : GEO pour Google SGE, AEO pour les featured snippets, LLMO pour ChatGPT et Claude, et audit SEO technique complet.',
     images: ['/api/og?title=Services&subtitle=SEO%2C%20GEO%2C%20AEO%2C%20LLMO'],
