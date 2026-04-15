@@ -465,6 +465,7 @@ function DashboardLayoutContent({
                     placeholder="Rechercher un outil... (Cmd+K)"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
+                    aria-label="Rechercher un outil"
                     className="w-full bg-transparent outline-none placeholder-white/30 text-sm text-white"
                   />
                   <kbd className="ml-auto rounded border border-white/10 bg-white/[0.05] px-1.5 py-0.5 text-[10px] text-white/40 font-medium hidden lg:inline-block">

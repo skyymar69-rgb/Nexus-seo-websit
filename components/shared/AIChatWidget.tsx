@@ -256,6 +256,7 @@ export default function AIChatWidget() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Posez votre question SEO..."
+              aria-label="Question pour l'assistant SEO"
               className="flex-1 rounded-lg bg-zinc-800 border border-zinc-700 px-3 py-2 text-xs text-white placeholder-zinc-500 outline-none focus:border-purple-500 transition-colors"
             />
             <button

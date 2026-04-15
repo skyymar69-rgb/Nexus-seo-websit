@@ -1,15 +1,32 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
 
 interface ScoreGaugeProps {
   score: number | null
+  previousScore?: number | null
   label: string
-  color: string
   size?: number
 }
 
-function ScoreGauge({ score, label, color, size = 100 }: ScoreGaugeProps) {
+function DeltaBadge({ current, previous }: { current: number | null; previous?: number | null }) {
+  if (current === null || previous === null || previous === undefined) return null
+  const delta = current - previous
+  if (delta === 0) return (
+    <span className="flex items-center gap-0.5 text-[10px] text-white/30">
+      <Minus className="w-2.5 h-2.5" /> 0
+    </span>
+  )
+  return (
+    <span className={`flex items-center gap-0.5 text-[10px] font-medium ${delta > 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+      {delta > 0 ? <TrendingUp className="w-2.5 h-2.5" /> : <TrendingDown className="w-2.5 h-2.5" />}
+      {delta > 0 ? '+' : ''}{delta}
+    </span>
+  )
+}
+
+function ScoreGauge({ score, previousScore, label, size = 100 }: ScoreGaugeProps) {
   if (score === null) return (
     <div className="flex flex-col items-center gap-2">
       <div style={{ width: size, height: size }} className="rounded-full bg-white/5 flex items-center justify-center">
@@ -29,7 +46,7 @@ function ScoreGauge({ score, label, color, size = 100 }: ScoreGaugeProps) {
   return (
     <div className="flex flex-col items-center gap-2">
       <div className="relative" style={{ width: size, height: size }}>
-        <svg width={size} height={size} className="-rotate-90">
+        <svg width={size} height={size} className="-rotate-90" aria-label={`Score ${label}: ${score} sur 100`}>
           <circle
             cx={size / 2} cy={size / 2} r={radius}
             fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth={5}
@@ -46,6 +63,7 @@ function ScoreGauge({ score, label, color, size = 100 }: ScoreGaugeProps) {
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span className={`text-xl font-bold ${scoreColor}`}>{score}</span>
+          <DeltaBadge current={score} previous={previousScore} />
         </div>
       </div>
       <span className="text-xs text-white/50 font-medium">{label}</span>
@@ -58,11 +76,20 @@ interface ScoreOverviewProps {
   aeoScore: number | null
   geoScore: number | null
   perfScore: number | null
+  previousScores?: {
+    audit?: number | null
+    aeo?: number | null
+    geo?: number | null
+    performance?: number | null
+  }
 }
 
-export function ScoreOverview({ auditScore, aeoScore, geoScore, perfScore }: ScoreOverviewProps) {
+export function ScoreOverview({ auditScore, aeoScore, geoScore, perfScore, previousScores }: ScoreOverviewProps) {
   const scores = [auditScore, aeoScore, geoScore, perfScore].filter((s): s is number => s !== null)
   const combined = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : null
+
+  const prevScores = previousScores ? [previousScores.audit, previousScores.aeo, previousScores.geo, previousScores.performance].filter((s): s is number => s !== null && s !== undefined) : []
+  const prevCombined = prevScores.length > 0 ? Math.round(prevScores.reduce((a, b) => a + b, 0) / prevScores.length) : null
 
   const combinedColor = combined === null ? 'text-white/20' : combined >= 75 ? 'text-emerald-400' : combined >= 50 ? 'text-amber-400' : 'text-rose-400'
   const combinedGrade = combined === null ? '—' : combined >= 90 ? 'A' : combined >= 75 ? 'B' : combined >= 55 ? 'C' : combined >= 35 ? 'D' : 'F'
@@ -75,7 +102,10 @@ export function ScoreOverview({ auditScore, aeoScore, geoScore, perfScore }: Sco
           <div className="relative w-32 h-32 flex items-center justify-center">
             <div className={`text-5xl font-black ${combinedColor}`}>{combined ?? '—'}</div>
           </div>
-          <div className={`text-lg font-bold ${combinedColor}`}>Note {combinedGrade}</div>
+          <div className="flex items-center gap-2">
+            <div className={`text-lg font-bold ${combinedColor}`}>Note {combinedGrade}</div>
+            <DeltaBadge current={combined} previous={prevCombined} />
+          </div>
           <div className="text-xs text-white/40">Score global</div>
         </div>
 
@@ -85,10 +115,10 @@ export function ScoreOverview({ auditScore, aeoScore, geoScore, perfScore }: Sco
 
         {/* Individual scores */}
         <div className="flex gap-6 sm:gap-8">
-          <ScoreGauge score={auditScore} label="SEO Technique" color="blue" />
-          <ScoreGauge score={aeoScore} label="AEO" color="violet" />
-          <ScoreGauge score={geoScore} label="GEO" color="emerald" />
-          <ScoreGauge score={perfScore} label="Performance" color="cyan" />
+          <ScoreGauge score={auditScore} previousScore={previousScores?.audit} label="SEO Technique" />
+          <ScoreGauge score={aeoScore} previousScore={previousScores?.aeo} label="AEO" />
+          <ScoreGauge score={geoScore} previousScore={previousScores?.geo} label="GEO" />
+          <ScoreGauge score={perfScore} previousScore={previousScores?.performance} label="Performance" />
         </div>
       </div>
     </div>
