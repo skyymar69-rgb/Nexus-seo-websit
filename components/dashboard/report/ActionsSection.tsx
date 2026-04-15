@@ -1,6 +1,7 @@
 'use client'
 
-import { Lightbulb, AlertCircle, AlertTriangle, Info } from 'lucide-react'
+import Link from 'next/link'
+import { Lightbulb, AlertCircle, AlertTriangle, Info, ArrowRight } from 'lucide-react'
 
 interface ActionsSectionProps {
   auditChecks: Array<{ name: string; status: string; summary: string; impact?: string; score: number }> | null
@@ -84,20 +85,32 @@ export function ActionsSection({ auditChecks, aeoRecommendations, geoRecommendat
       </div>
 
       <div className="divide-y divide-white/5">
-        {actions.slice(0, 12).map((action, i) => (
-          <div key={i} className="px-6 py-3.5 flex items-start gap-3">
-            <PriorityIcon priority={action.priority} />
-            <div className="flex-1 min-w-0">
-              <p className="text-sm text-white/80">{action.text}</p>
-              <div className="flex items-center gap-2 mt-1">
-                <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${priorityColor(action.priority)}`}>
-                  {priorityLabel(action.priority)}
-                </span>
-                <span className="text-[10px] text-white/30">{action.source}</span>
+        {actions.slice(0, 12).map((action, i) => {
+          const detailHref = action.source === 'SEO' ? '/dashboard/audit'
+            : action.source === 'AEO' ? '/dashboard/aeo-score'
+            : action.source === 'GEO' ? '/dashboard/geo-audit'
+            : '/dashboard/audit'
+          return (
+            <div key={i} className="px-6 py-3.5 flex items-start gap-3">
+              <PriorityIcon priority={action.priority} />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm text-white/80">{action.text}</p>
+                <div className="flex items-center gap-2 mt-1.5">
+                  <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${priorityColor(action.priority)}`}>
+                    {priorityLabel(action.priority)}
+                  </span>
+                  <span className="text-[10px] text-white/30">{action.source}</span>
+                </div>
               </div>
+              <Link
+                href={detailHref}
+                className="flex-shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/5 text-[11px] text-white/40 hover:text-white/70 hover:bg-white/[0.06] transition-colors"
+              >
+                Corriger <ArrowRight className="w-3 h-3" />
+              </Link>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </section>
   )

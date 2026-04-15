@@ -193,13 +193,13 @@ function SidebarContent() {
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed lg:relative inset-y-0 left-0 z-40 border-r border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 transition-all duration-300 flex flex-col',
+          'fixed lg:relative inset-y-0 left-0 z-40 border-r border-white/5 bg-zinc-950/95 backdrop-blur-xl transition-all duration-300 flex flex-col',
           sidebarOpen ? 'w-64' : 'w-20',
           !mobileMenuOpen && 'max-lg:-translate-x-full'
         )}
       >
         {/* Logo Section */}
-        <div className="border-b border-surface-200 dark:border-surface-800 px-4 py-4">
+        <div className="border-b border-white/5 px-4 py-4">
           <div className="flex items-center justify-between">
             <Link
               href="/"
@@ -214,41 +214,41 @@ function SidebarContent() {
                 <span className="w-2.5 h-2.5 rounded-full bg-green-500" />
               </div>
               {sidebarOpen && (
-                <span className="font-black text-xl tracking-tight text-surface-900 dark:text-white">
+                <span className="font-black text-xl tracking-tight text-white">
                   Nexus
                 </span>
               )}
             </Link>
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="hidden lg:flex rounded-md p-1.5 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
+              className="hidden lg:flex rounded-md p-1.5 hover:bg-white/[0.05] transition-colors"
               aria-label="Toggle sidebar"
             >
               {sidebarOpen ? (
-                <ChevronLeft className="h-5 w-5 text-surface-500" />
+                <ChevronLeft className="h-5 w-5 text-white/50" />
               ) : (
-                <ChevronRight className="h-5 w-5 text-surface-500" />
+                <ChevronRight className="h-5 w-5 text-white/50" />
               )}
             </button>
             <button
               onClick={() => setMobileMenuOpen(false)}
-              className="lg:hidden rounded-md p-1.5 hover:bg-surface-100 dark:hover:bg-surface-800"
+              className="lg:hidden rounded-md p-1.5 hover:bg-white/[0.05]"
               aria-label="Close menu"
             >
-              <X className="h-5 w-5 text-surface-500" />
+              <X className="h-5 w-5 text-white/50" />
             </button>
           </div>
         </div>
 
         {/* Website Selector */}
         {sidebarOpen && (
-          <div className="border-b border-surface-200 dark:border-surface-800 px-3 py-3">
+          <div className="border-b border-white/5 px-3 py-3">
             <WebsiteSelector />
           </div>
         )}
 
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto px-2 py-4 space-y-1 scrollbar-thin scrollbar-thumb-surface-300 dark:scrollbar-thumb-surface-700">
+        <nav className="flex-1 overflow-y-auto px-2 py-4 space-y-1 scrollbar-thin scrollbar-thumb-white/10">
           {navigationCategories.map((cat) => {
             // Category with items
             const Icon = cat.icon
@@ -259,13 +259,13 @@ function SidebarContent() {
                 {sidebarOpen ? (
                   <button
                     onClick={() => toggleCategory(cat.id)}
-                    className="flex items-center justify-between w-full rounded-lg px-3 py-2 text-sm font-medium text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800 transition-all"
+                    className="flex items-center justify-between w-full rounded-lg px-3 py-2 text-sm font-medium text-white/50 hover:bg-white/[0.05] transition-all"
                   >
                     <div className="flex items-center gap-3">
                       <Icon className="h-5 w-5 flex-shrink-0" />
                       <span className="truncate">{cat.label}</span>
                       {(cat as any).badge && (
-                        <span className="px-1.5 py-0.5 text-[8px] font-bold rounded whitespace-nowrap bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400">
+                        <span className="px-1.5 py-0.5 text-[8px] font-bold rounded whitespace-nowrap bg-green-900/40 text-green-400">
                           {(cat as any).badge}
                         </span>
                       )}
@@ -279,7 +279,7 @@ function SidebarContent() {
                   </button>
                 ) : (
                   <div
-                    className="flex items-center justify-center rounded-lg px-3 py-2 text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800 transition-all cursor-help"
+                    className="flex items-center justify-center rounded-lg px-3 py-2 text-white/50 hover:bg-white/[0.05] transition-all cursor-help"
                     title={cat.label}
                   >
                     <Icon className="h-5 w-5" />
@@ -288,7 +288,7 @@ function SidebarContent() {
 
                 {/* Sub-items */}
                 {isExpanded && sidebarOpen && (
-                  <div className="mt-1 space-y-0.5 ml-2 border-l border-surface-200 dark:border-surface-700 pl-3">
+                  <div className="mt-1 space-y-0.5 ml-2 border-l border-white/5 pl-3">
                     {cat.items?.map((item) => {
                       const ItemIcon = item.icon
                       const active = isActive(item.href)
@@ -300,8 +300,8 @@ function SidebarContent() {
                           className={cn(
                             'flex items-center justify-between gap-2 rounded-lg px-3 py-1.5 text-xs font-medium transition-all',
                             active
-                              ? 'bg-brand-50 dark:bg-brand-950 text-brand-700 dark:text-brand-400'
-                              : 'text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800'
+                              ? 'bg-brand-950 text-brand-400'
+                              : 'text-white/50 hover:bg-white/[0.05]'
                           )}
                         >
                           <div className="flex items-center gap-2 min-w-0">
@@ -313,8 +313,8 @@ function SidebarContent() {
                               className={cn(
                                 'px-1.5 py-0.5 text-[8px] font-bold rounded whitespace-nowrap flex-shrink-0',
                                 (item.badge as string) === 'PRO'
-                                  ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400'
-                                  : 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400'
+                                  ? 'bg-amber-900/40 text-amber-400'
+                                  : 'bg-green-900/40 text-green-400'
                               )}
                             >
                               {item.badge}
@@ -336,7 +336,7 @@ function SidebarContent() {
       {/* Mobile toggle button */}
       <button
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        className="lg:hidden fixed left-4 top-4 z-50 rounded-lg p-2 bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800"
+        className="lg:hidden fixed left-4 top-4 z-50 rounded-lg p-2 bg-zinc-950/90 backdrop-blur-xl border border-white/5 text-white"
         aria-label="Toggle menu"
       >
         {mobileMenuOpen ? (
@@ -371,13 +371,13 @@ function Breadcrumb() {
 
   return (
     <nav className="flex items-center gap-2 text-sm">
-      <Link href="/dashboard" className="text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-surface-100">
+      <Link href="/dashboard" className="text-white/40 hover:text-white/70">
         Dashboard
       </Link>
       {breadcrumbs.slice(1).map((crumb, idx) => (
         <div key={idx} className="flex items-center gap-2">
-          <ChevronRight className="h-4 w-4 text-surface-400" />
-          <Link href={crumb.path} className="text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-surface-100">
+          <ChevronRight className="h-4 w-4 text-white/30" />
+          <Link href={crumb.path} className="text-white/40 hover:text-white/70">
             {crumb.label}
           </Link>
         </div>
@@ -407,13 +407,13 @@ function DashboardLayoutContent({
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-surface-50 dark:bg-surface-950 flex items-center justify-center">
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
         <div className="text-center">
           <svg className="animate-spin h-8 w-8 mx-auto text-brand-600 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          <p className="text-surface-600 dark:text-surface-400">Chargement...</p>
+          <p className="text-white/50">Chargement...</p>
         </div>
       </div>
     )
@@ -427,7 +427,7 @@ function DashboardLayoutContent({
   const userPlan = 'Gratuit'
 
   return (
-    <div className="min-h-screen bg-surface-50 dark:bg-surface-950 text-surface-900 dark:text-surface-100">
+    <div className="min-h-screen bg-zinc-950 text-white">
       <div className="flex h-screen">
         {/* Sidebar */}
         <SidebarContent />
@@ -435,20 +435,20 @@ function DashboardLayoutContent({
         {/* Main Content */}
         <main className="flex-1 flex flex-col overflow-hidden lg:ml-0">
           {/* Header */}
-          <header className="border-b border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 px-4 lg:px-6 py-3 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <header className="border-b border-white/5 bg-zinc-950/80 backdrop-blur-xl px-4 lg:px-6 py-3 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             {/* Top row: Breadcrumb + Theme + User */}
             <div className="flex items-center justify-between gap-4">
               <Breadcrumb />
               <div className="flex items-center gap-2 lg:hidden">
                 <button
                   onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                  className="rounded-lg p-2 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
+                  className="rounded-lg p-2 hover:bg-white/[0.05] transition-colors"
                   aria-label="Toggle theme"
                 >
                   {theme === 'dark' ? (
-                    <Sun className="h-5 w-5 text-surface-400" />
+                    <Sun className="h-5 w-5 text-white/50" />
                   ) : (
-                    <Moon className="h-5 w-5 text-surface-600" />
+                    <Moon className="h-5 w-5 text-white/50" />
                   )}
                 </button>
               </div>
@@ -458,16 +458,16 @@ function DashboardLayoutContent({
             <div className="flex items-center gap-2 lg:gap-4">
               {/* Search */}
               <div className="flex-1 lg:flex-none lg:max-w-sm">
-                <div className="flex items-center gap-2 rounded-lg border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 px-3 py-2 focus-within:border-brand-500 transition-all">
-                  <Command className="h-4 w-4 text-surface-400" />
+                <div className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 focus-within:border-brand-500 transition-all">
+                  <Command className="h-4 w-4 text-white/30" />
                   <input
                     type="text"
                     placeholder="Rechercher un outil... (Cmd+K)"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-transparent outline-none placeholder-surface-400 text-sm dark:text-surface-100"
+                    className="w-full bg-transparent outline-none placeholder-white/30 text-sm text-white"
                   />
-                  <kbd className="ml-auto rounded border border-surface-300 dark:border-surface-600 bg-surface-100 dark:bg-surface-700 px-1.5 py-0.5 text-[10px] text-surface-500 font-medium hidden lg:inline-block">
+                  <kbd className="ml-auto rounded border border-white/10 bg-white/[0.05] px-1.5 py-0.5 text-[10px] text-white/40 font-medium hidden lg:inline-block">
                     Cmd+K
                   </kbd>
                 </div>
@@ -477,32 +477,32 @@ function DashboardLayoutContent({
               <div className="relative hidden lg:block">
                 <button
                   onClick={() => setNotificationMenuOpen(!notificationMenuOpen)}
-                  className="relative rounded-lg p-2 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
+                  className="relative rounded-lg p-2 hover:bg-white/[0.05] transition-colors"
                   aria-label="Notifications"
                 >
-                  <Bell className="h-5 w-5 text-surface-500 dark:text-surface-400" />
+                  <Bell className="h-5 w-5 text-white/50" />
                   <span className="absolute -right-0.5 -top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-brand-600 text-[11px] font-bold text-white">
                     3
                   </span>
                 </button>
 
                 {notificationMenuOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-80 rounded-lg border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800 shadow-xl z-50">
-                    <div className="border-b border-surface-200 dark:border-surface-700 px-4 py-3">
-                      <h3 className="text-sm font-semibold text-surface-900 dark:text-surface-100">Notifications</h3>
+                  <div className="absolute right-0 top-full mt-2 w-80 rounded-lg border border-white/10 bg-zinc-900/95 backdrop-blur-xl shadow-2xl shadow-black/50 z-50">
+                    <div className="border-b border-white/5 px-4 py-3">
+                      <h3 className="text-sm font-semibold text-white">Notifications</h3>
                     </div>
                     <div className="py-2 max-h-96 overflow-y-auto">
-                      <div className="px-4 py-2 border-b border-surface-100 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-700">
-                        <p className="text-sm font-medium text-surface-900 dark:text-surface-100">Audit termine</p>
-                        <p className="text-xs text-surface-500 dark:text-surface-400">Il y a 5 minutes</p>
+                      <div className="px-4 py-2 border-b border-white/5 hover:bg-white/[0.05]">
+                        <p className="text-sm font-medium text-white/90">Audit termine</p>
+                        <p className="text-xs text-white/40">Il y a 5 minutes</p>
                       </div>
-                      <div className="px-4 py-2 border-b border-surface-100 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-700">
-                        <p className="text-sm font-medium text-surface-900 dark:text-surface-100">Positions mises a jour</p>
-                        <p className="text-xs text-surface-500 dark:text-surface-400">Il y a 2 heures</p>
+                      <div className="px-4 py-2 border-b border-white/5 hover:bg-white/[0.05]">
+                        <p className="text-sm font-medium text-white/90">Positions mises a jour</p>
+                        <p className="text-xs text-white/40">Il y a 2 heures</p>
                       </div>
-                      <div className="px-4 py-2 hover:bg-surface-50 dark:hover:bg-surface-700">
-                        <p className="text-sm font-medium text-surface-900 dark:text-surface-100">Nouveau backlink detecte</p>
-                        <p className="text-xs text-surface-500 dark:text-surface-400">Il y a 1 jour</p>
+                      <div className="px-4 py-2 hover:bg-white/[0.05]">
+                        <p className="text-sm font-medium text-white/90">Nouveau backlink detecte</p>
+                        <p className="text-xs text-white/40">Il y a 1 jour</p>
                       </div>
                     </div>
                   </div>
@@ -512,13 +512,13 @@ function DashboardLayoutContent({
               {/* Theme Toggle */}
               <button
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                className="hidden lg:flex rounded-lg p-2 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
+                className="hidden lg:flex rounded-lg p-2 hover:bg-white/[0.05] transition-colors"
                 aria-label="Toggle theme"
               >
                 {theme === 'dark' ? (
-                  <Sun className="h-5 w-5 text-surface-400" />
+                  <Sun className="h-5 w-5 text-white/50" />
                 ) : (
-                  <Moon className="h-5 w-5 text-surface-600" />
+                  <Moon className="h-5 w-5 text-white/50" />
                 )}
               </button>
 
@@ -526,44 +526,44 @@ function DashboardLayoutContent({
               <div className="relative">
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
+                  className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-white/[0.05] transition-colors"
                   aria-label="User menu"
                 >
                   <div className="h-8 w-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-white text-xs font-semibold">
                     {userInitials}
                   </div>
-                  <ChevronDown className="h-4 w-4 text-surface-500 hidden lg:block" />
+                  <ChevronDown className="h-4 w-4 text-white/50 hidden lg:block" />
                 </button>
 
                 {userMenuOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-56 rounded-lg border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800 shadow-xl z-50">
-                    <div className="border-b border-surface-200 dark:border-surface-700 px-4 py-3">
-                      <p className="text-sm font-semibold text-surface-900 dark:text-surface-100">{userName}</p>
-                      <p className="text-xs text-surface-500 dark:text-surface-400">{userEmail}</p>
-                      <p className="text-xs font-medium text-green-600 dark:text-green-400 mt-1">100% {userPlan} — Tous les outils</p>
+                  <div className="absolute right-0 top-full mt-2 w-56 rounded-lg border border-white/10 bg-zinc-900/95 backdrop-blur-xl shadow-2xl shadow-black/50 z-50">
+                    <div className="border-b border-white/5 px-4 py-3">
+                      <p className="text-sm font-semibold text-white">{userName}</p>
+                      <p className="text-xs text-white/40">{userEmail}</p>
+                      <p className="text-xs font-medium text-green-400 mt-1">100% {userPlan} — Tous les outils</p>
                     </div>
                     <nav className="py-1">
                       <Link
                         href="/dashboard/settings"
-                        className="flex items-center gap-3 px-4 py-2 text-sm text-surface-700 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-700"
+                        className="flex items-center gap-3 px-4 py-2 text-sm text-white/70 hover:bg-white/[0.05]"
                       >
                         <User className="h-4 w-4" />
                         Mon profil
                       </Link>
                       <Link
                         href="/dashboard/settings"
-                        className="flex items-center gap-3 px-4 py-2 text-sm text-surface-700 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-700"
+                        className="flex items-center gap-3 px-4 py-2 text-sm text-white/70 hover:bg-white/[0.05]"
                       >
                         <Settings className="h-4 w-4" />
                         Parametres
                       </Link>
                     </nav>
-                    <div className="border-t border-surface-200 dark:border-surface-700 py-1">
+                    <div className="border-t border-white/5 py-1">
                       <button
                         onClick={async () => {
                           await signOut({ redirect: true, callbackUrl: '/login' })
                         }}
-                        className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30"
+                        className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-400 hover:bg-red-950/30"
                       >
                         <LogOut className="h-4 w-4" />
                         Deconnexion

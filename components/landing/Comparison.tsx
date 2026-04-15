@@ -59,7 +59,7 @@ export function Comparison() {
                 <tr className="border-b border-surface-200 dark:border-surface-700">
                   <th className="text-left p-5 text-sm font-semibold text-surface-700 dark:text-surface-400 w-1/2">Fonctionnalité</th>
                   {tools.map((tool) => (
-                    <th key={tool.name} className="p-5 text-center">
+                    <th key={tool.name} className={`p-5 text-center ${tool.highlight ? 'bg-brand-50/40 dark:bg-brand-950/20 border-l-2 border-brand-400 dark:border-brand-500' : ''}`}>
                       {tool.highlight ? (
                         <div className="inline-flex flex-col items-center gap-1">
                           <span className="text-sm font-black gradient-text">{tool.name}</span>
@@ -92,7 +92,7 @@ export function Comparison() {
                     {[f.nexus, f.semrush, f.ahrefs, f.moz].map((val, j) => (
                       <td
                         key={j}
-                        className={`p-4 text-center ${j === 0 ? 'bg-brand-50/30 dark:bg-brand-950/10' : ''}`}
+                        className={`p-4 text-center ${j === 0 ? 'bg-brand-50/40 dark:bg-brand-950/20 border-l-2 border-brand-400 dark:border-brand-500' : ''}`}
                       >
                         <Cell val={val as boolean | 'partial'} />
                       </td>

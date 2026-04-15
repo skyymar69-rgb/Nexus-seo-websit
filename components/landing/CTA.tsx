@@ -5,14 +5,19 @@ import { ArrowRight, Zap, Leaf } from 'lucide-react'
 
 export function CTA() {
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8 bg-surface-50 dark:bg-surface-900/50">
-      <div className="max-w-4xl mx-auto">
-        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-brand-600 via-violet-600 to-cyan-600 p-px">
+    <section className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-gradient-to-b from-surface-50 via-brand-50/30 to-surface-50 dark:from-surface-900/50 dark:via-brand-950/20 dark:to-surface-900/50">
+      {/* Section-level ambient glow */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-brand-500/8 dark:bg-brand-500/5 blur-[120px] rounded-full" />
+      </div>
+      <div className="max-w-4xl mx-auto relative z-10">
+        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-brand-600 via-violet-600 to-cyan-600 p-px shadow-2xl shadow-brand-500/20 dark:shadow-brand-500/10">
           <div className="relative rounded-3xl bg-white dark:bg-surface-950 p-10 sm:p-16 text-center overflow-hidden">
             {/* Background glow */}
             <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-48 bg-brand-500/10 dark:bg-brand-500/5 blur-3xl rounded-full" />
-              <div className="absolute bottom-0 right-0 w-64 h-64 bg-violet-500/10 dark:bg-violet-500/5 blur-3xl rounded-full" />
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-64 bg-brand-500/15 dark:bg-brand-500/8 blur-3xl rounded-full" />
+              <div className="absolute bottom-0 right-0 w-80 h-80 bg-violet-500/15 dark:bg-violet-500/8 blur-3xl rounded-full" />
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/10 dark:bg-cyan-500/5 blur-3xl rounded-full" />
             </div>
 
             <div className="relative z-10">
@@ -32,7 +37,7 @@ export function CTA() {
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
-                <Link href="/signup" className="btn-primary px-10 py-4 text-base rounded-2xl">
+                <Link href="/signup" className="btn-primary px-10 py-4 text-base rounded-2xl shadow-lg shadow-brand-500/30 hover:shadow-xl hover:shadow-brand-500/40 transition-shadow">
                   Creer mon compte gratuit
                   <ArrowRight className="w-5 h-5" />
                 </Link>

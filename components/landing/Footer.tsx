@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Twitter, Linkedin, Github, Mail } from 'lucide-react'
+import { Mail } from 'lucide-react'
 import { AnimatedLogo } from '@/components/shared/AnimatedLogo'
 
 const footerLinks = {
@@ -19,7 +19,7 @@ const footerLinks = {
     { label: 'Services', href: '/services' },
   ],
   Entreprise: [
-    { label: 'À propos', href: '/about' },
+    { label: '\u00C0 propos', href: '/about' },
     { label: 'Contact', href: '/contact' },
     { label: 'Agence Web Kayzen', href: 'https://internet.kayzen-lyon.fr' },
   ],
@@ -47,20 +47,13 @@ export function Footer() {
               La référence mondiale des outils SEO pour l&apos;ère de l&apos;IA. GEO · AEO · LLMO — tout en une plateforme.
             </p>
             <div className="flex gap-2">
-              {[
-                { Icon: Twitter, href: '#', label: 'Twitter' },
-                { Icon: Linkedin, href: '#', label: 'LinkedIn' },
-                { Icon: Github, href: '#', label: 'GitHub' },
-              ].map(({ Icon, href, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  aria-label={label}
-                  className="w-9 h-9 rounded-xl flex items-center justify-center text-surface-600 dark:text-surface-400 hover:text-surface-700 dark:hover:text-white hover:bg-surface-200 dark:hover:bg-surface-800 transition-colors border border-surface-200 dark:border-surface-700"
-                >
-                  <Icon className="w-4 h-4" />
-                </a>
-              ))}
+              <a
+                href="mailto:contact@nexus-seo.com"
+                aria-label="Email"
+                className="w-9 h-9 rounded-xl flex items-center justify-center text-surface-600 dark:text-surface-400 hover:text-surface-700 dark:hover:text-white hover:bg-surface-200 dark:hover:bg-surface-800 transition-colors border border-surface-200 dark:border-surface-700"
+              >
+                <Mail className="w-4 h-4" />
+              </a>
             </div>
           </div>
 
@@ -119,7 +112,7 @@ export function Footer() {
           <div className="flex items-center gap-1.5">
             {[
               { label: 'RGPD', color: 'text-brand-500' },
-              { label: 'Heberge en Europe', color: 'text-violet-500' },
+              { label: 'Hébergé en Europe', color: 'text-violet-500' },
               { label: '100% Gratuit', color: 'text-accent-500' },
             ].map((badge) => (
               <span
