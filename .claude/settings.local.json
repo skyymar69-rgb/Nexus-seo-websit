@@ -173,7 +173,12 @@
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --repo skyymar69-rgb/Nexus-seo-websit --title \"fix: E-E-A-T NaN scores\" --body \"Fix NaN sur barres E-E-A-T dans rapport GEO\" --base main --head claude/elastic-maxwell)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 20 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
       "mcp__Claude_in_Chrome__tabs_close_mcp",
-      "Bash(grep -rl \"bg-white dark:bg-surface\" app/dashboard/*/page.tsx)"
+      "Bash(grep -rl \"bg-white dark:bg-surface\" app/dashboard/*/page.tsx)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --repo skyymar69-rgb/Nexus-seo-websit --title \"feat: dark theme 16 sous-pages\" --body \"Theme glassmorphique unifie sur toutes les sous-pages dashboard\" --base main --head claude/elastic-maxwell)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 21 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
+      "Bash(npm info:*)",
+      "Bash(node -e \"const v=JSON.parse\\(require\\('fs'\\).readFileSync\\('/dev/stdin','utf8'\\)\\); console.log\\(v.filter\\(x=>x.startsWith\\('14.2.'\\)\\).pop\\(\\)\\)\")",
+      "Bash(npm view:*)"
     ]
   }
 }
