@@ -49,6 +49,7 @@ import {
   ShieldCheck,
   ShoppingCart,
   Tag,
+  Code2,
 } from 'lucide-react'
 
 interface CategoryItem {
@@ -73,6 +74,7 @@ const navigationCategories = [
       { label: 'Domain Overview', href: '/dashboard/domain-overview', icon: Globe, badge: 'NEW' as const },
       { label: 'Top Pages', href: '/dashboard/top-pages', icon: FileSearch, badge: 'NEW' as const },
       { label: 'On-Page Checker', href: '/dashboard/on-page-checker', icon: FileText, badge: 'NEW' as const },
+      { label: 'Schema Markup', href: '/dashboard/schema-markup', icon: Code2, badge: 'NEW' as const },
       { label: 'Comparaison', href: '/dashboard/compare', icon: Eye, badge: 'NEW' as const },
     ],
   },
