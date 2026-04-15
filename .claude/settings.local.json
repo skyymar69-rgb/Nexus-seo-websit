@@ -188,7 +188,11 @@
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 24 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --repo skyymar69-rgb/Nexus-seo-websit --title \"feat: pre-load scan + dark pages restantes\" --body \"Pre-load scan sur domain-overview + crawl, 12 pages dark converties\" --base main --head claude/elastic-maxwell)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 26 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
-      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 25 --repo skyymar69-rgb/Nexus-seo-websit --merge)"
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 25 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --repo skyymar69-rgb/Nexus-seo-websit --title \"feat: reports export + pre-load pages\" --body \"Reports export HTML, domain-overview/crawl pre-load\" --base main --head claude/elastic-maxwell)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr close 26 --repo skyymar69-rgb/Nexus-seo-websit)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --repo skyymar69-rgb/Nexus-seo-websit --title \"feat: reports + pre-load v2\" --body \"Reports export, pre-load pages\" --base main --head claude/elastic-maxwell)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 27 --repo skyymar69-rgb/Nexus-seo-websit --merge)"
     ]
   }
 }
