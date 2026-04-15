@@ -222,6 +222,48 @@ export default function AEOScorePage() {
     }
   }, [selectedWebsite])
 
+  // Auto-load latest scan results
+  useEffect(() => {
+    if (!selectedWebsite?.id || result) return
+
+    let cancelled = false
+
+    async function loadLatestScan() {
+      try {
+        const statsRes = await fetch(`/api/dashboard/stats?websiteId=${selectedWebsite!.id}`)
+        if (!statsRes.ok) return
+        const stats = await statsRes.json()
+        if (!stats.latestScanId) return
+
+        const scanRes = await fetch(`/api/scan/${stats.latestScanId}`)
+        if (!scanRes.ok) return
+        const scan = await scanRes.json()
+
+        const scanData = scan.data || scan
+        const results = typeof scanData.results === 'string' ? JSON.parse(scanData.results) : scanData.results
+        const aeo = results?.aeo
+        if (!aeo || cancelled) return
+
+        setResult({
+          success: true,
+          url: scan.url || `https://${selectedWebsite!.domain}`,
+          overallScore: aeo.overallScore ?? 0,
+          grade: aeo.grade ?? 'N/A',
+          snippetReadiness: aeo.snippetReadiness ?? { score: 0, checks: [] },
+          qaPatterns: aeo.qaPatterns ?? { score: 0, checks: [] },
+          voiceReadiness: aeo.voiceReadiness ?? { score: 0, checks: [] },
+          contentStructure: aeo.contentStructure ?? { score: 0, checks: [] },
+          recommendations: aeo.recommendations ?? [],
+        })
+      } catch {
+        // Silent fail — user can still trigger manual analysis
+      }
+    }
+
+    loadLatestScan()
+    return () => { cancelled = true }
+  }, [selectedWebsite?.id])
+
   if (!selectedWebsite) {
     return (
       <div className="space-y-8 pb-8">

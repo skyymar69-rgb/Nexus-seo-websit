@@ -216,6 +216,51 @@ export default function GeoAuditPage() {
     }
   }, [selectedWebsite])
 
+  // Auto-load latest scan results
+  useEffect(() => {
+    if (!selectedWebsite?.id || result) return
+
+    let cancelled = false
+
+    async function loadLatestScan() {
+      try {
+        const statsRes = await fetch(`/api/dashboard/stats?websiteId=${selectedWebsite!.id}`)
+        if (!statsRes.ok) return
+        const stats = await statsRes.json()
+        if (!stats.latestScanId) return
+
+        const scanRes = await fetch(`/api/scan/${stats.latestScanId}`)
+        if (!scanRes.ok) return
+        const scan = await scanRes.json()
+
+        const scanData = scan.data || scan
+        const results = typeof scanData.results === 'string' ? JSON.parse(scanData.results) : scanData.results
+        const geo = results?.geo
+        if (!geo || cancelled) return
+
+        setResult({
+          success: true,
+          url: scan.url || `https://${selectedWebsite!.domain}`,
+          overallScore: geo.overallScore ?? 0,
+          grade: geo.grade ?? 'N/A',
+          categories: {
+            structuredData: geo.categories?.structuredData ?? { score: 0, checks: [] },
+            entityClarity: geo.categories?.entityClarity ?? { score: 0, checks: [] },
+            citationReadiness: geo.categories?.citationReadiness ?? { score: 0, checks: [] },
+            eeat: geo.categories?.eeat ?? { score: 0, checks: [] },
+            technicalAI: geo.categories?.technicalAI ?? { score: 0, checks: [] },
+          },
+          recommendations: geo.recommendations ?? [],
+        })
+      } catch {
+        // Silent fail — user can still trigger manual analysis
+      }
+    }
+
+    loadLatestScan()
+    return () => { cancelled = true }
+  }, [selectedWebsite?.id])
+
   async function handleAnalyze() {
     if (!url.trim() || isAnalyzing) return
 

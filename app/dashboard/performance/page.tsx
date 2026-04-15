@@ -379,6 +379,103 @@ export default function PerformancePage() {
     }
   }, [selectedWebsite])
 
+  // Auto-load latest scan results
+  useEffect(() => {
+    if (!selectedWebsite?.id || data) return
+
+    let cancelled = false
+
+    async function loadLatestScan() {
+      try {
+        const statsRes = await fetch(`/api/dashboard/stats?websiteId=${selectedWebsite!.id}`)
+        if (!statsRes.ok) return
+        const stats = await statsRes.json()
+        if (!stats.latestScanId) return
+
+        const scanRes = await fetch(`/api/scan/${stats.latestScanId}`)
+        if (!scanRes.ok) return
+        const scan = await scanRes.json()
+
+        const scanData = scan.data || scan
+        const results = typeof scanData.results === 'string' ? JSON.parse(scanData.results) : scanData.results
+        const perf = results?.performance
+        if (!perf || cancelled) return
+
+        const score = perf.score ?? 0
+        const grade = perf.grade ?? 'N/A'
+        const scanUrl = scan.url || `https://${selectedWebsite!.domain}`
+
+        setData({
+          url: scanUrl,
+          score,
+          grade,
+          device,
+          timestamp: new Date().toISOString(),
+          coreWebVitals: {
+            lcp: {
+              value: perf.lcp ?? 0,
+              unit: 's',
+              rating: getRating((perf.lcp ?? 0) * 1000, 2500, 4000),
+              threshold: { good: 2.5, needsImprovement: 4 },
+              trend: 0,
+            },
+            inp: {
+              value: perf.fid ?? 0,
+              unit: 'ms',
+              rating: getRating(perf.fid ?? 0, 200, 500),
+              threshold: { good: 200, needsImprovement: 500 },
+              trend: 0,
+            },
+            cls: {
+              value: perf.cls ?? 0,
+              unit: '',
+              rating: getRating(perf.cls ?? 0, 0.1, 0.25),
+              threshold: { good: 0.1, needsImprovement: 0.25 },
+              trend: 0,
+            },
+            fcp: {
+              value: 0,
+              unit: 's',
+              rating: 'good',
+              threshold: { good: 1.8, needsImprovement: 3 },
+              trend: 0,
+            },
+            ttfb: {
+              value: perf.ttfb ?? 0,
+              unit: 'ms',
+              rating: getRating(perf.ttfb ?? 0, 600, 1800),
+              threshold: { good: 600, needsImprovement: 1800 },
+              trend: 0,
+            },
+            tbt: {
+              value: 0,
+              unit: 'ms',
+              rating: 'good',
+              threshold: { good: 200, needsImprovement: 600 },
+              trend: 0,
+            },
+          },
+          resources: {
+            scripts: [],
+            stylesheets: [],
+            images: [],
+            fonts: [],
+            other: [],
+            totalSize: 0,
+          },
+          opportunities: [],
+          diagnostics: [],
+          competitors: [],
+        })
+      } catch {
+        // Silent fail — user can still trigger manual analysis
+      }
+    }
+
+    loadLatestScan()
+    return () => { cancelled = true }
+  }, [selectedWebsite?.id])
+
   const handleAnalyze = async () => {
     if (!urlInput.trim()) {
       setError('Veuillez entrer une URL')

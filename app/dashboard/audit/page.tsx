@@ -825,7 +825,7 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
                         </div>
                         <span className={cn('text-sm font-bold', getScoreColor(avgScore))}>{avgScore}</span>
                       </div>
-                      <div className="w-full h-1.5 rounded-full bg-surface-100 dark:bg-surface-700 overflow-hidden">
+                      <div className="w-full h-1.5 rounded-full bg-surface-100 dark:bg-surface-700 overflow-hidden" role="progressbar" aria-label={cfg.label} aria-valuenow={avgScore} aria-valuemin={0} aria-valuemax={100}>
                         <div
                           className={cn('h-full rounded-full transition-all duration-700', avgScore >= 80 ? 'bg-green-500' : avgScore >= 60 ? 'bg-amber-500' : 'bg-red-500')}
                           style={{ width: `${avgScore}%` }}
