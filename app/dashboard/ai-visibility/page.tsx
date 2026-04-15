@@ -227,7 +227,7 @@ function LoadingSkeleton() {
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
-            className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6"
+            className="rounded-lg border border-white/5 bg-white/[0.02] p-6"
           >
             <div className="h-4 w-24 bg-surface-200 dark:bg-surface-700 rounded mb-3" />
             <div className="h-8 w-16 bg-surface-200 dark:bg-surface-700 rounded" />
@@ -235,7 +235,7 @@ function LoadingSkeleton() {
         ))}
       </div>
       {/* Chart skeleton */}
-      <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6">
+      <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6">
         <div className="h-5 w-48 bg-surface-200 dark:bg-surface-700 rounded mb-6" />
         <div className="h-[350px] bg-surface-200 dark:bg-surface-800 rounded" />
       </div>
@@ -247,9 +247,9 @@ function LoadingSkeleton() {
 
 function EmptyState({ onNewQuery }: { onNewQuery?: () => void }) {
   return (
-    <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-12 text-center">
+    <div className="rounded-lg border border-white/5 bg-white/[0.02] p-12 text-center">
       <Sparkles className="h-12 w-12 text-surface-400 mx-auto mb-4" />
-      <h3 className="text-lg font-semibold text-surface-900 dark:text-surface-50 mb-2">
+      <h3 className="text-lg font-semibold text-white mb-2">
         Aucune donnee disponible
       </h3>
       <p className="text-sm text-surface-500 mb-6 max-w-md mx-auto">
@@ -307,13 +307,13 @@ function NewQueryForm({
   }
 
   return (
-    <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6">
-      <h3 className="text-lg font-bold text-surface-900 dark:text-surface-50 mb-4">
+    <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6">
+      <h3 className="text-lg font-bold text-white mb-4">
         Nouvelle requete
       </h3>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1.5">
+          <label className="block text-sm font-medium text-white/70 mb-1.5">
             Requete / Prompt
           </label>
           <input
@@ -321,18 +321,18 @@ function NewQueryForm({
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             placeholder="Ex: meilleur outil SEO 2026"
-            className="w-full px-3 py-2.5 rounded-lg border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800 text-sm outline-none text-surface-900 dark:text-surface-50 placeholder-surface-400 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
+            className="w-full px-3 py-2.5 rounded-lg border border-white/5 bg-white/[0.03] text-sm outline-none text-white placeholder-surface-400 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
             disabled={isSubmitting}
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1.5">
+          <label className="block text-sm font-medium text-white/70 mb-1.5">
             LLM cible
           </label>
           <select
             value={llm}
             onChange={(e) => setLlm(e.target.value)}
-            className="w-full px-3 py-2.5 rounded-lg border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800 text-sm outline-none text-surface-900 dark:text-surface-50 cursor-pointer focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
+            className="w-full px-3 py-2.5 rounded-lg border border-white/5 bg-white/[0.03] text-sm outline-none text-white cursor-pointer focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
             disabled={isSubmitting}
           >
             {LLM_OPTIONS.map((opt) => (
@@ -400,7 +400,7 @@ export default function AIVisibilityPage() {
             <h1 className="text-3xl font-bold text-surface-950 dark:text-surface-50">Visibilite IA</h1>
           </div>
         </div>
-        <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-12 text-center">
+        <div className="rounded-lg border border-white/5 bg-white/[0.02] p-12 text-center">
           <p className="text-surface-500">
             Veuillez selectionner un site web pour afficher les donnees de visibilite IA.
           </p>
@@ -463,17 +463,17 @@ export default function AIVisibilityPage() {
             </div>
             <h1 className="text-3xl font-bold text-surface-950 dark:text-surface-50">Visibilite IA</h1>
           </div>
-          <p className="text-surface-600 dark:text-surface-400">
+          <p className="text-white/50">
             Surveillez et optimisez votre presence dans les reponses des moteurs IA
           </p>
         </div>
         <div className="flex items-center gap-3 flex-wrap lg:flex-nowrap">
-          <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-900">
+          <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-white/5 bg-white/[0.02]">
             <Calendar className="h-4 w-4 text-surface-500" />
             <select
               value={timeRange}
               onChange={(e) => setTimeRange(e.target.value)}
-              className="bg-transparent text-sm font-medium text-surface-900 dark:text-surface-50 outline-none cursor-pointer"
+              className="bg-transparent text-sm font-medium text-white outline-none cursor-pointer"
             >
               <option value="7j">7 derniers jours</option>
               <option value="30j">30 derniers jours</option>
@@ -509,9 +509,9 @@ export default function AIVisibilityPage() {
       {/* Top Stats Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Mention Rate Card */}
-        <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6 hover:shadow-md transition-shadow">
+        <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6 hover:shadow-md transition-shadow">
           <div className="space-y-4">
-            <p className="text-sm font-medium text-surface-600 dark:text-surface-400">Taux de mention</p>
+            <p className="text-sm font-medium text-white/50">Taux de mention</p>
             <div className="flex items-center justify-center">
               <div className="relative w-24 h-24">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
@@ -538,7 +538,7 @@ export default function AIVisibilityPage() {
                 </svg>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
-                    <p className="text-2xl font-bold text-surface-900 dark:text-surface-50">
+                    <p className="text-2xl font-bold text-white">
                       {Math.round(mentionRate)}
                     </p>
                     <p className="text-xs text-surface-500">%</p>
@@ -550,10 +550,10 @@ export default function AIVisibilityPage() {
         </div>
 
         {/* Total Queries Card */}
-        <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6 hover:shadow-md transition-shadow">
+        <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6 hover:shadow-md transition-shadow">
           <div className="space-y-3">
-            <p className="text-sm font-medium text-surface-600 dark:text-surface-400">Requetes analysees</p>
-            <p className="text-3xl font-bold text-surface-900 dark:text-surface-50">
+            <p className="text-sm font-medium text-white/50">Requetes analysees</p>
+            <p className="text-3xl font-bold text-white">
               {formatNumber(totalQueries)}
             </p>
             <p className="text-xs text-surface-500">
@@ -563,10 +563,10 @@ export default function AIVisibilityPage() {
         </div>
 
         {/* Positive Sentiment Card */}
-        <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6 hover:shadow-md transition-shadow">
+        <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6 hover:shadow-md transition-shadow">
           <div className="space-y-3">
-            <p className="text-sm font-medium text-surface-600 dark:text-surface-400">Sentiment Positif</p>
-            <p className="text-3xl font-bold text-surface-900 dark:text-surface-50">{positivePercent}%</p>
+            <p className="text-sm font-medium text-white/50">Sentiment Positif</p>
+            <p className="text-3xl font-bold text-white">{positivePercent}%</p>
             <div className="w-full h-1.5 rounded-full bg-surface-200 dark:bg-surface-800 overflow-hidden" role="progressbar" aria-label="Sentiment Positif" aria-valuenow={positivePercent} aria-valuemin={0} aria-valuemax={100}>
               <div
                 className="h-full bg-gradient-to-r from-accent-500 to-accent-600 rounded-full transition-all"
@@ -577,10 +577,10 @@ export default function AIVisibilityPage() {
         </div>
 
         {/* LLM Coverage Card */}
-        <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6 hover:shadow-md transition-shadow">
+        <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6 hover:shadow-md transition-shadow">
           <div className="space-y-3">
-            <p className="text-sm font-medium text-surface-600 dark:text-surface-400">LLM Couverts</p>
-            <p className="text-3xl font-bold text-surface-900 dark:text-surface-50">
+            <p className="text-sm font-medium text-white/50">LLM Couverts</p>
+            <p className="text-3xl font-bold text-white">
               {activeLlms}/{Object.keys(LLM_META).length}
             </p>
             <div className="flex gap-1.5">
@@ -605,10 +605,10 @@ export default function AIVisibilityPage() {
         <div className="lg:col-span-2 space-y-6">
           {/* Evolution Chart Section */}
           {chartData.length > 0 && (
-            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6">
+            <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h2 className="text-lg font-bold text-surface-900 dark:text-surface-50">
+                  <h2 className="text-lg font-bold text-white">
                     Evolution de la visibilite
                   </h2>
                   <p className="text-xs text-surface-500 mt-1">
@@ -624,7 +624,7 @@ export default function AIVisibilityPage() {
                         'px-3 py-1.5 rounded text-xs font-medium transition-colors',
                         timeRange === range
                           ? 'bg-brand-500 text-white'
-                          : 'bg-surface-200 dark:bg-surface-800 text-surface-700 dark:text-surface-300 hover:bg-surface-300 dark:hover:bg-surface-700'
+                          : 'bg-surface-200 dark:bg-surface-800 text-white/70 hover:bg-surface-300 dark:hover:bg-surface-700'
                       )}
                     >
                       {range}
@@ -649,12 +649,12 @@ export default function AIVisibilityPage() {
                   <XAxis
                     dataKey="date"
                     stroke="currentColor"
-                    className="text-surface-500 dark:text-surface-400"
+                    className="text-white/50"
                     style={{ fontSize: '12px' }}
                   />
                   <YAxis
                     stroke="currentColor"
-                    className="text-surface-500 dark:text-surface-400"
+                    className="text-white/50"
                     style={{ fontSize: '12px' }}
                     unit="%"
                   />
@@ -682,10 +682,10 @@ export default function AIVisibilityPage() {
           )}
 
           {/* Queries Table Section */}
-          <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6 overflow-hidden">
+          <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6 overflow-hidden">
             <div className="space-y-4 mb-6">
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-bold text-surface-900 dark:text-surface-50">
+                <h2 className="text-lg font-bold text-white">
                   Requetes recentes
                 </h2>
                 <span className="text-xs text-surface-500 bg-surface-200 dark:bg-surface-800 px-2.5 py-1 rounded-full font-medium">
@@ -695,7 +695,7 @@ export default function AIVisibilityPage() {
 
               {/* Search and Filter Bar */}
               <div className="flex items-center gap-3">
-                <div className="flex-1 flex items-center gap-2 px-3 py-2.5 rounded-lg border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800">
+                <div className="flex-1 flex items-center gap-2 px-3 py-2.5 rounded-lg border border-white/5 bg-white/[0.03]">
                   <Search className="h-4 w-4 text-surface-400" />
                   <input
                     type="text"
@@ -703,11 +703,11 @@ export default function AIVisibilityPage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     aria-label="Rechercher une requete"
-                    className="flex-1 bg-transparent text-sm outline-none text-surface-900 dark:text-surface-50 placeholder-surface-400"
+                    className="flex-1 bg-transparent text-sm outline-none text-white placeholder-surface-400"
                   />
                 </div>
-                <button className="p-2.5 rounded-lg border border-surface-200 dark:border-surface-700 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors">
-                  <Filter className="h-4 w-4 text-surface-600 dark:text-surface-400" />
+                <button className="p-2.5 rounded-lg border border-white/5 hover:bg-white/[0.03] transition-colors">
+                  <Filter className="h-4 w-4 text-white/50" />
                 </button>
               </div>
             </div>
@@ -717,23 +717,23 @@ export default function AIVisibilityPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-surface-200 dark:border-surface-700">
-                      <th className="text-left py-3 px-4 font-semibold text-surface-900 dark:text-surface-100">
+                    <tr className="border-b border-white/5">
+                      <th className="text-left py-3 px-4 font-semibold text-white">
                         Requete
                       </th>
-                      <th className="text-left py-3 px-4 font-semibold text-surface-900 dark:text-surface-100">
+                      <th className="text-left py-3 px-4 font-semibold text-white">
                         LLM
                       </th>
-                      <th className="text-center py-3 px-4 font-semibold text-surface-900 dark:text-surface-100">
+                      <th className="text-center py-3 px-4 font-semibold text-white">
                         Mentionne
                       </th>
-                      <th className="text-center py-3 px-4 font-semibold text-surface-900 dark:text-surface-100">
+                      <th className="text-center py-3 px-4 font-semibold text-white">
                         Position
                       </th>
-                      <th className="text-left py-3 px-4 font-semibold text-surface-900 dark:text-surface-100">
+                      <th className="text-left py-3 px-4 font-semibold text-white">
                         Sentiment
                       </th>
-                      <th className="text-left py-3 px-4 font-semibold text-surface-900 dark:text-surface-100">
+                      <th className="text-left py-3 px-4 font-semibold text-white">
                         Date
                       </th>
                     </tr>
@@ -748,7 +748,7 @@ export default function AIVisibilityPage() {
                       return (
                         <tr
                           key={query.id}
-                          className="hover:bg-surface-100 dark:hover:bg-surface-800/50 transition-colors"
+                          className="hover:bg-white/[0.03]/50 transition-colors"
                         >
                           <td className="py-3 px-4">
                             <span className="font-medium text-brand-600 dark:text-brand-400">
@@ -776,7 +776,7 @@ export default function AIVisibilityPage() {
                           </td>
                           <td className="py-3 px-4 text-center">
                             {query.position != null ? (
-                              <span className="font-semibold text-surface-900 dark:text-surface-50">
+                              <span className="font-semibold text-white">
                                 #{query.position}
                               </span>
                             ) : (
@@ -822,8 +822,8 @@ export default function AIVisibilityPage() {
           </div>
 
           {/* Score par LLM */}
-          <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6">
-            <h3 className="text-lg font-bold text-surface-900 dark:text-surface-50 mb-4">
+          <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6">
+            <h3 className="text-lg font-bold text-white mb-4">
               Mentions par LLM
             </h3>
             <div className="space-y-4">
@@ -832,11 +832,11 @@ export default function AIVisibilityPage() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div className={cn('w-2.5 h-2.5 rounded-full', llm.dotClass)} />
-                      <span className="font-medium text-surface-900 dark:text-surface-50">
+                      <span className="font-medium text-white">
                         {llm.label}
                       </span>
                     </div>
-                    <span className="text-sm text-surface-600 dark:text-surface-400">
+                    <span className="text-sm text-white/50">
                       {llm.mentions} mention{llm.mentions !== 1 ? 's' : ''}
                     </span>
                   </div>
@@ -853,8 +853,8 @@ export default function AIVisibilityPage() {
 
           {/* Sentiment breakdown */}
           {sentimentTotal > 0 && (
-            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6">
-              <h3 className="text-lg font-bold text-surface-900 dark:text-surface-50 mb-4">
+            <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6">
+              <h3 className="text-lg font-bold text-white mb-4">
                 Repartition des sentiments
               </h3>
               <div className="space-y-3">
@@ -867,8 +867,8 @@ export default function AIVisibilityPage() {
                   return (
                     <div key={s.key} className="space-y-1.5">
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-surface-700 dark:text-surface-300">{s.label}</span>
-                        <span className="font-medium text-surface-900 dark:text-surface-50">
+                        <span className="text-white/70">{s.label}</span>
+                        <span className="font-medium text-white">
                           {pct}% ({s.count})
                         </span>
                       </div>
@@ -886,15 +886,15 @@ export default function AIVisibilityPage() {
           )}
 
           {/* Recommendations */}
-          <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6">
-            <h3 className="text-lg font-bold text-surface-900 dark:text-surface-50 mb-4">
+          <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6">
+            <h3 className="text-lg font-bold text-white mb-4">
               Recommandations IA
             </h3>
             <div className="space-y-3">
               {recommendations.map((rec, idx) => (
                 <div
                   key={idx}
-                  className="rounded-lg border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800/50 p-3 hover:shadow-sm transition-shadow"
+                  className="rounded-lg border border-white/5 bg-white/[0.03]/50 p-3 hover:shadow-sm transition-shadow"
                 >
                   <div className="flex items-start gap-3">
                     <span
@@ -906,10 +906,10 @@ export default function AIVisibilityPage() {
                       {rec.priority}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-surface-900 dark:text-surface-100 leading-tight">
+                      <p className="text-xs font-medium text-white leading-tight">
                         {rec.title}
                       </p>
-                      <p className="text-xs text-surface-600 dark:text-surface-400 mt-1.5 leading-snug">
+                      <p className="text-xs text-white/50 mt-1.5 leading-snug">
                         {rec.description}
                       </p>
                     </div>

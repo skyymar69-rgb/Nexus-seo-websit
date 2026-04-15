@@ -217,17 +217,17 @@ export default function AIContentPage() {
   const metaDesc = keyword ? `Découvrez comment optimiser votre ${keyword}. Guide pratique avec stratégies éprouvées et cas d'étude réels.` : '';
 
   return (
-    <div className="min-h-screen bg-surface-50 dark:bg-surface-950">
+    <div className="min-h-screen bg-white/[0.02]">
       {/* Header */}
-      <div className="border-b border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900">
+      <div className="border-b border-white/5 bg-white/[0.03]">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex items-center gap-3 mb-2">
             <Sparkles className="w-8 h-8 text-brand-600" />
-            <h1 className="text-3xl font-bold text-surface-900 dark:text-white">
+            <h1 className="text-3xl font-bold text-white">
               Generateur de Contenu SEO
             </h1>
           </div>
-          <p className="text-surface-600 dark:text-surface-400">
+          <p className="text-white/50">
             Creez du contenu SEO-optimise en quelques secondes — 100% gratuit, sans cle API
           </p>
         </div>
@@ -236,17 +236,17 @@ export default function AIContentPage() {
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Error Banner */}
         {error && (
-          <div className="mb-6 rounded-xl border border-red-300 dark:border-red-800 bg-red-50 dark:bg-red-950/30 p-4">
+          <div className="mb-6 rounded-xl border border-rose-500/20 bg-rose-500/10 p-4">
             <div className="flex items-center gap-3">
               <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-              <p className="text-red-700 dark:text-red-400 text-sm">{error}</p>
+              <p className="text-rose-400 text-sm">{error}</p>
             </div>
           </div>
         )}
 
         {/* Content Type Selector */}
         <div className="mb-8">
-          <h2 className="text-lg font-semibold text-surface-900 dark:text-white mb-4">
+          <h2 className="text-lg font-semibold text-white mb-4">
             Choisissez le type de contenu
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
@@ -257,12 +257,12 @@ export default function AIContentPage() {
                 className={cn(
                   'p-4 rounded-lg border-2 transition-all text-center',
                   selectedType === type.id
-                    ? 'border-brand-600 bg-brand-50 dark:bg-brand-950/30'
-                    : 'border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 hover:border-brand-300 dark:hover:border-brand-800'
+                    ? 'border-brand-600 bg-brand-500/10'
+                    : 'border-white/5 bg-white/[0.03] hover:border-brand-300 '
                 )}
               >
                 <div className="text-2xl mb-2">{type.icon}</div>
-                <p className="text-sm font-medium text-surface-900 dark:text-white">
+                <p className="text-sm font-medium text-white">
                   {type.label}
                 </p>
               </button>
@@ -274,14 +274,14 @@ export default function AIContentPage() {
           {/* Left Column - Configuration and Editor */}
           <div className="lg:col-span-2 space-y-6">
             {/* Configuration Panel */}
-            <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
-              <h2 className="text-lg font-semibold text-surface-900 dark:text-white mb-5">
+            <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
+              <h2 className="text-lg font-semibold text-white mb-5">
                 Configuration
               </h2>
 
               {/* Keyword Input */}
               <div className="mb-5">
-                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+                <label className="block text-sm font-medium text-white/70 mb-2">
                   Mot-cle cible
                 </label>
                 <input
@@ -289,13 +289,13 @@ export default function AIContentPage() {
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
                   placeholder="Ex: SEO, developpement web, e-commerce..."
-                  className="w-full px-4 py-2 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800 text-surface-900 dark:text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  className="w-full px-4 py-2 rounded-lg border border-white/5 bg-white/[0.03] text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </div>
 
               {/* Tone Selector */}
               <div className="mb-5">
-                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+                <label className="block text-sm font-medium text-white/70 mb-2">
                   Ton de la voix
                 </label>
                 <div className="grid grid-cols-2 gap-2">
@@ -307,7 +307,7 @@ export default function AIContentPage() {
                         'px-3 py-2 rounded-lg text-sm font-medium transition-all',
                         tone === t.value
                           ? 'bg-brand-600 text-white'
-                          : 'bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 hover:bg-surface-200 dark:hover:bg-surface-700'
+                          : 'bg-white/[0.03] text-white/70 hover:bg-white/[0.03]'
                       )}
                     >
                       {t.label}
@@ -318,13 +318,13 @@ export default function AIContentPage() {
 
               {/* Language Selector */}
               <div className="mb-5">
-                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+                <label className="block text-sm font-medium text-white/70 mb-2">
                   Langue
                 </label>
                 <select
                   value={language}
                   onChange={(e) => setLanguage(e.target.value)}
-                  className="w-full px-4 py-2 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800 text-surface-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  className="w-full px-4 py-2 rounded-lg border border-white/5 bg-white/[0.03] text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
                 >
                   {LANGUAGES.map(lang => (
                     <option key={lang.value} value={lang.value}>{lang.label}</option>
@@ -334,7 +334,7 @@ export default function AIContentPage() {
 
               {/* Word Count Slider */}
               <div className="mb-5">
-                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+                <label className="block text-sm font-medium text-white/70 mb-2">
                   Nombre de mots: {wordCount}
                 </label>
                 <input
@@ -344,7 +344,7 @@ export default function AIContentPage() {
                   step="100"
                   value={wordCount}
                   onChange={(e) => setWordCount(parseInt(e.target.value))}
-                  className="w-full h-2 bg-surface-300 dark:bg-surface-700 rounded-lg appearance-none cursor-pointer accent-brand-600"
+                  className="w-full h-2 bg-white/[0.03] rounded-lg appearance-none cursor-pointer accent-brand-600"
                 />
                 <div className="flex justify-between text-xs text-surface-500 mt-1">
                   <span>300</span>
@@ -354,7 +354,7 @@ export default function AIContentPage() {
 
               {/* Instructions */}
               <div className="mb-6">
-                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+                <label className="block text-sm font-medium text-white/70 mb-2">
                   Instructions supplementaires (optionnel)
                 </label>
                 <textarea
@@ -363,7 +363,7 @@ export default function AIContentPage() {
                   placeholder="Ex: Inclure des statistiques recentes, mentionner des outils specifiques..."
                   rows={3}
                   maxLength={1000}
-                  className="w-full px-4 py-2 rounded-lg border border-surface-300 dark:border-surface-700 bg-white dark:bg-surface-800 text-surface-900 dark:text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-brand-500 resize-none"
+                  className="w-full px-4 py-2 rounded-lg border border-white/5 bg-white/[0.03] text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-brand-500 resize-none"
                 />
               </div>
 
@@ -399,46 +399,46 @@ export default function AIContentPage() {
 
             {/* Streaming skeleton / placeholder */}
             {isGenerating && !content && (
-              <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
+              <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
                 <div className="flex items-center gap-3 mb-4">
                   <Loader2 className="w-5 h-5 animate-spin text-brand-600" />
-                  <span className="text-sm font-medium text-surface-600 dark:text-surface-400">
+                  <span className="text-sm font-medium text-white/50">
                     Generation de votre contenu en cours...
                   </span>
                 </div>
                 <div className="space-y-3 animate-pulse">
-                  <div className="h-4 bg-surface-200 dark:bg-surface-800 rounded w-3/4" />
-                  <div className="h-4 bg-surface-200 dark:bg-surface-800 rounded w-full" />
-                  <div className="h-4 bg-surface-200 dark:bg-surface-800 rounded w-5/6" />
-                  <div className="h-4 bg-surface-200 dark:bg-surface-800 rounded w-2/3" />
-                  <div className="h-4 bg-surface-200 dark:bg-surface-800 rounded w-full" />
-                  <div className="h-4 bg-surface-200 dark:bg-surface-800 rounded w-4/5" />
+                  <div className="h-4 bg-white/[0.03] rounded w-3/4" />
+                  <div className="h-4 bg-white/[0.03] rounded w-full" />
+                  <div className="h-4 bg-white/[0.03] rounded w-5/6" />
+                  <div className="h-4 bg-white/[0.03] rounded w-2/3" />
+                  <div className="h-4 bg-white/[0.03] rounded w-full" />
+                  <div className="h-4 bg-white/[0.03] rounded w-4/5" />
                 </div>
               </div>
             )}
 
             {/* AI Editor */}
             {content && (
-              <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 overflow-hidden">
+              <div className="bg-white/[0.03] rounded-xl border border-white/5 overflow-hidden">
                 {/* Toolbar */}
-                <div className="bg-surface-50 dark:bg-surface-800/50 border-b border-surface-200 dark:border-surface-800 p-4 flex items-center gap-2 flex-wrap">
-                  <button className="p-2 hover:bg-surface-200 dark:hover:bg-surface-700 rounded transition-colors" title="Gras">
-                    <Bold className="w-4 h-4 text-surface-600 dark:text-surface-400" />
+                <div className="bg-white/[0.02] border-b border-white/5 p-4 flex items-center gap-2 flex-wrap">
+                  <button className="p-2 hover:bg-white/[0.03] rounded transition-colors" title="Gras">
+                    <Bold className="w-4 h-4 text-white/50" />
                   </button>
-                  <button className="p-2 hover:bg-surface-200 dark:hover:bg-surface-700 rounded transition-colors" title="Italique">
-                    <Italic className="w-4 h-4 text-surface-600 dark:text-surface-400" />
+                  <button className="p-2 hover:bg-white/[0.03] rounded transition-colors" title="Italique">
+                    <Italic className="w-4 h-4 text-white/50" />
                   </button>
-                  <button className="p-2 hover:bg-surface-200 dark:hover:bg-surface-700 rounded transition-colors" title="Titre 2">
-                    <Heading2 className="w-4 h-4 text-surface-600 dark:text-surface-400" />
+                  <button className="p-2 hover:bg-white/[0.03] rounded transition-colors" title="Titre 2">
+                    <Heading2 className="w-4 h-4 text-white/50" />
                   </button>
-                  <button className="p-2 hover:bg-surface-200 dark:hover:bg-surface-700 rounded transition-colors" title="Titre 3">
-                    <Heading3 className="w-4 h-4 text-surface-600 dark:text-surface-400" />
+                  <button className="p-2 hover:bg-white/[0.03] rounded transition-colors" title="Titre 3">
+                    <Heading3 className="w-4 h-4 text-white/50" />
                   </button>
-                  <button className="p-2 hover:bg-surface-200 dark:hover:bg-surface-700 rounded transition-colors" title="Liste">
-                    <List className="w-4 h-4 text-surface-600 dark:text-surface-400" />
+                  <button className="p-2 hover:bg-white/[0.03] rounded transition-colors" title="Liste">
+                    <List className="w-4 h-4 text-white/50" />
                   </button>
-                  <button className="p-2 hover:bg-surface-200 dark:hover:bg-surface-700 rounded transition-colors" title="Lien">
-                    <Link2 className="w-4 h-4 text-surface-600 dark:text-surface-400" />
+                  <button className="p-2 hover:bg-white/[0.03] rounded transition-colors" title="Lien">
+                    <Link2 className="w-4 h-4 text-white/50" />
                   </button>
                   <div className="flex-1"></div>
                   {isGenerating && (
@@ -447,7 +447,7 @@ export default function AIContentPage() {
                       <span className="text-xs text-brand-600 font-medium">En cours...</span>
                     </div>
                   )}
-                  <div className="text-sm text-surface-600 dark:text-surface-400">
+                  <div className="text-sm text-white/50">
                     {wordCountValue} mots | {charCount} caracteres
                   </div>
                 </div>
@@ -456,22 +456,22 @@ export default function AIContentPage() {
                 <textarea
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  className="w-full h-96 p-6 focus:outline-none bg-white dark:bg-surface-900 text-surface-900 dark:text-white resize-none font-serif leading-relaxed"
+                  className="w-full h-96 p-6 focus:outline-none bg-white/[0.03] text-white resize-none font-serif leading-relaxed"
                   placeholder="Le contenu genere apparaitra ici..."
                 />
 
                 {/* Actions */}
-                <div className="bg-surface-50 dark:bg-surface-800/50 border-t border-surface-200 dark:border-surface-800 p-4 flex gap-3">
+                <div className="bg-white/[0.02] border-t border-white/5 p-4 flex gap-3">
                   <button
                     onClick={handleCopy}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-700 text-surface-700 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors font-medium"
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/[0.03] border border-white/5 text-white/70 hover:bg-white/[0.03] transition-colors font-medium"
                   >
                     <Copy className="w-4 h-4" />
                     Copier
                   </button>
                   <button
                     onClick={handleDownload}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-700 text-surface-700 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors font-medium"
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/[0.03] border border-white/5 text-white/70 hover:bg-white/[0.03] transition-colors font-medium"
                   >
                     <Download className="w-4 h-4" />
                     Telecharger
@@ -482,15 +482,15 @@ export default function AIContentPage() {
 
             {/* Content Templates */}
             {!content && !isGenerating && (
-              <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
-                <h2 className="text-lg font-semibold text-surface-900 dark:text-white mb-4">
+              <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
+                <h2 className="text-lg font-semibold text-white mb-4">
                   Modeles disponibles
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {['Blog listicle', 'Guide complet', 'Etude de cas', 'Entrevue', 'Comparatif', 'Tutoriel'].map(template => (
                     <button
                       key={template}
-                      className="p-4 text-left rounded-lg bg-surface-50 dark:bg-surface-800/50 border border-surface-200 dark:border-surface-700 hover:border-brand-400 dark:hover:border-brand-600 transition-colors text-surface-700 dark:text-surface-300 hover:text-surface-900 dark:hover:text-white font-medium"
+                      className="p-4 text-left rounded-lg bg-white/[0.02] border border-white/5 hover:border-brand-500/30 transition-colors text-white/70 hover:text-white font-medium"
                     >
                       {template}
                     </button>
@@ -503,8 +503,8 @@ export default function AIContentPage() {
           {/* Right Column - SEO Sidebar */}
           <div className="space-y-6">
             {/* History */}
-            <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
-              <h3 className="text-lg font-semibold text-surface-900 dark:text-white mb-4 flex items-center gap-2">
+            <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
+              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                 <Clock className="w-5 h-5 text-brand-600" />
                 Historique
               </h3>
@@ -512,9 +512,9 @@ export default function AIContentPage() {
                 {HISTORY_ITEMS.map(item => (
                   <button
                     key={item.id}
-                    className="w-full text-left p-3 rounded-lg hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors group"
+                    className="w-full text-left p-3 rounded-lg hover:bg-white/[0.03] transition-colors group"
                   >
-                    <p className="font-medium text-sm text-surface-900 dark:text-white group-hover:text-brand-600 transition-colors">
+                    <p className="font-medium text-sm text-white group-hover:text-brand-600 transition-colors">
                       {item.title}
                     </p>
                     <p className="text-xs text-surface-500 mt-1">{item.date}</p>
@@ -527,14 +527,14 @@ export default function AIContentPage() {
             {showSEO && content && (
               <>
                 {/* SEO Score */}
-                <div className="bg-gradient-to-br from-brand-50 to-accent-50 dark:from-brand-950/30 dark:to-accent-950/30 rounded-xl border border-brand-200 dark:border-brand-800 p-6">
-                  <h3 className="text-lg font-semibold text-surface-900 dark:text-white mb-4 flex items-center gap-2">
+                <div className="bg-gradient-to-br from-brand-500/10 to-accent-500/10 rounded-xl border border-brand-500/20 p-6">
+                  <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                     <TrendingUp className="w-5 h-5 text-brand-600" />
                     Score SEO
                   </h3>
                   <div className="relative w-32 h-32 mx-auto mb-4">
                     <svg viewBox="0 0 100 100" className="w-full h-full">
-                      <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="8" className="text-surface-200 dark:text-surface-700" />
+                      <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="8" className="text-white/10" />
                       <circle
                         cx="50"
                         cy="50"
@@ -546,28 +546,28 @@ export default function AIContentPage() {
                         className="text-green-500"
                         style={{ transform: 'rotate(-90deg)', transformOrigin: '50% 50%' }}
                       />
-                      <text x="50" y="55" textAnchor="middle" className="text-2xl font-bold fill-surface-900 dark:fill-white">
+                      <text x="50" y="55" textAnchor="middle" className="text-2xl font-bold fill-white">
                         78%
                       </text>
                     </svg>
                   </div>
-                  <p className="text-center text-sm text-surface-600 dark:text-surface-400">
+                  <p className="text-center text-sm text-white/50">
                     Excellent! Votre contenu est bien optimise.
                   </p>
                 </div>
 
                 {/* Keyword Density */}
-                <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
-                  <h3 className="font-semibold text-surface-900 dark:text-white mb-3">
+                <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
+                  <h3 className="font-semibold text-white mb-3">
                     Densite du mot-cle
                   </h3>
                   {keyword && (
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-surface-600 dark:text-surface-400">{keyword}</span>
+                        <span className="text-sm text-white/50">{keyword}</span>
                         <span className="font-bold text-brand-600">2.1%</span>
                       </div>
-                      <div className="w-full bg-surface-200 dark:bg-surface-800 rounded-full h-2">
+                      <div className="w-full bg-white/[0.03] rounded-full h-2">
                         <div className="bg-green-500 h-2 rounded-full" style={{ width: '2.1%' }}></div>
                       </div>
                       <p className="text-xs text-surface-500 mt-2">Optimal (1-3%)</p>
@@ -576,33 +576,33 @@ export default function AIContentPage() {
                 </div>
 
                 {/* Readability */}
-                <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
-                  <h3 className="font-semibold text-surface-900 dark:text-white mb-4 flex items-center gap-2">
+                <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
+                  <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
                     <CheckCircle2 className="w-5 h-5 text-green-500" />
                     Lisibilite
                   </h3>
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-surface-600 dark:text-surface-400">Score Flesch</span>
+                      <span className="text-sm text-white/50">Score Flesch</span>
                       <span className="font-bold text-green-600">62/100</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-surface-600 dark:text-surface-400">Longueur moyenne</span>
+                      <span className="text-sm text-white/50">Longueur moyenne</span>
                       <span className="text-sm">18 mots/phrase</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-surface-600 dark:text-surface-400">Titres</span>
+                      <span className="text-sm text-white/50">Titres</span>
                       <span className="text-sm text-green-600">Bien structure</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Meta Title */}
-                <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
-                  <h3 className="font-semibold text-surface-900 dark:text-white mb-3">
+                <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
+                  <h3 className="font-semibold text-white mb-3">
                     Suggestion Meta Title
                   </h3>
-                  <p className="text-sm text-surface-700 dark:text-surface-300 mb-2 line-clamp-2">
+                  <p className="text-sm text-white/70 mb-2 line-clamp-2">
                     {metaTitle}
                   </p>
                   <p className="text-xs text-surface-500">
@@ -619,11 +619,11 @@ export default function AIContentPage() {
                 </div>
 
                 {/* Meta Description */}
-                <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
-                  <h3 className="font-semibold text-surface-900 dark:text-white mb-3">
+                <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
+                  <h3 className="font-semibold text-white mb-3">
                     Suggestion Meta Description
                   </h3>
-                  <p className="text-sm text-surface-700 dark:text-surface-300 mb-2 line-clamp-3">
+                  <p className="text-sm text-white/70 mb-2 line-clamp-3">
                     {metaDesc}
                   </p>
                   <p className="text-xs text-surface-500">
@@ -640,8 +640,8 @@ export default function AIContentPage() {
                 </div>
 
                 {/* Related Keywords */}
-                <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
-                  <h3 className="font-semibold text-surface-900 dark:text-white mb-4">
+                <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
+                  <h3 className="font-semibold text-white mb-4">
                     Mots-cles connexes
                   </h3>
                   <div className="space-y-2">
@@ -653,7 +653,7 @@ export default function AIContentPage() {
                           onChange={() => toggleKeyword(kw)}
                           className="w-4 h-4 rounded accent-brand-600 cursor-pointer"
                         />
-                        <span className="text-sm text-surface-700 dark:text-surface-300 group-hover:text-surface-900 dark:group-hover:text-white">
+                        <span className="text-sm text-white/70 group-hover:text-white">
                           {kw}
                         </span>
                       </label>
@@ -662,12 +662,12 @@ export default function AIContentPage() {
                 </div>
 
                 {/* Structure Recommendations */}
-                <div className="bg-blue-50 dark:bg-blue-950/30 rounded-xl border border-blue-200 dark:border-blue-800 p-6">
-                  <h3 className="font-semibold text-surface-900 dark:text-white mb-3 flex items-center gap-2">
+                <div className="bg-blue-500/10 rounded-xl border border-blue-500/20 p-6">
+                  <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
                     <AlertCircle className="w-5 h-5 text-blue-600" />
                     Recommandations
                   </h3>
-                  <ul className="space-y-2 text-sm text-surface-700 dark:text-surface-300">
+                  <ul className="space-y-2 text-sm text-white/70">
                     <li>Utilisez votre mot-cle dans le premier paragraphe</li>
                     <li>Ajoutez au moins 3-4 sous-titres H2/H3</li>
                     <li>Incluez des listes a puces</li>

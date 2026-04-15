@@ -65,15 +65,15 @@ export default function ContentAnalyzerPage() {
           <Sparkles className="h-6 w-6 text-white" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-surface-950 dark:text-surface-50">Content Analyzer IA</h1>
+          <h1 className="text-2xl font-bold text-white">Content Analyzer IA</h1>
           <p className="text-sm text-surface-500">Analysez votre contenu pour la citabilite par les LLMs</p>
         </div>
       </div>
 
       {/* Input */}
-      <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
+      <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
         <div className="flex gap-3">
-          <div className="flex items-center gap-2 flex-1 px-4 py-2.5 rounded-xl border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800">
+          <div className="flex items-center gap-2 flex-1 px-4 py-2.5 rounded-xl border border-white/5 bg-white/[0.02]">
             <Globe className="w-4 h-4 text-surface-400" />
             <input type="text" value={url} onChange={e => setUrl(e.target.value)} placeholder="https://votresite.fr/page" aria-label="URL de la page a analyser" className="flex-1 bg-transparent outline-none text-sm" onKeyDown={e => e.key === 'Enter' && handleAnalyze()} />
           </div>
@@ -88,8 +88,8 @@ export default function ContentAnalyzerPage() {
       {result && (
         <>
           {/* Scores overview */}
-          <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
-            <h2 className="text-lg font-bold text-surface-900 dark:text-white mb-6 text-center">Score de citabilite IA</h2>
+          <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
+            <h2 className="text-lg font-bold text-white mb-6 text-center">Score de citabilite IA</h2>
             <div className="flex flex-wrap justify-center gap-8">
               <ScoreRing score={result.geoScore} label="GEO Global" />
               <ScoreRing score={result.eeat.total} label="E-E-A-T" />
@@ -99,8 +99,8 @@ export default function ContentAnalyzerPage() {
           </div>
 
           {/* E-E-A-T breakdown */}
-          <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
-            <h3 className="font-bold text-surface-900 dark:text-white mb-4">E-E-A-T Detaille</h3>
+          <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
+            <h3 className="font-bold text-white mb-4">E-E-A-T Detaille</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
                 { label: 'Experience', score: result.eeat.experience.score, desc: 'Temoignages, cas clients, portfolio' },
@@ -108,9 +108,9 @@ export default function ContentAnalyzerPage() {
                 { label: 'Autorite', score: result.eeat.authority.score, desc: 'Reseaux sociaux, presse, citations' },
                 { label: 'Confiance', score: result.eeat.trust.score, desc: 'HTTPS, mentions legales, contact' },
               ].map(item => (
-                <div key={item.label} className="rounded-lg border border-surface-200 dark:border-surface-700 p-4">
+                <div key={item.label} className="rounded-lg border border-white/5 p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-semibold text-surface-700 dark:text-surface-300">{item.label}</span>
+                    <span className="text-sm font-semibold text-white/70">{item.label}</span>
                     <span className={cn('text-lg font-black', item.score >= 60 ? 'text-green-600' : item.score >= 40 ? 'text-amber-500' : 'text-red-500')}>{item.score}</span>
                   </div>
                   <div className="w-full bg-surface-200 dark:bg-surface-700 rounded-full h-1.5 mb-2" role="progressbar" aria-label={item.label} aria-valuenow={item.score} aria-valuemin={0} aria-valuemax={100}>
@@ -124,14 +124,14 @@ export default function ContentAnalyzerPage() {
 
           {/* Schema + FAQ */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
-              <h3 className="font-bold text-surface-900 dark:text-white mb-3">Schemas detectes</h3>
+            <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
+              <h3 className="font-bold text-white mb-3">Schemas detectes</h3>
               {result.schema.found.length > 0 ? (
                 <div className="space-y-2">
                   {result.schema.found.map((s, i) => (
                     <div key={i} className="flex items-center gap-2 text-sm">
                       {s.valid ? <CheckCircle className="w-4 h-4 text-green-500" /> : <AlertTriangle className="w-4 h-4 text-amber-500" />}
-                      <span className="text-surface-700 dark:text-surface-300">{s.type}</span>
+                      <span className="text-white/70">{s.type}</span>
                     </div>
                   ))}
                 </div>
@@ -144,16 +144,16 @@ export default function ContentAnalyzerPage() {
               )}
             </div>
 
-            <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
-              <h3 className="font-bold text-surface-900 dark:text-white mb-3">FAQ</h3>
+            <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
+              <h3 className="font-bold text-white mb-3">FAQ</h3>
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   {result.faq.detected ? <CheckCircle className="w-4 h-4 text-green-500" /> : <XCircle className="w-4 h-4 text-red-400" />}
-                  <span className="text-sm text-surface-700 dark:text-surface-300">{result.faq.detected ? `${result.faq.questionsFound} questions detectees` : 'Aucune FAQ detectee'}</span>
+                  <span className="text-sm text-white/70">{result.faq.detected ? `${result.faq.questionsFound} questions detectees` : 'Aucune FAQ detectee'}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   {result.faq.hasSchema ? <CheckCircle className="w-4 h-4 text-green-500" /> : <XCircle className="w-4 h-4 text-red-400" />}
-                  <span className="text-sm text-surface-700 dark:text-surface-300">{result.faq.hasSchema ? 'Schema FAQPage present' : 'Schema FAQPage manquant'}</span>
+                  <span className="text-sm text-white/70">{result.faq.hasSchema ? 'Schema FAQPage present' : 'Schema FAQPage manquant'}</span>
                 </div>
                 <p className="text-xs text-surface-500">{result.wordCount} mots sur la page</p>
               </div>

@@ -169,7 +169,11 @@
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --repo skyymar69-rgb/Nexus-seo-websit --title \"feat: Competitor Compare + Content Suggestions APIs\" --body \"Compare concurrents, analyse contenu, schema generator\" --base main --head claude/elastic-maxwell)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 18 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --repo skyymar69-rgb/Nexus-seo-websit --title \"feat: compare page dark + APIs\" --body \"Compare page dark theme\" --base main --head claude/elastic-maxwell)",
-      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 19 --repo skyymar69-rgb/Nexus-seo-websit --merge)"
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 19 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --repo skyymar69-rgb/Nexus-seo-websit --title \"fix: E-E-A-T NaN scores\" --body \"Fix NaN sur barres E-E-A-T dans rapport GEO\" --base main --head claude/elastic-maxwell)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 20 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
+      "mcp__Claude_in_Chrome__tabs_close_mcp",
+      "Bash(grep -rl \"bg-white dark:bg-surface\" app/dashboard/*/page.tsx)"
     ]
   }
 }

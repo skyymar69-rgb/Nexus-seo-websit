@@ -93,7 +93,7 @@ function ScoreGauge({ score, label, size = 160 }: { score: number; label: string
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span className={cn('text-3xl font-bold', getScoreColor(score))}>{score}</span>
-          <span className="text-xs font-medium text-surface-500 dark:text-surface-400">{label}</span>
+          <span className="text-xs font-medium text-white/50">{label}</span>
         </div>
       </div>
     </div>
@@ -116,14 +116,14 @@ function MetricCard({
   color: string
 }) {
   return (
-    <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-5 hover:shadow-md transition-shadow">
+    <div className="rounded-lg border border-white/5 bg-white/[0.02] p-5 hover:shadow-md transition-shadow">
       <div className="flex items-center gap-3 mb-3">
         <div className={cn('p-2 rounded-lg bg-gradient-to-br text-white', color)}>
           {icon}
         </div>
-        <p className="text-sm font-medium text-surface-600 dark:text-surface-400">{label}</p>
+        <p className="text-sm font-medium text-white/50">{label}</p>
       </div>
-      <p className="text-2xl font-bold text-surface-900 dark:text-surface-50">
+      <p className="text-2xl font-bold text-white">
         {value}
         {suffix && <span className="text-sm text-surface-400 font-normal ml-1">{suffix}</span>}
       </p>
@@ -145,7 +145,7 @@ function getSentimentBadge(sentiment: string) {
   switch (sentiment) {
     case 'positive': return 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800'
     case 'negative': return 'bg-red-500/10 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800'
-    default: return 'bg-surface-200 dark:bg-surface-700 text-surface-700 dark:text-surface-300 border border-surface-300 dark:border-surface-600'
+    default: return 'bg-surface-200 dark:bg-surface-700 text-white/70 border border-surface-300 dark:border-surface-600'
   }
 }
 
@@ -162,21 +162,21 @@ function getProviderDot(provider: string) {
 function LoadingSkeleton() {
   return (
     <div className="space-y-8 pb-8 animate-pulse">
-      <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-8">
+      <div className="rounded-lg border border-white/5 bg-white/[0.02] p-8">
         <div className="h-40 w-40 mx-auto bg-surface-200 dark:bg-surface-700 rounded-full" />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
-            className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6"
+            className="rounded-lg border border-white/5 bg-white/[0.02] p-6"
           >
             <div className="h-4 w-28 bg-surface-200 dark:bg-surface-700 rounded mb-3" />
             <div className="h-8 w-20 bg-surface-200 dark:bg-surface-700 rounded" />
           </div>
         ))}
       </div>
-      <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6">
+      <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6">
         <div className="h-5 w-40 bg-surface-200 dark:bg-surface-700 rounded mb-4" />
         <div className="space-y-3">
           {Array.from({ length: 3 }).map((_, i) => (
@@ -217,10 +217,10 @@ export default function LLMOScorePage() {
             <div className="p-2.5 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg">
               <Brain className="h-6 w-6 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-surface-950 dark:text-surface-50">Score LLMO</h1>
+            <h1 className="text-3xl font-bold text-white">Score LLMO</h1>
           </div>
         </div>
-        <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-12 text-center">
+        <div className="rounded-lg border border-white/5 bg-white/[0.02] p-12 text-center">
           <p className="text-surface-500">
             Veuillez selectionner un site web pour lancer l&apos;analyse LLMO.
           </p>
@@ -301,19 +301,19 @@ export default function LLMOScorePage() {
           <div className="p-2.5 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg">
             <Brain className="h-6 w-6 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-surface-950 dark:text-surface-50">Score LLMO</h1>
+          <h1 className="text-3xl font-bold text-white">Score LLMO</h1>
         </div>
-        <p className="text-surface-600 dark:text-surface-400">
+        <p className="text-white/50">
           Mesurez et optimisez la presence de votre marque dans les reponses des LLM (Large Language Model Optimization)
         </p>
       </div>
 
       {/* Form */}
-      <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6">
+      <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6">
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1.5">
+              <label className="block text-sm font-medium text-white/70 mb-1.5">
                 Nom de la marque
               </label>
               <input
@@ -321,12 +321,12 @@ export default function LLMOScorePage() {
                 value={brand}
                 onChange={(e) => setBrand(e.target.value)}
                 placeholder="Votre marque"
-                className="w-full px-3 py-2.5 rounded-lg border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800 text-sm outline-none text-surface-900 dark:text-surface-50 placeholder-surface-400 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
+                className="w-full px-3 py-2.5 rounded-lg border border-white/5 bg-white/[0.03] text-sm outline-none text-white placeholder-surface-400 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
                 disabled={isLoading}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1.5">
+              <label className="block text-sm font-medium text-white/70 mb-1.5">
                 Domaine
               </label>
               <input
@@ -334,14 +334,14 @@ export default function LLMOScorePage() {
                 value={domain}
                 onChange={(e) => setDomain(e.target.value)}
                 placeholder={selectedWebsite.domain}
-                className="w-full px-3 py-2.5 rounded-lg border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800 text-sm outline-none text-surface-900 dark:text-surface-50 placeholder-surface-400 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
+                className="w-full px-3 py-2.5 rounded-lg border border-white/5 bg-white/[0.03] text-sm outline-none text-white placeholder-surface-400 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
                 disabled={isLoading}
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1.5">
+            <label className="block text-sm font-medium text-white/70 mb-1.5">
               Requetes a analyser <span className="text-surface-400 font-normal">(une par ligne, max 5)</span>
             </label>
             <textarea
@@ -349,13 +349,13 @@ export default function LLMOScorePage() {
               onChange={(e) => setQueriesText(e.target.value)}
               placeholder={"meilleur outil SEO\ncomment optimiser son referencement\noutil analyse de backlinks"}
               rows={4}
-              className="w-full px-3 py-2.5 rounded-lg border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800 text-sm outline-none text-surface-900 dark:text-surface-50 placeholder-surface-400 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors resize-none"
+              className="w-full px-3 py-2.5 rounded-lg border border-white/5 bg-white/[0.03] text-sm outline-none text-white placeholder-surface-400 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors resize-none"
               disabled={isLoading}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+            <label className="block text-sm font-medium text-white/70 mb-2">
               Fournisseurs LLM
             </label>
             <div className="flex flex-wrap gap-3">
@@ -371,7 +371,7 @@ export default function LLMOScorePage() {
                       'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border transition-all',
                       isSelected
                         ? 'border-brand-500 bg-brand-500/10 text-brand-700 dark:text-brand-300'
-                        : 'border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800 text-surface-600 dark:text-surface-400 hover:border-surface-300 dark:hover:border-surface-600'
+                        : 'border-white/5 bg-white/[0.03] text-white/50 hover:border-surface-300 dark:hover:border-surface-600'
                     )}
                   >
                     <span className={cn('w-2.5 h-2.5 rounded-full', provider.color)} />
@@ -422,9 +422,9 @@ export default function LLMOScorePage() {
       {result && !isLoading && (
         <>
           {/* Overall Score */}
-          <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-8">
+          <div className="rounded-lg border border-white/5 bg-white/[0.02] p-8">
             <div className="text-center mb-4">
-              <h2 className="text-lg font-bold text-surface-900 dark:text-surface-50">
+              <h2 className="text-lg font-bold text-white">
                 Score LLMO global
               </h2>
             </div>
@@ -463,9 +463,9 @@ export default function LLMOScorePage() {
           </div>
 
           {/* Query Results Table */}
-          <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 overflow-hidden">
-            <div className="p-5 border-b border-surface-200 dark:border-surface-800">
-              <h2 className="text-lg font-bold text-surface-900 dark:text-surface-50">
+          <div className="rounded-lg border border-white/5 bg-white/[0.02] overflow-hidden">
+            <div className="p-5 border-b border-white/5">
+              <h2 className="text-lg font-bold text-white">
                 Resultats par requete
               </h2>
             </div>
@@ -473,19 +473,19 @@ export default function LLMOScorePage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="bg-surface-100 dark:bg-surface-800/50">
-                    <th className="text-left px-5 py-3 font-medium text-surface-600 dark:text-surface-400">
+                    <th className="text-left px-5 py-3 font-medium text-white/50">
                       Requete
                     </th>
-                    <th className="text-left px-5 py-3 font-medium text-surface-600 dark:text-surface-400">
+                    <th className="text-left px-5 py-3 font-medium text-white/50">
                       Fournisseur
                     </th>
-                    <th className="text-center px-5 py-3 font-medium text-surface-600 dark:text-surface-400">
+                    <th className="text-center px-5 py-3 font-medium text-white/50">
                       Mentionne
                     </th>
-                    <th className="text-center px-5 py-3 font-medium text-surface-600 dark:text-surface-400">
+                    <th className="text-center px-5 py-3 font-medium text-white/50">
                       Position
                     </th>
-                    <th className="text-center px-5 py-3 font-medium text-surface-600 dark:text-surface-400">
+                    <th className="text-center px-5 py-3 font-medium text-white/50">
                       Sentiment
                     </th>
                   </tr>
@@ -493,13 +493,13 @@ export default function LLMOScorePage() {
                 <tbody className="divide-y divide-surface-200 dark:divide-surface-800">
                   {result.queryResults.map((qr, i) => (
                     <tr key={i} className="hover:bg-surface-100/50 dark:hover:bg-surface-800/30 transition-colors">
-                      <td className="px-5 py-3 text-surface-900 dark:text-surface-100 max-w-xs truncate">
+                      <td className="px-5 py-3 text-white max-w-xs truncate">
                         {qr.query}
                       </td>
                       <td className="px-5 py-3">
                         <div className="flex items-center gap-2">
                           <span className={cn('w-2 h-2 rounded-full', getProviderDot(qr.provider))} />
-                          <span className="text-surface-700 dark:text-surface-300">
+                          <span className="text-white/70">
                             {getProviderLabel(qr.provider)}
                           </span>
                         </div>
@@ -511,7 +511,7 @@ export default function LLMOScorePage() {
                           <XCircle className="h-5 w-5 text-red-500 mx-auto" />
                         )}
                       </td>
-                      <td className="px-5 py-3 text-center text-surface-700 dark:text-surface-300">
+                      <td className="px-5 py-3 text-center text-white/70">
                         {qr.position != null ? `#${qr.position}` : '—'}
                       </td>
                       <td className="px-5 py-3 text-center">
@@ -528,14 +528,14 @@ export default function LLMOScorePage() {
 
           {/* Top Competitors */}
           {result.topCompetitors && result.topCompetitors.length > 0 && (
-            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6">
-              <h2 className="text-lg font-bold text-surface-900 dark:text-surface-50 mb-4">
+            <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6">
+              <h2 className="text-lg font-bold text-white mb-4">
                 Principaux concurrents mentionnes
               </h2>
               <div className="space-y-3">
                 {result.topCompetitors.map((comp, i) => (
                   <div key={i} className="flex items-center gap-4">
-                    <span className="text-sm font-medium text-surface-700 dark:text-surface-300 w-32 truncate">
+                    <span className="text-sm font-medium text-white/70 w-32 truncate">
                       {comp.name}
                     </span>
                     <div className="flex-1 h-6 bg-surface-200 dark:bg-surface-700 rounded-full overflow-hidden">
@@ -544,7 +544,7 @@ export default function LLMOScorePage() {
                         style={{ width: `${(comp.mentions / maxMentions) * 100}%` }}
                       />
                     </div>
-                    <span className="text-sm font-bold text-surface-900 dark:text-surface-100 w-12 text-right">
+                    <span className="text-sm font-bold text-white w-12 text-right">
                       {comp.mentions}
                     </span>
                   </div>
@@ -555,10 +555,10 @@ export default function LLMOScorePage() {
 
           {/* Recommendations */}
           {result.recommendations && result.recommendations.length > 0 && (
-            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6">
+            <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6">
               <div className="flex items-center gap-2 mb-4">
                 <Lightbulb className="h-5 w-5 text-amber-500" />
-                <h2 className="text-lg font-bold text-surface-900 dark:text-surface-50">
+                <h2 className="text-lg font-bold text-white">
                   Recommandations
                 </h2>
               </div>
@@ -568,7 +568,7 @@ export default function LLMOScorePage() {
                     <span className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 text-xs font-bold flex items-center justify-center mt-0.5">
                       {i + 1}
                     </span>
-                    <p className="text-sm text-surface-700 dark:text-surface-300">{rec}</p>
+                    <p className="text-sm text-white/70">{rec}</p>
                   </li>
                 ))}
               </ul>

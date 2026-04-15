@@ -51,7 +51,7 @@ export default function LLMSTxtPage() {
           <FileText className="h-6 w-6 text-white" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-surface-950 dark:text-surface-50">Generateur llms.txt</h1>
+          <h1 className="text-2xl font-bold text-white">Generateur llms.txt</h1>
           <p className="text-sm text-surface-500">Creez votre fichier llms.txt pour que les LLMs citent correctement votre site</p>
         </div>
       </div>
@@ -68,19 +68,19 @@ export default function LLMSTxtPage() {
       </div>
 
       {/* Form */}
-      <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6 space-y-4">
+      <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Nom de la marque *</label>
-            <input type="text" value={brandName} onChange={e => setBrandName(e.target.value)} placeholder="Kayzen Web" className="w-full px-4 py-2.5 rounded-xl border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 text-sm outline-none focus:ring-2 focus:ring-brand-500/30" />
+            <label className="block text-sm font-medium text-white/70 mb-1">Nom de la marque *</label>
+            <input type="text" value={brandName} onChange={e => setBrandName(e.target.value)} placeholder="Kayzen Web" className="w-full px-4 py-2.5 rounded-xl border border-white/5 bg-white/[0.02] text-sm outline-none focus:ring-2 focus:ring-brand-500/30" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">URL du site *</label>
-            <input type="text" value={url} onChange={e => setUrl(e.target.value)} placeholder="https://votresite.fr" className="w-full px-4 py-2.5 rounded-xl border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 text-sm outline-none focus:ring-2 focus:ring-brand-500/30" />
+            <label className="block text-sm font-medium text-white/70 mb-1">URL du site *</label>
+            <input type="text" value={url} onChange={e => setUrl(e.target.value)} placeholder="https://votresite.fr" className="w-full px-4 py-2.5 rounded-xl border border-white/5 bg-white/[0.02] text-sm outline-none focus:ring-2 focus:ring-brand-500/30" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Secteur (optionnel)</label>
-            <input type="text" value={sector} onChange={e => setSector(e.target.value)} placeholder="Agence web, E-commerce, SaaS..." className="w-full px-4 py-2.5 rounded-xl border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 text-sm outline-none focus:ring-2 focus:ring-brand-500/30" />
+            <label className="block text-sm font-medium text-white/70 mb-1">Secteur (optionnel)</label>
+            <input type="text" value={sector} onChange={e => setSector(e.target.value)} placeholder="Agence web, E-commerce, SaaS..." className="w-full px-4 py-2.5 rounded-xl border border-white/5 bg-white/[0.02] text-sm outline-none focus:ring-2 focus:ring-brand-500/30" />
           </div>
         </div>
         <button onClick={handleGenerate} disabled={loading || !url || !brandName} className="btn-primary px-6 py-3 rounded-xl w-full disabled:opacity-50 flex items-center justify-center gap-2">
@@ -95,45 +95,45 @@ export default function LLMSTxtPage() {
         <>
           {/* Tabs */}
           <div className="flex gap-2">
-            <button onClick={() => setActiveTab('short')} className={cn('px-4 py-2 rounded-lg text-sm font-medium transition-colors', activeTab === 'short' ? 'bg-brand-600 text-white' : 'bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400')}>
+            <button onClick={() => setActiveTab('short')} className={cn('px-4 py-2 rounded-lg text-sm font-medium transition-colors', activeTab === 'short' ? 'bg-brand-600 text-white' : 'bg-surface-100 dark:bg-surface-800 text-white/50')}>
               llms.txt (court)
             </button>
-            <button onClick={() => setActiveTab('full')} className={cn('px-4 py-2 rounded-lg text-sm font-medium transition-colors', activeTab === 'full' ? 'bg-brand-600 text-white' : 'bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400')}>
+            <button onClick={() => setActiveTab('full')} className={cn('px-4 py-2 rounded-lg text-sm font-medium transition-colors', activeTab === 'full' ? 'bg-brand-600 text-white' : 'bg-surface-100 dark:bg-surface-800 text-white/50')}>
               llms-full.txt (complet)
             </button>
           </div>
 
           {/* Generated content */}
-          <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 overflow-hidden">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-800/50">
-              <span className="text-sm font-mono text-surface-600 dark:text-surface-400">
+          <div className="bg-white/[0.03] rounded-xl border border-white/5 overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-white/[0.02]/50">
+              <span className="text-sm font-mono text-white/50">
                 {activeTab === 'short' ? 'llms.txt' : 'llms-full.txt'}
               </span>
               <div className="flex gap-2">
                 <button
                   onClick={() => copyText(activeTab === 'short' ? result.llmsTxt : result.llmsTxtFull, activeTab)}
-                  className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg border border-surface-200 dark:border-surface-700 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
+                  className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg border border-white/5 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
                 >
                   {copied === activeTab ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
                   {copied === activeTab ? 'Copie !' : 'Copier'}
                 </button>
                 <button
                   onClick={() => downloadFile(activeTab === 'short' ? result.llmsTxt : result.llmsTxtFull, activeTab === 'short' ? 'llms.txt' : 'llms-full.txt')}
-                  className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg border border-surface-200 dark:border-surface-700 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
+                  className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg border border-white/5 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
                 >
                   <Download className="w-3 h-3" /> Telecharger
                 </button>
               </div>
             </div>
-            <pre className="p-4 text-sm text-surface-700 dark:text-surface-300 overflow-x-auto whitespace-pre-wrap font-mono leading-relaxed max-h-[500px] overflow-y-auto">
+            <pre className="p-4 text-sm text-white/70 overflow-x-auto whitespace-pre-wrap font-mono leading-relaxed max-h-[500px] overflow-y-auto">
               {activeTab === 'short' ? result.llmsTxt : result.llmsTxtFull}
             </pre>
           </div>
 
           {/* How to install */}
-          <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
-            <h3 className="font-bold text-surface-900 dark:text-white mb-4">Comment installer votre llms.txt</h3>
-            <ol className="space-y-3 text-sm text-surface-700 dark:text-surface-300">
+          <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
+            <h3 className="font-bold text-white mb-4">Comment installer votre llms.txt</h3>
+            <ol className="space-y-3 text-sm text-white/70">
               <li className="flex items-start gap-3">
                 <span className="w-6 h-6 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">1</span>
                 <span>Telecharger les deux fichiers (<code className="px-1 py-0.5 bg-surface-100 dark:bg-surface-800 rounded text-xs font-mono">llms.txt</code> et <code className="px-1 py-0.5 bg-surface-100 dark:bg-surface-800 rounded text-xs font-mono">llms-full.txt</code>)</span>
@@ -155,18 +155,18 @@ export default function LLMSTxtPage() {
 
           {/* Detected info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-5">
-              <h4 className="text-sm font-bold text-surface-900 dark:text-white mb-3">Pages detectees ({result.keyPages?.length || 0})</h4>
+            <div className="bg-white/[0.03] rounded-xl border border-white/5 p-5">
+              <h4 className="text-sm font-bold text-white mb-3">Pages detectees ({result.keyPages?.length || 0})</h4>
               <div className="space-y-1 max-h-40 overflow-y-auto">
                 {result.keyPages?.slice(0, 10).map((p: any, i: number) => (
-                  <div key={i} className="flex items-center gap-2 text-xs text-surface-600 dark:text-surface-400">
+                  <div key={i} className="flex items-center gap-2 text-xs text-white/50">
                     <Globe className="w-3 h-3 shrink-0" /> <span className="truncate">{p.title}</span>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-5">
-              <h4 className="text-sm font-bold text-surface-900 dark:text-white mb-3">Reseaux sociaux ({result.socialLinks?.length || 0})</h4>
+            <div className="bg-white/[0.03] rounded-xl border border-white/5 p-5">
+              <h4 className="text-sm font-bold text-white mb-3">Reseaux sociaux ({result.socialLinks?.length || 0})</h4>
               <div className="space-y-1 max-h-40 overflow-y-auto">
                 {result.socialLinks?.map((link: string, i: number) => (
                   <a key={i} href={link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-brand-600 hover:underline truncate">
