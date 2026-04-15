@@ -13,11 +13,11 @@ const categories = [
     count: 8,
   },
   {
-    name: 'Mots-cles',
+    name: 'Mots-clés',
     icon: TrendingUp,
     color: 'from-violet-500 to-violet-600',
     border: 'border-violet-500/20 hover:border-violet-500/40',
-    tools: ['Suivi de positions', 'Keyword Magic', 'Keyword Gap', 'Recherche Semantique', 'Clustering'],
+    tools: ['Suivi de positions', 'Keyword Magic', 'Keyword Gap', 'Recherche Sémantique', 'Clustering'],
     count: 8,
   },
   {
@@ -25,7 +25,7 @@ const categories = [
     icon: LinkIcon,
     color: 'from-orange-500 to-orange-600',
     border: 'border-orange-500/20 hover:border-orange-500/40',
-    tools: ['Profil Backlinks', 'Audit Toxicite', 'Analyse Concurrents', 'Netlinking'],
+    tools: ['Profil Backlinks', 'Audit Toxicité', 'Analyse Concurrents', 'Netlinking'],
     count: 6,
   },
   {
@@ -33,7 +33,7 @@ const categories = [
     icon: FileText,
     color: 'from-emerald-500 to-emerald-600',
     border: 'border-emerald-500/20 hover:border-emerald-500/40',
-    tools: ['Optimisation', 'Topic Research', 'Templates SEO', 'Generateur IA', 'Analyse Lisibilite'],
+    tools: ['Optimisation', 'Topic Research', 'Templates SEO', 'Générateur IA', 'Analyse Lisibilité'],
     count: 8,
   },
   {
@@ -41,7 +41,7 @@ const categories = [
     icon: Sparkles,
     color: 'from-brand-500 to-accent-500',
     border: 'border-brand-500/20 hover:border-brand-500/40',
-    tools: ['Visibilite IA', 'Audit GEO', 'Score AEO', 'Score LLMO', 'AI Advisor', 'Prompt Tester'],
+    tools: ['Visibilité IA', 'Audit GEO', 'Score AEO', 'Score LLMO', 'AI Advisor', 'Prompt Tester'],
     count: 10,
   },
   {
@@ -49,14 +49,14 @@ const categories = [
     icon: BarChart3,
     color: 'from-cyan-500 to-cyan-600',
     border: 'border-cyan-500/20 hover:border-cyan-500/40',
-    tools: ['Analytics', 'Evolution', 'Rapports PDF', 'Export CSV'],
+    tools: ['Analytics', 'Évolution', 'Rapports PDF', 'Export CSV'],
     count: 6,
   },
 ]
 
 export function ToolsGrid() {
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white dark:bg-surface-950" id="outils">
+    <section className="py-24 px-4 sm:px-6 lg:px-8 bg-surface-950" id="outils">
       <div className="max-w-7xl mx-auto">
         <div className="max-w-3xl mx-auto text-center mb-14">
           <div className="section-badge mx-auto mb-4">Boîte à outils</div>
@@ -102,7 +102,7 @@ export function ToolsGrid() {
             href="/signup"
             className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-base transition-colors"
           >
-            Decouvrir les 50+ outils
+            Découvrir les 50+ outils
             <ArrowRight className="w-5 h-5" />
           </Link>
           <p className="mt-3 text-sm text-surface-500 dark:text-surface-400">100% gratuit — Aucune carte bancaire requise</p>

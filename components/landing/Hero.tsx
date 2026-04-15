@@ -130,7 +130,7 @@ export function Hero() {
             <div className="inline-flex flex-col sm:flex-row flex-wrap items-center justify-center lg:justify-start gap-6 sm:gap-10 px-8 py-5 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm">
               {[
                 { value: '50+', label: 'outils gratuits', icon: TrendingUp },
-                { value: '10+', label: 'LLMs surveilles', icon: Globe },
+                { value: '10+', label: 'LLMs surveillés', icon: Globe },
                 { value: '0€', label: 'pour toujours', icon: Zap },
               ].map((stat) => {
                 const Icon = stat.icon
@@ -151,7 +151,7 @@ export function Hero() {
 
           {/* Trust signal */}
           <p className="text-sm text-white/70 font-medium">
-            Developpe par <a href="https://internet.kayzen-lyon.fr" target="_blank" rel="noopener noreferrer" className="text-white/90 hover:text-gold-400 transition-colors">Kayzen Web</a> — Agence web Lyon
+            Développé par <a href="https://internet.kayzen-lyon.fr" target="_blank" rel="noopener noreferrer" className="text-white/90 hover:text-gold-400 transition-colors">Kayzen Web</a> — Agence web Lyon
           </p>
         </div>
 
@@ -268,7 +268,7 @@ export function Hero() {
             <g transform="translate(30, 330)">
               <rect width="360" height="28" rx="6" fill="rgba(43,18,76,0.4)" />
               <circle cx="16" cy="14" r="4" fill="#22c55e" />
-              <text x="26" y="18" fill="rgba(255,255,255,0.5)" fontSize="8" fontFamily="system-ui">Audit en cours... 50+ controles analyses</text>
+              <text x="26" y="18" fill="rgba(255,255,255,0.5)" fontSize="8" fontFamily="system-ui">Audit en cours... 50+ contrôles analysés</text>
               <text x="344" y="18" textAnchor="end" fill="#FECD4D" fontSize="8" fontWeight="700" fontFamily="system-ui">94/100 ✓</text>
             </g>
 

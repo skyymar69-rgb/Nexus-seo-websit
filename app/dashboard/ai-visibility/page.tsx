@@ -88,7 +88,7 @@ function useAIVisibilityData(websiteId: string | undefined, period: string) {
       const json: AIVisibilityData = await res.json()
       setData(json)
     } catch (err: any) {
-      setError(err.message || 'Impossible de charger les donnees')
+      setError(err.message || 'Impossible de charger les données')
     } finally {
       setIsLoading(false)
     }
@@ -175,19 +175,19 @@ const recommendations = [
     priority: 'HIGH' as const,
     title: 'Creer du contenu FAQ structure pour augmenter vos citations dans ChatGPT',
     description:
-      'ChatGPT cite souvent les FAQs structurees. Ciblez les 20 questions les plus frequentes de votre audience.',
+      'ChatGPT cite souvent les FAQs structurées. Ciblez les 20 questions les plus fréquentes de votre audience.',
   },
   {
     priority: 'HIGH' as const,
-    title: 'Ajouter des donnees structurees Schema.org sur vos pages cles',
+    title: 'Ajouter des données structurées Schema.org sur vos pages clés',
     description:
       'Les LLM utilisent davantage les pages avec Schema.org. Commencez par Product, Article, et FAQPage.',
   },
   {
     priority: 'MEDIUM' as const,
-    title: "Publier des etudes de cas avec des donnees chiffrees",
+    title: "Publier des études de cas avec des données chiffrées",
     description:
-      'Les LLM adorent les statistiques concretes. Creez 3 etudes de cas detaillees avec resultats mesurables.',
+      'Les LLM adorent les statistiques concrètes. Créez 3 études de cas détaillées avec résultats mesurables.',
   },
   {
     priority: 'LOW' as const,
@@ -250,10 +250,10 @@ function EmptyState({ onNewQuery }: { onNewQuery?: () => void }) {
     <div className="rounded-lg border border-white/5 bg-white/[0.02] p-12 text-center">
       <Sparkles className="h-12 w-12 text-surface-400 mx-auto mb-4" />
       <h3 className="text-lg font-semibold text-white mb-2">
-        Aucune donnee disponible
+        Aucune donnée disponible
       </h3>
       <p className="text-sm text-surface-500 mb-6 max-w-md mx-auto">
-        Lancez votre premiere requete pour decouvrir comment votre site est mentionne par les IA generatives.
+        Lancez votre première requête pour découvrir comment votre site est mentionné par les IA génératives.
       </p>
       {onNewQuery && (
         <button
@@ -402,7 +402,7 @@ export default function AIVisibilityPage() {
         </div>
         <div className="rounded-lg border border-white/5 bg-white/[0.02] p-12 text-center">
           <p className="text-surface-500">
-            Veuillez selectionner un site web pour afficher les donnees de visibilite IA.
+            Veuillez sélectionner un site web pour afficher les données de visibilité IA.
           </p>
         </div>
       </div>
@@ -464,7 +464,7 @@ export default function AIVisibilityPage() {
             <h1 className="text-3xl font-bold text-surface-950 dark:text-surface-50">Visibilite IA</h1>
           </div>
           <p className="text-white/50">
-            Surveillez et optimisez votre presence dans les reponses des moteurs IA
+            Surveillez et optimisez votre présence dans les réponses des moteurs IA
           </p>
         </div>
         <div className="flex items-center gap-3 flex-wrap lg:flex-nowrap">
@@ -609,7 +609,7 @@ export default function AIVisibilityPage() {
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h2 className="text-lg font-bold text-white">
-                    Evolution de la visibilite
+                    Évolution de la visibilité
                   </h2>
                   <p className="text-xs text-surface-500 mt-1">
                     Taux de mention au fil du temps

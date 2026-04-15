@@ -7,19 +7,19 @@ import { cn } from '@/lib/utils'
 const faqs = [
   {
     question: "Qu'est-ce que le GEO, l'AEO et le LLMO ?",
-    answer: "Le GEO (Generative Engine Optimization) optimise votre contenu pour apparaitre dans les reponses generees par IA de Google SGE et Bing Copilot. L'AEO (Answer Engine Optimization) vous positionne sur les featured snippets et la voice search. Le LLMO (Large Language Model Optimization) fait en sorte que ChatGPT, Claude, Gemini et Perplexity recommandent naturellement votre marque dans leurs reponses.",
+    answer: "Le GEO (Generative Engine Optimization) optimise votre contenu pour apparaître dans les réponses générées par IA de Google SGE et Bing Copilot. L'AEO (Answer Engine Optimization) vous positionne sur les featured snippets et la voice search. Le LLMO (Large Language Model Optimization) fait en sorte que ChatGPT, Claude, Gemini et Perplexity recommandent naturellement votre marque dans leurs réponses.",
   },
   {
     question: "Nexus est-il vraiment 100% gratuit ?",
-    answer: "Oui, tous les outils Nexus sont gratuits et sans limitation : audits illimites, suivi de mots-cles, backlinks, generateur de contenu SEO, scores GEO/AEO/LLMO. Aucune carte bancaire n'est requise. L'inscription sert uniquement a sauvegarder vos sites et suivre l'evolution de vos resultats dans le temps.",
+    answer: "Oui, tous les outils Nexus sont gratuits et sans limitation : audits illimités, suivi de mots-clés, backlinks, générateur de contenu SEO, scores GEO/AEO/LLMO. Aucune carte bancaire n'est requise. L'inscription sert uniquement à sauvegarder vos sites et suivre l'évolution de vos résultats dans le temps.",
   },
   {
     question: "Pourquoi Nexus est-il gratuit ?",
-    answer: "Nexus est developpe par Kayzen Web, agence de creation de sites a Lyon. L'outil gratuit permet aux entreprises de diagnostiquer leurs problemes SEO. Pour ceux qui souhaitent aller plus loin avec une refonte ou creation de site optimise, Kayzen Web propose ses services d'agence.",
+    answer: "Nexus est développé par Kayzen Web, agence de création de sites à Lyon. L'outil gratuit permet aux entreprises de diagnostiquer leurs problèmes SEO. Pour ceux qui souhaitent aller plus loin avec une refonte ou création de site optimisé, Kayzen Web propose ses services d'agence.",
   },
   {
-    question: "En combien de temps voit-on les premiers resultats ?",
-    answer: "Les premiers insights sont disponibles immediatement apres l'audit initial (quelques minutes). Pour les resultats concrets — amelioration des positions, meilleures pratiques SEO — les changements significatifs arrivent generalement des la 4eme semaine pour le SEO technique, et apres 6 a 12 semaines pour le GEO et le LLMO.",
+    question: "En combien de temps voit-on les premiers résultats ?",
+    answer: "Les premiers insights sont disponibles immédiatement après l'audit initial (quelques minutes). Pour les résultats concrets — amélioration des positions, meilleures pratiques SEO — les changements significatifs arrivent généralement dès la 4ème semaine pour le SEO technique, et après 6 à 12 semaines pour le GEO et le LLMO.",
   },
   {
     question: "Nexus est-il compatible avec mon CMS (WordPress, Shopify, etc.) ?",
@@ -27,15 +27,15 @@ const faqs = [
   },
   {
     question: "Comment Nexus surveille-t-il les mentions dans les LLMs ?",
-    answer: "Nexus envoie des requetes aux APIs de ChatGPT, Claude, Gemini, Perplexity et d'autres LLMs avec les questions-types de votre secteur. Il analyse si votre marque est citee, avec quel sentiment, et comment vous vous comparez a vos concurrents.",
+    answer: "Nexus envoie des requêtes aux APIs de ChatGPT, Claude, Gemini, Perplexity et d'autres LLMs avec les questions-types de votre secteur. Il analyse si votre marque est citée, avec quel sentiment, et comment vous vous comparez à vos concurrents.",
   },
   {
-    question: "Mes donnees sont-elles securisees ?",
-    answer: "Oui. Nexus est heberge sur des serveurs en Europe via Vercel et Railway, et respecte le RGPD. Vos donnees ne sont jamais partagees avec des tiers ni utilisees pour entrainer des modeles IA.",
+    question: "Mes données sont-elles sécurisées ?",
+    answer: "Oui. Nexus est hébergé sur des serveurs en Europe via Vercel et Railway, et respecte le RGPD. Vos données ne sont jamais partagées avec des tiers ni utilisées pour entraîner des modèles IA.",
   },
   {
     question: "Quel est le lien entre Nexus et Kayzen Web ?",
-    answer: "Nexus est un outil gratuit developpe par Kayzen Web (internet.kayzen-lyon.fr), agence web lyonnaise specialisee dans la creation de sites performants et eco-responsables en React/Next.js. Nexus diagnostique les problemes, Kayzen Web les resout avec des sites optimises des la conception.",
+    answer: "Nexus est un outil gratuit développé par Kayzen Web (internet.kayzen-lyon.fr), agence web lyonnaise spécialisée dans la création de sites performants et éco-responsables en React/Next.js. Nexus diagnostique les problèmes, Kayzen Web les résout avec des sites optimisés dès la conception.",
   },
 ]
 
@@ -77,7 +77,7 @@ export function FAQ() {
   }
 
   return (
-    <section id="faq" className="py-24 px-4 sm:px-6 lg:px-8 bg-white dark:bg-surface-950">
+    <section id="faq" className="py-24 px-4 sm:px-6 lg:px-8 bg-surface-950">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

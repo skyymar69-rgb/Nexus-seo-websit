@@ -38,7 +38,7 @@ const problems = [
 
 export function Problem() {
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8 bg-surface-50 dark:bg-surface-900/50 border-y border-surface-200 dark:border-surface-800/60">
+    <section className="py-24 px-4 sm:px-6 lg:px-8 bg-surface-950 border-y border-white/5">
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}

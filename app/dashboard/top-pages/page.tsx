@@ -94,7 +94,7 @@ export default function TopPagesPage() {
         </div>
         <div className="flex items-center justify-center py-20">
           <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-          <span className="ml-3 text-white/40">Chargement des donnees...</span>
+          <span className="ml-3 text-white/40">Chargement des données...</span>
         </div>
       </div>
     )

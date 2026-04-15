@@ -16,7 +16,7 @@ export function TrustedBy() {
 
         {/* Header */}
         <p className="text-center text-sm font-medium text-surface-700 dark:text-surface-400 mb-8 uppercase tracking-widest">
-          Sites optimises par Kayzen Web — Lyon
+          Sites optimisés par Kayzen Web — Lyon
         </p>
 
         {/* Marquee */}

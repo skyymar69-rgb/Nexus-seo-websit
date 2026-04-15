@@ -5,15 +5,15 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils'
 
 const features = [
-  'Audits SEO illimites',
-  'Suivi de mots-cles illimite',
-  'Sites web illimites',
+  'Audits SEO illimités',
+  'Suivi de mots-clés illimité',
+  'Sites web illimités',
   'Score GEO, AEO, LLMO',
-  'Visibilite IA (10+ LLMs)',
-  'Generateur de contenu SEO',
+  'Visibilité IA (10+ LLMs)',
+  'Générateur de contenu SEO',
   'Analyse concurrents',
   'Export PDF / JSON',
-  'Chat IA integre',
+  'Chat IA intégré',
   'Support email',
 ]
 
@@ -27,7 +27,7 @@ export function Pricing() {
           <div className="section-badge mx-auto mb-4">100% Gratuit</div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-surface-900 dark:text-white mb-4">
             Tous les outils.{' '}
-            <span className="gradient-text">Zero euro.</span>
+            <span className="gradient-text">Zéro euro.</span>
           </h2>
           <p className="text-lg text-surface-700 dark:text-surface-400">
             50+ outils SEO & IA sans aucune limitation. Aucune carte bancaire requise.
@@ -38,7 +38,7 @@ export function Pricing() {
         <div className="max-w-2xl mx-auto">
           <div className="relative overflow-hidden rounded-3xl border-2 border-brand-500 bg-white dark:bg-surface-900 shadow-xl">
             <div className="absolute top-0 right-0 bg-brand-600 text-white text-xs font-bold px-4 py-1.5 rounded-bl-xl">
-              Acces complet
+              Accès complet
             </div>
 
             <div className="p-8 sm:p-10">
@@ -82,7 +82,7 @@ export function Pricing() {
             Besoin d&apos;un site web performant ?
           </p>
           <p className="text-surface-600 dark:text-surface-400 mb-5 max-w-xl mx-auto">
-            L&apos;Agence Kayzen cree des sites optimises SEO des 1&nbsp;500&euro;
+            L&apos;Agence Kayzen crée des sites optimisés SEO dès 1&nbsp;500&euro;
           </p>
           <a
             href="https://internet.kayzen-lyon.fr"
@@ -90,13 +90,13 @@ export function Pricing() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 transition-all duration-200 shadow-lg hover:shadow-xl"
           >
-            Decouvrir l&apos;Agence Kayzen
+            Découvrir l&apos;Agence Kayzen
             <ExternalLink className="w-4 h-4" />
           </a>
         </div>
 
         <p className="text-center text-surface-600 dark:text-surface-500 text-sm mt-10">
-          Heberge en Europe &middot; Conforme RGPD &middot; Support inclus
+          Hébergé en Europe &middot; Conforme RGPD &middot; Support inclus
         </p>
       </div>
     </section>

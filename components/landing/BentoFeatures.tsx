@@ -66,7 +66,7 @@ export function BentoFeatures() {
   const smallItems = features.filter(f => f.size === 'small')
 
   return (
-    <section id="features" className="py-24 px-4 sm:px-6 lg:px-8 bg-white dark:bg-surface-950">
+    <section id="features" className="py-24 px-4 sm:px-6 lg:px-8 bg-surface-950">
       <div className="max-w-7xl mx-auto">
         <div className="max-w-3xl mx-auto text-center mb-14">
           <div className="section-badge mx-auto mb-4">Fonctionnalités</div>

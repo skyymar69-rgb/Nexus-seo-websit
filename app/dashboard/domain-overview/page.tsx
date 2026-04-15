@@ -271,7 +271,7 @@ export default function DomainOverviewPage() {
                 <StatusBadge ok={data.structuredData.hasTwitterCard} label="Twitter Card" />
                 {data.structuredData.schemas.length > 0 && (
                   <div className="pt-2 border-t border-white/5 mt-2">
-                    <span className="text-xs text-white/30 uppercase tracking-wider">Schemas detectes</span>
+                    <span className="text-xs text-white/30 uppercase tracking-wider">Schémas détectés</span>
                     <div className="flex flex-wrap gap-1.5 mt-1.5">
                       {data.structuredData.schemas.map((s) => (
                         <span key={s} className="px-2 py-0.5 bg-blue-500/10 text-blue-400 text-xs rounded-full">{s}</span>

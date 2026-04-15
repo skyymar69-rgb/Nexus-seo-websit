@@ -100,13 +100,13 @@ export default function ContentAnalyzerPage() {
 
           {/* E-E-A-T breakdown */}
           <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
-            <h3 className="font-bold text-white mb-4">E-E-A-T Detaille</h3>
+            <h3 className="font-bold text-white mb-4">E-E-A-T Détaillé</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { label: 'Experience', score: result.eeat.experience.score, desc: 'Temoignages, cas clients, portfolio' },
+                { label: 'Expérience', score: result.eeat.experience.score, desc: 'Témoignages, cas clients, portfolio' },
                 { label: 'Expertise', score: result.eeat.expertise.score, desc: 'Blog, schema Author, contenu expert' },
-                { label: 'Autorite', score: result.eeat.authority.score, desc: 'Reseaux sociaux, presse, citations' },
-                { label: 'Confiance', score: result.eeat.trust.score, desc: 'HTTPS, mentions legales, contact' },
+                { label: 'Autorité', score: result.eeat.authority.score, desc: 'Réseaux sociaux, presse, citations' },
+                { label: 'Confiance', score: result.eeat.trust.score, desc: 'HTTPS, mentions légales, contact' },
               ].map(item => (
                 <div key={item.label} className="rounded-lg border border-white/5 p-4">
                   <div className="flex items-center justify-between mb-2">
@@ -125,7 +125,7 @@ export default function ContentAnalyzerPage() {
           {/* Schema + FAQ */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
-              <h3 className="font-bold text-white mb-3">Schemas detectes</h3>
+              <h3 className="font-bold text-white mb-3">Schémas détectés</h3>
               {result.schema.found.length > 0 ? (
                 <div className="space-y-2">
                   {result.schema.found.map((s, i) => (
@@ -135,7 +135,7 @@ export default function ContentAnalyzerPage() {
                     </div>
                   ))}
                 </div>
-              ) : <p className="text-sm text-surface-500">Aucun schema detecte</p>}
+              ) : <p className="text-sm text-surface-500">Aucun schéma détecté</p>}
               {result.schema.missing.length > 0 && (
                 <div className="mt-3 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/20">
                   <p className="text-xs font-bold text-amber-700 mb-1">Manquants :</p>
@@ -149,11 +149,11 @@ export default function ContentAnalyzerPage() {
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   {result.faq.detected ? <CheckCircle className="w-4 h-4 text-green-500" /> : <XCircle className="w-4 h-4 text-red-400" />}
-                  <span className="text-sm text-white/70">{result.faq.detected ? `${result.faq.questionsFound} questions detectees` : 'Aucune FAQ detectee'}</span>
+                  <span className="text-sm text-white/70">{result.faq.detected ? `${result.faq.questionsFound} questions détectées` : 'Aucune FAQ détectée'}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   {result.faq.hasSchema ? <CheckCircle className="w-4 h-4 text-green-500" /> : <XCircle className="w-4 h-4 text-red-400" />}
-                  <span className="text-sm text-white/70">{result.faq.hasSchema ? 'Schema FAQPage present' : 'Schema FAQPage manquant'}</span>
+                  <span className="text-sm text-white/70">{result.faq.hasSchema ? 'Schema FAQPage présent' : 'Schema FAQPage manquant'}</span>
                 </div>
                 <p className="text-xs text-surface-500">{result.wordCount} mots sur la page</p>
               </div>

@@ -358,7 +358,7 @@ export default function BacklinksPage() {
     return (
       <div className="flex flex-col items-center justify-center py-24 space-y-4">
         <Link2 className="h-12 w-12 text-slate-600" />
-        <p className="text-slate-400 text-lg">Selectionnez un site web pour voir les backlinks</p>
+        <p className="text-slate-400 text-lg">Sélectionnez un site web pour voir les backlinks</p>
       </div>
     )
   }
@@ -687,7 +687,7 @@ export default function BacklinksPage() {
                     <td colSpan={8} className="px-6 py-12 text-center">
                       <p className="text-slate-400">
                         {backlinks.length === 0
-                          ? 'Aucun backlink trouve. Les backlinks apparaitront ici une fois detectes.'
+                          ? 'Aucun backlink trouve. Les backlinks apparaîtront ici une fois détectés.'
                           : 'Aucun backlink ne correspond aux filtres'}
                       </p>
                     </td>
