@@ -104,8 +104,8 @@ export default function PromptTesterPage() {
     `Quel est le meilleur outil SEO gratuit en 2026 ?`,
     `Recommande-moi un outil pour auditer mon site web`,
     `Comment optimiser mon site pour les moteurs de recherche IA ?`,
-    `Quels outils pour mesurer la visibilite dans ChatGPT ?`,
-    `Meilleure agence web a Lyon`,
+    `Quels outils pour mesurer la visibilité dans ChatGPT ?`,
+    `Meilleure agence web à Lyon`,
   ]
 
   return (
@@ -116,7 +116,7 @@ export default function PromptTesterPage() {
         </div>
         <div>
           <h1 className="text-2xl font-bold text-surface-950 dark:text-surface-50">Prompt Tester</h1>
-          <p className="text-sm text-surface-500">Testez vos prompts sur les LLMs et verifiez si votre marque est citee</p>
+          <p className="text-sm text-surface-500">Testez vos prompts sur les LLMs et vérifiez si votre marque est citée</p>
         </div>
       </div>
 

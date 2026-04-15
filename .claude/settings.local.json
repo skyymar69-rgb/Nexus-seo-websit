@@ -196,7 +196,9 @@
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 28 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 29 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 30 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
-      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 31 --repo skyymar69-rgb/Nexus-seo-websit --merge)"
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 31 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 32 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
+      "Bash(grep -rn \"legere\\\\|referencee\\\\|experience\\\\|numerique\\\\|Gerez\\\\|Selectionnez\\\\|donnees\\\\|Generer\\\\|Generez\\\\|genere\\\\b\\\\|Analysez\\\\|Evaluez\\\\|detecte\\\\b\\\\|Ameliorez\\\\|Integrez\\\\|Ajoutez\\\\|Optimisez\\\\|Decouvrir\\\\|Creez\\\\|creez\\\\|Lancez\\\\|Entrez\\\\|Verifiez\\\\|Activez\\\\|securite\\\\b\\\\|visibilite\\\\b\\\\|qualite\\\\b\\\\|referencement\\\\b\\\\|activite\\\\b\\\\|fonctionnalite\\\\b\\\\|opportunite\\\\b\\\\|lisibilite\\\\b\\\\|autorite\\\\b\\\\|fiabilite\\\\b\\\\|accessibilite\\\\b\\\\|disponibilite\\\\b\" components/landing/*.tsx app/dashboard/*/page.tsx app/page.tsx)"
     ]
   }
 }

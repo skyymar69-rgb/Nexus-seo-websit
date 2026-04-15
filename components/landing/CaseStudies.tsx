@@ -5,20 +5,20 @@ import { ArrowRight, Globe, ExternalLink } from 'lucide-react'
 const cases = [
   {
     category: 'Transport & Tourisme',
-    company: 'France Evasions',
-    desc: 'Site vitrine optimise pour le referencement local et national dans le secteur du transport touristique.',
+    company: 'France Évasions',
+    desc: 'Site vitrine optimisé pour le référencement local et national dans le secteur du transport touristique.',
     tags: ['SEO', 'Performance'],
   },
   {
-    category: 'Commerce de proximite',
+    category: 'Commerce de proximité',
     company: 'Boucherie de l\'Avenue',
-    desc: 'Site vitrine rapide et eco-responsable pour un commerce local lyonnais, optimise pour le SEO local.',
+    desc: 'Site vitrine rapide et éco-responsable pour un commerce local lyonnais, optimisé pour le SEO local.',
     tags: ['SEO Local', 'Eco-web'],
   },
   {
-    category: 'Batiment & Renovation',
-    company: 'Net Renovation',
-    desc: 'Site professionnel pour une entreprise de renovation, avec structure SEO et pages de services optimisees.',
+    category: 'Bâtiment & Rénovation',
+    company: 'Net Rénovation',
+    desc: 'Site professionnel pour une entreprise de rénovation, avec structure SEO et pages de services optimisées.',
     tags: ['SEO Technique', 'Contenu'],
   },
   {
@@ -29,14 +29,14 @@ const cases = [
   },
   {
     category: 'Restauration',
-    company: 'Grand Cafe du Commerce',
-    desc: 'Site restaurant avec menu, horaires et referencement local Google My Business optimise.',
+    company: 'Grand Café du Commerce',
+    desc: 'Site restaurant avec menu, horaires et référencement local Google My Business optimisé.',
     tags: ['SEO Local', 'Mobile'],
   },
   {
-    category: 'Culture & Evenementiel',
+    category: 'Culture & Événementiel',
     company: 'Art Scenic',
-    desc: 'Site evenementiel avec gestion de contenu dynamique et SEO pour le secteur culturel.',
+    desc: 'Site événementiel avec gestion de contenu dynamique et SEO pour le secteur culturel.',
     tags: ['SEO', 'Contenu'],
   },
 ]
@@ -60,11 +60,11 @@ export function CaseStudies() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-14">
           <div>
-            <div className="section-badge mb-4">Sites realises par Kayzen Web</div>
+            <div className="section-badge mb-4">Sites réalisés par Kayzen Web</div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-surface-900 dark:text-white">
-              Des sites optimises
+              Des sites optimisés
               <br />
-              <span className="gradient-text">des la conception.</span>
+              <span className="gradient-text">dès la conception.</span>
             </h2>
           </div>
           <a

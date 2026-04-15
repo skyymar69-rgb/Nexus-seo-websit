@@ -65,7 +65,7 @@ export default function ProjectsPage() {
             <h1 className="text-2xl font-bold text-white">Mes Sites</h1>
           </div>
           <p className="text-sm text-white/40">
-            Gerez vos sites web. Selectionnez un site pour voir ses donnees dans le dashboard.
+            Gérez vos sites web. Sélectionnez un site pour voir ses données dans le dashboard.
           </p>
         </div>
         <button

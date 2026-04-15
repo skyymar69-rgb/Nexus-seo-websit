@@ -123,10 +123,10 @@ export default function AnalyticsPage() {
         <div className="text-center">
           <BarChart3 className="mx-auto h-12 w-12 text-white/30" />
           <h2 className="mt-4 text-lg font-semibold text-white">
-            Aucun site selectionne
+            Aucun site sélectionné
           </h2>
           <p className="mt-1 text-sm text-white/40">
-            Selectionnez un site web pour voir les analytics internes.
+            Sélectionnez un site web pour voir les analytics internes.
           </p>
         </div>
       </div>
@@ -163,10 +163,10 @@ export default function AnalyticsPage() {
         <div className="text-center">
           <BarChart3 className="mx-auto h-12 w-12 text-white/30" />
           <h2 className="mt-4 text-lg font-semibold text-white">
-            Aucune donnee disponible
+            Aucune donnée disponible
           </h2>
           <p className="mt-1 max-w-md text-sm text-white/40">
-            Lancez un audit, ajoutez des mots-cles ou verifiez la visibilite IA
+            Lancez un audit, ajoutez des mots-clés ou vérifiez la visibilité IA
             pour commencer a voir vos analytics internes.
           </p>
         </div>
@@ -182,7 +182,7 @@ export default function AnalyticsPage() {
       <div className="border-b border-white/5 bg-white/[0.03] px-8 py-6">
         <h1 className="text-2xl font-bold text-white">Analytics internes</h1>
         <p className="mt-1 text-sm text-white/40">
-          Vue d&apos;ensemble des donnees collectees pour{' '}
+          Vue d&apos;ensemble des données collectées pour{' '}
           <span className="font-medium text-white/70">
             {selectedWebsite.domain}
           </span>
@@ -194,7 +194,7 @@ export default function AnalyticsPage() {
         <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           <KpiCard
             icon={FileSearch}
-            label="Audits realises"
+            label="Audits réalisés"
             value={String(kpis.totalAudits)}
             sub={
               kpis.avgAuditScore != null

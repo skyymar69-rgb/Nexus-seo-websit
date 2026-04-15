@@ -27,22 +27,22 @@ export function CTA() {
               </div>
 
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-surface-900 dark:text-white mb-6 leading-tight">
-                Pret a optimiser{' '}
-                <span className="gradient-text">votre visibilite</span>{' '}
+                Prêt à optimiser{' '}
+                <span className="gradient-text">votre visibilité</span>{' '}
                 ?
               </h2>
 
               <p className="text-lg text-surface-700 dark:text-surface-400 mb-10 max-w-2xl mx-auto">
-                Lancez votre audit SEO gratuit en 5 minutes. 50+ outils, zero euro, aucune carte bancaire.
+                Lancez votre audit SEO gratuit en 5 minutes. 50+ outils, zéro euro, aucune carte bancaire.
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
                 <Link href="/signup" className="btn-primary px-10 py-4 text-base rounded-2xl shadow-lg shadow-brand-500/30 hover:shadow-xl hover:shadow-brand-500/40 transition-shadow">
-                  Creer mon compte gratuit
+                  Créer mon compte gratuit
                   <ArrowRight className="w-5 h-5" />
                 </Link>
                 <a href="https://internet.kayzen-lyon.fr" target="_blank" rel="noopener noreferrer" className="btn-outline px-8 py-4 text-base rounded-2xl">
-                  Faire creer mon site par Kayzen
+                  Faire créer mon site par Kayzen
                 </a>
               </div>
 
@@ -50,12 +50,12 @@ export function CTA() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-surface-600 dark:text-surface-400">
                 <span className="flex items-center gap-1.5">
                   <Leaf className="w-4 h-4 text-green-500" />
-                  Web eco-responsable
+                  Web éco-responsable
                 </span>
                 <div className="hidden sm:block w-px h-4 bg-surface-200 dark:bg-surface-700" />
                 <span>Sans carte bancaire</span>
                 <div className="hidden sm:block w-px h-4 bg-surface-200 dark:bg-surface-700" />
-                <span>Developpe par Kayzen Web — Lyon</span>
+                <span>Développé par Kayzen Web — Lyon</span>
               </div>
             </div>
           </div>

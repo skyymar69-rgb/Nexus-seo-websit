@@ -610,8 +610,8 @@ export default function KeywordsPage() {
           </h1>
           <p className="text-surface-400">
             {selectedWebsite
-              ? `Mots-cles suivis pour ${selectedWebsite.domain}`
-              : 'Gerez et suivez les performances de vos mots-cles'}
+              ? `Mots-clés suivis pour ${selectedWebsite.domain}`
+              : 'Gérez et suivez les performances de vos mots-clés'}
           </p>
         </div>
         <div className="flex gap-3">

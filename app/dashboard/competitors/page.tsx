@@ -335,7 +335,7 @@ export default function CompetitorsPage() {
         format: (v) => `${v}ms`,
       },
       {
-        label: 'Problemes detectes',
+        label: 'Problèmes détectés',
         icon: <AlertTriangle className="h-4 w-4" />,
         ownValue: ownCrawl ? totalIssues(ownCrawl.pages) : null,
         competitors: crawledCompetitors.map((c) => ({
@@ -891,7 +891,7 @@ export default function CompetitorsPage() {
               <Bar
                 dataKey="value"
                 fill="rgb(239, 68, 68)"
-                name="Problemes detectes"
+                name="Problèmes détectés"
                 radius={[8, 8, 0, 0]}
               />
             </BarChart>

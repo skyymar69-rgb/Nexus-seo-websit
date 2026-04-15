@@ -104,7 +104,7 @@ const categoryConfig: Record<CategoryKey, { label: string; icon: any; color: str
   content:     { label: 'Contenu',          icon: BookOpen,   color: 'text-purple-600', bgColor: 'bg-purple-50 dark:bg-purple-950/30', borderColor: 'border-purple-200 dark:border-purple-800' },
   technical:   { label: 'Technique',        icon: Settings,   color: 'text-orange-600', bgColor: 'bg-orange-50 dark:bg-orange-950/30', borderColor: 'border-orange-200 dark:border-orange-800' },
   performance: { label: 'Performance',      icon: Zap,        color: 'text-amber-600',  bgColor: 'bg-amber-50 dark:bg-amber-950/30',  borderColor: 'border-amber-200 dark:border-amber-800' },
-  security:    { label: 'Securite',         icon: Shield,     color: 'text-green-600',  bgColor: 'bg-green-50 dark:bg-green-950/30',  borderColor: 'border-green-200 dark:border-green-800' },
+  security:    { label: 'Sécurité',         icon: Shield,     color: 'text-green-600',  bgColor: 'bg-green-50 dark:bg-green-950/30',  borderColor: 'border-green-200 dark:border-green-800' },
   mobile:      { label: 'Mobile',           icon: Smartphone, color: 'text-cyan-600',   bgColor: 'bg-cyan-50 dark:bg-cyan-950/30',    borderColor: 'border-cyan-200 dark:border-cyan-800' },
 }
 
@@ -533,7 +533,7 @@ export default function AuditPage() {
 
       setResult(json.data)
     } catch {
-      setError('Impossible de se connecter au serveur. Verifiez votre connexion.')
+      setError('Impossible de se connecter au serveur. Vérifiez votre connexion.')
     } finally {
       setIsAnalyzing(false)
     }
@@ -939,7 +939,7 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
                 ) : (
                   <div className="rounded-lg border border-white/5 bg-white/[0.03] p-8 text-center">
                     <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-                    <p className="text-lg font-semibold text-white">Aucun probleme detecte</p>
+                    <p className="text-lg font-semibold text-white">Aucun problème détecté</p>
                     <p className="text-sm text-white/50 mt-2">Votre site respecte toutes les bonnes pratiques pour cette categorie.</p>
                   </div>
                 )}
@@ -1058,7 +1058,7 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
             </div>
             <h3 className="text-xl font-bold text-white mb-2">Lancez votre premier audit</h3>
             <p className="text-white/50 max-w-md">
-              Entrez l&apos;URL de votre site ci-dessus pour obtenir une analyse SEO complete avec des recommandations personnalisees.
+              Entrez l&apos;URL de votre site ci-dessus pour obtenir une analyse SEO complète avec des recommandations personnalisées.
             </p>
           </div>
         </div>

@@ -151,7 +151,7 @@ export default function EvolutionPage() {
       {loading && (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-          <span className="ml-3 text-white/40">Chargement des donnees...</span>
+          <span className="ml-3 text-white/40">Chargement des données...</span>
         </div>
       )}
 
@@ -162,7 +162,7 @@ export default function EvolutionPage() {
       )}
 
       {!loading && !error && !selectedWebsite && (
-        <EmptyState message="Selectionnez un site pour voir son evolution." />
+        <EmptyState message="Sélectionnez un site pour voir son évolution." />
       )}
 
       {!loading && !error && selectedWebsite && !hasAnyData && (

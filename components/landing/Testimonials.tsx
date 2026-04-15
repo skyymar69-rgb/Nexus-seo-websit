@@ -6,31 +6,31 @@ const reasons = [
   {
     icon: Sparkles,
     title: 'Premier outil GEO + AEO + LLMO',
-    desc: 'Nexus est le seul outil qui combine l\'optimisation pour Google SGE, les featured snippets et les reponses des LLMs (ChatGPT, Claude, Gemini) en une seule plateforme.',
+    desc: 'Nexus est le seul outil qui combine l\'optimisation pour Google SGE, les featured snippets et les réponses des LLMs (ChatGPT, Claude, Gemini) en une seule plateforme.',
     color: 'from-brand-500 to-violet-500',
   },
   {
     icon: Zap,
     title: '50+ outils SEO gratuits',
-    desc: 'Audit technique, suivi de positions, analyse de backlinks, generateur de contenu, keyword research — tout est inclus sans limitation et sans carte bancaire.',
+    desc: 'Audit technique, suivi de positions, analyse de backlinks, générateur de contenu, keyword research — tout est inclus sans limitation et sans carte bancaire.',
     color: 'from-violet-500 to-cyan-500',
   },
   {
     icon: Leaf,
-    title: 'SEO eco-responsable',
-    desc: 'Un site rapide et bien reference consomme moins d\'energie. Nexus vous aide a reduire le poids de vos pages et a adopter les bonnes pratiques du web durable.',
+    title: 'SEO éco-responsable',
+    desc: 'Un site rapide et bien référencé consomme moins d\'énergie. Nexus vous aide à réduire le poids de vos pages et à adopter les bonnes pratiques du web durable.',
     color: 'from-green-500 to-emerald-500',
   },
   {
     icon: Globe,
-    title: 'Concu par une agence web',
-    desc: 'Nexus est developpe par Kayzen Web, agence lyonnaise de creation de sites React/Next.js performants. L\'outil est ne de l\'experience terrain avec de vrais clients.',
+    title: 'Conçu par une agence web',
+    desc: 'Nexus est développé par Kayzen Web, agence lyonnaise de création de sites React/Next.js performants. L\'outil est né de l\'expérience terrain avec de vrais clients.',
     color: 'from-cyan-500 to-brand-500',
   },
   {
     icon: Shield,
-    title: 'Donnees hebergees en Europe',
-    desc: 'Vos donnees sont hebergees en Europe via Vercel et Railway, dans le respect du RGPD. Aucune revente de donnees, aucune utilisation pour entrainer des modeles IA.',
+    title: 'Données hébergées en Europe',
+    desc: 'Vos données sont hébergées en Europe via Vercel et Railway, dans le respect du RGPD. Aucune revente de données, aucune utilisation pour entraîner des modèles IA.',
     color: 'from-brand-500 to-cyan-500',
   },
 ]
@@ -44,10 +44,10 @@ export function Testimonials() {
           <div className="section-badge mx-auto mb-4">Pourquoi Nexus</div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-surface-900 dark:text-white mb-4">
             Ce qui rend Nexus{' '}
-            <span className="gradient-text">different.</span>
+            <span className="gradient-text">différent.</span>
           </h2>
           <p className="text-lg text-surface-700 dark:text-surface-400">
-            Un outil gratuit, honnete et concu pour le SEO de demain.
+            Un outil gratuit, honnête et conçu pour le SEO de demain.
           </p>
         </div>
 
@@ -87,7 +87,7 @@ export function Testimonials() {
         {/* Kayzen CTA */}
         <div className="text-center mt-12 pt-10 border-t border-surface-200 dark:border-surface-800">
           <p className="text-surface-700 dark:text-surface-400 mb-4">
-            Besoin d&apos;aller plus loin ? Kayzen Web cree des sites optimises des la conception.
+            Besoin d&apos;aller plus loin ? Kayzen Web crée des sites optimisés dès la conception.
           </p>
           <a
             href="https://internet.kayzen-lyon.fr"
@@ -95,7 +95,7 @@ export function Testimonials() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 dark:text-brand-400 hover:gap-3 transition-all"
           >
-            Decouvrir Kayzen Web <ArrowRight className="w-4 h-4" />
+            Découvrir Kayzen Web <ArrowRight className="w-4 h-4" />
           </a>
         </div>
       </div>

@@ -224,11 +224,11 @@ export default function AIContentPage() {
           <div className="flex items-center gap-3 mb-2">
             <Sparkles className="w-8 h-8 text-brand-600" />
             <h1 className="text-3xl font-bold text-white">
-              Generateur de Contenu SEO
+              Générateur de Contenu SEO
             </h1>
           </div>
           <p className="text-white/50">
-            Creez du contenu SEO-optimise en quelques secondes — 100% gratuit, sans cle API
+            Créez du contenu SEO-optimisé en quelques secondes — 100% gratuit, sans clé API
           </p>
         </div>
       </div>
@@ -288,7 +288,7 @@ export default function AIContentPage() {
                   type="text"
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
-                  placeholder="Ex: SEO, developpement web, e-commerce..."
+                  placeholder="Ex: SEO, développement web, e-commerce..."
                   className="w-full px-4 py-2 rounded-lg border border-white/5 bg-white/[0.03] text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </div>
@@ -382,7 +382,7 @@ export default function AIContentPage() {
                   ) : (
                     <span className="flex items-center justify-center gap-2">
                       <Sparkles className="w-5 h-5" />
-                      Generer
+                      Générer
                     </span>
                   )}
                 </button>
@@ -457,7 +457,7 @@ export default function AIContentPage() {
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   className="w-full h-96 p-6 focus:outline-none bg-white/[0.03] text-white resize-none font-serif leading-relaxed"
-                  placeholder="Le contenu genere apparaitra ici..."
+                  placeholder="Le contenu généré apparaîtra ici..."
                 />
 
                 {/* Actions */}
@@ -552,7 +552,7 @@ export default function AIContentPage() {
                     </svg>
                   </div>
                   <p className="text-center text-sm text-white/50">
-                    Excellent! Votre contenu est bien optimise.
+                    Excellent! Votre contenu est bien optimisé.
                   </p>
                 </div>
 
@@ -671,8 +671,8 @@ export default function AIContentPage() {
                     <li>Utilisez votre mot-cle dans le premier paragraphe</li>
                     <li>Ajoutez au moins 3-4 sous-titres H2/H3</li>
                     <li>Incluez des listes a puces</li>
-                    <li>Integrez les mots-cles LSI naturellement</li>
-                    <li>Ajoutez une image avec alt-text optimise</li>
+                    <li>Intégrez les mots-clés LSI naturellement</li>
+                    <li>Ajoutez une image avec alt-text optimisé</li>
                   </ul>
                 </div>
               </>

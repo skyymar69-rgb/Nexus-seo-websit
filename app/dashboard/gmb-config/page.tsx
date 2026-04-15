@@ -97,12 +97,12 @@ export default function GMBConfigPage() {
           </div>
         </div>
         <div>
-          <label className="block text-sm font-medium text-white/70 mb-1">Description de l&apos;activite</label>
-          <textarea value={form.description} onChange={e => update('description', e.target.value)} placeholder="Decrivez votre activite en quelques phrases..." rows={3} className="w-full px-4 py-2.5 rounded-xl border border-white/5 bg-white/[0.02] text-sm resize-none" />
+          <label className="block text-sm font-medium text-white/70 mb-1">Description de l&apos;activité</label>
+          <textarea value={form.description} onChange={e => update('description', e.target.value)} placeholder="Décrivez votre activité en quelques phrases..." rows={3} className="w-full px-4 py-2.5 rounded-xl border border-white/5 bg-white/[0.02] text-sm resize-none" />
         </div>
         <button onClick={handleGenerate} disabled={loading || !form.businessName || !form.category} className="btn-primary px-6 py-3 rounded-xl w-full disabled:opacity-50 flex items-center justify-center gap-2">
           {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4" />}
-          {loading ? 'Generation...' : 'Generer la configuration GMB'}
+          {loading ? 'Génération...' : 'Générer la configuration GMB'}
         </button>
       </div>
 
@@ -112,16 +112,16 @@ export default function GMBConfigPage() {
         <>
           {/* Business Info Card */}
           <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
-            <h3 className="font-bold text-white mb-4 flex items-center gap-2"><Building2 className="w-5 h-5 text-brand-500" /> Informations optimisees</h3>
+            <h3 className="font-bold text-white mb-4 flex items-center gap-2"><Building2 className="w-5 h-5 text-brand-500" /> Informations optimisées</h3>
             <div className="space-y-3">
               <div className="p-3 rounded-lg bg-white/[0.02]">
-                <p className="text-xs font-bold text-surface-500 mb-1">NOM (tel qu&apos;il apparaitra sur Google)</p>
+                <p className="text-xs font-bold text-surface-500 mb-1">NOM (tel qu&apos;il apparaîtra sur Google)</p>
                 <p className="text-sm font-semibold text-white">{result.businessInfo.name}</p>
               </div>
               <div className="p-3 rounded-lg bg-white/[0.02]">
                 <p className="text-xs font-bold text-surface-500 mb-1">CATEGORIE PRINCIPALE</p>
                 <p className="text-sm text-white">{result.businessInfo.category}</p>
-                <p className="text-xs text-surface-400 mt-1">Sous-categories suggerees: {result.businessInfo.subcategories.join(', ')}</p>
+                <p className="text-xs text-surface-400 mt-1">Sous-catégories suggérées: {result.businessInfo.subcategories.join(', ')}</p>
               </div>
               <div className="p-3 rounded-lg bg-white/[0.02]">
                 <div className="flex items-center justify-between mb-1">
