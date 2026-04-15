@@ -102,10 +102,10 @@ export default function ReportsPage() {
         <div className="text-center">
           <FileText className="mx-auto h-12 w-12 text-white/30" />
           <h2 className="mt-4 text-lg font-semibold text-white">
-            Aucun site selectionne
+            Aucun site sélectionné
           </h2>
           <p className="mt-1 text-sm text-white/40">
-            Selectionnez un site web pour generer des rapports.
+            Sélectionnez un site web pour générer des rapports.
           </p>
         </div>
       </div>
@@ -120,7 +120,7 @@ export default function ReportsPage() {
           <div>
             <h1 className="text-2xl font-bold text-white">Rapports</h1>
             <p className="mt-1 text-sm text-white/40">
-              Generez et consultez vos rapports SEO pour{' '}
+              Générez et consultez vos rapports SEO pour{' '}
               <span className="font-medium text-white/70">
                 {selectedWebsite.domain}
               </span>
@@ -153,7 +153,7 @@ export default function ReportsPage() {
               ) : (
                 <Plus className="h-4 w-4" />
               )}
-              Generer un rapport
+              Générer un rapport
             </button>
           </div>
         </div>
@@ -186,7 +186,7 @@ export default function ReportsPage() {
               Aucun rapport
             </h3>
             <p className="mt-1 text-sm text-white/40">
-              Cliquez sur &quot;Generer un rapport&quot; pour creer votre
+              Cliquez sur &quot;Générer un rapport&quot; pour créer votre
               premier rapport SEO.
             </p>
           </div>

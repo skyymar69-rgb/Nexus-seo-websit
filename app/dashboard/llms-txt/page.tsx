@@ -51,8 +51,8 @@ export default function LLMSTxtPage() {
           <FileText className="h-6 w-6 text-white" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-white">Generateur llms.txt</h1>
-          <p className="text-sm text-surface-500">Creez votre fichier llms.txt pour que les LLMs citent correctement votre site</p>
+          <h1 className="text-2xl font-bold text-white">Générateur llms.txt</h1>
+          <p className="text-sm text-surface-500">Créez votre fichier llms.txt pour que les LLMs citent correctement votre site</p>
         </div>
       </div>
 
@@ -63,7 +63,7 @@ export default function LLMSTxtPage() {
         </h3>
         <p className="text-sm text-emerald-700 dark:text-emerald-400 leading-relaxed">
           Le fichier <code className="px-1 py-0.5 bg-emerald-100 dark:bg-emerald-900/30 rounded text-xs font-mono">llms.txt</code> est un standard (llmstxt.org) qui indique aux LLMs (ChatGPT, Claude, Gemini) les informations essentielles de votre site.
-          Placez-le a la racine : <code className="px-1 py-0.5 bg-emerald-100 dark:bg-emerald-900/30 rounded text-xs font-mono">votresite.fr/llms.txt</code>
+          Placez-le à la racine : <code className="px-1 py-0.5 bg-emerald-100 dark:bg-emerald-900/30 rounded text-xs font-mono">votresite.fr/llms.txt</code>
         </p>
       </div>
 
@@ -85,7 +85,7 @@ export default function LLMSTxtPage() {
         </div>
         <button onClick={handleGenerate} disabled={loading || !url || !brandName} className="btn-primary px-6 py-3 rounded-xl w-full disabled:opacity-50 flex items-center justify-center gap-2">
           {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
-          {loading ? 'Generation en cours...' : 'Generer llms.txt'}
+          {loading ? 'Génération en cours...' : 'Générer llms.txt'}
         </button>
       </div>
 
@@ -121,7 +121,7 @@ export default function LLMSTxtPage() {
                   onClick={() => downloadFile(activeTab === 'short' ? result.llmsTxt : result.llmsTxtFull, activeTab === 'short' ? 'llms.txt' : 'llms-full.txt')}
                   className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg border border-white/5 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
                 >
-                  <Download className="w-3 h-3" /> Telecharger
+                  <Download className="w-3 h-3" /> Télécharger
                 </button>
               </div>
             </div>
@@ -136,19 +136,19 @@ export default function LLMSTxtPage() {
             <ol className="space-y-3 text-sm text-white/70">
               <li className="flex items-start gap-3">
                 <span className="w-6 h-6 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">1</span>
-                <span>Telecharger les deux fichiers (<code className="px-1 py-0.5 bg-surface-100 dark:bg-surface-800 rounded text-xs font-mono">llms.txt</code> et <code className="px-1 py-0.5 bg-surface-100 dark:bg-surface-800 rounded text-xs font-mono">llms-full.txt</code>)</span>
+                <span>Télécharger les deux fichiers (<code className="px-1 py-0.5 bg-surface-100 dark:bg-surface-800 rounded text-xs font-mono">llms.txt</code> et <code className="px-1 py-0.5 bg-surface-100 dark:bg-surface-800 rounded text-xs font-mono">llms-full.txt</code>)</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="w-6 h-6 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">2</span>
-                <span>Placez-les a la racine de votre site web (dans <code className="px-1 py-0.5 bg-surface-100 dark:bg-surface-800 rounded text-xs font-mono">/public/</code> pour Next.js ou a la racine pour WordPress)</span>
+                <span>Placez-les à la racine de votre site web (dans <code className="px-1 py-0.5 bg-surface-100 dark:bg-surface-800 rounded text-xs font-mono">/public/</code> pour Next.js ou à la racine pour WordPress)</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="w-6 h-6 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">3</span>
-                <span>Verifiez que <code className="px-1 py-0.5 bg-surface-100 dark:bg-surface-800 rounded text-xs font-mono">votresite.fr/llms.txt</code> est accessible</span>
+                <span>Vérifiez que <code className="px-1 py-0.5 bg-surface-100 dark:bg-surface-800 rounded text-xs font-mono">votresite.fr/llms.txt</code> est accessible</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="w-6 h-6 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">4</span>
-                <span>Les LLMs detecteront automatiquement votre fichier lors de leurs prochains crawls</span>
+                <span>Les LLMs détecteront automatiquement votre fichier lors de leurs prochains crawls</span>
               </li>
             </ol>
           </div>
@@ -156,7 +156,7 @@ export default function LLMSTxtPage() {
           {/* Detected info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-white/[0.03] rounded-xl border border-white/5 p-5">
-              <h4 className="text-sm font-bold text-white mb-3">Pages detectees ({result.keyPages?.length || 0})</h4>
+              <h4 className="text-sm font-bold text-white mb-3">Pages détectées ({result.keyPages?.length || 0})</h4>
               <div className="space-y-1 max-h-40 overflow-y-auto">
                 {result.keyPages?.slice(0, 10).map((p: any, i: number) => (
                   <div key={i} className="flex items-center gap-2 text-xs text-white/50">
@@ -166,7 +166,7 @@ export default function LLMSTxtPage() {
               </div>
             </div>
             <div className="bg-white/[0.03] rounded-xl border border-white/5 p-5">
-              <h4 className="text-sm font-bold text-white mb-3">Reseaux sociaux ({result.socialLinks?.length || 0})</h4>
+              <h4 className="text-sm font-bold text-white mb-3">Réseaux sociaux ({result.socialLinks?.length || 0})</h4>
               <div className="space-y-1 max-h-40 overflow-y-auto">
                 {result.socialLinks?.map((link: string, i: number) => (
                   <a key={i} href={link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-brand-600 hover:underline truncate">
@@ -174,7 +174,7 @@ export default function LLMSTxtPage() {
                   </a>
                 ))}
                 {(!result.socialLinks || result.socialLinks.length === 0) && (
-                  <p className="text-xs text-surface-500">Aucun reseau social detecte</p>
+                  <p className="text-xs text-surface-500">Aucun réseau social détecté</p>
                 )}
               </div>
             </div>

@@ -69,7 +69,7 @@ export default function LinkBuyingPage() {
         </div>
         <div>
           <h1 className="text-2xl font-bold text-white">Opportunites de Liens</h1>
-          <p className="text-sm text-surface-500">Trouvez des opportunites de backlinks gratuits et de qualite</p>
+          <p className="text-sm text-surface-500">Trouvez des opportunités de backlinks gratuits et de qualité</p>
         </div>
       </div>
 
@@ -78,7 +78,7 @@ export default function LinkBuyingPage() {
         <Check className="w-5 h-5 text-green-600 mt-0.5 shrink-0" />
         <div>
           <p className="text-sm font-semibold text-green-800 dark:text-green-300">100% Gratuit — Aucun achat de lien</p>
-          <p className="text-xs text-green-700 dark:text-green-400 mt-1">Nexus vous propose uniquement des opportunites de liens naturels : guest posts, contributions editoriales, annuaires de qualite. Conformite Google Webmaster Guidelines.</p>
+          <p className="text-xs text-green-700 dark:text-green-400 mt-1">Nexus vous propose uniquement des opportunités de liens naturels : guest posts, contributions éditoriales, annuaires de qualité. Conformité Google Webmaster Guidelines.</p>
         </div>
       </div>
 
@@ -168,7 +168,7 @@ export default function LinkBuyingPage() {
         {filtered.length === 0 && (
           <div className="text-center py-12 text-surface-500">
             <Search className="w-8 h-8 mx-auto mb-3 text-surface-300" />
-            <p>Aucune opportunite trouvee avec ces filtres.</p>
+            <p>Aucune opportunité trouvée avec ces filtres.</p>
           </div>
         )}
       </div>

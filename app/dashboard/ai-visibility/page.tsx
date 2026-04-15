@@ -300,7 +300,7 @@ function NewQueryForm({
       setPrompt('')
       onSuccess()
     } catch (err: any) {
-      setError(err.message || 'Impossible de soumettre la requete')
+      setError(err.message || 'Impossible de soumettre la requête')
     } finally {
       setIsSubmitting(false)
     }
@@ -309,7 +309,7 @@ function NewQueryForm({
   return (
     <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6">
       <h3 className="text-lg font-bold text-white mb-4">
-        Nouvelle requete
+        Nouvelle requête
       </h3>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -557,7 +557,7 @@ export default function AIVisibilityPage() {
               {formatNumber(totalQueries)}
             </p>
             <p className="text-xs text-surface-500">
-              {mentionedCount} mention{mentionedCount !== 1 ? 's' : ''} trouvee{mentionedCount !== 1 ? 's' : ''}
+              {mentionedCount} mention{mentionedCount !== 1 ? 's' : ''} trouvée{mentionedCount !== 1 ? 's' : ''}
             </p>
           </div>
         </div>
@@ -689,7 +689,7 @@ export default function AIVisibilityPage() {
                   Requetes recentes
                 </h2>
                 <span className="text-xs text-surface-500 bg-surface-200 dark:bg-surface-800 px-2.5 py-1 rounded-full font-medium">
-                  {sortedQueries.length} requete{sortedQueries.length !== 1 ? 's' : ''}
+                  {sortedQueries.length} requête{sortedQueries.length !== 1 ? 's' : ''}
                 </span>
               </div>
 
@@ -699,10 +699,10 @@ export default function AIVisibilityPage() {
                   <Search className="h-4 w-4 text-surface-400" />
                   <input
                     type="text"
-                    placeholder="Rechercher une requete..."
+                    placeholder="Rechercher une requête..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    aria-label="Rechercher une requete"
+                    aria-label="Rechercher une requête"
                     className="flex-1 bg-transparent text-sm outline-none text-white placeholder-surface-400"
                   />
                 </div>
@@ -808,7 +808,7 @@ export default function AIVisibilityPage() {
               </div>
             ) : (
               <p className="text-sm text-surface-500 text-center py-8">
-                Aucune requete trouvee.
+                Aucune requête trouvée.
               </p>
             )}
           </div>

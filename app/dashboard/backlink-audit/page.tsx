@@ -179,16 +179,16 @@ export default function BacklinkAuditPage() {
                 <AlertTriangle className="w-6 h-6 text-red-500" />
                 <div>
                   <h3 className="font-bold text-red-800 dark:text-red-300">
-                    {stats.toxic} lien{stats.toxic > 1 ? 's' : ''} toxique{stats.toxic > 1 ? 's' : ''} detecte{stats.toxic > 1 ? 's' : ''}
+                    {stats.toxic} lien{stats.toxic > 1 ? 's' : ''} toxique{stats.toxic > 1 ? 's' : ''} détecté{stats.toxic > 1 ? 's' : ''}
                   </h3>
                   <p className="text-sm text-red-700 dark:text-red-400">
-                    Ces liens peuvent nuire a votre classement. Utilisez l&apos;outil de desaveu de Google.
+                    Ces liens peuvent nuire à votre classement. Utilisez l&apos;outil de désaveu de Google.
                   </p>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <h4 className="text-sm font-semibold text-red-800 dark:text-red-300">Liens a desavouer :</h4>
+                <h4 className="text-sm font-semibold text-red-800 dark:text-red-300">Liens à désavouer :</h4>
                 {scored.filter(b => b.quality === 'toxic').map(b => (
                   <div key={b.id} className="flex items-center justify-between bg-white/[0.03] rounded-lg px-4 py-2 border border-red-100 dark:border-red-900">
                     <span className="text-sm text-red-700 dark:text-red-400 truncate">{b.sourceDomain}</span>
@@ -201,7 +201,7 @@ export default function BacklinkAuditPage() {
                 <button
                   onClick={() => {
                     const lines = scored.filter(b => b.quality === 'toxic').map(b => `domain:${b.sourceDomain}`)
-                    const content = `# Fichier de desaveu Google\n# Genere par Nexus SEO — ${new Date().toLocaleDateString('fr-FR')}\n# Soumettez ce fichier sur https://search.google.com/search-console/disavow-links\n\n${lines.join('\n')}`
+                    const content = `# Fichier de désaveu Google\n# Généré par Nexus SEO — ${new Date().toLocaleDateString('fr-FR')}\n# Soumettez ce fichier sur https://search.google.com/search-console/disavow-links\n\n${lines.join('\n')}`
                     const blob = new Blob([content], { type: 'text/plain' })
                     const a = document.createElement('a'); a.href = URL.createObjectURL(blob)
                     a.download = `disavow-${selectedWebsite?.domain || 'site'}.txt`
@@ -209,7 +209,7 @@ export default function BacklinkAuditPage() {
                   }}
                   className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors"
                 >
-                  Telecharger le fichier de desaveu (.txt)
+                  Télécharger le fichier de désaveu (.txt)
                 </button>
                 <a
                   href="https://search.google.com/search-console/disavow-links"
@@ -222,13 +222,13 @@ export default function BacklinkAuditPage() {
               </div>
 
               <div className="bg-white/[0.03] rounded-lg p-4 border border-red-100 dark:border-red-900">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-red-500 mb-2">Comment utiliser le fichier de desaveu</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-red-500 mb-2">Comment utiliser le fichier de désaveu</h4>
                 <ol className="text-sm text-red-700 dark:text-red-400 space-y-1 list-decimal pl-4">
-                  <li>Telecharger le fichier .txt ci-dessus</li>
-                  <li>Aller sur Google Search Console &gt; Desavouer des liens</li>
-                  <li>Selectionner votre propriete</li>
+                  <li>Télécharger le fichier .txt ci-dessus</li>
+                  <li>Aller sur Google Search Console &gt; Désavouer des liens</li>
+                  <li>Sélectionner votre propriété</li>
                   <li>Importer le fichier .txt</li>
-                  <li>Attendre quelques semaines que Google traite le desaveu</li>
+                  <li>Attendre quelques semaines que Google traite le désaveu</li>
                 </ol>
               </div>
             </div>
@@ -241,25 +241,25 @@ export default function BacklinkAuditPage() {
               {stats.overallScore < 50 && (
                 <li className="flex items-start gap-2 text-sm text-white/70">
                   <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
-                  Votre profil de backlinks est de mauvaise qualite. Priorisez le desaveu des liens toxiques.
+                  Votre profil de backlinks est de mauvaise qualité. Priorisez le désaveu des liens toxiques.
                 </li>
               )}
               {stats.dofollowPct < 50 && (
                 <li className="flex items-start gap-2 text-sm text-white/70">
                   <AlertTriangle className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
-                  Ratio dofollow faible ({stats.dofollowPct}%). Cherchez des opportunites de liens dofollow.
+                  Ratio dofollow faible ({stats.dofollowPct}%). Cherchez des opportunités de liens dofollow.
                 </li>
               )}
               {stats.good < stats.total * 0.5 && (
                 <li className="flex items-start gap-2 text-sm text-white/70">
                   <AlertTriangle className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
-                  Moins de 50% de vos liens sont de bonne qualite. Focalisez-vous sur le guest blogging et les liens editoriaux.
+                  Moins de 50% de vos liens sont de bonne qualité. Focalisez-vous sur le guest blogging et les liens éditoriaux.
                 </li>
               )}
               {stats.overallScore >= 70 && (
                 <li className="flex items-start gap-2 text-sm text-white/70">
                   <CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
-                  Bon profil de backlinks ! Continuez a developper des liens de qualite.
+                  Bon profil de backlinks ! Continuez à développer des liens de qualité.
                 </li>
               )}
             </ul>

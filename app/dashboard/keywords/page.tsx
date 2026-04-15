@@ -256,7 +256,7 @@ function AddKeywordsModal({
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm">
       <div className="bg-surface-900 border border-surface-700 rounded-xl p-6 w-full max-w-md">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-surface-100">Ajouter des mots-cles</h2>
+          <h2 className="text-xl font-bold text-surface-100">Ajouter des mots-clés</h2>
           <button
             onClick={onClose}
             className="p-1 hover:bg-surface-800 rounded-lg transition-colors"
@@ -595,7 +595,7 @@ export default function KeywordsPage() {
     return (
       <div className="flex flex-col items-center justify-center py-24 space-y-4">
         <Loader2 className="h-8 w-8 animate-spin text-brand-400" />
-        <p className="text-surface-400">Chargement des mots-cles...</p>
+        <p className="text-surface-400">Chargement des mots-clés...</p>
       </div>
     )
   }
@@ -949,7 +949,7 @@ export default function KeywordsPage() {
                     <td colSpan={11} className="px-6 py-12 text-center">
                       <p className="text-surface-400">
                         {keywords.length === 0
-                          ? 'Aucun mot-cle suivi. Ajoutez des mots-cles pour commencer le suivi.'
+                          ? 'Aucun mot-cle suivi. Ajoutez des mots-clés pour commencer le suivi.'
                           : 'Aucun mot-cle ne correspond aux filtres'}
                       </p>
                     </td>

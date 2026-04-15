@@ -317,7 +317,7 @@ export default function GeoAuditPage() {
           Audit GEO
         </h1>
         <p className="text-white/50 mt-1">
-          Evaluez la compatibilite de votre site avec les moteurs de recherche generatifs (SGE, Perplexity, ChatGPT Search)
+          Évaluez la compatibilité de votre site avec les moteurs de recherche génératifs (SGE, Perplexity, ChatGPT Search)
         </p>
       </div>
 
@@ -366,7 +366,7 @@ export default function GeoAuditPage() {
             <div>
               <p className="text-lg font-semibold text-white">Pret pour l&apos;analyse GEO</p>
               <p className="text-sm text-surface-500 mt-1 max-w-md">
-                Entrez l&apos;URL de votre site pour evaluer sa compatibilite avec les moteurs de recherche generatifs et obtenir des recommandations personnalisees.
+                Entrez l&apos;URL de votre site pour évaluer sa compatibilité avec les moteurs de recherche génératifs et obtenir des recommandations personnalisées.
               </p>
             </div>
           </div>
@@ -492,7 +492,7 @@ export default function GeoAuditPage() {
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                 {[
-                  { label: 'Experience', score: result.eeat.experience.score },
+                  { label: 'Expérience', score: result.eeat.experience.score },
                   { label: 'Expertise', score: result.eeat.expertise.score },
                   { label: 'Autorite', score: result.eeat.authority.score },
                   { label: 'Confiance', score: result.eeat.trust.score },
