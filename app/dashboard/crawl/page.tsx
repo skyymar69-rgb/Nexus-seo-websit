@@ -71,6 +71,56 @@ export default function CrawlPage() {
     }
   }, [selectedWebsite]);
 
+  // Pre-load crawl data from latest scan
+  useEffect(() => {
+    if (!selectedWebsite?.id || data) return;
+    async function loadFromScan() {
+      try {
+        const statsRes = await fetch(`/api/dashboard/stats?websiteId=${selectedWebsite!.id}`);
+        if (!statsRes.ok) return;
+        const stats = await statsRes.json();
+        if (!stats.latestScanId) return;
+        const scanRes = await fetch(`/api/scan/${stats.latestScanId}`);
+        if (!scanRes.ok) return;
+        const scan = await scanRes.json();
+        const scanData = scan.data || scan;
+        const results = typeof scanData.results === 'string' ? JSON.parse(scanData.results) : scanData.results;
+        if (!results?.crawl) return;
+        const c = results.crawl;
+        setData({
+          url: scanData.url || `https://${selectedWebsite!.domain}`,
+          stats: {
+            totalPages: c.pagesCrawled || 0,
+            statusCodes: c.statusCodes || {},
+            totalInternalLinks: 0,
+            totalExternalLinks: 0,
+            totalImages: 0,
+            totalImagesWithoutAlt: 0,
+            avgResponseTime: 0,
+          },
+          pages: (c.issues || []).map((issue: any) => ({
+            url: issue.url,
+            statusCode: 200,
+            contentType: 'text/html',
+            contentLength: 0,
+            responseTime: 0,
+            title: '',
+            description: '',
+            h1Count: 0,
+            h2Count: 0,
+            internalLinks: 0,
+            externalLinks: 0,
+            imageCount: 0,
+            imagesWithoutAlt: 0,
+            issues: [issue.issue],
+          })),
+        });
+      } catch { /* silent */ }
+    }
+    loadFromScan();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedWebsite?.id]);
+
   const handleCrawl = async () => {
     if (!url.trim()) {
       setError('Veuillez entrer une URL valide');
