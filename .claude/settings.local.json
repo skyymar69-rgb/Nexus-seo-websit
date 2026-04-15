@@ -140,7 +140,13 @@
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 7 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --repo skyymar69-rgb/Nexus-seo-websit --title \"fix: race condition onboarding redirect\" --body \"Fix redirect prématuré\" --base main --head claude/elastic-maxwell)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 8 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
-      "mcp__Claude_in_Chrome__javascript_tool"
+      "mcp__Claude_in_Chrome__javascript_tool",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --repo skyymar69-rgb/Nexus-seo-websit --title \"fix: supprime redirect onboarding\" --body \"Dashboard ne redirige plus vers onboarding\" --base main --head claude/elastic-maxwell)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 9 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr list --repo skyymar69-rgb/Nexus-seo-websit --state open)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge --repo skyymar69-rgb/Nexus-seo-websit 9 --merge)",
+      "Bash(DATABASE_URL=\"postgresql://neondb_owner:npg_6doekIMjw2rO@ep-purple-dream-anjeb191.c-6.us-east-1.aws.neon.tech/neondb?sslmode=require\" npx prisma db execute --stdin <<< \"DELETE FROM \\\\\"ScanSession\\\\\" WHERE \\\\\"websiteId\\\\\" IN \\(SELECT id FROM \\\\\"Website\\\\\" WHERE domain = 'kayzen-web.fr'\\); DELETE FROM \\\\\"Website\\\\\" WHERE domain = 'kayzen-web.fr';\")",
+      "Bash(curl -sI -m 10 \"https://internet.kayzen-lyon.fr\")"
     ]
   }
 }
