@@ -865,10 +865,10 @@ export default function CompetitorsPage() {
         <div className="rounded-xl border border-surface-700 bg-surface-900/50 backdrop-blur p-6 shadow-sm">
           <h2 className="text-lg font-bold text-surface-100 mb-2 flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-brand-400" />
-            Comparaison des Problemes SEO
+            Comparaison des Problèmes SEO
           </h2>
           <p className="text-sm text-surface-400 mb-6">
-            Nombre de problemes detectes par le crawl (plus bas = mieux)
+            Nombre de problèmes détectés par le crawl (plus bas = mieux)
           </p>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={issuesChartData}>

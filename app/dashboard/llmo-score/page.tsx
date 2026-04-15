@@ -304,7 +304,7 @@ export default function LLMOScorePage() {
           <h1 className="text-3xl font-bold text-white">Score LLMO</h1>
         </div>
         <p className="text-white/50">
-          Mesurez et optimisez la presence de votre marque dans les reponses des LLM (Large Language Model Optimization)
+          Mesurez et optimisez la présence de votre marque dans les réponses des LLM (Large Language Model Optimization)
         </p>
       </div>
 
@@ -347,7 +347,7 @@ export default function LLMOScorePage() {
             <textarea
               value={queriesText}
               onChange={(e) => setQueriesText(e.target.value)}
-              placeholder={"meilleur outil SEO\ncomment optimiser son referencement\noutil analyse de backlinks"}
+              placeholder={"meilleur outil SEO\ncomment optimiser son référencement\noutil analyse de backlinks"}
               rows={4}
               className="w-full px-3 py-2.5 rounded-lg border border-white/5 bg-white/[0.03] text-sm outline-none text-white placeholder-surface-400 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors resize-none"
               disabled={isLoading}

@@ -127,7 +127,7 @@ export default function EvolutionPage() {
             </h1>
           </div>
           <p className="text-white/40 mt-1 max-w-xl">
-            Suivez l&apos;evolution de vos metriques SEO et identifiez les tendances
+            Suivez l&apos;évolution de vos métriques SEO et identifiez les tendances
           </p>
         </div>
         <div className="flex gap-2">
@@ -166,7 +166,7 @@ export default function EvolutionPage() {
       )}
 
       {!loading && !error && selectedWebsite && !hasAnyData && (
-        <EmptyState message="Aucune donnee historique disponible. Lancez des audits et suivez des mots-cles pour voir l'evolution." />
+        <EmptyState message="Aucune donnée historique disponible. Lancez des audits et suivez des mots-clés pour voir l'évolution." />
       )}
 
       {!loading && !error && hasAnyData && (
@@ -224,10 +224,10 @@ export default function EvolutionPage() {
               <div className="mb-6">
                 <h2 className="text-lg font-bold text-white flex items-center gap-2">
                   <Target className="h-5 w-5 text-blue-600" />
-                  Evolution de la Position des Mots-cles
+                  Evolution de la Position des Mots-clés
                 </h2>
                 <p className="text-sm text-white/40 mt-1">
-                  Position moyenne en baisse = amelioration (plus proche du top)
+                  Position moyenne en baisse = amélioration (plus proche du top)
                 </p>
               </div>
               <ResponsiveContainer width="100%" height={300}>

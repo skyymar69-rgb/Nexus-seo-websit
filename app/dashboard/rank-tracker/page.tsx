@@ -143,10 +143,10 @@ export default function RankTrackerPage() {
         <div className="text-center">
           <Search className="mx-auto h-12 w-12 text-white/30" />
           <h2 className="mt-4 text-lg font-semibold text-white">
-            Aucun site selectionne
+            Aucun site sélectionné
           </h2>
           <p className="mt-1 text-sm text-white/40">
-            Selectionnez un site web pour suivre vos positions.
+            Sélectionnez un site web pour suivre vos positions.
           </p>
         </div>
       </div>

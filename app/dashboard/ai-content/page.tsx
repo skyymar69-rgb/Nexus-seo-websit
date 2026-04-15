@@ -86,7 +86,7 @@ export default function AIContentPage() {
 
   const handleGenerate = async () => {
     if (!keyword.trim()) {
-      setError('Veuillez entrer un mot-cle');
+      setError('Veuillez entrer un mot-clé');
       return;
     }
 
@@ -377,7 +377,7 @@ export default function AIContentPage() {
                   {isGenerating ? (
                     <span className="flex items-center justify-center gap-2">
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      Generation en cours...
+                      Génération en cours...
                     </span>
                   ) : (
                     <span className="flex items-center justify-center gap-2">
@@ -403,7 +403,7 @@ export default function AIContentPage() {
                 <div className="flex items-center gap-3 mb-4">
                   <Loader2 className="w-5 h-5 animate-spin text-brand-600" />
                   <span className="text-sm font-medium text-white/50">
-                    Generation de votre contenu en cours...
+                    Génération de votre contenu en cours...
                   </span>
                 </div>
                 <div className="space-y-3 animate-pulse">
@@ -474,7 +474,7 @@ export default function AIContentPage() {
                     className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/[0.03] border border-white/5 text-white/70 hover:bg-white/[0.03] transition-colors font-medium"
                   >
                     <Download className="w-4 h-4" />
-                    Telecharger
+                    Télécharger
                   </button>
                 </div>
               </div>
@@ -559,7 +559,7 @@ export default function AIContentPage() {
                 {/* Keyword Density */}
                 <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
                   <h3 className="font-semibold text-white mb-3">
-                    Densite du mot-cle
+                    Densité du mot-clé
                   </h3>
                   {keyword && (
                     <div className="space-y-2">
@@ -642,7 +642,7 @@ export default function AIContentPage() {
                 {/* Related Keywords */}
                 <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
                   <h3 className="font-semibold text-white mb-4">
-                    Mots-cles connexes
+                    Mots-clés connexes
                   </h3>
                   <div className="space-y-2">
                     {RELATED_KEYWORDS.map(kw => (
@@ -668,7 +668,7 @@ export default function AIContentPage() {
                     Recommandations
                   </h3>
                   <ul className="space-y-2 text-sm text-white/70">
-                    <li>Utilisez votre mot-cle dans le premier paragraphe</li>
+                    <li>Utilisez votre mot-clé dans le premier paragraphe</li>
                     <li>Ajoutez au moins 3-4 sous-titres H2/H3</li>
                     <li>Incluez des listes a puces</li>
                     <li>Intégrez les mots-clés LSI naturellement</li>

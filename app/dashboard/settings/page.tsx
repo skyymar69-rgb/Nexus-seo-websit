@@ -75,8 +75,8 @@ export default function SettingsPage() {
     <div className="space-y-8 max-w-4xl">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-white">Parametres</h1>
-        <p className="text-white/50 mt-1">Gerez vos parametres et preferences</p>
+        <h1 className="text-3xl font-bold text-white">Paramètres</h1>
+        <p className="text-white/50 mt-1">Gérez vos paramètres et préférences</p>
       </div>
 
       {/* Profile Section */}
@@ -138,7 +138,7 @@ export default function SettingsPage() {
               <div>
                 <p className="font-semibold text-emerald-300">Plan {planInfo.label}</p>
                 <p className="text-sm text-white/50 mt-1">
-                  Acces complet a toutes les fonctionnalites
+                  Accès complet à toutes les fonctionnalités
                 </p>
               </div>
               <span className="px-3 py-1 rounded-full text-sm font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
@@ -157,7 +157,7 @@ export default function SettingsPage() {
           </div>
 
           <button className="w-full px-4 py-2.5 rounded-lg border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] font-medium text-white/70 transition-colors">
-            Gerer mon abonnement
+            Gérer mon abonnement
           </button>
         </div>
       </div>
@@ -170,7 +170,7 @@ export default function SettingsPage() {
         </h2>
 
         <p className="text-sm text-white/50 mb-4">
-          Gerez vos sites web, lancez des audits et suivez leurs performances.
+          Gérez vos sites web, lancez des audits et suivez leurs performances.
         </p>
 
         <Link
@@ -178,7 +178,7 @@ export default function SettingsPage() {
           className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-purple-600/20 border border-purple-500/30 text-purple-300 hover:bg-purple-600/30 font-medium transition-colors"
         >
           <ExternalLink className="h-4 w-4" />
-          Gerer mes projets
+          Gérer mes projets
         </Link>
       </div>
 
@@ -186,7 +186,7 @@ export default function SettingsPage() {
       <div className="rounded-xl border border-white/5 bg-white/[0.03] backdrop-blur-sm p-6">
         <h2 className="text-lg font-bold mb-6 flex items-center gap-2 text-white">
           <Sun className="h-5 w-5 text-amber-400" />
-          Theme
+          Thème
         </h2>
 
         <div className="space-y-3">
@@ -240,7 +240,7 @@ export default function SettingsPage() {
               <div>
                 <p className="font-medium text-white">Automatique</p>
                 <p className="text-xs text-white/50">
-                  Suit les preferences du systeme
+                  Suit les préférences du système
                 </p>
               </div>
             </div>
@@ -265,17 +265,17 @@ export default function SettingsPage() {
                     : key === 'weeklyReports'
                       ? 'Rapports hebdomadaires'
                       : key === 'newFeatures'
-                        ? 'Nouvelles fonctionnalites'
-                        : 'Mises a jour produit'}
+                        ? 'Nouvelles fonctionnalités'
+                        : 'Mises à jour produit'}
                 </p>
                 <p className="text-xs text-white/50 mt-1">
                   {key === 'emailAlerts'
                     ? 'Recevez des alertes importantes par email'
                     : key === 'weeklyReports'
-                      ? 'Rapport resume chaque semaine'
+                      ? 'Rapport résumé chaque semaine'
                       : key === 'newFeatures'
-                        ? 'Soyez informe des nouvelles fonctionnalites'
-                        : 'Recevez les informations sur les mises a jour'}
+                        ? 'Soyez informé des nouvelles fonctionnalités'
+                        : 'Recevez les informations sur les mises à jour'}
                 </p>
               </div>
               <button
@@ -301,17 +301,17 @@ export default function SettingsPage() {
       <div className="rounded-xl border border-white/5 bg-white/[0.03] backdrop-blur-sm p-6">
         <h2 className="text-lg font-bold mb-6 flex items-center gap-2 text-white">
           <Key className="h-5 w-5 text-cyan-400" />
-          Cle API
+          Clé API
         </h2>
 
         <p className="text-sm text-white/50 mb-4">
-          Utilisez une cle API pour integrer Nexus dans vos outils.
+          Utilisez une clé API pour intégrer Nexus dans vos outils.
         </p>
 
         <button
           className="w-full px-4 py-3 rounded-lg border font-medium transition-colors border-white/10 bg-white/[0.03] hover:bg-white/[0.06] text-white/70"
         >
-          Generez votre cle API pour integrer Nexus
+          Générez votre clé API pour intégrer Nexus
         </button>
       </div>
 
@@ -322,7 +322,7 @@ export default function SettingsPage() {
           Zone de danger
         </h2>
         <p className="text-sm text-white/50 mb-4">
-          Ces actions sont irreversibles. Soyez prudent.
+          Ces actions sont irréversibles. Soyez prudent.
         </p>
         <button className="px-4 py-2.5 rounded-lg border border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20 font-medium transition-colors">
           Supprimer mon compte

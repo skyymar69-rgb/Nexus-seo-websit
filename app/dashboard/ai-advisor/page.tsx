@@ -144,8 +144,8 @@ const categoryLabelsMap: Record<string, string> = {
   contenu: 'Contenu',
   performance: 'Performance',
   backlinks: 'Backlinks',
-  'ai-visibility': 'Visibilite IA',
-  securite: 'Securite',
+  'ai-visibility': 'Visibilité IA',
+  securite: 'Sécurité',
   mobile: 'Mobile',
   ux: 'UX',
 }
@@ -501,7 +501,7 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
         <div className="border-t border-slate-700 px-4 py-4 bg-slate-700/30 space-y-4">
           <div>
             <h4 className="text-xs font-semibold text-slate-300 uppercase tracking-wide mb-2">
-              Description detaillee
+              Description détaillée
             </h4>
             <p className="text-sm text-slate-300">{recommendation.description}</p>
           </div>
@@ -823,7 +823,7 @@ function LoadingSkeleton() {
             <Loader2 size={48} className="text-blue-500 animate-spin mx-auto" />
             <p className="text-slate-400 text-lg">Analyse en cours...</p>
             <p className="text-slate-500 text-sm">
-              Generation des recommandations personnalisees
+              Génération des recommandations personnalisées
             </p>
           </div>
         </div>
@@ -846,7 +846,7 @@ function EmptyState({ message }: { message: string }) {
             <div>
               <h1 className="text-3xl font-bold text-white">Conseiller IA Nexus</h1>
               <p className="text-sm text-slate-400 mt-1">
-                Optimisation SEO intelligente et recommandations personnalisees
+                Optimisation SEO intelligente et recommandations personnalisées
               </p>
             </div>
           </div>
@@ -961,7 +961,7 @@ export default function AIAdvisorPage() {
   // No website selected
   if (!selectedWebsite) {
     return (
-      <EmptyState message="Selectionnez un site web dans le menu pour commencer l'analyse." />
+      <EmptyState message="Sélectionnez un site web dans le menu pour commencer l'analyse." />
     )
   }
 
@@ -978,7 +978,7 @@ export default function AIAdvisorPage() {
       <EmptyState
         message={
           data?.message ||
-          'Aucun audit disponible. Lancez un audit pour obtenir des recommandations personnalisees.'
+          'Aucun audit disponible. Lancez un audit pour obtenir des recommandations personnalisées.'
         }
       />
     )
@@ -1033,7 +1033,7 @@ export default function AIAdvisorPage() {
                 <p className="text-sm text-slate-400 mt-1">
                   {data.websiteDomain
                     ? `Analyse de ${data.websiteDomain}`
-                    : 'Optimisation SEO intelligente et recommandations personnalisees'}
+                    : 'Optimisation SEO intelligente et recommandations personnalisées'}
                 </p>
               </div>
             </div>
@@ -1142,7 +1142,7 @@ export default function AIAdvisorPage() {
               {/* Key metrics */}
               <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
                 <h3 className="font-semibold text-slate-100 mb-4">
-                  Metriques cles
+                  Métriques clés
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-slate-700/50 rounded p-3">

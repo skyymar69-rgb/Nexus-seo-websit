@@ -204,7 +204,7 @@ export default function AnalyticsPage() {
           />
           <KpiCard
             icon={Key}
-            label="Mots-cles suivis"
+            label="Mots-clés suivis"
             value={String(kpis.totalKeywords)}
             sub={
               bestKeyword
@@ -285,7 +285,7 @@ export default function AnalyticsPage() {
           {charts.keywordPositionsOverTime.length > 0 && (
             <div className="rounded-lg border border-white/5 bg-white/[0.03] p-6 shadow-sm">
               <h2 className="mb-4 text-base font-semibold text-white">
-                Position moyenne des mots-cles
+                Position moyenne des mots-clés
               </h2>
               <ResponsiveContainer width="100%" height={260}>
                 <LineChart data={charts.keywordPositionsOverTime}>
@@ -387,7 +387,7 @@ export default function AnalyticsPage() {
               <div className="flex items-center gap-4 rounded-lg border border-green-200 bg-green-50 p-4">
                 <TrendingUp className="h-6 w-6 text-green-600" />
                 <div>
-                  <p className="text-sm text-green-800">Meilleur mot-cle</p>
+                  <p className="text-sm text-green-800">Meilleur mot-clé</p>
                   <p className="font-semibold text-green-900">
                     &quot;{bestKeyword.term}&quot; — position #{bestKeyword.position}
                   </p>
@@ -398,7 +398,7 @@ export default function AnalyticsPage() {
               <div className="flex items-center gap-4 rounded-lg border border-orange-200 bg-orange-50 p-4">
                 <TrendingDown className="h-6 w-6 text-orange-600" />
                 <div>
-                  <p className="text-sm text-orange-800">Mot-cle a ameliorer</p>
+                  <p className="text-sm text-orange-800">Mot-cle à améliorer</p>
                   <p className="font-semibold text-orange-900">
                     &quot;{worstKeyword.term}&quot; — position #{worstKeyword.position}
                   </p>

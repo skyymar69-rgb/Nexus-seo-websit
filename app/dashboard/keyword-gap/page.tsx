@@ -123,7 +123,7 @@ export default function KeywordGapPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-white">Keyword Gap</h1>
-        <p className="text-white/40 mt-1">Comparez les mots-cles entre deux domaines</p>
+        <p className="text-white/40 mt-1">Comparez les mots-clés entre deux domaines</p>
       </div>
 
       {/* Input forms */}
@@ -176,7 +176,7 @@ export default function KeywordGapPage() {
           ) : (
             <>
               <BarChart3 className="w-4 h-4" />
-              Comparer les mots-cles
+              Comparer les mots-clés
             </>
           )}
         </button>

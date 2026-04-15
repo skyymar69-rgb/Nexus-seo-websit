@@ -85,7 +85,7 @@ export default function KeywordMagicPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-white">Keyword Magic Tool</h1>
-        <p className="text-white/40 mt-1">Recherche de mots-cles a partir d'un terme initial</p>
+        <p className="text-white/40 mt-1">Recherche de mots-clés à partir d'un terme initial</p>
       </div>
 
       {/* Search input */}
@@ -98,8 +98,8 @@ export default function KeywordMagicPage() {
               value={seed}
               onChange={(e) => setSeed(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && !loading && handleSearch()}
-              placeholder="Entrez un mot-cle (ex: referencement naturel)"
-              aria-label="Mot-cle a rechercher"
+              placeholder="Entrez un mot-clé (ex: référencement naturel)"
+              aria-label="Mot-clé à rechercher"
               className="w-full pl-10 pr-4 py-3 rounded-xl border border-white/5 bg-white/[0.03] text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 text-sm"
             />
           </div>
@@ -138,7 +138,7 @@ export default function KeywordMagicPage() {
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-purple-500" />
               <span className="text-xs font-medium text-purple-700 bg-purple-50 px-2.5 py-1 rounded-full">
-                Estimation IA — donnees simulees
+                Estimation IA — données simulées
               </span>
             </div>
             <div className="flex items-center gap-1.5">
@@ -165,7 +165,7 @@ export default function KeywordMagicPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-white/5 bg-white/[0.02]">
-                    <th className="text-left px-4 py-3 font-medium text-white/40">Mot-cle</th>
+                    <th className="text-left px-4 py-3 font-medium text-white/40">Mot-clé</th>
                     <th className="text-center px-3 py-3 font-medium text-white/40">Volume</th>
                     <th className="text-center px-3 py-3 font-medium text-white/40">Difficulte</th>
                     <th className="text-center px-3 py-3 font-medium text-white/40">CPC</th>
@@ -216,7 +216,7 @@ export default function KeywordMagicPage() {
             </div>
             {filtered.length === 0 && (
               <div className="p-8 text-center text-white/30 text-sm">
-                Aucun resultat pour ce filtre d'intention
+                Aucun résultat pour ce filtre d'intention
               </div>
             )}
           </div>
