@@ -36,7 +36,7 @@ function CategoryBar({ label, score, checks }: { label: string; score: number; c
         <span className="text-sm text-white font-medium">{label}</span>
         <span className={`text-sm font-bold ${textColor}`}>{score}/100</span>
       </div>
-      <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+      <div className="h-1.5 bg-white/5 rounded-full overflow-hidden" role="progressbar" aria-label={label} aria-valuenow={score} aria-valuemin={0} aria-valuemax={100}>
         <div className={`h-full rounded-full ${color} transition-all`} style={{ width: `${score}%` }} />
       </div>
       <div className="space-y-1">

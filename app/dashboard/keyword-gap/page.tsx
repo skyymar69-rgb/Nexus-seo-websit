@@ -26,7 +26,7 @@ function FrequencyBar({ value, max }: { value: number; max: number }) {
   const pct = max > 0 ? (value / max) * 100 : 0
   return (
     <div className="flex items-center gap-2">
-      <div className="w-20 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+      <div className="w-20 h-1.5 bg-gray-100 rounded-full overflow-hidden" role="progressbar" aria-label="Frequence" aria-valuenow={Math.round(pct)} aria-valuemin={0} aria-valuemax={100}>
         <div className="h-full rounded-full bg-blue-500" style={{ width: `${pct}%` }} />
       </div>
       <span className="text-xs text-gray-600">{value}</span>

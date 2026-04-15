@@ -567,7 +567,7 @@ export default function AIVisibilityPage() {
           <div className="space-y-3">
             <p className="text-sm font-medium text-surface-600 dark:text-surface-400">Sentiment Positif</p>
             <p className="text-3xl font-bold text-surface-900 dark:text-surface-50">{positivePercent}%</p>
-            <div className="w-full h-1.5 rounded-full bg-surface-200 dark:bg-surface-800 overflow-hidden">
+            <div className="w-full h-1.5 rounded-full bg-surface-200 dark:bg-surface-800 overflow-hidden" role="progressbar" aria-label="Sentiment Positif" aria-valuenow={positivePercent} aria-valuemin={0} aria-valuemax={100}>
               <div
                 className="h-full bg-gradient-to-r from-accent-500 to-accent-600 rounded-full transition-all"
                 style={{ width: `${positivePercent}%` }}
@@ -871,7 +871,7 @@ export default function AIVisibilityPage() {
                           {pct}% ({s.count})
                         </span>
                       </div>
-                      <div className="w-full h-1.5 rounded-full bg-surface-200 dark:bg-surface-800 overflow-hidden">
+                      <div className="w-full h-1.5 rounded-full bg-surface-200 dark:bg-surface-800 overflow-hidden" role="progressbar" aria-label={s.label} aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
                         <div
                           className={cn('h-full rounded-full transition-all', s.color)}
                           style={{ width: `${pct}%` }}

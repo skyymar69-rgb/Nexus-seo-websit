@@ -46,7 +46,7 @@ function EEATBar({ label, score }: { label: string; score: number }) {
         <span className="text-white/60">{label}</span>
         <span className="text-white/40">{Math.round(pct)}</span>
       </div>
-      <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+      <div className="h-1.5 bg-white/5 rounded-full overflow-hidden" role="progressbar" aria-label={label} aria-valuenow={Math.round(pct)} aria-valuemin={0} aria-valuemax={100}>
         <div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%` }} />
       </div>
     </div>

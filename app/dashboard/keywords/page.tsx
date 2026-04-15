@@ -892,7 +892,7 @@ export default function KeywordsPage() {
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
-                          <div className="w-12 h-1.5 rounded-full bg-surface-700 overflow-hidden">
+                          <div className="w-12 h-1.5 rounded-full bg-surface-700 overflow-hidden" role="progressbar" aria-label="Difficulte" aria-valuenow={kw.difficulty} aria-valuemin={0} aria-valuemax={100}>
                             <div
                               className={cn(
                                 'h-full',
