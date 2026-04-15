@@ -136,7 +136,7 @@ export default function DashboardPage() {
   const dashboardData = useDashboardData(selectedWebsite?.id)
 
   const [latestScan, setLatestScan] = useState<ScanData | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [scanning, setScanning] = useState(false)
 
   // Fetch latest scan for selected website
@@ -171,16 +171,18 @@ export default function DashboardPage() {
   }, [selectedWebsite?.id])
 
   useEffect(() => {
-    setLoading(true)
-    fetchLatestScan()
-  }, [fetchLatestScan])
+    if (selectedWebsite?.id) {
+      setLoading(true)
+      fetchLatestScan()
+    }
+  }, [fetchLatestScan, selectedWebsite?.id])
 
-  // Check onboarding — only redirect if websites are loaded AND empty
+  // Check onboarding — only redirect if websites are fully loaded AND empty
   useEffect(() => {
-    if (!loading && !websitesLoading && websites.length === 0) {
+    if (!websitesLoading && websites.length === 0) {
       router.push('/dashboard/onboarding')
     }
-  }, [loading, websitesLoading, websites, router])
+  }, [websitesLoading, websites, router])
 
   // Launch new scan
   const handleNewScan = async () => {
@@ -213,7 +215,7 @@ export default function DashboardPage() {
 
   const results = latestScan?.results
 
-  if (loading) {
+  if (loading || websitesLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <Loader2 className="w-6 h-6 animate-spin text-brand-500" />
