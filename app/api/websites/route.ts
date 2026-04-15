@@ -46,6 +46,45 @@ export async function GET(request: NextRequest) {
   }
 }
 
+export async function DELETE(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions)
+    if (!session?.user) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    }
+
+    const userId = (session.user as any).id
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+
+    if (!id) {
+      return NextResponse.json({ error: 'ID requis' }, { status: 400 })
+    }
+
+    // Verify ownership
+    const website = await prisma.website.findFirst({
+      where: { id, userId },
+    })
+
+    if (!website) {
+      return NextResponse.json({ error: 'Site non trouvé' }, { status: 404 })
+    }
+
+    // Delete website (cascade will handle related records thanks to Prisma onDelete: Cascade)
+    await prisma.website.delete({
+      where: { id },
+    })
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Delete website error:', error)
+    return NextResponse.json(
+      { error: 'Erreur lors de la suppression' },
+      { status: 500 }
+    )
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)

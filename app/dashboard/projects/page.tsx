@@ -33,12 +33,24 @@ export default function ProjectsPage() {
     }
   }
 
+  const [deleting, setDeleting] = useState<string | null>(null)
+
   const handleDelete = async (id: string) => {
-    if (!confirm('Supprimer ce site ? Cette action est irreversible.')) return
+    if (!confirm('Supprimer ce site et toutes ses données ? Cette action est irréversible.')) return
+    setDeleting(id)
     try {
-      await fetch(`/api/websites?id=${id}`, { method: 'DELETE' })
+      const res = await fetch(`/api/websites?id=${id}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const data = await res.json()
+        setError(data.error || 'Erreur lors de la suppression')
+        return
+      }
       await refreshWebsites()
-    } catch { /* ignore */ }
+    } catch {
+      setError('Erreur réseau lors de la suppression')
+    } finally {
+      setDeleting(null)
+    }
   }
 
   return (
@@ -47,12 +59,12 @@ export default function ProjectsPage() {
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 rounded-lg bg-brand-50 dark:bg-brand-950/30">
-              <Globe className="h-6 w-6 text-brand-600" />
+            <div className="p-2.5 rounded-lg bg-brand-500/10">
+              <Globe className="h-6 w-6 text-brand-400" />
             </div>
             <h1 className="text-2xl font-bold text-white">Mes Sites</h1>
           </div>
-          <p className="text-sm text-surface-500">
+          <p className="text-sm text-white/40">
             Gerez vos sites web. Selectionnez un site pour voir ses donnees dans le dashboard.
           </p>
         </div>
@@ -69,13 +81,13 @@ export default function ProjectsPage() {
         <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
           <h3 className="font-bold text-white mb-4">Ajouter un site</h3>
           {error && (
-            <div className="flex items-center gap-2 p-3 mb-4 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm">
+            <div className="flex items-center gap-2 p-3 mb-4 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm">
               <AlertTriangle className="w-4 h-4 shrink-0" /> {error}
             </div>
           )}
           <div className="flex gap-3">
             <div className="flex-1">
-              <label className="block text-xs font-medium text-surface-500 mb-1">Domaine</label>
+              <label className="block text-xs font-medium text-white/40 mb-1">Domaine</label>
               <input
                 type="text"
                 value={newDomain}
@@ -86,7 +98,7 @@ export default function ProjectsPage() {
               />
             </div>
             <div className="flex-1">
-              <label className="block text-xs font-medium text-surface-500 mb-1">Nom (optionnel)</label>
+              <label className="block text-xs font-medium text-white/40 mb-1">Nom (optionnel)</label>
               <input
                 type="text"
                 value={newName}
@@ -117,7 +129,7 @@ export default function ProjectsPage() {
                   'rounded-xl border bg-white/[0.03] overflow-hidden cursor-pointer transition-all hover:shadow-md',
                   isSelected
                     ? 'border-brand-400 dark:border-brand-600 ring-2 ring-brand-400/20'
-                    : 'border-white/5 hover:border-surface-300 dark:hover:border-surface-700'
+                    : 'border-white/5 hover:border-white/10'
                 )}
               >
                 {/* Header */}
@@ -126,16 +138,16 @@ export default function ProjectsPage() {
                     <div className="flex items-center gap-3">
                       <div className={cn(
                         'w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold',
-                        isSelected ? 'bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400' : 'bg-white/[0.03] text-white/50'
+                        isSelected ? 'bg-brand-500/10 text-brand-400' : 'bg-white/[0.03] text-white/50'
                       )}>
                         {site.domain.charAt(0).toUpperCase()}
                       </div>
                       <div>
                         <h3 className="font-bold text-white text-sm">{site.name || site.domain}</h3>
-                        <p className="text-xs text-surface-500">{site.domain}</p>
+                        <p className="text-xs text-white/40">{site.domain}</p>
                       </div>
                     </div>
-                    {isSelected && <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400">Actif</span>}
+                    {isSelected && <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-brand-500/10 text-brand-400">Actif</span>}
                   </div>
                 </div>
 
@@ -143,7 +155,7 @@ export default function ProjectsPage() {
                 <div className="p-4 flex gap-2">
                   <button
                     onClick={(e) => { e.stopPropagation(); selectWebsite(site.id); router.push('/dashboard/audit') }}
-                    className="flex-1 px-3 py-2 rounded-lg text-xs font-medium text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/30 transition-colors"
+                    className="flex-1 px-3 py-2 rounded-lg text-xs font-medium text-brand-600 dark:text-brand-400 hover:bg-brand-500/10 transition-colors"
                   >
                     Auditer
                   </button>
@@ -152,13 +164,13 @@ export default function ProjectsPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={e => e.stopPropagation()}
-                    className="px-3 py-2 rounded-lg text-xs font-medium text-surface-500 hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
+                    className="px-3 py-2 rounded-lg text-xs font-medium text-white/40 hover:bg-white/[0.05] transition-colors"
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
                   </a>
                   <button
                     onClick={(e) => { e.stopPropagation(); handleDelete(site.id) }}
-                    className="px-3 py-2 rounded-lg text-xs font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+                    className="px-3 py-2 rounded-lg text-xs font-medium text-red-500 hover:bg-rose-500/10 transition-colors"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -168,10 +180,10 @@ export default function ProjectsPage() {
           })}
         </div>
       ) : (
-        <div className="bg-white/[0.03] rounded-xl border border-dashed border-surface-300 dark:border-surface-700 p-16 text-center">
-          <Globe className="w-12 h-12 text-surface-300 dark:text-surface-600 mx-auto mb-4" />
+        <div className="bg-white/[0.03] rounded-xl border border-dashed border-white/10 p-16 text-center">
+          <Globe className="w-12 h-12 text-white/20 mx-auto mb-4" />
           <h3 className="text-lg font-bold text-white mb-2">Aucun site ajoute</h3>
-          <p className="text-sm text-surface-500 mb-6 max-w-sm mx-auto">
+          <p className="text-sm text-white/40 mb-6 max-w-sm mx-auto">
             Ajoutez votre premier site pour commencer a auditer et suivre votre SEO.
           </p>
           <button onClick={() => setShowForm(true)} className="btn-primary px-6 py-3 rounded-xl">
