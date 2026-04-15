@@ -109,6 +109,7 @@ export default function ExitIntent() {
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 placeholder="https://votre-site.fr"
+                aria-label="URL du site a auditer"
                 className="flex-1 px-4 py-3 rounded-xl border border-surface-300 dark:border-surface-600 bg-surface-50 dark:bg-surface-800 text-surface-900 dark:text-white placeholder-surface-400 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
               />
               <button
@@ -151,6 +152,7 @@ export default function ExitIntent() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="votre@email.com"
+                  aria-label="Adresse email pour recevoir le rapport"
                   className="w-full pl-10 pr-4 py-3 rounded-xl border border-surface-300 dark:border-surface-600 bg-surface-50 dark:bg-surface-800 text-surface-900 dark:text-white placeholder-surface-400 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                 />
               </div>

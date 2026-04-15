@@ -75,7 +75,7 @@ export default function ContentAnalyzerPage() {
         <div className="flex gap-3">
           <div className="flex items-center gap-2 flex-1 px-4 py-2.5 rounded-xl border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800">
             <Globe className="w-4 h-4 text-surface-400" />
-            <input type="text" value={url} onChange={e => setUrl(e.target.value)} placeholder="https://votresite.fr/page" className="flex-1 bg-transparent outline-none text-sm" onKeyDown={e => e.key === 'Enter' && handleAnalyze()} />
+            <input type="text" value={url} onChange={e => setUrl(e.target.value)} placeholder="https://votresite.fr/page" aria-label="URL de la page a analyser" className="flex-1 bg-transparent outline-none text-sm" onKeyDown={e => e.key === 'Enter' && handleAnalyze()} />
           </div>
           <button onClick={handleAnalyze} disabled={loading} className="btn-primary px-6 py-2.5 rounded-xl disabled:opacity-50">
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Search className="w-4 h-4" /> Analyser</>}

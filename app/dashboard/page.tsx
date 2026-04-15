@@ -136,6 +136,7 @@ export default function DashboardPage() {
   const dashboardData = useDashboardData(selectedWebsite?.id)
 
   const [latestScan, setLatestScan] = useState<ScanData | null>(null)
+  const [previousScores, setPreviousScores] = useState<{ audit?: number | null; aeo?: number | null; geo?: number | null; performance?: number | null } | undefined>(undefined)
   const [loading, setLoading] = useState(false)
   const [scanning, setScanning] = useState(false)
 
@@ -160,6 +161,23 @@ export default function DashboardPage() {
             setLatestScan(scanJson.data)
           }
         }
+
+        // Fetch scan history for deltas (previous scan comparison)
+        try {
+          const histRes = await fetch(`/api/dashboard/scan-history?websiteId=${selectedWebsite.id}&limit=2`)
+          if (histRes.ok) {
+            const histJson = await histRes.json()
+            if (histJson.success && histJson.data?.length >= 2) {
+              const prev = histJson.data[1] // second most recent = previous scan
+              setPreviousScores({
+                audit: prev.auditScore,
+                aeo: prev.aeoScore,
+                geo: prev.geoScore,
+                performance: prev.perfScore,
+              })
+            }
+          }
+        } catch { /* non-critical */ }
       } else {
         setLatestScan(null)
       }
@@ -384,6 +402,7 @@ export default function DashboardPage() {
         aeoScore={latestScan.aeoScore}
         geoScore={latestScan.geoScore}
         perfScore={latestScan.perfScore}
+        previousScores={previousScores}
       />
 
       {/* Score trends */}

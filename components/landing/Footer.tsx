@@ -67,6 +67,7 @@ export function Footer() {
                 <input
                   type="email"
                   placeholder="votre@email.fr"
+                  aria-label="Adresse email pour la newsletter"
                   className="w-full pl-9 pr-3 py-2.5 rounded-xl text-sm bg-white dark:bg-surface-800 border border-surface-200 dark:border-surface-700 text-surface-900 dark:text-white placeholder-surface-400 focus:outline-none focus:ring-2 focus:ring-brand-500/50"
                 />
               </div>
