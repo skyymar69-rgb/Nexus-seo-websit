@@ -96,27 +96,44 @@ async function updateScanProgress(
 // ── HTML Fetch ───────────────────────────────────────────────
 
 async function fetchHTML(url: string): Promise<{ html: string; loadTime: number; headers: Headers }> {
-  const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 20000)
-  const start = Date.now()
-
-  try {
-    const response = await fetch(url, {
-      signal: controller.signal,
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-      },
-    })
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`)
-    }
-
-    const html = await response.text()
-    return { html, loadTime: Date.now() - start, headers: response.headers }
-  } finally {
-    clearTimeout(timeoutId)
+  const fetchHeaders = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept-Language': 'fr-FR,fr;q=0.9,en;q=0.8',
   }
+
+  // Try with https first, then http as fallback
+  for (const protocol of ['https://', 'http://']) {
+    const targetUrl = url.startsWith('http') ? url : protocol + url.replace(/^https?:\/\//, '')
+
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 25000)
+    const start = Date.now()
+
+    try {
+      const response = await fetch(targetUrl, {
+        signal: controller.signal,
+        headers: fetchHeaders,
+        redirect: 'follow',
+      })
+
+      if (!response.ok) {
+        clearTimeout(timeoutId)
+        if (protocol === 'https://') continue // Try http
+        throw new Error(`HTTP ${response.status}`)
+      }
+
+      const html = await response.text()
+      clearTimeout(timeoutId)
+      return { html, loadTime: Date.now() - start, headers: response.headers }
+    } catch (err) {
+      clearTimeout(timeoutId)
+      if (protocol === 'https://') continue // Try http fallback
+      throw err
+    }
+  }
+
+  throw new Error(`Impossible de charger ${url}`)
 }
 
 // ── Step: Audit Technique ────────────────────────────────────
