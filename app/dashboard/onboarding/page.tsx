@@ -91,12 +91,31 @@ export default function OnboardingPage() {
         throw new Error(data.error || 'Erreur lors de l\'ajout du site')
       }
 
+      const websiteData = await res.json()
       await refreshWebsites()
-      setStep('done')
 
-      // Redirect to audit with auto-launch after 2s
+      // Launch full scan automatically
+      const scanRes = await fetch('/api/scan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          websiteId: websiteData.data?.id || websiteData.id,
+          url: 'https://' + cleaned,
+        }),
+      })
+
+      if (scanRes.ok) {
+        const scanData = await scanRes.json()
+        if (scanData.scanId) {
+          router.push(`/dashboard/scan/${scanData.scanId}`)
+          return
+        }
+      }
+
+      // Fallback if scan fails to start
+      setStep('done')
       setTimeout(() => {
-        router.push(`/dashboard/audit?url=${encodeURIComponent('https://' + cleaned)}`)
+        router.push('/dashboard')
       }, 2000)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur inconnue')

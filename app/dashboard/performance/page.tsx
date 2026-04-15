@@ -9,6 +9,7 @@ import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, L
 import { cn } from '@/lib/utils'
 import { useWebsite } from '@/contexts/WebsiteContext'
 import { UrlInput } from '@/components/shared/UrlInput'
+import { PageHeader } from '@/components/dashboard/ui/PageHeader'
 
 // Types
 interface CoreWebVital {
@@ -109,7 +110,7 @@ function PerformanceGauge({ score, grade }: { score: number; grade: string }) {
               <stop offset="100%" stopColor="#059669" />
             </linearGradient>
           </defs>
-          <circle cx="70" cy="70" r="60" fill="none" stroke="currentColor" strokeWidth="10" className="text-surface-200 dark:text-surface-700" />
+          <circle cx="70" cy="70" r="60" fill="none" stroke="currentColor" strokeWidth="10" className="text-white/10" />
           <circle
             cx="70"
             cy="70"
@@ -124,8 +125,8 @@ function PerformanceGauge({ score, grade }: { score: number; grade: string }) {
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <div className="text-5xl font-bold text-surface-900 dark:text-surface-50">{score}</div>
-          <div className="text-sm text-surface-600 dark:text-surface-400 mt-2">Grade {grade}</div>
+          <div className="text-5xl font-bold text-white">{score}</div>
+          <div className="text-sm text-white/50 mt-2">Grade {grade}</div>
         </div>
       </div>
       <div className={cn('text-lg font-semibold px-4 py-2 rounded-full', info.color)}>{info.label}</div>
@@ -157,10 +158,10 @@ function VitalCard({
     <div className={cn('rounded-lg p-6 border transition-all', ratingInfo.bgColor, ratingInfo.borderColor)}>
       <div className="flex items-start justify-between mb-4">
         <div>
-          <p className="text-sm font-medium text-surface-600 dark:text-surface-400 uppercase tracking-wider">{label}</p>
-          <p className="text-3xl font-bold text-surface-900 dark:text-surface-50 mt-2">
+          <p className="text-sm font-medium text-white/50 uppercase tracking-wider">{label}</p>
+          <p className="text-3xl font-bold text-white mt-2">
             {displayValue}
-            <span className="text-lg font-normal text-surface-500 ml-1">{unit}</span>
+            <span className="text-lg font-normal text-white/40 ml-1">{unit}</span>
           </p>
         </div>
         <div className={cn('px-3 py-1.5 rounded-full text-xs font-semibold', ratingInfo.color, ratingInfo.bgColor)}>
@@ -168,7 +169,7 @@ function VitalCard({
         </div>
       </div>
 
-      <div className="space-y-2 text-xs text-surface-600 dark:text-surface-400 mb-3 pt-3 border-t border-surface-200 dark:border-surface-700">
+      <div className="space-y-2 text-xs text-white/50 mb-3 pt-3 border-t border-white/5">
         <div className="flex justify-between">
           <span>Bon: &lt; {threshold.good}{unit}</span>
           <span>À améliorer: &lt; {threshold.needsImprovement}{unit}</span>
@@ -181,7 +182,7 @@ function VitalCard({
         ) : (
           <ArrowUpRight className="w-4 h-4 text-red-500" />
         )}
-        <span className={trendIsPositive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
+        <span className={trendIsPositive ? 'text-green-400' : 'text-red-400'}>
           {Math.abs(trend)}% {trendIsPositive ? 'amélioration' : 'dégradation'}
         </span>
       </div>
@@ -203,26 +204,26 @@ function ResourceTable({ resources }: { resources: PerformanceData['resources'] 
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-surface-200 dark:border-surface-700">
-            <th className="text-left py-3 px-4 font-semibold text-surface-700 dark:text-surface-300">Type</th>
-            <th className="text-right py-3 px-4 font-semibold text-surface-700 dark:text-surface-300">Taille</th>
-            <th className="text-right py-3 px-4 font-semibold text-surface-700 dark:text-surface-300">Temps chargement</th>
-            <th className="text-center py-3 px-4 font-semibold text-surface-700 dark:text-surface-300">Bloquant</th>
+          <tr className="border-b border-white/5">
+            <th className="text-left py-3 px-4 font-semibold text-white/70">Type</th>
+            <th className="text-right py-3 px-4 font-semibold text-white/70">Taille</th>
+            <th className="text-right py-3 px-4 font-semibold text-white/70">Temps chargement</th>
+            <th className="text-center py-3 px-4 font-semibold text-white/70">Bloquant</th>
           </tr>
         </thead>
         <tbody>
           {allResources.map((resource, idx) => (
-            <tr key={idx} className="border-b border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors">
-              <td className="py-3 px-4 font-medium text-surface-900 dark:text-surface-50">{resource.typeLabel}</td>
-              <td className="text-right py-3 px-4 text-surface-600 dark:text-surface-400">{(resource.size / 1024).toFixed(1)} KB</td>
-              <td className="text-right py-3 px-4 text-surface-600 dark:text-surface-400">{Math.round(resource.loadTime)}ms</td>
+            <tr key={idx} className="border-b border-white/5 hover:bg-white/[0.03] transition-colors">
+              <td className="py-3 px-4 font-medium text-white">{resource.typeLabel}</td>
+              <td className="text-right py-3 px-4 text-white/50">{(resource.size / 1024).toFixed(1)} KB</td>
+              <td className="text-right py-3 px-4 text-white/50">{Math.round(resource.loadTime)}ms</td>
               <td className="text-center py-3 px-4">
                 {resource.blocking ? (
-                  <span className="inline-flex items-center gap-1 text-red-600 dark:text-red-400">
+                  <span className="inline-flex items-center gap-1 text-red-400">
                     <AlertCircle className="w-4 h-4" /> Oui
                   </span>
                 ) : (
-                  <span className="text-green-600 dark:text-green-400">Non</span>
+                  <span className="text-green-400">Non</span>
                 )}
               </td>
             </tr>
@@ -238,27 +239,27 @@ function CompetitorComparison({ competitors }: { competitors: PerformanceData['c
   return (
     <div className="space-y-4">
       {competitors.map((competitor, idx) => (
-        <div key={idx} className="p-4 rounded-lg border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800">
+        <div key={idx} className="p-4 rounded-lg border border-white/5 bg-white/[0.02]">
           <div className="flex items-center justify-between mb-3">
-            <h4 className="font-medium text-surface-900 dark:text-surface-50">{competitor.name}</h4>
+            <h4 className="font-medium text-white">{competitor.name}</h4>
             <div className="flex items-center gap-2">
               <div className="text-right">
-                <p className="text-2xl font-bold text-surface-900 dark:text-surface-50">{competitor.score}</p>
+                <p className="text-2xl font-bold text-white">{competitor.score}</p>
               </div>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-3 text-sm">
             <div>
-              <p className="text-surface-600 dark:text-surface-400 text-xs">LCP</p>
-              <p className="font-semibold text-surface-900 dark:text-surface-50">{competitor.lcp.toFixed(2)}s</p>
+              <p className="text-white/50 text-xs">LCP</p>
+              <p className="font-semibold text-white">{competitor.lcp.toFixed(2)}s</p>
             </div>
             <div>
-              <p className="text-surface-600 dark:text-surface-400 text-xs">INP</p>
-              <p className="font-semibold text-surface-900 dark:text-surface-50">{Math.round(competitor.inp)}ms</p>
+              <p className="text-white/50 text-xs">INP</p>
+              <p className="font-semibold text-white">{Math.round(competitor.inp)}ms</p>
             </div>
             <div>
-              <p className="text-surface-600 dark:text-surface-400 text-xs">CLS</p>
-              <p className="font-semibold text-surface-900 dark:text-surface-50">{competitor.cls.toFixed(3)}</p>
+              <p className="text-white/50 text-xs">CLS</p>
+              <p className="font-semibold text-white">{competitor.cls.toFixed(3)}</p>
             </div>
           </div>
         </div>
@@ -422,20 +423,17 @@ export default function PerformancePage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-50 dark:bg-surface-900">
+    <div className="min-h-screen bg-white/[0.02]">
       {/* Header */}
-      <div className="border-b border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-800 sticky top-0 z-50">
+      <div className="border-b border-white/5 bg-white/[0.03] sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-gradient-to-br from-brand-400 to-brand-600 rounded-lg">
-                <Gauge className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-surface-900 dark:text-surface-50">Performance & Core Web Vitals</h1>
-                {data && <p className="text-sm text-surface-600 dark:text-surface-400 mt-1">{data.url}</p>}
-              </div>
-            </div>
+            <PageHeader
+              title="Performance Web"
+              description="Core Web Vitals et vitesse de chargement"
+              icon={<Gauge className="w-6 h-6 text-cyan-400" />}
+              iconBg="bg-cyan-500/10"
+            />
             {data && (
               <div className="flex gap-3">
                 <button
@@ -446,7 +444,7 @@ export default function PerformancePage() {
                 </button>
                 <button
                   onClick={handleExport}
-                  className="px-4 py-2.5 rounded-lg border border-surface-300 dark:border-surface-600 text-surface-700 dark:text-surface-300 font-medium hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors inline-flex items-center gap-2"
+                  className="px-4 py-2.5 rounded-lg border border-white/5 text-white/70 font-medium hover:bg-white/[0.03] transition-colors inline-flex items-center gap-2"
                 >
                   <Download className="w-4 h-4" /> Exporter
                 </button>
@@ -459,8 +457,8 @@ export default function PerformancePage() {
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
         {/* URL Input */}
         {!data && (
-          <div className="bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-8">
-            <label className="block text-sm font-medium text-surface-900 dark:text-surface-50 mb-4">URL à analyser</label>
+          <div className="bg-white/[0.03] rounded-lg border border-white/5 p-8">
+            <label className="block text-sm font-medium text-white mb-4">URL à analyser</label>
             <UrlInput
               value={urlInput}
               onChange={setUrlInput}
@@ -478,10 +476,10 @@ export default function PerformancePage() {
 
         {/* Loading State */}
         {loading && (
-          <div className="bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-16 text-center">
+          <div className="bg-white/[0.03] rounded-lg border border-white/5 p-16 text-center">
             <Loader2 className="w-16 h-16 animate-spin text-brand-500 mx-auto mb-4" />
-            <p className="text-xl font-semibold text-surface-700 dark:text-surface-300">Analyse en cours...</p>
-            <p className="text-sm text-surface-500 mt-2">Chargement et analyse de la page</p>
+            <p className="text-xl font-semibold text-white/70">Analyse en cours...</p>
+            <p className="text-sm text-white/40 mt-2">Chargement et analyse de la page</p>
           </div>
         )}
 
@@ -498,7 +496,7 @@ export default function PerformancePage() {
                   'px-4 py-2 rounded-lg font-medium inline-flex items-center gap-2 transition-colors',
                   device === 'desktop'
                     ? 'bg-brand-500 text-white'
-                    : 'bg-surface-200 dark:bg-surface-700 text-surface-700 dark:text-surface-300 hover:bg-surface-300 dark:hover:bg-surface-600'
+                    : 'bg-white/[0.03] text-white/70 hover:bg-white/[0.06]'
                 )}
               >
                 <Monitor className="w-4 h-4" /> Desktop
@@ -511,7 +509,7 @@ export default function PerformancePage() {
                   'px-4 py-2 rounded-lg font-medium inline-flex items-center gap-2 transition-colors',
                   device === 'mobile'
                     ? 'bg-brand-500 text-white'
-                    : 'bg-surface-200 dark:bg-surface-700 text-surface-700 dark:text-surface-300 hover:bg-surface-300 dark:hover:bg-surface-600'
+                    : 'bg-white/[0.03] text-white/70 hover:bg-white/[0.06]'
                 )}
               >
                 <Smartphone className="w-4 h-4" /> Mobile
@@ -520,7 +518,7 @@ export default function PerformancePage() {
 
             {/* Overall Score + Core Web Vitals */}
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-              <div className="lg:col-span-1 bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-8 flex items-center justify-center">
+              <div className="lg:col-span-1 bg-white/[0.03] rounded-lg border border-white/5 p-8 flex items-center justify-center">
                 <PerformanceGauge score={data.score} grade={data.grade} />
               </div>
               <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -558,30 +556,31 @@ export default function PerformancePage() {
                 { label: 'TTFB', value: data.coreWebVitals.ttfb.value, unit: 'ms' },
                 { label: 'TBT', value: data.coreWebVitals.tbt.value, unit: 'ms' },
               ].map(metric => (
-                <div key={metric.label} className="bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-4">
-                  <p className="text-xs font-medium text-surface-600 dark:text-surface-400 uppercase">{metric.label}</p>
-                  <p className="text-2xl font-bold text-surface-900 dark:text-surface-50 mt-2">
+                <div key={metric.label} className="bg-white/[0.03] rounded-lg border border-white/5 p-4">
+                  <p className="text-xs font-medium text-white/50 uppercase">{metric.label}</p>
+                  <p className="text-2xl font-bold text-white mt-2">
                     {metric.value < 10 ? metric.value.toFixed(2) : Math.round(metric.value)}
                   </p>
-                  <p className="text-xs text-surface-500 mt-1">{metric.unit}</p>
+                  <p className="text-xs text-white/40 mt-1">{metric.unit}</p>
                 </div>
               ))}
             </div>
 
             {/* Performance Evolution Chart */}
             {historyData.length > 0 && (
-              <div className="bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-6">
-                <h2 className="text-xl font-bold text-surface-900 dark:text-surface-50 mb-6">Évolution des Performances (30 jours)</h2>
+              <div className="bg-white/[0.03] rounded-lg border border-white/5 p-6">
+                <h2 className="text-xl font-bold text-white mb-6">Évolution des Performances (30 jours)</h2>
                 <ResponsiveContainer width="100%" height={350}>
                   <LineChart data={historyData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" className="dark:stroke-surface-700" />
-                    <XAxis dataKey="date" stroke="#9ca3af" style={{ fontSize: '12px' }} />
-                    <YAxis stroke="#9ca3af" style={{ fontSize: '12px' }} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                    <XAxis dataKey="date" stroke="rgba(255,255,255,0.3)" style={{ fontSize: '12px' }} />
+                    <YAxis stroke="rgba(255,255,255,0.3)" style={{ fontSize: '12px' }} />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: '#fff',
-                        border: '1px solid #e5e7eb',
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        border: '1px solid rgba(255,255,255,0.1)',
                         borderRadius: '8px',
+                        color: '#fff',
                       }}
                     />
                     <Legend />
@@ -594,17 +593,17 @@ export default function PerformancePage() {
             )}
 
             {/* Resource Breakdown */}
-            <div className="bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-6">
-              <h2 className="text-xl font-bold text-surface-900 dark:text-surface-50 mb-6">Répartition des Ressources</h2>
-              <p className="text-sm text-surface-600 dark:text-surface-400 mb-4">
+            <div className="bg-white/[0.03] rounded-lg border border-white/5 p-6">
+              <h2 className="text-xl font-bold text-white mb-6">Répartition des Ressources</h2>
+              <p className="text-sm text-white/50 mb-4">
                 Taille totale: {(data.resources.totalSize / 1024 / 1024).toFixed(2)} MB
               </p>
               <ResourceTable resources={data.resources} />
             </div>
 
             {/* Opportunities */}
-            <div className="bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-6">
-              <h2 className="text-xl font-bold text-surface-900 dark:text-surface-50 mb-6 flex items-center gap-2">
+            <div className="bg-white/[0.03] rounded-lg border border-white/5 p-6">
+              <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
                 <TrendingUp className="w-5 h-5 text-green-500" /> Opportunités d'Optimisation
               </h2>
               <div className="space-y-4">
@@ -612,11 +611,11 @@ export default function PerformancePage() {
                   <div key={idx} className={cn('rounded-lg p-4 border', getSeverityColor(opp.severity).bg, getSeverityColor(opp.severity).border)}>
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
-                        <h4 className="font-semibold text-surface-900 dark:text-surface-50">{opp.title}</h4>
-                        <p className="text-sm text-surface-600 dark:text-surface-400 mt-1">{opp.description}</p>
+                        <h4 className="font-semibold text-white">{opp.title}</h4>
+                        <p className="text-sm text-white/50 mt-1">{opp.description}</p>
                       </div>
                       <div className="text-right flex-shrink-0">
-                        <p className="text-sm font-semibold text-green-600 dark:text-green-400">
+                        <p className="text-sm font-semibold text-green-400">
                           -{opp.savings.value}
                           {opp.savings.unit}
                         </p>
@@ -629,8 +628,8 @@ export default function PerformancePage() {
 
             {/* Diagnostics */}
             {data.diagnostics.length > 0 && (
-              <div className="bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-6">
-                <h2 className="text-xl font-bold text-surface-900 dark:text-surface-50 mb-6 flex items-center gap-2">
+              <div className="bg-white/[0.03] rounded-lg border border-white/5 p-6">
+                <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
                   <AlertCircle className="w-5 h-5 text-amber-500" /> Diagnostics Techniques
                 </h2>
                 <div className="space-y-4">
@@ -641,8 +640,8 @@ export default function PerformancePage() {
                         <div className="flex items-start gap-3">
                           <AlertCircle className={cn('w-5 h-5 flex-shrink-0 mt-0.5', severityInfo.color)} />
                           <div className="flex-1">
-                            <h4 className="font-semibold text-surface-900 dark:text-surface-50">{diag.title}</h4>
-                            <p className="text-sm text-surface-600 dark:text-surface-400 mt-1">{diag.description}</p>
+                            <h4 className="font-semibold text-white">{diag.title}</h4>
+                            <p className="text-sm text-white/50 mt-1">{diag.description}</p>
                           </div>
                         </div>
                       </div>
@@ -654,8 +653,8 @@ export default function PerformancePage() {
 
             {/* Competitor Comparison */}
             {data.competitors.length > 0 && (
-              <div className="bg-white dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-6">
-                <h2 className="text-xl font-bold text-surface-900 dark:text-surface-50 mb-6 flex items-center gap-2">
+              <div className="bg-white/[0.03] rounded-lg border border-white/5 p-6">
+                <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
                   <BarChart3 className="w-5 h-5 text-blue-500" /> Comparaison avec les Concurrents
                 </h2>
                 <CompetitorComparison competitors={data.competitors} />
@@ -667,7 +666,7 @@ export default function PerformancePage() {
               <button className="px-6 py-3 rounded-lg bg-brand-500 text-white font-medium hover:bg-brand-600 transition-colors inline-flex items-center gap-2">
                 <Download className="w-4 h-4" /> Télécharger le Rapport PDF
               </button>
-              <button className="px-6 py-3 rounded-lg border border-brand-500 text-brand-600 dark:text-brand-400 font-medium hover:bg-brand-500/10 transition-colors inline-flex items-center gap-2">
+              <button className="px-6 py-3 rounded-lg border border-brand-500 text-brand-400 font-medium hover:bg-brand-500/10 transition-colors inline-flex items-center gap-2">
                 <Share2 className="w-4 h-4" /> Partager les Résultats
               </button>
             </div>
@@ -677,9 +676,9 @@ export default function PerformancePage() {
         {/* Empty State */}
         {!data && !loading && !error && (
           <div className="text-center py-24">
-            <Gauge className="w-20 h-20 text-surface-300 dark:text-surface-600 mx-auto mb-6" />
-            <h3 className="text-2xl font-bold text-surface-900 dark:text-surface-50 mb-2">Analysez les performances de votre site</h3>
-            <p className="text-surface-600 dark:text-surface-400 max-w-md mx-auto">
+            <Gauge className="w-20 h-20 text-white/20 mx-auto mb-6" />
+            <h3 className="text-2xl font-bold text-white mb-2">Analysez les performances de votre site</h3>
+            <p className="text-white/50 max-w-md mx-auto">
               Entrez une URL ci-dessus pour obtenir un audit détaillé des Core Web Vitals, des recommandations d'optimisation et une comparaison avec vos concurrents.
             </p>
           </div>

@@ -58,13 +58,13 @@ export function Problem() {
           {problems.map((p, i) => {
             const Icon = p.icon
             return (
-              <div key={i} className={`rounded-2xl p-8 border ${p.bg} ${p.border}`}>
+              <div key={i} className="group rounded-2xl p-8 border border-white/10 dark:border-white/5 bg-white/60 dark:bg-white/[0.03] backdrop-blur-xl hover:border-white/20 dark:hover:border-white/10 transition-all duration-300 hover:shadow-glow">
                 <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-5 ${p.bg} border ${p.border}`}>
                   <Icon className={`w-6 h-6 ${p.color}`} />
                 </div>
                 <div className="mb-4">
-                  <span className={`text-4xl font-black ${p.color}`}>{p.stat}</span>
-                  <span className="block text-xs text-surface-500 dark:text-surface-400 mt-0.5">{p.statLabel}</span>
+                  <span className={`text-5xl sm:text-6xl font-black ${p.color}`}>{p.stat}</span>
+                  <span className="block text-xs text-surface-500 dark:text-surface-400 mt-1">{p.statLabel}</span>
                 </div>
                 <h3 className="text-lg font-bold text-surface-900 dark:text-white mb-2">{p.title}</h3>
                 <p className="text-sm text-surface-600 dark:text-surface-400 leading-relaxed">{p.desc}</p>

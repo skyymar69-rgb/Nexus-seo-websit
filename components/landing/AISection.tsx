@@ -29,7 +29,9 @@ export function AISection() {
   }, [])
 
   return (
-    <section id="demo" className="py-24 px-4 sm:px-6 lg:px-8 bg-surface-50 dark:bg-surface-900/50 border-y border-surface-200 dark:border-surface-800/60">
+    <section id="demo" className="py-28 px-4 sm:px-6 lg:px-8 bg-brand-950 relative overflow-hidden">
+      {/* Background grid */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.06)_0%,transparent_65%)]" />
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
