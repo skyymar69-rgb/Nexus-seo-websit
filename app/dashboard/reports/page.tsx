@@ -16,6 +16,8 @@ import {
   Link2,
   Bot,
   Gauge,
+  Download,
+  ExternalLink,
 } from 'lucide-react'
 
 interface ReportData {
@@ -124,27 +126,45 @@ export default function ReportsPage() {
               </span>
             </p>
           </div>
-          <button
-            onClick={handleGenerate}
-            disabled={generating}
-            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700 disabled:opacity-50"
-          >
-            {generating ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Plus className="h-4 w-4" />
-            )}
-            Generer un rapport
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                // Find latest scan and export
+                fetch(`/api/dashboard/scan-history?websiteId=${selectedWebsite.id}&limit=1`)
+                  .then(r => r.json())
+                  .then(d => {
+                    if (d.success && d.data?.[0]?.id) {
+                      window.open(`/api/export?scanId=${d.data[0].id}&format=html`, '_blank')
+                    }
+                  })
+              }}
+              className="inline-flex items-center gap-2 rounded-lg bg-white/[0.03] border border-white/5 px-4 py-2.5 text-sm font-medium text-white/60 hover:text-white hover:bg-white/[0.06] transition-colors"
+            >
+              <Download className="h-4 w-4" />
+              Exporter HTML
+            </button>
+            <button
+              onClick={handleGenerate}
+              disabled={generating}
+              className="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-brand-400 disabled:opacity-50"
+            >
+              {generating ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Plus className="h-4 w-4" />
+              )}
+              Generer un rapport
+            </button>
+          </div>
         </div>
       </div>
 
       <div className="p-8">
         {/* Error */}
         {error && (
-          <div className="mb-6 flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
-            <AlertCircle className="h-5 w-5 text-red-500" />
-            <p className="text-sm text-red-700">{error}</p>
+          <div className="mb-6 flex items-center gap-3 rounded-lg border border-rose-500/20 bg-rose-500/10 p-4">
+            <AlertCircle className="h-5 w-5 text-rose-400" />
+            <p className="text-sm text-rose-400">{error}</p>
           </div>
         )}
 
