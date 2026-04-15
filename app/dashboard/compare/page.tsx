@@ -19,10 +19,10 @@ function MetricRow({ label, v1, v2, better }: { label: string; v1: string | numb
   else if (better === 'boolean') { w1 = v1 === 'Oui'; w2 = v2 === 'Oui' }
 
   return (
-    <tr className="border-b border-surface-100 dark:border-surface-800">
-      <td className="py-3 px-4 text-sm font-medium text-surface-700 dark:text-surface-300">{label}</td>
-      <td className={cn('py-3 px-4 text-sm text-center font-semibold', w1 ? 'text-green-600' : 'text-surface-600 dark:text-surface-400')}>{v1}</td>
-      <td className={cn('py-3 px-4 text-sm text-center font-semibold', w2 ? 'text-green-600' : 'text-surface-600 dark:text-surface-400')}>{v2}</td>
+    <tr className="border-b border-white/5">
+      <td className="py-3 px-4 text-sm font-medium text-white/70">{label}</td>
+      <td className={cn('py-3 px-4 text-sm text-center font-semibold', w1 ? 'text-green-600' : 'text-white/50')}>{v1}</td>
+      <td className={cn('py-3 px-4 text-sm text-center font-semibold', w2 ? 'text-green-600' : 'text-white/50')}>{v2}</td>
     </tr>
   )
 }
@@ -59,27 +59,27 @@ export default function ComparePage() {
           <Zap className="h-6 w-6 text-white" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-surface-950 dark:text-surface-50">Comparaison de sites</h1>
-          <p className="text-sm text-surface-500">Comparez deux sites cote a cote</p>
+          <h1 className="text-2xl font-bold text-white">Comparaison de sites</h1>
+          <p className="text-sm text-white/40">Comparez deux sites cote a cote</p>
         </div>
       </div>
 
-      <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
+      <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
         <div className="flex flex-col md:flex-row gap-4 items-end">
           <div className="flex-1">
-            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Site 1</label>
-            <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800">
-              <Globe className="w-4 h-4 text-surface-400" />
+            <label className="block text-sm font-medium text-white/70 mb-1">Site 1</label>
+            <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/10 bg-white/[0.02]">
+              <Globe className="w-4 h-4 text-white/30" />
               <input type="text" value={url1} onChange={e => setUrl1(e.target.value)} placeholder="https://www.site1.fr" className="flex-1 bg-transparent outline-none text-sm" />
             </div>
           </div>
-          <div className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-surface-100 dark:bg-surface-800">
-            <span className="text-surface-400 font-bold text-sm">VS</span>
+          <div className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-white/5">
+            <span className="text-white/30 font-bold text-sm">VS</span>
           </div>
           <div className="flex-1">
-            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Site 2</label>
-            <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800">
-              <Globe className="w-4 h-4 text-surface-400" />
+            <label className="block text-sm font-medium text-white/70 mb-1">Site 2</label>
+            <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/10 bg-white/[0.02]">
+              <Globe className="w-4 h-4 text-white/30" />
               <input type="text" value={url2} onChange={e => setUrl2(e.target.value)} placeholder="https://www.site2.fr" className="flex-1 bg-transparent outline-none text-sm" />
             </div>
           </div>
@@ -89,17 +89,17 @@ export default function ComparePage() {
         </div>
       </div>
 
-      {error && <div className="p-4 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm">{error}</div>}
+      {error && <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm">{error}</div>}
 
       {result && (
         <>
           {/* Insights */}
           {result.insights.length > 0 && (
-            <div className="bg-brand-50 dark:bg-brand-950/30 rounded-xl border border-brand-200 dark:border-brand-800 p-5">
-              <h3 className="text-sm font-bold text-brand-700 dark:text-brand-300 mb-3">Insights</h3>
+            <div className="bg-brand-500/10 rounded-xl border border-brand-500/20 p-5">
+              <h3 className="text-sm font-bold text-brand-400 mb-3">Insights</h3>
               <ul className="space-y-2">
                 {result.insights.map((insight, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-brand-600 dark:text-brand-400">
+                  <li key={i} className="flex items-start gap-2 text-sm text-brand-400">
                     <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" /> {insight}
                   </li>
                 ))}
@@ -110,23 +110,23 @@ export default function ComparePage() {
           {/* Score cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[result.site1, result.site2].map((site, i) => (
-              <div key={i} className={cn('bg-white dark:bg-surface-900 rounded-xl border p-6 text-center', result.winner === `site${i + 1}` ? 'border-green-400 dark:border-green-600 ring-1 ring-green-400/30' : 'border-surface-200 dark:border-surface-800')}>
+              <div key={i} className={cn('bg-white/[0.03] rounded-xl border p-6 text-center', result.winner === `site${i + 1}` ? 'border-green-400 dark:border-green-600 ring-1 ring-green-400/30' : 'border-white/5')}>
                 {result.winner === `site${i + 1}` && <span className="inline-block px-2 py-0.5 text-[10px] font-bold uppercase bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 rounded-full mb-2">Meilleur</span>}
-                <p className="text-sm text-surface-500 truncate mb-2">{new URL(site.url).hostname}</p>
+                <p className="text-sm text-white/40 truncate mb-2">{new URL(site.url).hostname}</p>
                 <p className={cn('text-5xl font-black', site.score >= 80 ? 'text-green-600' : site.score >= 60 ? 'text-amber-500' : 'text-red-500')}>{site.score}</p>
-                <p className="text-xs text-surface-400 mt-1">/100</p>
+                <p className="text-xs text-white/30 mt-1">/100</p>
               </div>
             ))}
           </div>
 
           {/* Detailed comparison table */}
-          <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 overflow-hidden">
+          <div className="bg-white/[0.03] rounded-xl border border-white/5 overflow-hidden">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800">
-                  <th className="py-3 px-4 text-left text-xs font-bold text-surface-500 uppercase">Metrique</th>
-                  <th className="py-3 px-4 text-center text-xs font-bold text-surface-500 uppercase truncate">{new URL(result.site1.url).hostname}</th>
-                  <th className="py-3 px-4 text-center text-xs font-bold text-surface-500 uppercase truncate">{new URL(result.site2.url).hostname}</th>
+                <tr className="border-b border-white/10 bg-white/[0.02]">
+                  <th className="py-3 px-4 text-left text-xs font-bold text-white/40 uppercase">Metrique</th>
+                  <th className="py-3 px-4 text-center text-xs font-bold text-white/40 uppercase truncate">{new URL(result.site1.url).hostname}</th>
+                  <th className="py-3 px-4 text-center text-xs font-bold text-white/40 uppercase truncate">{new URL(result.site2.url).hostname}</th>
                 </tr>
               </thead>
               <tbody>
