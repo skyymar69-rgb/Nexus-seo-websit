@@ -306,11 +306,21 @@ async function runSimpleCrawl(
 
 // ── Step: Performance (PageSpeed API) ────────────────────────
 
-async function runPerformanceCheck(url: string): Promise<FullScanResult['performance']> {
-  const apiKey = process.env.PAGESPEED_API_KEY
+async function runPerformanceCheck(url: string, loadTime?: number): Promise<FullScanResult['performance']> {
+  const apiKey = process.env.PAGESPEED_API_KEY || process.env.GOOGLE_PAGESPEED_API_KEY
+
+  // Fallback sans API key — estimation basée sur le load time
   if (!apiKey) {
-    // Fallback — estimation basique
-    return null
+    if (!loadTime) return null
+    const estimatedScore = loadTime < 1000 ? 90 : loadTime < 2000 ? 75 : loadTime < 3000 ? 55 : loadTime < 5000 ? 35 : 20
+    return {
+      score: estimatedScore,
+      grade: gradeFromScore(estimatedScore),
+      lcp: loadTime * 1.5, // estimation LCP
+      fid: loadTime < 2000 ? 50 : 150,
+      cls: 0.05, // estimation conservative
+      ttfb: loadTime * 0.4,
+    }
   }
 
   try {
@@ -442,7 +452,7 @@ export async function runFullScan(scanId: string, websiteId: string, url: string
   // Step 5 — Performance (external API call)
   const perfStart = Date.now()
   try {
-    result.performance = await runPerformanceCheck(url)
+    result.performance = await runPerformanceCheck(url, loadTime)
     steps.push({ name: 'Performance', status: 'completed', duration: Date.now() - perfStart })
   } catch (err) {
     steps.push({ name: 'Performance', status: 'failed', duration: Date.now() - perfStart, error: String(err) })
@@ -455,7 +465,7 @@ export async function runFullScan(scanId: string, websiteId: string, url: string
   // Step 6 — Crawl (BFS, multiple HTTP requests)
   const crawlStart = Date.now()
   try {
-    result.crawl = await runSimpleCrawl(url, 15)
+    result.crawl = await runSimpleCrawl(url, 10)
     steps.push({ name: 'Crawl', status: 'completed', duration: Date.now() - crawlStart })
   } catch (err) {
     steps.push({ name: 'Crawl', status: 'failed', duration: Date.now() - crawlStart, error: String(err) })

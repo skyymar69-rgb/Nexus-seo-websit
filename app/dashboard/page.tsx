@@ -94,13 +94,13 @@ interface ScanData {
 
 // ── Quick Actions ────────────────────────────────────────────
 
-function QuickActions({ onScan, scanning }: { onScan: () => void; scanning: boolean }) {
+function QuickActions({ onScan, scanning, scanId }: { onScan: () => void; scanning: boolean; scanId?: string }) {
   const router = useRouter()
   const actions = [
     { icon: RefreshCw, label: 'Relancer scan', onClick: onScan, primary: true },
-    { icon: Shield, label: 'Audit detail', onClick: () => router.push('/dashboard/audit') },
-    { icon: Eye, label: 'Visibilite IA', onClick: () => router.push('/dashboard/ai-visibility') },
-    { icon: BarChart3, label: 'Rapports', onClick: () => router.push('/dashboard/reports') },
+    { icon: Shield, label: 'Audit détail', onClick: () => router.push('/dashboard/audit') },
+    { icon: Eye, label: 'Visibilité IA', onClick: () => router.push('/dashboard/ai-visibility') },
+    ...(scanId ? [{ icon: FileText, label: 'Exporter rapport', onClick: () => window.open(`/api/export?scanId=${scanId}&format=html`, '_blank') }] : []),
   ]
 
   return (
@@ -336,7 +336,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <QuickActions onScan={handleNewScan} scanning={scanning} />
+        <QuickActions onScan={handleNewScan} scanning={scanning} scanId={latestScan?.id} />
       </div>
 
       {/* KPI Summary Bar */}
