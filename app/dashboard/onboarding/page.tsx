@@ -69,7 +69,7 @@ export default function OnboardingPage() {
       const websiteData = await res.json()
       await refreshWebsites()
 
-      // 2. Launch full scan
+      // 2. Launch full scan (synchrone — attend la fin)
       const scanRes = await fetch('/api/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -79,15 +79,7 @@ export default function OnboardingPage() {
         }),
       })
 
-      if (scanRes.ok) {
-        const scanData = await scanRes.json()
-        if (scanData.scanId) {
-          router.push(`/dashboard/scan/${scanData.scanId}`)
-          return
-        }
-      }
-
-      // Fallback
+      // Redirect to dashboard whether scan succeeded or not
       router.push('/dashboard')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur inconnue')
@@ -180,7 +172,7 @@ export default function OnboardingPage() {
             className="w-full mt-6 py-3.5 rounded-xl bg-brand-500 hover:bg-brand-400 text-white font-semibold text-sm flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
           >
             {loading ? (
-              <><Loader2 className="w-4 h-4 animate-spin" /> Lancement du scan...</>
+              <><Loader2 className="w-4 h-4 animate-spin" /> Analyse en cours... (30-60 secondes)</>
             ) : (
               <>Lancer le scan complet <ArrowRight className="w-4 h-4" /></>
             )}
