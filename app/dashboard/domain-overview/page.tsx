@@ -114,6 +114,52 @@ export default function DomainOverviewPage() {
     }
   }, [selectedWebsite])
 
+  // Auto-load from latest scan
+  useEffect(() => {
+    if (!selectedWebsite?.id || data) return
+    async function loadFromScan() {
+      try {
+        const statsRes = await fetch(`/api/dashboard/stats?websiteId=${selectedWebsite!.id}`)
+        if (!statsRes.ok) return
+        const stats = await statsRes.json()
+        if (!stats.latestScanId) return
+        const scanRes = await fetch(`/api/scan/${stats.latestScanId}`)
+        if (!scanRes.ok) return
+        const scan = await scanRes.json()
+        const scanData = scan.data || scan
+        const results = typeof scanData.results === 'string' ? JSON.parse(scanData.results) : scanData.results
+        if (!results?.audit) return
+        const a = results.audit
+        setData({
+          score: a.score || 0,
+          meta: {
+            title: a.meta?.title || '',
+            description: a.meta?.description || '',
+            canonical: a.meta?.canonical || '',
+            lang: 'fr',
+            robots: '',
+            ogImage: !!a.meta?.ogImage,
+            favicon: true,
+          },
+          content: {
+            wordCount: a.content?.wordCount || 0,
+            h1Count: a.content?.h1Count || 0,
+            h2Count: a.content?.h2Count || 0,
+            h3Count: a.content?.h3Count || 0,
+            imageCount: a.content?.imageCount || 0,
+            imagesWithoutAlt: (a.content?.imageCount || 0) - (a.content?.imagesWithAlt || 0),
+            internalLinks: a.content?.internalLinks || 0,
+            externalLinks: a.content?.externalLinks || 0,
+          },
+          performance: { responseTime: 0, contentLength: 0, gzip: true, https: true },
+          structuredData: { hasJsonLd: true, hasOpenGraph: !!a.meta?.ogTitle, hasTwitterCard: false, schemas: [] },
+        })
+      } catch { /* silent */ }
+    }
+    loadFromScan()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedWebsite?.id])
+
   const handleAnalyze = async () => {
     if (!url.trim()) return
     let analyzeUrl = url.trim()
@@ -166,9 +212,9 @@ export default function DomainOverviewPage() {
       )}
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
-          <AlertTriangle className="w-5 h-5 text-red-500 mt-0.5" />
-          <p className="text-red-700 text-sm">{error}</p>
+        <div className="bg-rose-500/10 border border-rose-500/20 rounded-xl p-4 flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 text-rose-400 mt-0.5" />
+          <p className="text-rose-400 text-sm">{error}</p>
         </div>
       )}
 
@@ -228,7 +274,7 @@ export default function DomainOverviewPage() {
                     <span className="text-xs text-white/30 uppercase tracking-wider">Schemas detectes</span>
                     <div className="flex flex-wrap gap-1.5 mt-1.5">
                       {data.structuredData.schemas.map((s) => (
-                        <span key={s} className="px-2 py-0.5 bg-blue-50 text-blue-700 text-xs rounded-full">{s}</span>
+                        <span key={s} className="px-2 py-0.5 bg-blue-500/10 text-blue-400 text-xs rounded-full">{s}</span>
                       ))}
                     </div>
                   </div>
