@@ -195,7 +195,8 @@
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 27 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 28 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 29 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
-      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 30 --repo skyymar69-rgb/Nexus-seo-websit --merge)"
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 30 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 31 --repo skyymar69-rgb/Nexus-seo-websit --merge)"
     ]
   }
 }
