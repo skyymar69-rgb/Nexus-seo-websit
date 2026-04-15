@@ -76,6 +76,7 @@ const navigationCategories = [
       { label: 'On-Page Checker', href: '/dashboard/on-page-checker', icon: FileText, badge: 'NEW' as const },
       { label: 'Schema Markup', href: '/dashboard/schema-markup', icon: Code2, badge: 'NEW' as const },
       { label: 'Comparaison', href: '/dashboard/compare', icon: Eye, badge: 'NEW' as const },
+      { label: 'Benchmark', href: '/dashboard/competitor-compare', icon: Users, badge: 'NEW' as const },
     ],
   },
   {
