@@ -16,7 +16,7 @@ const navItems = [
     { label: 'SEO Technique',            href: '/services#technical' },
     { label: 'Analytics & Rapports',     href: '/services#analytics' },
   ]},
-  { label: 'Outils gratuits', href: '/audit-gratuit#outils' },
+  { label: 'Outils gratuits', href: '#outils' },
   { label: 'Cas clients', href: '/cases' },
   { label: 'Tarifs',      href: '/pricing' },
   { label: 'Blog',        href: '/blog' },

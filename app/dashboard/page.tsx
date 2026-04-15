@@ -222,16 +222,38 @@ export default function DashboardPage() {
   if (!selectedWebsite) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="text-center max-w-md">
-          <Globe className="w-12 h-12 text-white/20 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-white mb-2">Aucun site selectionne</h2>
-          <p className="text-white/50 text-sm mb-6">Ajoutez un site pour commencer votre analyse SEO complete.</p>
+        <div className="text-center max-w-lg">
+          <div className="w-20 h-20 rounded-2xl bg-brand-500/10 flex items-center justify-center mx-auto mb-6">
+            <Globe className="w-10 h-10 text-brand-400" />
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-3">Bienvenue sur Nexus SEO</h2>
+          <p className="text-white/50 mb-8">
+            Ajoutez votre premier site pour obtenir un audit complet : SEO technique, visibilité IA (GEO, AEO, LLMO), performance et recommandations personnalisées.
+          </p>
           <button
             onClick={() => router.push('/dashboard/onboarding')}
-            className="px-6 py-3 rounded-xl bg-brand-500 text-white font-semibold hover:bg-brand-400 transition-colors"
+            className="px-8 py-3.5 rounded-xl bg-brand-500 text-white font-semibold hover:bg-brand-400 transition-colors inline-flex items-center gap-2"
           >
-            Ajouter un site
+            <Play className="w-4 h-4" /> Ajouter mon site
           </button>
+
+          {/* Features preview */}
+          <div className="grid grid-cols-3 gap-3 mt-10">
+            {[
+              { icon: Shield, label: 'Audit SEO', desc: '25+ vérifications' },
+              { icon: Sparkles, label: 'Visibilité IA', desc: 'GEO, AEO, LLMO' },
+              { icon: Search, label: 'Crawl complet', desc: 'Toutes vos pages' },
+            ].map((f, i) => {
+              const Icon = f.icon
+              return (
+                <div key={i} className="p-4 rounded-xl bg-white/[0.02] border border-white/5 text-center">
+                  <Icon className="w-5 h-5 text-brand-400 mx-auto mb-2" />
+                  <div className="text-sm font-medium text-white">{f.label}</div>
+                  <div className="text-xs text-white/30">{f.desc}</div>
+                </div>
+              )
+            })}
+          </div>
         </div>
       </div>
     )
@@ -240,25 +262,38 @@ export default function DashboardPage() {
   if (!latestScan || !results) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="text-center max-w-md">
-          <div className="w-16 h-16 rounded-2xl bg-brand-500/10 flex items-center justify-center mx-auto mb-4">
-            <Play className="w-8 h-8 text-brand-400" />
+        <div className="text-center max-w-lg">
+          <div className="w-20 h-20 rounded-2xl bg-brand-500/10 flex items-center justify-center mx-auto mb-6">
+            <Play className="w-10 h-10 text-brand-400" />
           </div>
-          <h2 className="text-xl font-bold text-white mb-2">Lancez votre premier scan</h2>
-          <p className="text-white/50 text-sm mb-6">
-            Analysez {selectedWebsite.domain} avec nos 50+ outils : audit technique, AEO, GEO, performance et crawl en une seule passe.
+          <h2 className="text-2xl font-bold text-white mb-3">
+            Analysez {selectedWebsite.domain}
+          </h2>
+          <p className="text-white/50 mb-8">
+            Lancez un scan complet avec nos 50+ outils. Audit technique, score AEO &amp; GEO, performance, crawl — tout en une seule passe.
           </p>
           <button
             onClick={handleNewScan}
             disabled={scanning}
-            className="px-6 py-3 rounded-xl bg-brand-500 text-white font-semibold hover:bg-brand-400 transition-colors disabled:opacity-50 inline-flex items-center gap-2"
+            className="px-8 py-3.5 rounded-xl bg-brand-500 text-white font-semibold hover:bg-brand-400 transition-colors disabled:opacity-50 inline-flex items-center gap-2"
           >
             {scanning ? (
-              <><Loader2 className="w-4 h-4 animate-spin" /> Lancement...</>
+              <><Loader2 className="w-4 h-4 animate-spin" /> Analyse en cours... (30-60s)</>
             ) : (
               <><Play className="w-4 h-4" /> Lancer le scan complet</>
             )}
           </button>
+
+          {scanning && (
+            <div className="mt-8 space-y-2">
+              {['Audit technique SEO', 'Score AEO & GEO', 'Analyse E-E-A-T', 'Performance web', 'Crawl du site'].map((step, i) => (
+                <div key={i} className="flex items-center gap-3 px-4 py-2 rounded-lg bg-white/[0.02] border border-white/5 text-sm">
+                  <Loader2 className="w-3 h-3 text-brand-400 animate-spin" />
+                  <span className="text-white/50">{step}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     )
@@ -358,14 +393,25 @@ export default function DashboardPage() {
       <div className="flex gap-6">
         {/* Sidebar nav (desktop) */}
         <div className="hidden lg:block w-44 flex-shrink-0">
-          <ReportNav />
+          <ReportNav scores={{
+            audit: latestScan.auditScore,
+            aeo: latestScan.aeoScore,
+            geo: latestScan.geoScore,
+            performance: latestScan.perfScore,
+            crawl: latestScan.crawlPages,
+          }} />
         </div>
 
         {/* Main report sections */}
         <div className="flex-1 min-w-0 space-y-6">
           {/* Mobile nav */}
           <div className="lg:hidden">
-            <ReportNav />
+            <ReportNav scores={{
+              audit: latestScan.auditScore,
+              aeo: latestScan.aeoScore,
+              geo: latestScan.geoScore,
+              performance: latestScan.perfScore,
+            }} />
           </div>
 
           <AuditSection
