@@ -64,17 +64,17 @@ export default function OnPageCheckerPage() {
     <div className="p-6 max-w-4xl mx-auto space-y-6">
       <div className="flex items-center gap-3">
         <FileSearch className="w-6 h-6 text-blue-600" />
-        <h1 className="text-2xl font-bold text-gray-900">Vérificateur On-Page</h1>
+        <h1 className="text-2xl font-bold text-white">Vérificateur On-Page</h1>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-lg p-6 space-y-4">
+      <form onSubmit={handleSubmit} className="bg-white/[0.03] border border-white/5 rounded-lg p-6 space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">URL de la page</label>
-          <input type="url" value={url} onChange={e => setUrl(e.target.value)} placeholder="https://exemple.com/page" className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" required />
+          <label className="block text-sm font-medium text-white/70 mb-1">URL de la page</label>
+          <input type="url" value={url} onChange={e => setUrl(e.target.value)} placeholder="https://exemple.com/page" className="w-full border border-white/10 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" required />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Mot-clé cible</label>
-          <input type="text" value={keyword} onChange={e => setKeyword(e.target.value)} placeholder="Ex: référencement naturel" className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" required />
+          <label className="block text-sm font-medium text-white/70 mb-1">Mot-clé cible</label>
+          <input type="text" value={keyword} onChange={e => setKeyword(e.target.value)} placeholder="Ex: référencement naturel" className="w-full border border-white/10 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" required />
         </div>
         <button type="submit" disabled={loading} className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors">
           {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
@@ -87,18 +87,18 @@ export default function OnPageCheckerPage() {
       {result && (
         <div className="space-y-4">
           {/* Score */}
-          <div className="bg-white border border-gray-200 rounded-lg p-6 flex items-center gap-6">
+          <div className="bg-white/[0.03] border border-white/5 rounded-lg p-6 flex items-center gap-6">
             <div className={`text-5xl font-bold ${result.score >= 70 ? 'text-green-600' : result.score >= 40 ? 'text-yellow-600' : 'text-red-600'}`}>
-              {result.score}<span className="text-lg text-gray-400">/100</span>
+              {result.score}<span className="text-lg text-white/30">/100</span>
             </div>
             <div>
-              <p className="font-medium text-gray-900">Score On-Page</p>
-              <p className="text-sm text-gray-500">Densité du mot-clé : {result.keywordDensity.toFixed(2)}%</p>
+              <p className="font-medium text-white">Score On-Page</p>
+              <p className="text-sm text-white/40">Densité du mot-clé : {result.keywordDensity.toFixed(2)}%</p>
             </div>
           </div>
 
           {/* Checklist */}
-          <div className="bg-white border border-gray-200 rounded-lg divide-y divide-gray-100">
+          <div className="bg-white/[0.03] border border-white/5 rounded-lg divide-y divide-white/5">
             {result.checks.map(check => (
               <div key={check.key} className="flex items-start gap-3 px-5 py-4">
                 {check.passed ? (
@@ -107,8 +107,8 @@ export default function OnPageCheckerPage() {
                   <XCircle className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
                 )}
                 <div>
-                  <p className={`text-sm font-medium ${check.passed ? 'text-gray-900' : 'text-gray-700'}`}>{check.label}</p>
-                  {!check.passed && <p className="text-xs text-gray-500 mt-0.5">{check.recommendation}</p>}
+                  <p className={`text-sm font-medium ${check.passed ? 'text-white' : 'text-white/70'}`}>{check.label}</p>
+                  {!check.passed && <p className="text-xs text-white/40 mt-0.5">{check.recommendation}</p>}
                 </div>
               </div>
             ))}

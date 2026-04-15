@@ -482,9 +482,7 @@ function DashboardLayoutContent({
                   aria-label="Notifications"
                 >
                   <Bell className="h-5 w-5 text-white/50" />
-                  <span className="absolute -right-0.5 -top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-brand-600 text-[11px] font-bold text-white">
-                    3
-                  </span>
+                  {/* Badge count - shown when there are unread notifications */}
                 </button>
 
                 {notificationMenuOpen && (
@@ -493,17 +491,10 @@ function DashboardLayoutContent({
                       <h3 className="text-sm font-semibold text-white">Notifications</h3>
                     </div>
                     <div className="py-2 max-h-96 overflow-y-auto">
-                      <div className="px-4 py-2 border-b border-white/5 hover:bg-white/[0.05]">
-                        <p className="text-sm font-medium text-white/90">Audit termine</p>
-                        <p className="text-xs text-white/40">Il y a 5 minutes</p>
-                      </div>
-                      <div className="px-4 py-2 border-b border-white/5 hover:bg-white/[0.05]">
-                        <p className="text-sm font-medium text-white/90">Positions mises a jour</p>
-                        <p className="text-xs text-white/40">Il y a 2 heures</p>
-                      </div>
-                      <div className="px-4 py-2 hover:bg-white/[0.05]">
-                        <p className="text-sm font-medium text-white/90">Nouveau backlink detecte</p>
-                        <p className="text-xs text-white/40">Il y a 1 jour</p>
+                      <div className="px-4 py-6 text-center">
+                        <Bell className="w-8 h-8 text-white/10 mx-auto mb-2" />
+                        <p className="text-xs text-white/30">Aucune notification</p>
+                        <p className="text-[10px] text-white/20 mt-1">Les alertes de scan et de monitoring apparaitront ici</p>
                       </div>
                     </div>
                   </div>

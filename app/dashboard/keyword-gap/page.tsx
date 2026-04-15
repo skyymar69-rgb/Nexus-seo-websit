@@ -26,10 +26,10 @@ function FrequencyBar({ value, max }: { value: number; max: number }) {
   const pct = max > 0 ? (value / max) * 100 : 0
   return (
     <div className="flex items-center gap-2">
-      <div className="w-20 h-1.5 bg-gray-100 rounded-full overflow-hidden" role="progressbar" aria-label="Frequence" aria-valuenow={Math.round(pct)} aria-valuemin={0} aria-valuemax={100}>
+      <div className="w-20 h-1.5 bg-white/[0.03] rounded-full overflow-hidden" role="progressbar" aria-label="Frequence" aria-valuenow={Math.round(pct)} aria-valuemin={0} aria-valuemax={100}>
         <div className="h-full rounded-full bg-blue-500" style={{ width: `${pct}%` }} />
       </div>
-      <span className="text-xs text-gray-600">{value}</span>
+      <span className="text-xs text-white/50">{value}</span>
     </div>
   )
 }
@@ -122,14 +122,14 @@ export default function KeywordGapPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Keyword Gap</h1>
-        <p className="text-gray-500 mt-1">Comparez les mots-cles entre deux domaines</p>
+        <h1 className="text-2xl font-bold text-white">Keyword Gap</h1>
+        <p className="text-white/40 mt-1">Comparez les mots-cles entre deux domaines</p>
       </div>
 
       {/* Input forms */}
-      <div className="bg-white border border-gray-200 rounded-xl p-5 space-y-4">
+      <div className="bg-white/[0.03] border border-white/5 rounded-xl p-5 space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Votre domaine</label>
+          <label className="block text-sm font-medium text-white/70 mb-1.5">Votre domaine</label>
           <UrlInput
             value={url1}
             onChange={setUrl1}
@@ -143,21 +143,21 @@ export default function KeywordGapPage() {
         </div>
 
         <div className="flex items-center justify-center">
-          <ArrowLeftRight className="w-5 h-5 text-gray-400" />
+          <ArrowLeftRight className="w-5 h-5 text-white/30" />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Domaine concurrent</label>
+          <label className="block text-sm font-medium text-white/70 mb-1.5">Domaine concurrent</label>
           <div className="flex gap-2">
             <div className="flex-1 relative">
-              <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
               <input
                 type="url"
                 value={url2}
                 onChange={(e) => setUrl2(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && !loading && handleAnalyze()}
                 placeholder="https://concurrent.com"
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 text-sm"
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-white/5 bg-white/[0.03] text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 text-sm"
               />
             </div>
           </div>
@@ -192,16 +192,16 @@ export default function KeywordGapPage() {
       {loading && (
         <div className="flex items-center justify-center py-16">
           <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-          <span className="ml-3 text-gray-500">Comparaison en cours...</span>
+          <span className="ml-3 text-white/40">Comparaison en cours...</span>
         </div>
       )}
 
       {data && !loading && (
         <div className="space-y-4">
           {/* Venn Diagram */}
-          <div className="bg-white border border-gray-200 rounded-xl p-4">
+          <div className="bg-white/[0.03] border border-white/5 rounded-xl p-4">
             <VennDiagram data={data} />
-            <div className="flex items-center justify-center gap-6 text-xs text-gray-500 mt-2">
+            <div className="flex items-center justify-center gap-6 text-xs text-white/40 mt-2">
               <span className="flex items-center gap-1.5">
                 <span className="w-3 h-3 rounded-full bg-blue-200" /> {data.domain1}
               </span>
@@ -212,8 +212,8 @@ export default function KeywordGapPage() {
           </div>
 
           {/* Tabs */}
-          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-            <div className="flex border-b border-gray-100">
+          <div className="bg-white/[0.03] border border-white/5 rounded-xl overflow-hidden">
+            <div className="flex border-b border-white/5">
               {TABS.map((tab) => (
                 <button
                   key={tab.key}
@@ -221,11 +221,11 @@ export default function KeywordGapPage() {
                   className={`flex-1 px-4 py-3 text-sm font-medium transition-colors border-b-2 ${
                     activeTab === tab.key
                       ? `border-${tab.color}-600 text-${tab.color}-700 bg-${tab.color}-50/50`
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                      : 'border-transparent text-white/40 hover:text-white/70 hover:bg-white/[0.03]'
                   }`}
                 >
                   {tab.label}
-                  <span className="ml-1.5 text-xs font-normal text-gray-400">
+                  <span className="ml-1.5 text-xs font-normal text-white/30">
                     ({data[tab.key].length})
                   </span>
                 </button>
@@ -236,22 +236,22 @@ export default function KeywordGapPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-100 bg-gray-50/50">
-                    <th className="text-left px-4 py-3 font-medium text-gray-500">Terme</th>
-                    <th className="text-center px-4 py-3 font-medium text-gray-500">Frequence</th>
+                  <tr className="border-b border-white/5 bg-white/[0.02]">
+                    <th className="text-left px-4 py-3 font-medium text-white/40">Terme</th>
+                    <th className="text-center px-4 py-3 font-medium text-white/40">Frequence</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-50">
+                <tbody className="divide-y divide-white/5">
                   {activeTerms.length === 0 ? (
                     <tr>
-                      <td colSpan={2} className="px-4 py-8 text-center text-gray-400 text-sm">
+                      <td colSpan={2} className="px-4 py-8 text-center text-white/30 text-sm">
                         Aucun terme dans cette categorie
                       </td>
                     </tr>
                   ) : (
                     activeTerms.map((term, i) => (
-                      <tr key={i} className="hover:bg-gray-50/50 transition-colors">
-                        <td className="px-4 py-2.5 font-medium text-gray-900">{term.term}</td>
+                      <tr key={i} className="hover:bg-white/[0.03]/50 transition-colors">
+                        <td className="px-4 py-2.5 font-medium text-white">{term.term}</td>
                         <td className="px-4 py-2.5">
                           <FrequencyBar value={term.frequency} max={maxFreq} />
                         </td>

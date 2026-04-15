@@ -62,30 +62,30 @@ export default function BacklinkAuditPage() {
   }, [scored])
 
   if (!selectedWebsite) {
-    return <div className="p-8 text-center text-gray-500">Veuillez sélectionner un site web pour commencer l&apos;audit.</div>
+    return <div className="p-8 text-center text-white/40">Veuillez sélectionner un site web pour commencer l&apos;audit.</div>
   }
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       <div className="flex items-center gap-3">
         <Shield className="w-6 h-6 text-blue-600" />
-        <h1 className="text-2xl font-bold text-gray-900">Audit des Backlinks</h1>
+        <h1 className="text-2xl font-bold text-white">Audit des Backlinks</h1>
       </div>
 
       {loading && (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-          <span className="ml-3 text-gray-500">Analyse des backlinks en cours...</span>
+          <span className="ml-3 text-white/40">Analyse des backlinks en cours...</span>
         </div>
       )}
 
       {error && <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">{error}</div>}
 
       {!loading && !error && scored.length === 0 && (
-        <div className="bg-white border border-gray-200 rounded-lg p-12 text-center">
-          <Link2 className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500 text-lg">Aucun backlink trouvé pour ce site.</p>
-          <p className="text-gray-400 mt-1">Les backlinks apparaîtront ici une fois détectés.</p>
+        <div className="bg-white/[0.03] border border-white/5 rounded-lg p-12 text-center">
+          <Link2 className="w-12 h-12 text-white/30 mx-auto mb-4" />
+          <p className="text-white/40 text-lg">Aucun backlink trouvé pour ce site.</p>
+          <p className="text-white/30 mt-1">Les backlinks apparaîtront ici une fois détectés.</p>
         </div>
       )}
 
@@ -93,66 +93,66 @@ export default function BacklinkAuditPage() {
         <>
           {/* Summary cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-white border border-gray-200 rounded-lg p-5">
-              <p className="text-sm text-gray-500">Score global</p>
-              <p className="text-3xl font-bold text-gray-900">{stats.overallScore}<span className="text-lg text-gray-400">/100</span></p>
+            <div className="bg-white/[0.03] border border-white/5 rounded-lg p-5">
+              <p className="text-sm text-white/40">Score global</p>
+              <p className="text-3xl font-bold text-white">{stats.overallScore}<span className="text-lg text-white/30">/100</span></p>
             </div>
-            <div className="bg-white border border-gray-200 rounded-lg p-5">
-              <p className="text-sm text-gray-500">Ratio Dofollow / Nofollow</p>
+            <div className="bg-white/[0.03] border border-white/5 rounded-lg p-5">
+              <p className="text-sm text-white/40">Ratio Dofollow / Nofollow</p>
               <div className="mt-2 flex items-center gap-2">
-                <div className="flex-1 h-3 bg-gray-100 rounded-full overflow-hidden flex">
+                <div className="flex-1 h-3 bg-white/[0.03] rounded-full overflow-hidden flex">
                   <div className="bg-blue-500 h-full" style={{ width: `${stats.dofollowPct}%` }} />
-                  <div className="bg-gray-300 h-full" style={{ width: `${stats.nofollowPct}%` }} />
+                  <div className="bg-white/10 h-full" style={{ width: `${stats.nofollowPct}%` }} />
                 </div>
               </div>
-              <p className="text-xs text-gray-500 mt-1">{stats.dofollowPct}% dofollow / {stats.nofollowPct}% nofollow</p>
+              <p className="text-xs text-white/40 mt-1">{stats.dofollowPct}% dofollow / {stats.nofollowPct}% nofollow</p>
             </div>
-            <div className="bg-white border border-gray-200 rounded-lg p-5">
+            <div className="bg-white/[0.03] border border-white/5 rounded-lg p-5">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-green-500" />
-                <p className="text-sm text-gray-500">Bons liens</p>
+                <p className="text-sm text-white/40">Bons liens</p>
               </div>
               <p className="text-3xl font-bold text-green-600">{stats.good}</p>
             </div>
-            <div className="bg-white border border-gray-200 rounded-lg p-5">
+            <div className="bg-white/[0.03] border border-white/5 rounded-lg p-5">
               <div className="flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4 text-red-500" />
-                <p className="text-sm text-gray-500">Liens toxiques</p>
+                <p className="text-sm text-white/40">Liens toxiques</p>
               </div>
               <p className="text-3xl font-bold text-red-600">{stats.toxic}</p>
             </div>
           </div>
 
           {/* Table */}
-          <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+          <div className="bg-white/[0.03] border border-white/5 rounded-lg overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-gray-50 border-b border-gray-200">
+                <thead className="bg-white/[0.02] border-b border-white/5">
                   <tr>
-                    <th className="text-left px-4 py-3 font-medium text-gray-600">Domaine source</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-600">Texte d&apos;ancre</th>
-                    <th className="text-center px-4 py-3 font-medium text-gray-600">DA</th>
-                    <th className="text-center px-4 py-3 font-medium text-gray-600">DR</th>
-                    <th className="text-center px-4 py-3 font-medium text-gray-600">Type</th>
-                    <th className="text-center px-4 py-3 font-medium text-gray-600">Statut</th>
-                    <th className="text-center px-4 py-3 font-medium text-gray-600">Qualité</th>
+                    <th className="text-left px-4 py-3 font-medium text-white/50">Domaine source</th>
+                    <th className="text-left px-4 py-3 font-medium text-white/50">Texte d&apos;ancre</th>
+                    <th className="text-center px-4 py-3 font-medium text-white/50">DA</th>
+                    <th className="text-center px-4 py-3 font-medium text-white/50">DR</th>
+                    <th className="text-center px-4 py-3 font-medium text-white/50">Type</th>
+                    <th className="text-center px-4 py-3 font-medium text-white/50">Statut</th>
+                    <th className="text-center px-4 py-3 font-medium text-white/50">Qualité</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-white/5">
                   {scored.map(b => {
                     const q = qualityConfig[b.quality]
                     return (
-                      <tr key={b.id} className="hover:bg-gray-50">
+                      <tr key={b.id} className="hover:bg-white/[0.03]">
                         <td className="px-4 py-3">
                           <a href={b.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center gap-1">
                             {b.sourceDomain} <ExternalLink className="w-3 h-3" />
                           </a>
                         </td>
-                        <td className="px-4 py-3 text-gray-700 max-w-[200px] truncate">{b.anchorText || '-'}</td>
+                        <td className="px-4 py-3 text-white/70 max-w-[200px] truncate">{b.anchorText || '-'}</td>
                         <td className="px-4 py-3 text-center font-medium">{b.da}</td>
                         <td className="px-4 py-3 text-center font-medium">{b.dr}</td>
                         <td className="px-4 py-3 text-center">
-                          <span className={`text-xs px-2 py-0.5 rounded-full ${b.linkType === 'dofollow' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600'}`}>
+                          <span className={`text-xs px-2 py-0.5 rounded-full ${b.linkType === 'dofollow' ? 'bg-blue-100 text-blue-700' : 'bg-white/[0.03] text-white/50'}`}>
                             {b.linkType}
                           </span>
                         </td>

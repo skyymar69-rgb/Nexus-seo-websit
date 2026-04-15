@@ -57,7 +57,7 @@ function filterByRange<T extends { date: string }>(data: T[], range: DateRange):
 
 function EmptyState({ message }: { message: string }) {
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+    <div className="flex flex-col items-center justify-center py-16 text-white/30">
       <AlertCircle className="h-10 w-10 mb-3" />
       <p className="text-sm">{message}</p>
     </div>
@@ -110,11 +110,11 @@ export default function EvolutionPage() {
             <div className="p-2 rounded-lg bg-blue-100">
               <TrendingUp className="h-6 w-6 text-blue-600" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-white">
               Suivi d&apos;Evolution
             </h1>
           </div>
-          <p className="text-gray-500 mt-1 max-w-xl">
+          <p className="text-white/40 mt-1 max-w-xl">
             Suivez l&apos;evolution de vos metriques SEO et identifiez les tendances
           </p>
         </div>
@@ -127,7 +127,7 @@ export default function EvolutionPage() {
                 'px-4 py-2 rounded-lg font-medium transition-colors',
                 dateRange === range
                   ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-500 hover:text-gray-700'
+                  : 'bg-white/[0.03] text-white/40 hover:text-white/70'
               )}
             >
               {range === '7d' ? '7 jours' : range === '30d' ? '30 jours' : '90 jours'}
@@ -139,7 +139,7 @@ export default function EvolutionPage() {
       {loading && (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-          <span className="ml-3 text-gray-500">Chargement des donnees...</span>
+          <span className="ml-3 text-white/40">Chargement des donnees...</span>
         </div>
       )}
 
@@ -161,13 +161,13 @@ export default function EvolutionPage() {
         <>
           {/* Score Evolution Chart */}
           {audits.length > 0 && (
-            <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div className="rounded-xl border border-white/5 bg-white/[0.03] p-6 shadow-sm">
               <div className="mb-6">
-                <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                <h2 className="text-lg font-bold text-white flex items-center gap-2">
                   <Award className="h-5 w-5 text-blue-600" />
                   Evolution du Score SEO
                 </h2>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-white/40 mt-1">
                   Progression de votre score global au fil des audits
                 </p>
               </div>
@@ -208,13 +208,13 @@ export default function EvolutionPage() {
 
           {/* Keyword Position Evolution */}
           {keywords.length > 0 && (
-            <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div className="rounded-xl border border-white/5 bg-white/[0.03] p-6 shadow-sm">
               <div className="mb-6">
-                <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                <h2 className="text-lg font-bold text-white flex items-center gap-2">
                   <Target className="h-5 w-5 text-blue-600" />
                   Evolution de la Position des Mots-cles
                 </h2>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-white/40 mt-1">
                   Position moyenne en baisse = amelioration (plus proche du top)
                 </p>
               </div>
@@ -254,9 +254,9 @@ export default function EvolutionPage() {
 
           {/* Backlink Growth */}
           {backlinks.length > 0 && (
-            <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div className="rounded-xl border border-white/5 bg-white/[0.03] p-6 shadow-sm">
               <div className="mb-6">
-                <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                <h2 className="text-lg font-bold text-white flex items-center gap-2">
                   <Link2 className="h-5 w-5 text-blue-600" />
                   Croissance des Backlinks
                 </h2>

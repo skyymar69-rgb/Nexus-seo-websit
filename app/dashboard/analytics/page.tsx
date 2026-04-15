@@ -67,12 +67,12 @@ function KpiCard({
   sub?: string
 }) {
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+    <div className="rounded-lg border border-white/5 bg-white/[0.03] p-5 shadow-sm">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm text-gray-500">{label}</p>
-          <p className="mt-1 text-2xl font-bold text-gray-900">{value}</p>
-          {sub && <p className="mt-1 text-xs text-gray-400">{sub}</p>}
+          <p className="text-sm text-white/40">{label}</p>
+          <p className="mt-1 text-2xl font-bold text-white">{value}</p>
+          {sub && <p className="mt-1 text-xs text-white/30">{sub}</p>}
         </div>
         <div className="rounded-lg bg-blue-50 p-2.5">
           <Icon className="h-5 w-5 text-blue-600" />
@@ -121,11 +121,11 @@ export default function AnalyticsPage() {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="text-center">
-          <BarChart3 className="mx-auto h-12 w-12 text-gray-300" />
-          <h2 className="mt-4 text-lg font-semibold text-gray-900">
+          <BarChart3 className="mx-auto h-12 w-12 text-white/30" />
+          <h2 className="mt-4 text-lg font-semibold text-white">
             Aucun site selectionne
           </h2>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-white/40">
             Selectionnez un site web pour voir les analytics internes.
           </p>
         </div>
@@ -138,7 +138,7 @@ export default function AnalyticsPage() {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <span className="ml-3 text-gray-600">Chargement des analytics...</span>
+        <span className="ml-3 text-white/50">Chargement des analytics...</span>
       </div>
     )
   }
@@ -149,8 +149,8 @@ export default function AnalyticsPage() {
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="text-center">
           <AlertCircle className="mx-auto h-12 w-12 text-red-400" />
-          <h2 className="mt-4 text-lg font-semibold text-gray-900">Erreur</h2>
-          <p className="mt-1 text-sm text-gray-500">{error}</p>
+          <h2 className="mt-4 text-lg font-semibold text-white">Erreur</h2>
+          <p className="mt-1 text-sm text-white/40">{error}</p>
         </div>
       </div>
     )
@@ -161,11 +161,11 @@ export default function AnalyticsPage() {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="text-center">
-          <BarChart3 className="mx-auto h-12 w-12 text-gray-300" />
-          <h2 className="mt-4 text-lg font-semibold text-gray-900">
+          <BarChart3 className="mx-auto h-12 w-12 text-white/30" />
+          <h2 className="mt-4 text-lg font-semibold text-white">
             Aucune donnee disponible
           </h2>
-          <p className="mt-1 max-w-md text-sm text-gray-500">
+          <p className="mt-1 max-w-md text-sm text-white/40">
             Lancez un audit, ajoutez des mots-cles ou verifiez la visibilite IA
             pour commencer a voir vos analytics internes.
           </p>
@@ -177,13 +177,13 @@ export default function AnalyticsPage() {
   const { kpis, charts, bestKeyword, worstKeyword } = data
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white/[0.02]">
       {/* Header */}
-      <div className="border-b border-gray-200 bg-white px-8 py-6">
-        <h1 className="text-2xl font-bold text-gray-900">Analytics internes</h1>
-        <p className="mt-1 text-sm text-gray-500">
+      <div className="border-b border-white/5 bg-white/[0.03] px-8 py-6">
+        <h1 className="text-2xl font-bold text-white">Analytics internes</h1>
+        <p className="mt-1 text-sm text-white/40">
           Vue d&apos;ensemble des donnees collectees pour{' '}
-          <span className="font-medium text-gray-700">
+          <span className="font-medium text-white/70">
             {selectedWebsite.domain}
           </span>
         </p>
@@ -239,8 +239,8 @@ export default function AnalyticsPage() {
         <div className="grid gap-8 lg:grid-cols-2">
           {/* Audit Scores Over Time */}
           {charts.auditScoresOverTime.length > 0 && (
-            <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-              <h2 className="mb-4 text-base font-semibold text-gray-900">
+            <div className="rounded-lg border border-white/5 bg-white/[0.03] p-6 shadow-sm">
+              <h2 className="mb-4 text-base font-semibold text-white">
                 Scores d&apos;audit dans le temps
               </h2>
               <ResponsiveContainer width="100%" height={260}>
@@ -283,8 +283,8 @@ export default function AnalyticsPage() {
 
           {/* Keyword Positions Trend */}
           {charts.keywordPositionsOverTime.length > 0 && (
-            <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-              <h2 className="mb-4 text-base font-semibold text-gray-900">
+            <div className="rounded-lg border border-white/5 bg-white/[0.03] p-6 shadow-sm">
+              <h2 className="mb-4 text-base font-semibold text-white">
                 Position moyenne des mots-cles
               </h2>
               <ResponsiveContainer width="100%" height={260}>
@@ -308,8 +308,8 @@ export default function AnalyticsPage() {
 
           {/* Backlinks Growth */}
           {charts.backlinksGrowth.length > 0 && (
-            <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-              <h2 className="mb-4 text-base font-semibold text-gray-900">
+            <div className="rounded-lg border border-white/5 bg-white/[0.03] p-6 shadow-sm">
+              <h2 className="mb-4 text-base font-semibold text-white">
                 Croissance des backlinks
               </h2>
               <ResponsiveContainer width="100%" height={260}>
@@ -337,8 +337,8 @@ export default function AnalyticsPage() {
 
           {/* Performance Over Time */}
           {charts.performanceOverTime.length > 0 && (
-            <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-              <h2 className="mb-4 text-base font-semibold text-gray-900">
+            <div className="rounded-lg border border-white/5 bg-white/[0.03] p-6 shadow-sm">
+              <h2 className="mb-4 text-base font-semibold text-white">
                 Score de performance
               </h2>
               <ResponsiveContainer width="100%" height={260}>

@@ -62,17 +62,17 @@ function ScoreGauge({ score }: { score: number }) {
         <text x="70" y="70" textAnchor="middle" dominantBaseline="central"
           className="text-3xl font-bold" fill={color}>{score}</text>
       </svg>
-      <span className="text-sm text-gray-500 mt-1">Score SEO global</span>
+      <span className="text-sm text-white/40 mt-1">Score SEO global</span>
     </div>
   )
 }
 
 function Card({ title, icon: Icon, children }: { title: string; icon: React.ElementType; children: React.ReactNode }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-5">
+    <div className="bg-white/[0.03] border border-white/5 rounded-xl p-5">
       <div className="flex items-center gap-2 mb-4">
         <Icon className="w-5 h-5 text-blue-600" />
-        <h3 className="font-semibold text-gray-900">{title}</h3>
+        <h3 className="font-semibold text-white">{title}</h3>
       </div>
       {children}
     </div>
@@ -82,7 +82,7 @@ function Card({ title, icon: Icon, children }: { title: string; icon: React.Elem
 function StatusBadge({ ok, label }: { ok: boolean; label: string }) {
   return (
     <div className="flex items-center justify-between py-1.5">
-      <span className="text-sm text-gray-600">{label}</span>
+      <span className="text-sm text-white/50">{label}</span>
       {ok ? (
         <CheckCircle2 className="w-4 h-4 text-emerald-500" />
       ) : (
@@ -95,8 +95,8 @@ function StatusBadge({ ok, label }: { ok: boolean; label: string }) {
 function Stat({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="flex items-center justify-between py-1.5">
-      <span className="text-sm text-gray-600">{label}</span>
-      <span className="text-sm font-medium text-gray-900">{value}</span>
+      <span className="text-sm text-white/50">{label}</span>
+      <span className="text-sm font-medium text-white">{value}</span>
     </div>
   )
 }
@@ -142,11 +142,11 @@ export default function DomainOverviewPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Vue d'ensemble du domaine</h1>
-        <p className="text-gray-500 mt-1">Analyse compl&egrave;te de votre site en une page</p>
+        <h1 className="text-2xl font-bold text-white">Vue d'ensemble du domaine</h1>
+        <p className="text-white/40 mt-1">Analyse compl&egrave;te de votre site en une page</p>
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-xl p-5">
+      <div className="bg-white/[0.03] border border-white/5 rounded-xl p-5">
         <UrlInput
           value={url}
           onChange={setUrl}
@@ -161,7 +161,7 @@ export default function DomainOverviewPage() {
       {loading && (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-          <span className="ml-3 text-gray-500">Analyse en cours...</span>
+          <span className="ml-3 text-white/40">Analyse en cours...</span>
         </div>
       )}
 
@@ -175,7 +175,7 @@ export default function DomainOverviewPage() {
       {data && !loading && (
         <div className="space-y-6">
           {/* Score */}
-          <div className="bg-white border border-gray-200 rounded-xl p-6 flex flex-col items-center">
+          <div className="bg-white/[0.03] border border-white/5 rounded-xl p-6 flex flex-col items-center">
             <ScoreGauge score={data.score} />
           </div>
 
@@ -224,8 +224,8 @@ export default function DomainOverviewPage() {
                 <StatusBadge ok={data.structuredData.hasOpenGraph} label="Open Graph" />
                 <StatusBadge ok={data.structuredData.hasTwitterCard} label="Twitter Card" />
                 {data.structuredData.schemas.length > 0 && (
-                  <div className="pt-2 border-t border-gray-100 mt-2">
-                    <span className="text-xs text-gray-400 uppercase tracking-wider">Schemas detectes</span>
+                  <div className="pt-2 border-t border-white/5 mt-2">
+                    <span className="text-xs text-white/30 uppercase tracking-wider">Schemas detectes</span>
                     <div className="flex flex-wrap gap-1.5 mt-1.5">
                       {data.structuredData.schemas.map((s) => (
                         <span key={s} className="px-2 py-0.5 bg-blue-50 text-blue-700 text-xs rounded-full">{s}</span>
