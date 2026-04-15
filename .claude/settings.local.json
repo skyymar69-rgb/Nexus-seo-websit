@@ -159,7 +159,9 @@
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --repo skyymar69-rgb/Nexus-seo-websit --title \"feat: TIER 1 export + perf fallback\" --body \"Export HTML rapport, perf fallback, scan optimise\" --base main --head claude/elastic-maxwell)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 13 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --repo skyymar69-rgb/Nexus-seo-websit --title \"feat: deltas scores + accessibilite\" --body \"Deltas N vs N-1, aria-labels, touch targets\" --base main --head claude/elastic-maxwell)",
-      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 14 --repo skyymar69-rgb/Nexus-seo-websit --merge)"
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 14 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --repo skyymar69-rgb/Nexus-seo-websit --title \"feat: audit pre-load + accessibilite\" --body \"Page audit charge auto les résultats du dernier scan\" --base main --head claude/elastic-maxwell)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 15 --repo skyymar69-rgb/Nexus-seo-websit --merge)"
     ]
   }
 }

@@ -702,6 +702,7 @@ export default function AIVisibilityPage() {
                     placeholder="Rechercher une requete..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
+                    aria-label="Rechercher une requete"
                     className="flex-1 bg-transparent text-sm outline-none text-surface-900 dark:text-surface-50 placeholder-surface-400"
                   />
                 </div>
