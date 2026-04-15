@@ -28,7 +28,7 @@ export function CTA() {
               </h2>
 
               <p className="text-lg text-surface-700 dark:text-surface-400 mb-10 max-w-2xl mx-auto">
-                Lancez votre audit SEO gratuit en 5 minutes. 30+ outils, zero euro, aucune carte bancaire.
+                Lancez votre audit SEO gratuit en 5 minutes. 50+ outils, zero euro, aucune carte bancaire.
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">

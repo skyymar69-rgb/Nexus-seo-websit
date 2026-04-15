@@ -30,7 +30,7 @@ export function Pricing() {
             <span className="gradient-text">Zero euro.</span>
           </h2>
           <p className="text-lg text-surface-700 dark:text-surface-400">
-            30+ outils SEO & IA sans aucune limitation. Aucune carte bancaire requise.
+            50+ outils SEO & IA sans aucune limitation. Aucune carte bancaire requise.
           </p>
         </div>
 

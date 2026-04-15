@@ -20,7 +20,7 @@ export default function ReferralPage() {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const shareText = encodeURIComponent('Decouvrez Nexus SEO — 30+ outils SEO & IA 100% gratuits ! Audit, mots-cles, visibilite IA, contenu')
+  const shareText = encodeURIComponent('Decouvrez Nexus SEO — 50+ outils SEO & IA 100% gratuits ! Audit, mots-cles, visibilite IA, contenu')
 
   return (
     <div className="space-y-6 pb-8 max-w-3xl mx-auto">

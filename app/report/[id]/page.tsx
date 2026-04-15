@@ -120,7 +120,7 @@ export default async function PublicReportPage({ params }: { params: { id: strin
           {/* CTA */}
           <div className="text-center p-8 rounded-2xl bg-gradient-to-r from-brand-600 to-violet-600">
             <h3 className="text-xl font-bold text-white mb-2">Lancez votre propre audit gratuit</h3>
-            <p className="text-white/70 mb-4">30+ outils SEO & IA. 100% gratuit.</p>
+            <p className="text-white/70 mb-4">50+ outils SEO & IA. 100% gratuit.</p>
             <a href="/signup" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-brand-700 font-bold hover:bg-surface-50 transition-colors">
               Creer mon compte <ExternalLink className="w-4 h-4" />
             </a>

@@ -22,7 +22,6 @@ const CookieBanner = dynamic(() => import('@/components/shared/CookieBanner'), {
 const AccessibilityToggle = dynamic(() => import('@/components/shared/AccessibilityToggle'), { ssr: false })
 const ScrollProgress = dynamic(() => import('@/components/shared/ScrollProgress'), { ssr: false })
 const AIChatWidget = dynamic(() => import('@/components/shared/AIChatWidget'), { ssr: false })
-const SocialProofToast = dynamic(() => import('@/components/shared/SocialProofToast'), { ssr: false })
 import './globals.css'
 
 const BASE_URL = process.env.NEXT_PUBLIC_URL || 'https://nexus-seo.app'
@@ -179,7 +178,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ErrorBoundary><CookieBanner /></ErrorBoundary>
           <ErrorBoundary><AccessibilityToggle /></ErrorBoundary>
           <ErrorBoundary><AIChatWidget /></ErrorBoundary>
-          <ErrorBoundary><SocialProofToast /></ErrorBoundary>
         </Providers>
       </body>
     </html>

@@ -55,7 +55,7 @@ export function TrustedBy() {
           </div>
           <div className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 shadow-sm">
             <div>
-              <p className="text-sm font-bold text-surface-900 dark:text-white">30+ outils</p>
+              <p className="text-sm font-bold text-surface-900 dark:text-white">50+ outils</p>
               <p className="text-xs text-surface-600 dark:text-surface-400">SEO, GEO, AEO, LLMO</p>
             </div>
           </div>

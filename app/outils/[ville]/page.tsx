@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: { params: { ville: string } }
 
   return {
     title: `Audit SEO gratuit a ${city.name} — Nexus SEO`,
-    description: `Analysez votre site web gratuitement a ${city.name}. 30+ outils SEO, GEO, AEO, LLMO. Score SEO instantane, recommandations actionnables. 100% gratuit.`,
+    description: `Analysez votre site web gratuitement a ${city.name}. 50+ outils SEO, GEO, AEO, LLMO. Score SEO instantane, recommandations actionnables. 100% gratuit.`,
     openGraph: {
       title: `Audit SEO gratuit a ${city.name}`,
       description: `Optimisez votre visibilite a ${city.name} avec Nexus SEO. Audit complet, mots-cles, backlinks, visibilite IA.`,
