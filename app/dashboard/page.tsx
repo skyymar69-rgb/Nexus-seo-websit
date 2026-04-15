@@ -177,12 +177,8 @@ export default function DashboardPage() {
     }
   }, [fetchLatestScan, selectedWebsite?.id])
 
-  // Check onboarding — only redirect if websites are fully loaded AND empty
-  useEffect(() => {
-    if (!websitesLoading && websites.length === 0) {
-      router.push('/dashboard/onboarding')
-    }
-  }, [websitesLoading, websites, router])
+  // NOTE: Ne redirige plus vers onboarding automatiquement.
+  // Si pas de sites, on affiche le CTA "Ajouter un site" dans le dashboard.
 
   // Launch new scan
   const handleNewScan = async () => {
