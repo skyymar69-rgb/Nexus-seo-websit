@@ -194,7 +194,8 @@
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --repo skyymar69-rgb/Nexus-seo-websit --title \"feat: reports + pre-load v2\" --body \"Reports export, pre-load pages\" --base main --head claude/elastic-maxwell)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 27 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 28 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
-      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 29 --repo skyymar69-rgb/Nexus-seo-websit --merge)"
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 29 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 30 --repo skyymar69-rgb/Nexus-seo-websit --merge)"
     ]
   }
 }
