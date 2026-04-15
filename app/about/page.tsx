@@ -4,11 +4,14 @@ import { Zap, Target, Globe, Users, TrendingUp, Award } from 'lucide-react'
 import { Breadcrumb } from '@/components/shared/Breadcrumb'
 
 export const metadata = {
-  title: 'À propos — Nexus SEO',
-  description: 'Nexus est né d\'une conviction : les outils SEO du passé ne suffisent plus à l\'ère de l\'IA. Découvrez notre mission et notre équipe.',
+  title: 'A propos — Notre Mission SEO IA',
+  description: 'Nexus est ne d\'une conviction : les outils SEO du passe ne suffisent plus a l\'ere de l\'IA. Decouvrez notre mission, notre equipe et notre vision du SEO en 2026.',
+  alternates: {
+    canonical: '/about',
+  },
   openGraph: {
-    title: 'A propos',
-    description: 'Nexus est né d\'une conviction : les outils SEO du passé ne suffisent plus à l\'ère de l\'IA. Découvrez notre mission et notre équipe.',
+    title: 'A propos — Nexus SEO',
+    description: 'Nexus est ne d\'une conviction : les outils SEO du passe ne suffisent plus a l\'ere de l\'IA. Decouvrez notre mission et notre equipe.',
     images: ['/api/og?title=A%20propos&subtitle=Kayzen%20Web%20x%20Nexus'],
   },
 }

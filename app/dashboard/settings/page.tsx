@@ -5,6 +5,7 @@ import { useSession } from '@/hooks/useSession'
 import { usePlan } from '@/hooks/usePlan'
 import { useTheme } from 'next-themes'
 import { cn } from '@/lib/utils'
+import Link from 'next/link'
 import {
   Save,
   Key,
@@ -16,11 +17,26 @@ import {
   Zap,
   Loader2,
   Info,
+  Globe,
+  ExternalLink,
+  Check,
+  Shield,
 } from 'lucide-react'
 
 const PLAN_LABELS: Record<string, { label: string; price: string }> = {
   free: { label: 'Gratuit', price: '100% Gratuit' },
 }
+
+const PLAN_FEATURES = [
+  'Audit SEO complet',
+  'Audit GEO / AEO',
+  'Score AI Visibility',
+  'Analyse de performance',
+  'Export PDF / HTML',
+  'Schema Generator',
+  'Suivi multi-sites',
+  'Historique des scans',
+]
 
 export default function SettingsPage() {
   const { user, isLoading: sessionLoading } = useSession()
@@ -50,7 +66,7 @@ export default function SettingsPage() {
   if (sessionLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-white/40" />
       </div>
     )
   }
@@ -59,41 +75,41 @@ export default function SettingsPage() {
     <div className="space-y-8 max-w-4xl">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Parametres</h1>
-        <p className="text-gray-500 mt-1">Gerez vos parametres et preferences</p>
+        <h1 className="text-3xl font-bold text-white">Parametres</h1>
+        <p className="text-white/50 mt-1">Gerez vos parametres et preferences</p>
       </div>
 
       {/* Profile Section */}
-      <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-bold mb-6 flex items-center gap-2 text-gray-900">
-          <User className="h-5 w-5" />
+      <div className="rounded-xl border border-white/5 bg-white/[0.03] backdrop-blur-sm p-6">
+        <h2 className="text-lg font-bold mb-6 flex items-center gap-2 text-white">
+          <User className="h-5 w-5 text-blue-400" />
           Profil
         </h2>
 
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-2 text-gray-700">Nom</label>
+              <label className="block text-sm font-medium mb-2 text-white/70">Nom</label>
               <input
                 type="text"
                 value={user?.name || ''}
                 readOnly
-                className="w-full rounded-lg bg-gray-50 border border-gray-200 px-4 py-2 text-gray-700 outline-none cursor-not-allowed"
+                className="w-full rounded-lg bg-white/[0.05] border border-white/10 px-4 py-2.5 text-white outline-none cursor-not-allowed placeholder:text-white/30"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2 text-gray-700">Email</label>
+              <label className="block text-sm font-medium mb-2 text-white/70">Email</label>
               <input
                 type="email"
                 value={user?.email || ''}
                 readOnly
-                className="w-full rounded-lg bg-gray-50 border border-gray-200 px-4 py-2 text-gray-700 outline-none cursor-not-allowed"
+                className="w-full rounded-lg bg-white/[0.05] border border-white/10 px-4 py-2.5 text-white outline-none cursor-not-allowed placeholder:text-white/30"
               />
             </div>
           </div>
 
           {saveMessage && (
-            <div className="flex items-center gap-2 rounded-lg bg-blue-50 border border-blue-200 px-4 py-3 text-sm text-blue-700">
+            <div className="flex items-center gap-2 rounded-lg bg-blue-500/10 border border-blue-500/20 px-4 py-3 text-sm text-blue-300">
               <Info className="h-4 w-4 flex-shrink-0" />
               {saveMessage}
             </div>
@@ -101,7 +117,7 @@ export default function SettingsPage() {
 
           <button
             onClick={handleSave}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-500 transition-colors"
           >
             <Save className="h-4 w-4" />
             Enregistrer les modifications
@@ -109,10 +125,67 @@ export default function SettingsPage() {
         </div>
       </div>
 
+      {/* Plan Section */}
+      <div className="rounded-xl border border-white/5 bg-white/[0.03] backdrop-blur-sm p-6">
+        <h2 className="text-lg font-bold mb-6 flex items-center gap-2 text-white">
+          <CreditCard className="h-5 w-5 text-emerald-400" />
+          Plan et facturation
+        </h2>
+
+        <div className="space-y-4">
+          <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="font-semibold text-emerald-300">Plan {planInfo.label}</p>
+                <p className="text-sm text-white/50 mt-1">
+                  Acces complet a toutes les fonctionnalites
+                </p>
+              </div>
+              <span className="px-3 py-1 rounded-full text-sm font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                {planInfo.price}
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            {PLAN_FEATURES.map((feature) => (
+              <div key={feature} className="flex items-center gap-2 text-sm text-white/70">
+                <Check className="h-3.5 w-3.5 text-emerald-400 flex-shrink-0" />
+                {feature}
+              </div>
+            ))}
+          </div>
+
+          <button className="w-full px-4 py-2.5 rounded-lg border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] font-medium text-white/70 transition-colors">
+            Gerer mon abonnement
+          </button>
+        </div>
+      </div>
+
+      {/* Websites Section */}
+      <div className="rounded-xl border border-white/5 bg-white/[0.03] backdrop-blur-sm p-6">
+        <h2 className="text-lg font-bold mb-4 flex items-center gap-2 text-white">
+          <Globe className="h-5 w-5 text-purple-400" />
+          Mes sites web
+        </h2>
+
+        <p className="text-sm text-white/50 mb-4">
+          Gerez vos sites web, lancez des audits et suivez leurs performances.
+        </p>
+
+        <Link
+          href="/dashboard/projects"
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-purple-600/20 border border-purple-500/30 text-purple-300 hover:bg-purple-600/30 font-medium transition-colors"
+        >
+          <ExternalLink className="h-4 w-4" />
+          Gerer mes projets
+        </Link>
+      </div>
+
       {/* Theme Section */}
-      <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-bold mb-6 flex items-center gap-2 text-gray-900">
-          <Sun className="h-5 w-5" />
+      <div className="rounded-xl border border-white/5 bg-white/[0.03] backdrop-blur-sm p-6">
+        <h2 className="text-lg font-bold mb-6 flex items-center gap-2 text-white">
+          <Sun className="h-5 w-5 text-amber-400" />
           Theme
         </h2>
 
@@ -122,15 +195,15 @@ export default function SettingsPage() {
             className={cn(
               'w-full text-left px-4 py-3 rounded-lg border-2 transition-all',
               theme === 'light'
-                ? 'border-blue-500 bg-blue-50'
-                : 'border-gray-200 hover:border-gray-300'
+                ? 'border-blue-500/50 bg-blue-500/10'
+                : 'border-white/5 bg-white/[0.02] hover:border-white/10'
             )}
           >
             <div className="flex items-center gap-3">
-              <Sun className="h-5 w-5 text-gray-700" />
+              <Sun className="h-5 w-5 text-white/70" />
               <div>
-                <p className="font-medium text-gray-900">Mode clair</p>
-                <p className="text-xs text-gray-500">Interface en couleurs claires</p>
+                <p className="font-medium text-white">Mode clair</p>
+                <p className="text-xs text-white/50">Interface en couleurs claires</p>
               </div>
             </div>
           </button>
@@ -140,15 +213,15 @@ export default function SettingsPage() {
             className={cn(
               'w-full text-left px-4 py-3 rounded-lg border-2 transition-all',
               theme === 'dark'
-                ? 'border-blue-500 bg-blue-50'
-                : 'border-gray-200 hover:border-gray-300'
+                ? 'border-blue-500/50 bg-blue-500/10'
+                : 'border-white/5 bg-white/[0.02] hover:border-white/10'
             )}
           >
             <div className="flex items-center gap-3">
-              <Moon className="h-5 w-5 text-gray-700" />
+              <Moon className="h-5 w-5 text-white/70" />
               <div>
-                <p className="font-medium text-gray-900">Mode sombre</p>
-                <p className="text-xs text-gray-500">Interface en couleurs sombres</p>
+                <p className="font-medium text-white">Mode sombre</p>
+                <p className="text-xs text-white/50">Interface en couleurs sombres</p>
               </div>
             </div>
           </button>
@@ -158,15 +231,15 @@ export default function SettingsPage() {
             className={cn(
               'w-full text-left px-4 py-3 rounded-lg border-2 transition-all',
               theme === 'system'
-                ? 'border-blue-500 bg-blue-50'
-                : 'border-gray-200 hover:border-gray-300'
+                ? 'border-blue-500/50 bg-blue-500/10'
+                : 'border-white/5 bg-white/[0.02] hover:border-white/10'
             )}
           >
             <div className="flex items-center gap-3">
-              <Zap className="h-5 w-5 text-gray-700" />
+              <Zap className="h-5 w-5 text-white/70" />
               <div>
-                <p className="font-medium text-gray-900">Automatique</p>
-                <p className="text-xs text-gray-500">
+                <p className="font-medium text-white">Automatique</p>
+                <p className="text-xs text-white/50">
                   Suit les preferences du systeme
                 </p>
               </div>
@@ -176,9 +249,9 @@ export default function SettingsPage() {
       </div>
 
       {/* Notifications Section */}
-      <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-bold mb-6 flex items-center gap-2 text-gray-900">
-          <Bell className="h-5 w-5" />
+      <div className="rounded-xl border border-white/5 bg-white/[0.03] backdrop-blur-sm p-6">
+        <h2 className="text-lg font-bold mb-6 flex items-center gap-2 text-white">
+          <Bell className="h-5 w-5 text-orange-400" />
           Notifications
         </h2>
 
@@ -186,7 +259,7 @@ export default function SettingsPage() {
           {Object.entries(notifications).map(([key, value]) => (
             <div key={key} className="flex items-center justify-between">
               <div>
-                <p className="font-medium text-sm text-gray-900">
+                <p className="font-medium text-sm text-white">
                   {key === 'emailAlerts'
                     ? 'Alertes par email'
                     : key === 'weeklyReports'
@@ -195,7 +268,7 @@ export default function SettingsPage() {
                         ? 'Nouvelles fonctionnalites'
                         : 'Mises a jour produit'}
                 </p>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-white/50 mt-1">
                   {key === 'emailAlerts'
                     ? 'Recevez des alertes importantes par email'
                     : key === 'weeklyReports'
@@ -208,14 +281,14 @@ export default function SettingsPage() {
               <button
                 onClick={() => handleNotificationChange(key)}
                 className={cn(
-                  'relative inline-flex h-8 w-14 items-center rounded-full transition-colors',
-                  value ? 'bg-blue-600' : 'bg-gray-300'
+                  'relative inline-flex h-7 w-12 items-center rounded-full transition-colors flex-shrink-0',
+                  value ? 'bg-blue-600' : 'bg-white/10'
                 )}
               >
                 <span
                   className={cn(
-                    'inline-block h-6 w-6 transform rounded-full bg-white transition-transform shadow',
-                    value ? 'translate-x-7' : 'translate-x-1'
+                    'inline-block h-5 w-5 transform rounded-full bg-white transition-transform shadow',
+                    value ? 'translate-x-6' : 'translate-x-1'
                   )}
                 />
               </button>
@@ -225,58 +298,33 @@ export default function SettingsPage() {
       </div>
 
       {/* API Keys Section */}
-      <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-bold mb-6 flex items-center gap-2 text-gray-900">
-          <Key className="h-5 w-5" />
+      <div className="rounded-xl border border-white/5 bg-white/[0.03] backdrop-blur-sm p-6">
+        <h2 className="text-lg font-bold mb-6 flex items-center gap-2 text-white">
+          <Key className="h-5 w-5 text-cyan-400" />
           Cle API
         </h2>
 
-        <p className="text-sm text-gray-500 mb-4">
+        <p className="text-sm text-white/50 mb-4">
           Utilisez une cle API pour integrer Nexus dans vos outils.
         </p>
 
         <button
-          className="w-full px-4 py-3 rounded-lg border font-medium transition-colors border-gray-200 bg-white hover:bg-gray-50 text-gray-700"
+          className="w-full px-4 py-3 rounded-lg border font-medium transition-colors border-white/10 bg-white/[0.03] hover:bg-white/[0.06] text-white/70"
         >
           Generez votre cle API pour integrer Nexus
         </button>
       </div>
 
-      {/* Plan Section */}
-      <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-bold mb-6 flex items-center gap-2 text-gray-900">
-          <CreditCard className="h-5 w-5" />
-          Plan et facturation
-        </h2>
-
-        <div className="space-y-4">
-          <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="font-medium text-blue-700">Plan {planInfo.label}</p>
-                <p className="text-sm text-gray-500 mt-1">
-                  Votre plan actuel
-                </p>
-              </div>
-              <span className="px-3 py-1 rounded text-sm font-medium bg-blue-100 text-blue-700">
-                {planInfo.price}
-              </span>
-            </div>
-          </div>
-
-          <button className="w-full px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 font-medium text-gray-700 transition-colors">
-            Gerer mon abonnement
-          </button>
-        </div>
-      </div>
-
       {/* Danger Zone */}
-      <div className="rounded-lg border border-red-200 bg-red-50 p-6">
-        <h2 className="text-lg font-bold mb-4 text-red-600">Zone de danger</h2>
-        <p className="text-sm text-gray-500 mb-4">
+      <div className="rounded-xl border border-red-500/20 bg-red-500/[0.05] backdrop-blur-sm p-6">
+        <h2 className="text-lg font-bold mb-4 flex items-center gap-2 text-red-400">
+          <Shield className="h-5 w-5" />
+          Zone de danger
+        </h2>
+        <p className="text-sm text-white/50 mb-4">
           Ces actions sont irreversibles. Soyez prudent.
         </p>
-        <button className="px-4 py-2 rounded-lg border border-red-300 bg-white text-red-600 hover:bg-red-50 font-medium transition-colors">
+        <button className="px-4 py-2.5 rounded-lg border border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20 font-medium transition-colors">
           Supprimer mon compte
         </button>
       </div>

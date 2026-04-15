@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next'
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://nexus.kayzen-lyon.fr'
+const BASE_URL = process.env.NEXT_PUBLIC_URL || 'https://nexus-seo.app'
 
 const casesSlugs = ['maison-lumiere', 'flowstack', 'lefort-associes', 'techflow-saas', 'agence-digitale-lyon', 'ecommerce-sante']
 const blogSlugs = ['geo-guide-complet-2026', 'llmo-chatgpt-recommande-votre-marque', 'aeo-featured-snippets-voice-search', 'core-web-vitals-2026-guide', 'eeat-seo-ia-2026', 'semrush-vs-nexus-comparaison']

@@ -24,10 +24,14 @@ export const metadata = {
   description:
     "Nexus est le premier outil SEO conçu pour 2026 : optimisez votre présence dans ChatGPT, Perplexity, Google SGE et tous les LLMs. GEO, AEO, LLMO — une seule plateforme.",
   keywords: 'SEO IA, GEO, AEO, LLMO, ChatGPT SEO, Google SGE, optimisation LLM, visibilité IA',
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     title: 'Nexus SEO — La référence SEO de l\'ère IA',
     description: 'GEO · AEO · LLMO : dominez ChatGPT, Google SGE, Perplexity et tous les moteurs IA.',
     type: 'website',
+    images: ['/og-image.png'],
   },
 }
 
