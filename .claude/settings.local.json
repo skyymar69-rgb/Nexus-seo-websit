@@ -130,7 +130,12 @@
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 4 --repo skyymar69-rgb/Nexus-seo-websit --squash)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr close 4 --repo skyymar69-rgb/Nexus-seo-websit)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --title \"fix: corrections critiques v2\" --body \"Toutes corrections: 30→50+, OAuth supprimé, compteurs, toasts, accents, merge main\" --base main --head claude/elastic-maxwell)",
-      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 5 --repo skyymar69-rgb/Nexus-seo-websit --merge)"
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 5 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --repo skyymar69-rgb/Nexus-seo-websit --title \"feat: parcours auth + onboarding dark theme\" --body \"Auth layout dark, login/signup unifiés, onboarding simplifié 1 étape\" --base main --head claude/elastic-maxwell)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge --repo skyymar69-rgb/Nexus-seo-websit --merge)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 6 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
+      "mcp__Claude_in_Chrome__find",
+      "mcp__Claude_in_Chrome__form_input"
     ]
   }
 }

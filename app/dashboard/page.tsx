@@ -131,7 +131,7 @@ function QuickActions({ onScan, scanning }: { onScan: () => void; scanning: bool
 
 export default function DashboardPage() {
   const { data: session } = useSession()
-  const { selectedWebsite, websites } = useWebsite()
+  const { selectedWebsite, websites, isLoading: websitesLoading } = useWebsite()
   const router = useRouter()
   const dashboardData = useDashboardData(selectedWebsite?.id)
 
@@ -175,12 +175,12 @@ export default function DashboardPage() {
     fetchLatestScan()
   }, [fetchLatestScan])
 
-  // Check onboarding
+  // Check onboarding — only redirect if websites are loaded AND empty
   useEffect(() => {
-    if (!loading && websites.length === 0) {
+    if (!loading && !websitesLoading && websites.length === 0) {
       router.push('/dashboard/onboarding')
     }
-  }, [loading, websites, router])
+  }, [loading, websitesLoading, websites, router])
 
   // Launch new scan
   const handleNewScan = async () => {
