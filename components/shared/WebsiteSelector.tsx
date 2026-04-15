@@ -140,6 +140,7 @@ export function WebsiteSelector() {
                 value={newDomain}
                 onChange={(e) => setNewDomain(e.target.value)}
                 placeholder="example.com"
+                aria-label="Domaine du site"
                 className="w-full px-3 py-2 rounded-lg bg-surface-900 border border-surface-600 text-surface-100 text-sm placeholder:text-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none"
                 autoFocus
                 onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
@@ -149,6 +150,7 @@ export function WebsiteSelector() {
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
                 placeholder="Nom du site (optionnel)"
+                aria-label="Nom du site"
                 className="w-full px-3 py-2 rounded-lg bg-surface-900 border border-surface-600 text-surface-100 text-sm placeholder:text-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none"
                 onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
               />

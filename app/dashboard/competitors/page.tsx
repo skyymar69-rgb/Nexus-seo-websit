@@ -512,6 +512,7 @@ export default function CompetitorsPage() {
               placeholder="Entrez un domaine concurrent (ex: exemple.com)"
               value={newDomain}
               onChange={(e) => setNewDomain(e.target.value)}
+              aria-label="Domaine concurrent"
               className="w-full px-4 py-2.5 rounded-lg bg-surface-800 border border-surface-700 text-surface-100 placeholder-surface-500 focus:outline-none focus:border-brand-500 transition-colors"
             />
           </div>

@@ -465,6 +465,44 @@ export default function AuditPage() {
     }
   }, [selectedWebsite, autoLaunched])
 
+  // Pre-load results from latest scan if available
+  useEffect(() => {
+    if (result || autoLaunched || !selectedWebsite?.id) return
+    async function loadFromScan() {
+      try {
+        const statsRes = await fetch(`/api/dashboard/stats?websiteId=${selectedWebsite!.id}`)
+        if (!statsRes.ok) return
+        const stats = await statsRes.json()
+        if (!stats.latestScanId) return
+
+        const scanRes = await fetch(`/api/scan/${stats.latestScanId}`)
+        if (!scanRes.ok) return
+        const scanJson = await scanRes.json()
+        if (!scanJson.success || !scanJson.data?.results) return
+
+        const scanResults = typeof scanJson.data.results === 'string'
+          ? JSON.parse(scanJson.data.results)
+          : scanJson.data.results
+
+        if (scanResults?.audit) {
+          setResult({
+            url: scanJson.data.url,
+            score: scanResults.audit.score,
+            loadTime: 0,
+            htmlSize: 0,
+            checks: scanResults.audit.checks || [],
+            detailedChecks: scanResults.audit.checks || [],
+            summary: scanResults.audit.summary || { passed: 0, warnings: 0, errors: 0, totalChecks: 0 },
+            meta: scanResults.audit.meta || {},
+            content: scanResults.audit.content || {},
+          })
+        }
+      } catch { /* non-critical */ }
+    }
+    loadFromScan()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedWebsite?.id])
+
   /* ── API call ─────────────────────────────────────────────── */
 
   const handleAnalyze = useCallback(async () => {

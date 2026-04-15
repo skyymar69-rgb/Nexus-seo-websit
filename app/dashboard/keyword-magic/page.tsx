@@ -26,7 +26,7 @@ function DifficultyBar({ value }: { value: number }) {
   const color = value >= 70 ? 'bg-red-500' : value >= 40 ? 'bg-amber-500' : 'bg-emerald-500'
   return (
     <div className="flex items-center gap-2">
-      <div className="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+      <div className="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden" role="progressbar" aria-label="Difficulte" aria-valuenow={value} aria-valuemin={0} aria-valuemax={100}>
         <div className={`h-full rounded-full ${color}`} style={{ width: `${value}%` }} />
       </div>
       <span className="text-xs text-gray-600">{value}</span>
@@ -99,6 +99,7 @@ export default function KeywordMagicPage() {
               onChange={(e) => setSeed(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && !loading && handleSearch()}
               placeholder="Entrez un mot-cle (ex: referencement naturel)"
+              aria-label="Mot-cle a rechercher"
               className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 text-sm"
             />
           </div>

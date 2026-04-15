@@ -113,7 +113,7 @@ export default function ContentAnalyzerPage() {
                     <span className="text-sm font-semibold text-surface-700 dark:text-surface-300">{item.label}</span>
                     <span className={cn('text-lg font-black', item.score >= 60 ? 'text-green-600' : item.score >= 40 ? 'text-amber-500' : 'text-red-500')}>{item.score}</span>
                   </div>
-                  <div className="w-full bg-surface-200 dark:bg-surface-700 rounded-full h-1.5 mb-2">
+                  <div className="w-full bg-surface-200 dark:bg-surface-700 rounded-full h-1.5 mb-2" role="progressbar" aria-label={item.label} aria-valuenow={item.score} aria-valuemin={0} aria-valuemax={100}>
                     <div className={cn('h-1.5 rounded-full', item.score >= 60 ? 'bg-green-500' : item.score >= 40 ? 'bg-amber-500' : 'bg-red-500')} style={{ width: `${item.score}%` }} />
                   </div>
                   <p className="text-[10px] text-surface-400">{item.desc}</p>

@@ -146,7 +146,7 @@ export default function ScanProgressPage() {
 
         {/* Progress bar */}
         <div className="mb-8">
-          <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-white/5 rounded-full overflow-hidden" role="progressbar" aria-label="Progression du scan" aria-valuenow={isComplete ? 100 : progress} aria-valuemin={0} aria-valuemax={100}>
             <motion.div
               className={`h-full rounded-full ${isComplete ? 'bg-emerald-500' : isFailed ? 'bg-rose-500' : 'bg-brand-500'}`}
               initial={{ width: 0 }}
