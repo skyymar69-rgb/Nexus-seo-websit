@@ -190,7 +190,7 @@ export default function BacklinkAuditPage() {
               <div className="space-y-2">
                 <h4 className="text-sm font-semibold text-red-800 dark:text-red-300">Liens a desavouer :</h4>
                 {scored.filter(b => b.quality === 'toxic').map(b => (
-                  <div key={b.id} className="flex items-center justify-between bg-white dark:bg-surface-900 rounded-lg px-4 py-2 border border-red-100 dark:border-red-900">
+                  <div key={b.id} className="flex items-center justify-between bg-white/[0.03] rounded-lg px-4 py-2 border border-red-100 dark:border-red-900">
                     <span className="text-sm text-red-700 dark:text-red-400 truncate">{b.sourceDomain}</span>
                     <span className="text-xs text-red-500">Spam: {b.spamScore}% | DA: {b.da}</span>
                   </div>
@@ -221,7 +221,7 @@ export default function BacklinkAuditPage() {
                 </a>
               </div>
 
-              <div className="bg-white dark:bg-surface-900 rounded-lg p-4 border border-red-100 dark:border-red-900">
+              <div className="bg-white/[0.03] rounded-lg p-4 border border-red-100 dark:border-red-900">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-red-500 mb-2">Comment utiliser le fichier de desaveu</h4>
                 <ol className="text-sm text-red-700 dark:text-red-400 space-y-1 list-decimal pl-4">
                   <li>Telecharger le fichier .txt ci-dessus</li>
@@ -235,29 +235,29 @@ export default function BacklinkAuditPage() {
           )}
 
           {/* Health recommendations */}
-          <div className="bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 rounded-xl p-6">
-            <h3 className="font-bold text-surface-900 dark:text-white mb-4">Recommandations</h3>
+          <div className="bg-white/[0.03] border border-white/5 rounded-xl p-6">
+            <h3 className="font-bold text-white mb-4">Recommandations</h3>
             <ul className="space-y-2">
               {stats.overallScore < 50 && (
-                <li className="flex items-start gap-2 text-sm text-surface-700 dark:text-surface-300">
+                <li className="flex items-start gap-2 text-sm text-white/70">
                   <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
                   Votre profil de backlinks est de mauvaise qualite. Priorisez le desaveu des liens toxiques.
                 </li>
               )}
               {stats.dofollowPct < 50 && (
-                <li className="flex items-start gap-2 text-sm text-surface-700 dark:text-surface-300">
+                <li className="flex items-start gap-2 text-sm text-white/70">
                   <AlertTriangle className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
                   Ratio dofollow faible ({stats.dofollowPct}%). Cherchez des opportunites de liens dofollow.
                 </li>
               )}
               {stats.good < stats.total * 0.5 && (
-                <li className="flex items-start gap-2 text-sm text-surface-700 dark:text-surface-300">
+                <li className="flex items-start gap-2 text-sm text-white/70">
                   <AlertTriangle className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
                   Moins de 50% de vos liens sont de bonne qualite. Focalisez-vous sur le guest blogging et les liens editoriaux.
                 </li>
               )}
               {stats.overallScore >= 70 && (
-                <li className="flex items-start gap-2 text-sm text-surface-700 dark:text-surface-300">
+                <li className="flex items-start gap-2 text-sm text-white/70">
                   <CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
                   Bon profil de backlinks ! Continuez a developper des liens de qualite.
                 </li>

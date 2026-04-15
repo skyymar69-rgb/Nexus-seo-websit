@@ -43,7 +43,7 @@ export default function ReferralPage() {
         ].map(stat => {
           const Icon = stat.icon
           return (
-            <div key={stat.label} className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-5 text-center">
+            <div key={stat.label} className="bg-white/[0.03] rounded-xl border border-white/5 p-5 text-center">
               <Icon className={cn('w-5 h-5 mx-auto mb-2', stat.color)} />
               <p className={cn('text-xl font-black', stat.color)}>{stat.value}</p>
               <p className="text-xs text-surface-500">{stat.label}</p>
@@ -53,10 +53,10 @@ export default function ReferralPage() {
       </div>
 
       {/* Share link */}
-      <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
-        <h3 className="font-bold text-surface-900 dark:text-white mb-4">Votre lien de parrainage</h3>
+      <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
+        <h3 className="font-bold text-white mb-4">Votre lien de parrainage</h3>
         <div className="flex gap-2">
-          <div className="flex-1 px-4 py-3 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 text-sm font-mono text-surface-700 dark:text-surface-300 truncate">
+          <div className="flex-1 px-4 py-3 rounded-xl bg-white/[0.02] border border-white/10 text-sm font-mono text-white/70 truncate">
             {referralUrl}
           </div>
           <button onClick={copyLink} className="btn-primary px-4 py-3 rounded-xl flex items-center gap-2">
@@ -71,7 +71,7 @@ export default function ReferralPage() {
             href={`https://twitter.com/intent/tweet?text=${shareText}&url=${encodeURIComponent(referralUrl)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-surface-200 dark:border-surface-700 text-sm text-surface-700 dark:text-surface-300 hover:border-brand-400 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 text-sm text-white/70 hover:border-brand-400 transition-colors"
           >
             <Twitter className="w-4 h-4" /> Twitter
           </a>
@@ -79,13 +79,13 @@ export default function ReferralPage() {
             href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(referralUrl)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-surface-200 dark:border-surface-700 text-sm text-surface-700 dark:text-surface-300 hover:border-brand-400 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 text-sm text-white/70 hover:border-brand-400 transition-colors"
           >
             <Linkedin className="w-4 h-4" /> LinkedIn
           </a>
           <a
             href={`mailto:?subject=${encodeURIComponent('Decouvre Nexus SEO')}&body=${shareText}%20${encodeURIComponent(referralUrl)}`}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-surface-200 dark:border-surface-700 text-sm text-surface-700 dark:text-surface-300 hover:border-brand-400 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 text-sm text-white/70 hover:border-brand-400 transition-colors"
           >
             <Mail className="w-4 h-4" /> Email
           </a>
@@ -93,8 +93,8 @@ export default function ReferralPage() {
       </div>
 
       {/* How it works */}
-      <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
-        <h3 className="font-bold text-surface-900 dark:text-white mb-4">Comment ca marche</h3>
+      <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
+        <h3 className="font-bold text-white mb-4">Comment ca marche</h3>
         <div className="space-y-4">
           {[
             { step: '1', title: 'Partagez votre lien', desc: 'Envoyez votre lien de parrainage a vos contacts, clients ou sur les reseaux sociaux.' },
@@ -106,7 +106,7 @@ export default function ReferralPage() {
                 {item.step}
               </div>
               <div>
-                <p className="font-semibold text-sm text-surface-900 dark:text-white">{item.title}</p>
+                <p className="font-semibold text-sm text-white">{item.title}</p>
                 <p className="text-xs text-surface-500 mt-0.5">{item.desc}</p>
               </div>
             </div>
@@ -115,10 +115,10 @@ export default function ReferralPage() {
       </div>
 
       {/* Widget embed */}
-      <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6">
-        <h3 className="font-bold text-surface-900 dark:text-white mb-4">Badge SEO pour votre site</h3>
+      <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6">
+        <h3 className="font-bold text-white mb-4">Badge SEO pour votre site</h3>
         <p className="text-sm text-surface-500 mb-3">Affichez votre score SEO sur votre site et generez des backlinks vers Nexus.</p>
-        <div className="bg-surface-50 dark:bg-surface-800 rounded-lg p-3 font-mono text-xs text-surface-600 dark:text-surface-400 overflow-x-auto">
+        <div className="bg-white/[0.02] rounded-lg p-3 font-mono text-xs text-surface-600 dark:text-surface-400 overflow-x-auto">
           {`<a href="${baseUrl}"><img src="${baseUrl}/api/widget?domain=VOTRE-DOMAINE.FR" alt="Score SEO par Nexus"></a>`}
         </div>
       </div>

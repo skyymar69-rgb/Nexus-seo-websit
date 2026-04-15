@@ -153,14 +153,14 @@ function renderReport(text: string) {
     // Bullet points
     if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
       return (
-        <li key={i} className="ml-4 list-disc text-sm text-surface-700 dark:text-surface-300 leading-relaxed">
+        <li key={i} className="ml-4 list-disc text-sm text-white/70 leading-relaxed">
           {renderInlineMarkdown(trimmed.slice(2))}
         </li>
       )
     }
 
     return (
-      <p key={i} className="text-sm text-surface-700 dark:text-surface-300 leading-relaxed">
+      <p key={i} className="text-sm text-white/70 leading-relaxed">
         {renderInlineMarkdown(trimmed)}
       </p>
     )
@@ -172,7 +172,7 @@ function renderInlineMarkdown(text: string) {
   const parts = text.split(/(\*\*[^*]+\*\*)/)
   return parts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) {
-      return <strong key={i} className="font-semibold text-surface-900 dark:text-surface-100">{part.slice(2, -2)}</strong>
+      return <strong key={i} className="font-semibold text-white">{part.slice(2, -2)}</strong>
     }
     return <span key={i}>{part}</span>
   })
@@ -311,7 +311,7 @@ function ExpandableDetailedCheck({ check }: { check: DetailedCheck }) {
     : ''
 
   return (
-    <div className="border border-surface-200 dark:border-surface-700 rounded-lg bg-white dark:bg-surface-800 overflow-hidden print:break-inside-avoid relative">
+    <div className="border border-white/5 rounded-lg bg-white/[0.03] overflow-hidden print:break-inside-avoid relative">
       {/* Header row — always visible */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
@@ -321,8 +321,8 @@ function ExpandableDetailedCheck({ check }: { check: DetailedCheck }) {
       >
         {statusIcon(check.status)}
         <div className="flex-1 min-w-0">
-          <span className="text-sm font-medium text-surface-900 dark:text-surface-100">{check.name}</span>
-          <span className="text-sm text-surface-500 dark:text-surface-400 ml-2 hidden sm:inline">
+          <span className="text-sm font-medium text-white">{check.name}</span>
+          <span className="text-sm text-white/50 ml-2 hidden sm:inline">
             --- {check.summary}
           </span>
         </div>
@@ -343,7 +343,7 @@ function ExpandableDetailedCheck({ check }: { check: DetailedCheck }) {
 
       {/* Summary on mobile */}
       <div className="px-4 pb-2 sm:hidden">
-        <p className="text-xs text-surface-500 dark:text-surface-400">{check.summary}</p>
+        <p className="text-xs text-white/50">{check.summary}</p>
       </div>
 
       {/* Expanded panel */}
@@ -357,12 +357,12 @@ function ExpandableDetailedCheck({ check }: { check: DetailedCheck }) {
           {/* Best practices */}
           {check.bestPractices.length > 0 && (
             <div>
-              <h5 className="text-xs font-bold uppercase tracking-wider text-surface-500 dark:text-surface-400 mb-2">
+              <h5 className="text-xs font-bold uppercase tracking-wider text-white/50 mb-2">
                 Bonnes pratiques 2026
               </h5>
               <ul className="space-y-1">
                 {check.bestPractices.map((bp, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-surface-700 dark:text-surface-300">
+                  <li key={i} className="flex items-start gap-2 text-sm text-white/70">
                     <ChevronRight className="h-4 w-4 text-brand-500 flex-shrink-0 mt-0.5" />
                     {bp}
                   </li>
@@ -374,7 +374,7 @@ function ExpandableDetailedCheck({ check }: { check: DetailedCheck }) {
           {/* Sources */}
           {check.sources.length > 0 && (
             <div>
-              <h5 className="text-xs font-bold uppercase tracking-wider text-surface-500 dark:text-surface-400 mb-2">
+              <h5 className="text-xs font-bold uppercase tracking-wider text-white/50 mb-2">
                 Sources
               </h5>
               <div className="flex flex-wrap gap-2">
@@ -418,7 +418,7 @@ function ScoreGauge({ score, size = 180 }: { score: number; size?: number }) {
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-4xl font-extrabold" style={{ color }}>{score}</span>
-        <span className="text-xs text-surface-500 dark:text-surface-400">/100</span>
+        <span className="text-xs text-white/50">/100</span>
         <span className="mt-1 px-2 py-0.5 text-xs font-bold rounded-full bg-surface-100 dark:bg-surface-700 text-surface-600 dark:text-surface-300">
           Grade {grade}
         </span>
@@ -677,16 +677,16 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
           <div>
             <h1 className="text-2xl font-bold text-surface-950 dark:text-surface-50">Audit SEO</h1>
             {result && (
-              <p className="text-sm text-surface-500 dark:text-surface-400">{result.url}</p>
+              <p className="text-sm text-white/50">{result.url}</p>
             )}
           </div>
         </div>
       </div>
 
       {/* ── URL Input Form ──────────────────────────────────── */}
-      <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 space-y-4 print:hidden">
+      <div className="rounded-lg border border-white/5 bg-white/[0.03] p-6 space-y-4 print:hidden">
         <div>
-          <label className="block text-sm font-semibold text-surface-900 dark:text-surface-100 mb-3">
+          <label className="block text-sm font-semibold text-white mb-3">
             Entrez l&apos;URL de votre site
           </label>
           <UrlInput
@@ -700,26 +700,26 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-surface-600 dark:text-surface-400 mb-2">Profondeur d&apos;audit</label>
-            <select value={depth} onChange={(e) => setDepth(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 text-surface-900 dark:text-surface-50 text-sm outline-none">
+            <label className="block text-xs font-semibold text-white/50 mb-2">Profondeur d&apos;audit</label>
+            <select value={depth} onChange={(e) => setDepth(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-white/5 bg-white/[0.02] text-white text-sm outline-none">
               <option value="100">100 pages</option>
               <option value="500">500 pages</option>
               <option value="1000">1000 pages</option>
             </select>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-surface-600 dark:text-surface-400 mb-2">Mode de crawl</label>
+            <label className="block text-xs font-semibold text-white/50 mb-2">Mode de crawl</label>
             <div className="flex gap-2">
               {['rapide', 'complet'].map((m) => (
-                <button key={m} onClick={() => setMode(m)} className={cn('flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors', mode === m ? 'bg-brand-500 text-white' : 'bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300')}>
+                <button key={m} onClick={() => setMode(m)} className={cn('flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors', mode === m ? 'bg-brand-500 text-white' : 'bg-white/[0.03] text-white/70')}>
                   {m.charAt(0).toUpperCase() + m.slice(1)}
                 </button>
               ))}
             </div>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-surface-600 dark:text-surface-400 mb-2">User-Agent</label>
-            <select value={userAgent} onChange={(e) => setUserAgent(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 text-surface-900 dark:text-surface-50 text-sm outline-none">
+            <label className="block text-xs font-semibold text-white/50 mb-2">User-Agent</label>
+            <select value={userAgent} onChange={(e) => setUserAgent(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-white/5 bg-white/[0.02] text-white text-sm outline-none">
               <option value="googlebot">Googlebot (Desktop)</option>
               <option value="mobile">Googlebot (Mobile)</option>
               <option value="firefox">Firefox (Desktop)</option>
@@ -746,14 +746,14 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
 
       {/* ── Loading ─────────────────────────────────────────── */}
       {isAnalyzing && (
-        <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-12 print:hidden">
+        <div className="rounded-lg border border-white/5 bg-white/[0.03] p-12 print:hidden">
           <div className="flex flex-col items-center justify-center gap-4">
             <div className="relative">
-              <div className="w-20 h-20 rounded-full border-4 border-surface-200 dark:border-surface-700" />
+              <div className="w-20 h-20 rounded-full border-4 border-white/5" />
               <div className="absolute inset-0 w-20 h-20 rounded-full border-4 border-brand-500 border-t-transparent animate-spin" />
             </div>
             <div className="text-center">
-              <p className="text-lg font-semibold text-surface-900 dark:text-surface-50">Analyse en cours...</p>
+              <p className="text-lg font-semibold text-white">Analyse en cours...</p>
               <p className="text-sm text-surface-500 mt-1">Nous analysons {url} en profondeur</p>
             </div>
           </div>
@@ -764,24 +764,24 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
       {result && !isAnalyzing && (
         <>
           {/* Export bar */}
-          <div className="flex flex-wrap items-center gap-2 rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 px-4 py-3 print:hidden">
-            <span className="text-sm font-semibold text-surface-700 dark:text-surface-300 mr-2">Exporter :</span>
-            <button onClick={handleExportPDF} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 text-surface-700 dark:text-surface-300 transition-colors">
+          <div className="flex flex-wrap items-center gap-2 rounded-lg border border-white/5 bg-white/[0.03] px-4 py-3 print:hidden">
+            <span className="text-sm font-semibold text-white/70 mr-2">Exporter :</span>
+            <button onClick={handleExportPDF} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-white/5 hover:bg-white/[0.03] text-white/70 transition-colors">
               <Printer className="h-3.5 w-3.5" /> PDF
             </button>
-            <button onClick={handleExportJSON} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 text-surface-700 dark:text-surface-300 transition-colors">
+            <button onClick={handleExportJSON} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-white/5 hover:bg-white/[0.03] text-white/70 transition-colors">
               <FileJson className="h-3.5 w-3.5" /> JSON
             </button>
-            <button onClick={handleExportMD} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 text-surface-700 dark:text-surface-300 transition-colors">
+            <button onClick={handleExportMD} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-white/5 hover:bg-white/[0.03] text-white/70 transition-colors">
               <FileDown className="h-3.5 w-3.5" /> Markdown
             </button>
-            <button onClick={handleExportTXT} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 text-surface-700 dark:text-surface-300 transition-colors">
+            <button onClick={handleExportTXT} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-white/5 hover:bg-white/[0.03] text-white/70 transition-colors">
               <Download className="h-3.5 w-3.5" /> TXT
             </button>
-            <button onClick={handleExportCSV} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 text-surface-700 dark:text-surface-300 transition-colors">
+            <button onClick={handleExportCSV} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-white/5 hover:bg-white/[0.03] text-white/70 transition-colors">
               <ArrowUpDown className="h-3.5 w-3.5" /> CSV
             </button>
-            <button onClick={handleExportHTML} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-surface-200 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-800 text-surface-700 dark:text-surface-300 transition-colors">
+            <button onClick={handleExportHTML} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-white/5 hover:bg-white/[0.03] text-white/70 transition-colors">
               <Globe className="h-3.5 w-3.5" /> HTML
             </button>
           </div>
@@ -789,7 +789,7 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
           {/* Score + Summary + Radar */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Score gauge */}
-            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 flex flex-col items-center justify-center print:items-start">
+            <div className="rounded-lg border border-white/5 bg-white/[0.03] p-6 flex flex-col items-center justify-center print:items-start">
               <ScoreGauge score={result.score} />
               <div className="mt-4 grid grid-cols-3 gap-3 w-full">
                 <div className="text-center rounded-lg bg-green-50 dark:bg-green-950/30 p-2">
@@ -808,8 +808,8 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
             </div>
 
             {/* Category scores list */}
-            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6">
-              <h2 className="text-sm font-bold text-surface-900 dark:text-surface-50 mb-4 uppercase tracking-wider">Scores par categorie</h2>
+            <div className="rounded-lg border border-white/5 bg-white/[0.03] p-6">
+              <h2 className="text-sm font-bold text-white mb-4 uppercase tracking-wider">Scores par categorie</h2>
               <div className="space-y-3">
                 {CATEGORY_ORDER.filter(cat => categoryCounts[cat]).map(cat => {
                   const cfg = categoryConfig[cat]
@@ -821,7 +821,7 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
                       <div className="flex items-center justify-between mb-1">
                         <div className="flex items-center gap-2">
                           <CatIcon className={cn('h-4 w-4', cfg.color)} />
-                          <span className="text-xs font-medium text-surface-700 dark:text-surface-300">{cfg.label}</span>
+                          <span className="text-xs font-medium text-white/70">{cfg.label}</span>
                         </div>
                         <span className={cn('text-sm font-bold', getScoreColor(avgScore))}>{avgScore}</span>
                       </div>
@@ -838,8 +838,8 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
             </div>
 
             {/* Radar chart */}
-            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 print:hidden">
-              <h2 className="text-sm font-bold text-surface-900 dark:text-surface-50 mb-4 uppercase tracking-wider">Radar</h2>
+            <div className="rounded-lg border border-white/5 bg-white/[0.03] p-6 print:hidden">
+              <h2 className="text-sm font-bold text-white mb-4 uppercase tracking-wider">Radar</h2>
               <div className="h-56">
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart data={radarData}>
@@ -862,7 +862,7 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
                   'px-3 py-1.5 text-xs font-medium rounded-lg transition-colors',
                   activeCategory === 'all'
                     ? 'bg-brand-500 text-white'
-                    : 'bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400 hover:bg-surface-200 dark:hover:bg-surface-700'
+                    : 'bg-white/[0.03] text-white/50 hover:bg-surface-200 dark:hover:bg-surface-700'
                 )}
               >
                 Tous ({detailedChecks.length})
@@ -878,7 +878,7 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
                       'px-3 py-1.5 text-xs font-medium rounded-lg transition-colors',
                       activeCategory === cat
                         ? 'bg-brand-500 text-white'
-                        : 'bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400 hover:bg-surface-200 dark:hover:bg-surface-700'
+                        : 'bg-white/[0.03] text-white/50 hover:bg-surface-200 dark:hover:bg-surface-700'
                     )}
                   >
                     {cfg.label} ({count})
@@ -892,7 +892,7 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
                 'inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors',
                 sortByImpact
                   ? 'bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300'
-                  : 'bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400 hover:bg-surface-200 dark:hover:bg-surface-700'
+                  : 'bg-white/[0.03] text-white/50 hover:bg-surface-200 dark:hover:bg-surface-700'
               )}
             >
               <ArrowUpDown className="h-3.5 w-3.5" />
@@ -918,10 +918,10 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
                     {/* Category header */}
                     <div className={cn('flex items-center gap-3 px-4 py-3 rounded-t-lg border border-b-0', cfg.bgColor, cfg.borderColor)}>
                       <CatIcon className={cn('h-5 w-5', cfg.color)} />
-                      <h3 className="text-sm font-bold text-surface-900 dark:text-surface-100">{cfg.label}</h3>
+                      <h3 className="text-sm font-bold text-white">{cfg.label}</h3>
                       <span className={cn('ml-auto text-sm font-bold', getScoreColor(avgScore))}>{avgScore}/100</span>
                     </div>
-                    <div className="space-y-0 border-x border-b border-surface-200 dark:border-surface-700 rounded-b-lg overflow-hidden">
+                    <div className="space-y-0 border-x border-b border-white/5 rounded-b-lg overflow-hidden">
                       {catChecks.map(check => (
                         <ExpandableDetailedCheck key={check.id} check={check} />
                       ))}
@@ -937,10 +937,10 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
                     <ExpandableDetailedCheck key={check.id} check={check} />
                   ))
                 ) : (
-                  <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-800 p-8 text-center">
+                  <div className="rounded-lg border border-white/5 bg-white/[0.03] p-8 text-center">
                     <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-                    <p className="text-lg font-semibold text-surface-900 dark:text-surface-50">Aucun probleme detecte</p>
-                    <p className="text-sm text-surface-600 dark:text-surface-400 mt-2">Votre site respecte toutes les bonnes pratiques pour cette categorie.</p>
+                    <p className="text-lg font-semibold text-white">Aucun probleme detecte</p>
+                    <p className="text-sm text-white/50 mt-2">Votre site respecte toutes les bonnes pratiques pour cette categorie.</p>
                   </div>
                 )}
               </div>
@@ -948,26 +948,26 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
           </div>
 
           {/* ── Technical Summary ────────────────────────────── */}
-          <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6">
-            <h3 className="text-sm font-bold text-surface-900 dark:text-surface-50 mb-4 uppercase tracking-wider">Resume technique</h3>
+          <div className="rounded-lg border border-white/5 bg-white/[0.03] p-6">
+            <h3 className="text-sm font-bold text-white mb-4 uppercase tracking-wider">Resume technique</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div className="rounded-lg bg-surface-50 dark:bg-surface-800 p-3">
+              <div className="rounded-lg bg-white/[0.02] p-3">
                 <p className="text-xs text-surface-500 mb-1">HTTPS</p>
                 <p className={cn('text-lg font-bold', result.url.startsWith('https') ? 'text-green-600' : 'text-red-500')}>
                   {result.url.startsWith('https') ? 'Actif' : 'Inactif'}
                 </p>
               </div>
-              <div className="rounded-lg bg-surface-50 dark:bg-surface-800 p-3">
+              <div className="rounded-lg bg-white/[0.02] p-3">
                 <p className="text-xs text-surface-500 mb-1">Temps de reponse</p>
-                <p className="text-lg font-bold text-surface-900 dark:text-surface-50">{result.loadTime}ms</p>
+                <p className="text-lg font-bold text-white">{result.loadTime}ms</p>
               </div>
-              <div className="rounded-lg bg-surface-50 dark:bg-surface-800 p-3">
+              <div className="rounded-lg bg-white/[0.02] p-3">
                 <p className="text-xs text-surface-500 mb-1">Taille HTML</p>
-                <p className="text-lg font-bold text-surface-900 dark:text-surface-50">{(result.htmlSize / 1024).toFixed(1)} KB</p>
+                <p className="text-lg font-bold text-white">{(result.htmlSize / 1024).toFixed(1)} KB</p>
               </div>
-              <div className="rounded-lg bg-surface-50 dark:bg-surface-800 p-3">
+              <div className="rounded-lg bg-white/[0.02] p-3">
                 <p className="text-xs text-surface-500 mb-1">Verifications</p>
-                <p className="text-lg font-bold text-surface-900 dark:text-surface-50">
+                <p className="text-lg font-bold text-white">
                   {summary.totalChecks}
                   <span className="text-xs font-normal text-surface-500 ml-1">({summary.passed} OK)</span>
                 </p>
@@ -977,17 +977,17 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
 
           {/* ── Meta & Content panels ────────────────────────── */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6">
-              <h3 className="text-sm font-bold text-surface-900 dark:text-surface-50 mb-4 uppercase tracking-wider">Balises Meta</h3>
+            <div className="rounded-lg border border-white/5 bg-white/[0.03] p-6">
+              <h3 className="text-sm font-bold text-white mb-4 uppercase tracking-wider">Balises Meta</h3>
               <div className="space-y-3">
                 {[
                   { label: 'Title', value: result.meta.title, warn: 'Manquant' },
                   { label: 'Description', value: result.meta.description, warn: 'Manquante' },
                   { label: 'Canonical', value: result.meta.canonical, warn: 'Non defini' },
                 ].map(({ label, value, warn }) => (
-                  <div key={label} className="rounded-lg bg-surface-50 dark:bg-surface-800 p-3">
+                  <div key={label} className="rounded-lg bg-white/[0.02] p-3">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-surface-400 mb-1">{label}</p>
-                    <p className="text-sm text-surface-900 dark:text-surface-50 break-all">
+                    <p className="text-sm text-white break-all">
                       {value || <span className="text-red-500 italic">{warn}</span>}
                     </p>
                     {value && <p className="text-[10px] text-surface-400 mt-1">{value.length} caracteres</p>}
@@ -996,8 +996,8 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
               </div>
             </div>
 
-            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6">
-              <h3 className="text-sm font-bold text-surface-900 dark:text-surface-50 mb-4 uppercase tracking-wider">Analyse du contenu</h3>
+            <div className="rounded-lg border border-white/5 bg-white/[0.03] p-6">
+              <h3 className="text-sm font-bold text-white mb-4 uppercase tracking-wider">Analyse du contenu</h3>
               <div className="grid grid-cols-2 gap-3">
                 {[
                   { label: 'Mots', value: formatNumber(result.content.wordCount) },
@@ -1007,9 +1007,9 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
                   { label: 'Images', value: result.content.imageCount, sub: result.content.imageCount - result.content.imagesWithAlt > 0 ? `${result.content.imageCount - result.content.imagesWithAlt} sans alt` : undefined },
                   { label: 'Liens', value: result.content.internalLinks + result.content.externalLinks, sub: `${result.content.internalLinks} int. / ${result.content.externalLinks} ext.` },
                 ].map(({ label, value, color, sub }) => (
-                  <div key={label} className="rounded-lg bg-surface-50 dark:bg-surface-800 p-3">
+                  <div key={label} className="rounded-lg bg-white/[0.02] p-3">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-surface-400 mb-1">{label}</p>
-                    <p className={cn('text-xl font-bold', color || 'text-surface-900 dark:text-surface-50')}>{value}</p>
+                    <p className={cn('text-xl font-bold', color || 'text-white')}>{value}</p>
                     {sub && <p className="text-[10px] text-surface-400 mt-1">{sub}</p>}
                   </div>
                 ))}
@@ -1056,8 +1056,8 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
             <div className="p-4 rounded-full bg-brand-50 dark:bg-brand-950/30 mb-4">
               <Search className="h-8 w-8 text-brand-500" />
             </div>
-            <h3 className="text-xl font-bold text-surface-900 dark:text-surface-50 mb-2">Lancez votre premier audit</h3>
-            <p className="text-surface-500 dark:text-surface-400 max-w-md">
+            <h3 className="text-xl font-bold text-white mb-2">Lancez votre premier audit</h3>
+            <p className="text-white/50 max-w-md">
               Entrez l&apos;URL de votre site ci-dessus pour obtenir une analyse SEO complete avec des recommandations personnalisees.
             </p>
           </div>
@@ -1088,8 +1088,8 @@ function AuditHistory({ websiteId }: { websiteId: string }) {
   if (loadingH || audits.length === 0) return null
 
   return (
-    <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6 print:hidden">
-      <h3 className="text-sm font-bold text-surface-900 dark:text-surface-50 mb-4 uppercase tracking-wider flex items-center gap-2">
+    <div className="rounded-lg border border-white/5 bg-white/[0.03] p-6 print:hidden">
+      <h3 className="text-sm font-bold text-white mb-4 uppercase tracking-wider flex items-center gap-2">
         <ChevronRight className="w-4 h-4" /> Historique des audits ({audits.length})
       </h3>
       <div className="space-y-2">
@@ -1097,11 +1097,11 @@ function AuditHistory({ websiteId }: { websiteId: string }) {
           const date = new Date(audit.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
           const scoreColor = audit.score >= 80 ? 'text-green-600' : audit.score >= 60 ? 'text-amber-500' : 'text-red-500'
           return (
-            <div key={audit.id} className="flex items-center justify-between px-4 py-3 rounded-lg bg-surface-50 dark:bg-surface-800">
+            <div key={audit.id} className="flex items-center justify-between px-4 py-3 rounded-lg bg-white/[0.02]">
               <div className="flex items-center gap-3 min-w-0">
                 <span className={cn('text-lg font-black tabular-nums w-10', scoreColor)}>{audit.score}</span>
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-surface-900 dark:text-white truncate">{audit.url}</p>
+                  <p className="text-sm font-medium text-white truncate">{audit.url}</p>
                   <p className="text-xs text-surface-500">{date}</p>
                 </div>
               </div>

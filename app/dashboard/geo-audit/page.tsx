@@ -110,10 +110,10 @@ function ExpandableCheck({ check }: { check: GeoCheck }) {
           <Icon className={cn('h-5 w-5', cfg.color)} />
         </div>
         <div className="flex-1 min-w-0">
-          <h4 className="font-semibold text-surface-900 dark:text-surface-50 group-hover:underline">
+          <h4 className="font-semibold text-white group-hover:underline">
             {check.name}
           </h4>
-          <p className="text-sm text-surface-600 dark:text-surface-400 mt-1">{check.value}</p>
+          <p className="text-sm text-white/50 mt-1">{check.value}</p>
         </div>
         <button className="flex-shrink-0 p-2 hover:bg-surface-200/50 dark:hover:bg-surface-700/50 rounded-lg transition-colors">
           <ChevronDown className={cn('h-4 w-4 text-surface-400 transition-transform', isExpanded && 'rotate-180')} />
@@ -121,9 +121,9 @@ function ExpandableCheck({ check }: { check: GeoCheck }) {
       </div>
       {isExpanded && (
         <div className="mt-4 pt-4 border-t border-current border-opacity-10">
-          <div className="bg-white dark:bg-surface-800/50 rounded-lg p-4">
-            <h5 className="font-semibold text-surface-900 dark:text-surface-50 text-sm mb-2">Recommandation</h5>
-            <p className="text-sm text-surface-600 dark:text-surface-400 leading-relaxed">{check.recommendation}</p>
+          <div className="bg-white/[0.03]/50 rounded-lg p-4">
+            <h5 className="font-semibold text-white text-sm mb-2">Recommandation</h5>
+            <p className="text-sm text-white/50 leading-relaxed">{check.recommendation}</p>
           </div>
         </div>
       )}
@@ -146,7 +146,7 @@ function CategoryCard({
   const errors = category.checks.filter(c => c.status === 'error').length
 
   return (
-    <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 overflow-hidden">
+    <div className="rounded-lg border border-white/5 bg-white/[0.02] overflow-hidden">
       {/* Header */}
       <div
         className="p-5 cursor-pointer group"
@@ -156,7 +156,7 @@ function CategoryCard({
           <div className={cn('p-2 rounded-lg', cfg.bgColor)}>
             <Icon className={cn('h-5 w-5', cfg.color)} />
           </div>
-          <h3 className="font-semibold text-surface-900 dark:text-surface-50 group-hover:underline">
+          <h3 className="font-semibold text-white group-hover:underline">
             {cfg.label}
           </h3>
           <div className="ml-auto flex items-center gap-2">
@@ -188,7 +188,7 @@ function CategoryCard({
 
       {/* Expanded checks */}
       {isExpanded && (
-        <div className="px-5 pb-5 space-y-3 border-t border-surface-200 dark:border-surface-800 pt-4">
+        <div className="px-5 pb-5 space-y-3 border-t border-white/5 pt-4">
           {category.checks.map((check, idx) => (
             <ExpandableCheck key={idx} check={check} />
           ))}
@@ -313,16 +313,16 @@ export default function GeoAuditPage() {
     <div className="space-y-6">
       {/* Page header */}
       <div>
-        <h1 className="text-2xl font-display font-bold text-surface-900 dark:text-surface-50">
+        <h1 className="text-2xl font-display font-bold text-white">
           Audit GEO
         </h1>
-        <p className="text-surface-600 dark:text-surface-400 mt-1">
+        <p className="text-white/50 mt-1">
           Evaluez la compatibilite de votre site avec les moteurs de recherche generatifs (SGE, Perplexity, ChatGPT Search)
         </p>
       </div>
 
       {/* URL input form */}
-      <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6">
+      <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6">
         <UrlInput
           value={url}
           onChange={setUrl}
@@ -342,14 +342,14 @@ export default function GeoAuditPage() {
 
       {/* Loading state */}
       {isAnalyzing && (
-        <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-12">
+        <div className="rounded-lg border border-white/5 bg-white/[0.02] p-12">
           <div className="flex flex-col items-center justify-center gap-4">
             <div className="relative">
-              <div className="w-20 h-20 rounded-full border-4 border-surface-200 dark:border-surface-700" />
+              <div className="w-20 h-20 rounded-full border-4 border-white/5" />
               <div className="absolute inset-0 w-20 h-20 rounded-full border-4 border-brand-500 border-t-transparent animate-spin" />
             </div>
             <div className="text-center">
-              <p className="text-lg font-semibold text-surface-900 dark:text-surface-50">Analyse GEO en cours...</p>
+              <p className="text-lg font-semibold text-white">Analyse GEO en cours...</p>
               <p className="text-sm text-surface-500 mt-1">Nous evaluons {url} pour les moteurs generatifs</p>
             </div>
           </div>
@@ -358,13 +358,13 @@ export default function GeoAuditPage() {
 
       {/* Empty state */}
       {!result && !isAnalyzing && !error && (
-        <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-12">
+        <div className="rounded-lg border border-white/5 bg-white/[0.02] p-12">
           <div className="flex flex-col items-center justify-center gap-4 text-center">
             <div className="w-16 h-16 rounded-full bg-brand-100 dark:bg-brand-900/30 flex items-center justify-center">
               <Globe className="h-8 w-8 text-brand-600 dark:text-brand-400" />
             </div>
             <div>
-              <p className="text-lg font-semibold text-surface-900 dark:text-surface-50">Pret pour l&apos;analyse GEO</p>
+              <p className="text-lg font-semibold text-white">Pret pour l&apos;analyse GEO</p>
               <p className="text-sm text-surface-500 mt-1 max-w-md">
                 Entrez l&apos;URL de votre site pour evaluer sa compatibilite avec les moteurs de recherche generatifs et obtenir des recommandations personnalisees.
               </p>
@@ -377,7 +377,7 @@ export default function GeoAuditPage() {
       {result && !isAnalyzing && (
         <>
           {/* Score + Grade header */}
-          <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-8">
+          <div className="rounded-lg border border-white/5 bg-white/[0.02] p-8">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
               {/* Circular gauge */}
               <div className="flex justify-center">
@@ -415,7 +415,7 @@ export default function GeoAuditPage() {
               {/* Grade badge + info */}
               <div className="col-span-2 space-y-4">
                 <div className="flex items-center gap-4">
-                  <h2 className="text-xl font-bold text-surface-900 dark:text-surface-50">
+                  <h2 className="text-xl font-bold text-white">
                     Score GEO Global
                   </h2>
                   {gradeColor && (
@@ -424,8 +424,8 @@ export default function GeoAuditPage() {
                     </span>
                   )}
                 </div>
-                <p className="text-surface-600 dark:text-surface-400 text-sm">
-                  Analyse de <span className="font-medium text-surface-900 dark:text-surface-50">{result.url}</span>
+                <p className="text-white/50 text-sm">
+                  Analyse de <span className="font-medium text-white">{result.url}</span>
                 </p>
 
                 {/* Quick stats grid */}
@@ -434,9 +434,9 @@ export default function GeoAuditPage() {
                     const cfg = categoryConfig[key]
                     const cat = result.categories[key]
                     return (
-                      <div key={key} className="rounded-lg bg-white dark:bg-surface-800 p-3 text-center">
+                      <div key={key} className="rounded-lg bg-white/[0.03] p-3 text-center">
                         <p className={cn('text-xl font-bold', getScoreColor(cat.score))}>{cat.score}</p>
-                        <p className="text-xs text-surface-600 dark:text-surface-400 mt-1 truncate">{cfg.label}</p>
+                        <p className="text-xs text-white/50 mt-1 truncate">{cfg.label}</p>
                       </div>
                     )
                   })}
@@ -447,7 +447,7 @@ export default function GeoAuditPage() {
 
           {/* Category cards grid */}
           <div>
-            <h2 className="text-lg font-bold text-surface-900 dark:text-surface-50 mb-4">
+            <h2 className="text-lg font-bold text-white mb-4">
               Analyse par categorie
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -459,12 +459,12 @@ export default function GeoAuditPage() {
 
           {/* Recommendations */}
           {result.recommendations.length > 0 && (
-            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900 p-6">
+            <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 rounded-lg bg-brand-500/10">
                   <Lightbulb className="h-5 w-5 text-brand-500" />
                 </div>
-                <h2 className="text-lg font-bold text-surface-900 dark:text-surface-50">
+                <h2 className="text-lg font-bold text-white">
                   Recommandations prioritaires
                 </h2>
               </div>
@@ -472,12 +472,12 @@ export default function GeoAuditPage() {
                 {result.recommendations.map((rec, idx) => (
                   <div
                     key={idx}
-                    className="flex items-start gap-3 rounded-lg bg-white dark:bg-surface-800 p-4"
+                    className="flex items-start gap-3 rounded-lg bg-white/[0.03] p-4"
                   >
                     <span className="flex-shrink-0 w-7 h-7 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 flex items-center justify-center text-sm font-bold">
                       {idx + 1}
                     </span>
-                    <p className="text-sm text-surface-700 dark:text-surface-300 leading-relaxed">{rec}</p>
+                    <p className="text-sm text-white/70 leading-relaxed">{rec}</p>
                   </div>
                 ))}
               </div>
@@ -486,8 +486,8 @@ export default function GeoAuditPage() {
 
           {/* E-E-A-T Score (from GEO Engine) */}
           {result.eeat && (
-            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6">
-              <h2 className="text-lg font-bold text-surface-900 dark:text-white mb-4 flex items-center gap-2">
+            <div className="rounded-lg border border-white/5 bg-white/[0.03] p-6">
+              <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                 <ShieldCheck className="w-5 h-5 text-brand-500" /> Score E-E-A-T — {result.eeat.total}/100
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
@@ -497,7 +497,7 @@ export default function GeoAuditPage() {
                   { label: 'Autorite', score: result.eeat.authority.score },
                   { label: 'Confiance', score: result.eeat.trust.score },
                 ].map(item => (
-                  <div key={item.label} className="text-center p-3 rounded-lg bg-surface-50 dark:bg-surface-800">
+                  <div key={item.label} className="text-center p-3 rounded-lg bg-white/[0.02]">
                     <p className="text-xs text-surface-500 mb-1">{item.label}</p>
                     <p className={cn('text-2xl font-black', item.score >= 60 ? 'text-green-600' : item.score >= 40 ? 'text-amber-500' : 'text-red-500')}>
                       {item.score}
@@ -509,7 +509,7 @@ export default function GeoAuditPage() {
                 <div className="space-y-1 mt-3">
                   <p className="text-xs font-bold uppercase text-surface-500">Recommandations E-E-A-T</p>
                   {[...result.eeat.experience.recommendations, ...result.eeat.expertise.recommendations, ...result.eeat.authority.recommendations, ...result.eeat.trust.recommendations].slice(0, 5).map((rec: string, i: number) => (
-                    <p key={i} className="text-sm text-surface-700 dark:text-surface-300 flex items-start gap-2">
+                    <p key={i} className="text-sm text-white/70 flex items-start gap-2">
                       <AlertTriangle className="w-3.5 h-3.5 text-amber-500 mt-0.5 shrink-0" /> {rec}
                     </p>
                   ))}
@@ -520,8 +520,8 @@ export default function GeoAuditPage() {
 
           {/* Schema Validation (from GEO Engine) */}
           {result.schema && (
-            <div className="rounded-lg border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 p-6">
-              <h2 className="text-lg font-bold text-surface-900 dark:text-white mb-4 flex items-center gap-2">
+            <div className="rounded-lg border border-white/5 bg-white/[0.03] p-6">
+              <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                 <Database className="w-5 h-5 text-violet-500" /> Validation Schema — {result.schema.score}/100
               </h2>
               {result.schema.found.length > 0 && (
@@ -529,7 +529,7 @@ export default function GeoAuditPage() {
                   {result.schema.found.map((s: any, i: number) => (
                     <div key={i} className="flex items-center gap-2 text-sm">
                       {s.valid ? <CheckCircle className="w-4 h-4 text-green-500" /> : <AlertCircle className="w-4 h-4 text-amber-500" />}
-                      <span className="font-medium text-surface-900 dark:text-white">{s.type}</span>
+                      <span className="font-medium text-white">{s.type}</span>
                       {s.issues.length > 0 && <span className="text-xs text-amber-600">({s.issues.join(', ')})</span>}
                     </div>
                   ))}

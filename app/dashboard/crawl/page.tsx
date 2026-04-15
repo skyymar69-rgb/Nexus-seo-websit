@@ -191,22 +191,22 @@ export default function CrawlPage() {
   };
 
   return (
-    <div className="min-h-screen bg-surface-50 dark:bg-surface-900 p-6">
+    <div className="min-h-screen bg-white/[0.02] p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-surface-900 dark:text-surface-50 mb-2">
+          <h1 className="text-4xl font-bold text-white mb-2">
             Crawl & Analyse de Logs
           </h1>
-          <p className="text-surface-600 dark:text-surface-400">
+          <p className="text-white/50">
             Analysez votre site web et détectez les problèmes techniques
           </p>
         </div>
 
         {/* URL Input Section */}
-        <div className="border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-800 rounded-xl p-6">
+        <div className="border border-white/5 bg-white/[0.03] rounded-xl p-6">
           <div className="space-y-4">
-            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300">
+            <label className="block text-sm font-medium text-white/70">
               URL à crawler
             </label>
             <div className="flex gap-3 items-start">
@@ -223,7 +223,7 @@ export default function CrawlPage() {
                 value={maxPages}
                 onChange={(e) => setMaxPages(Number(e.target.value))}
                 disabled={loading}
-                className="h-[46px] rounded-lg border border-surface-200 dark:border-surface-600 bg-surface-50 dark:bg-surface-700 px-3 text-sm text-surface-900 dark:text-surface-50 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                className="h-[46px] rounded-lg border border-white/5 bg-white/[0.02] px-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
               >
                 <option value={5}>5 pages</option>
                 <option value={10}>10 pages</option>
@@ -232,9 +232,9 @@ export default function CrawlPage() {
               </select>
             </div>
             {error && (
-              <div className="flex items-start gap-3 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
-                <p className="font-medium text-red-900 dark:text-red-300">{error}</p>
+              <div className="flex items-start gap-3 p-4 bg-rose-500/10 border border-rose-500/20 rounded-lg">
+                <AlertTriangle className="w-5 h-5 text-rose-400 flex-shrink-0 mt-0.5" />
+                <p className="font-medium text-rose-400">{error}</p>
               </div>
             )}
           </div>
@@ -242,10 +242,10 @@ export default function CrawlPage() {
 
         {/* Loading State with SSE Progress */}
         {loading && (
-          <div className="border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 rounded-xl p-8 space-y-4">
+          <div className="border border-white/5 bg-white/[0.03] rounded-xl p-8 space-y-4">
             <div className="flex items-center gap-3">
               <Loader2 className="w-6 h-6 animate-spin text-brand-600" />
-              <p className="text-lg font-medium text-surface-900 dark:text-white">
+              <p className="text-lg font-medium text-white">
                 Crawl en cours...
               </p>
             </div>
@@ -253,14 +253,14 @@ export default function CrawlPage() {
             {progress && (
               <>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-surface-600 dark:text-surface-400">
+                  <span className="text-white/50">
                     {progress.pagesCrawled}/{progress.pagesFound} pages crawlees
                   </span>
                   <span className="text-brand-600 font-mono text-xs truncate max-w-xs">
                     {progress.currentUrl}
                   </span>
                 </div>
-                <div className="w-full bg-surface-200 dark:bg-surface-700 rounded-full h-2.5">
+                <div className="w-full bg-white/[0.03] rounded-full h-2.5">
                   <div
                     className="bg-gradient-to-r from-brand-500 to-cyan-500 h-2.5 rounded-full transition-all duration-300"
                     style={{ width: `${Math.min(100, (progress.pagesCrawled / Math.max(1, maxPages)) * 100)}%` }}
@@ -280,7 +280,7 @@ export default function CrawlPage() {
                     )}>
                       {p.statusCode}
                     </span>
-                    <span className="text-surface-600 dark:text-surface-400 truncate flex-1">{p.url}</span>
+                    <span className="text-white/50 truncate flex-1">{p.url}</span>
                     {p.issues.length > 0 && (
                       <span className="text-amber-500 text-[10px] font-medium">{p.issues.length} issues</span>
                     )}
@@ -297,19 +297,19 @@ export default function CrawlPage() {
             {/* Stats Grid */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
               {[
-                { icon: Globe, label: 'Pages crawlées', value: data.stats.totalPages, color: 'text-brand-600 dark:text-brand-400' },
-                { icon: Zap, label: 'Temps moyen', value: `${data.stats.avgResponseTime}ms`, color: 'text-accent-600 dark:text-accent-400' },
-                { icon: CheckCircle2, label: 'Codes 2xx', value: data.stats.statusCodes['2xx'] || 0, color: 'text-emerald-600 dark:text-emerald-400' },
-                { icon: TrendingUp, label: 'Redirections (3xx)', value: data.stats.statusCodes['3xx'] || 0, color: 'text-amber-600 dark:text-amber-400' },
-                { icon: AlertTriangle, label: 'Erreurs (4xx)', value: data.stats.statusCodes['4xx'] || 0, color: 'text-orange-600 dark:text-orange-400' },
-                { icon: Activity, label: 'Erreurs serveur (5xx)', value: data.stats.statusCodes['5xx'] || 0, color: 'text-red-600 dark:text-red-400' },
+                { icon: Globe, label: 'Pages crawlées', value: data.stats.totalPages, color: 'text-brand-400' },
+                { icon: Zap, label: 'Temps moyen', value: `${data.stats.avgResponseTime}ms`, color: 'text-accent-400' },
+                { icon: CheckCircle2, label: 'Codes 2xx', value: data.stats.statusCodes['2xx'] || 0, color: 'text-emerald-400' },
+                { icon: TrendingUp, label: 'Redirections (3xx)', value: data.stats.statusCodes['3xx'] || 0, color: 'text-amber-400' },
+                { icon: AlertTriangle, label: 'Erreurs (4xx)', value: data.stats.statusCodes['4xx'] || 0, color: 'text-orange-400' },
+                { icon: Activity, label: 'Erreurs serveur (5xx)', value: data.stats.statusCodes['5xx'] || 0, color: 'text-rose-400' },
               ].map((stat) => (
-                <div key={stat.label} className="border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-800 rounded-xl p-4">
+                <div key={stat.label} className="border border-white/5 bg-white/[0.03] rounded-xl p-4">
                   <div className="flex items-center gap-3">
                     <stat.icon className={cn('w-8 h-8', stat.color)} />
                     <div>
-                      <p className="text-xs text-surface-600 dark:text-surface-400">{stat.label}</p>
-                      <p className="text-xl font-bold text-surface-900 dark:text-surface-50">{stat.value}</p>
+                      <p className="text-xs text-white/50">{stat.label}</p>
+                      <p className="text-xl font-bold text-white">{stat.value}</p>
                     </div>
                   </div>
                 </div>
@@ -319,19 +319,19 @@ export default function CrawlPage() {
             {/* Status Code Distribution & Link Analysis */}
             <div className="grid lg:grid-cols-2 gap-6">
               {/* Status Codes */}
-              <div className="border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-800 rounded-xl p-6">
-                <h2 className="text-lg font-bold text-surface-900 dark:text-surface-50 mb-4 flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+              <div className="border border-white/5 bg-white/[0.03] rounded-xl p-6">
+                <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5 text-brand-400" />
                   Distribution des codes de statut
                 </h2>
                 <div className="space-y-3">
                   {Object.entries(data.stats.statusCodes).sort().map(([code, count]) => (
                     <div key={code} className="space-y-1">
                       <div className="flex justify-between text-sm">
-                        <span className="text-surface-600 dark:text-surface-400">{code}</span>
-                        <span className="font-medium text-surface-900 dark:text-surface-50">{count}</span>
+                        <span className="text-white/50">{code}</span>
+                        <span className="font-medium text-white">{count}</span>
                       </div>
-                      <div className="h-2 bg-surface-200 dark:bg-surface-700 rounded-full overflow-hidden">
+                      <div className="h-2 bg-white/[0.03] rounded-full overflow-hidden">
                         <div
                           className={cn('h-full transition-all rounded-full', getStatusBarColor(code))}
                           style={{ width: `${(count / data.stats.totalPages) * 100}%` }}
@@ -343,35 +343,35 @@ export default function CrawlPage() {
               </div>
 
               {/* Link & Image Analysis */}
-              <div className="border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-800 rounded-xl p-6">
-                <h2 className="text-lg font-bold text-surface-900 dark:text-surface-50 mb-4 flex items-center gap-2">
-                  <Link2 className="w-5 h-5 text-accent-600 dark:text-accent-400" />
+              <div className="border border-white/5 bg-white/[0.03] rounded-xl p-6">
+                <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                  <Link2 className="w-5 h-5 text-accent-400" />
                   Liens & Images
                 </h2>
                 <div className="space-y-4">
                   <div>
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm font-medium text-surface-700 dark:text-surface-300">Liens internes</span>
-                      <span className="text-lg font-bold text-brand-600 dark:text-brand-400">{data.stats.totalInternalLinks}</span>
+                      <span className="text-sm font-medium text-white/70">Liens internes</span>
+                      <span className="text-lg font-bold text-brand-400">{data.stats.totalInternalLinks}</span>
                     </div>
                     <div className="h-2 bg-brand-500 rounded-full" />
                   </div>
                   <div>
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm font-medium text-surface-700 dark:text-surface-300">Liens externes</span>
-                      <span className="text-lg font-bold text-accent-600 dark:text-accent-400">{data.stats.totalExternalLinks}</span>
+                      <span className="text-sm font-medium text-white/70">Liens externes</span>
+                      <span className="text-lg font-bold text-accent-400">{data.stats.totalExternalLinks}</span>
                     </div>
                     <div className="h-2 bg-accent-500 rounded-full" />
                   </div>
-                  <div className="pt-4 border-t border-surface-200 dark:border-surface-700 space-y-2">
+                  <div className="pt-4 border-t border-white/5 space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-surface-600 dark:text-surface-400 flex items-center gap-1">
+                      <span className="text-white/50 flex items-center gap-1">
                         <Image className="w-4 h-4" /> Total images
                       </span>
-                      <span className="font-bold text-surface-900 dark:text-surface-50">{data.stats.totalImages}</span>
+                      <span className="font-bold text-white">{data.stats.totalImages}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-surface-600 dark:text-surface-400">Images sans alt</span>
+                      <span className="text-white/50">Images sans alt</span>
                       <span className={cn('font-bold', data.stats.totalImagesWithoutAlt > 0 ? 'text-red-500' : 'text-emerald-500')}>
                         {data.stats.totalImagesWithoutAlt}
                       </span>
@@ -382,37 +382,37 @@ export default function CrawlPage() {
             </div>
 
             {/* Crawl Results Table */}
-            <div className="border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-800 rounded-xl p-6">
-              <h2 className="text-lg font-bold text-surface-900 dark:text-surface-50 mb-4 flex items-center gap-2">
-                <FileText className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+            <div className="border border-white/5 bg-white/[0.03] rounded-xl p-6">
+              <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <FileText className="w-5 h-5 text-brand-400" />
                 Résultats détaillés ({data.pages.length} pages)
               </h2>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-surface-200 dark:border-surface-700">
-                      <th className="text-left py-3 px-4 font-semibold text-surface-700 dark:text-surface-300">URL</th>
-                      <th className="text-left py-3 px-4 font-semibold text-surface-700 dark:text-surface-300">Code</th>
-                      <th className="text-left py-3 px-4 font-semibold text-surface-700 dark:text-surface-300">Titre</th>
-                      <th className="text-right py-3 px-4 font-semibold text-surface-700 dark:text-surface-300">Taille</th>
-                      <th className="text-right py-3 px-4 font-semibold text-surface-700 dark:text-surface-300">Temps</th>
-                      <th className="text-center py-3 px-4 font-semibold text-surface-700 dark:text-surface-300">H1</th>
-                      <th className="text-center py-3 px-4 font-semibold text-surface-700 dark:text-surface-300">Liens</th>
-                      <th className="text-left py-3 px-4 font-semibold text-surface-700 dark:text-surface-300">Problèmes</th>
+                    <tr className="border-b border-white/5">
+                      <th className="text-left py-3 px-4 font-semibold text-white/70">URL</th>
+                      <th className="text-left py-3 px-4 font-semibold text-white/70">Code</th>
+                      <th className="text-left py-3 px-4 font-semibold text-white/70">Titre</th>
+                      <th className="text-right py-3 px-4 font-semibold text-white/70">Taille</th>
+                      <th className="text-right py-3 px-4 font-semibold text-white/70">Temps</th>
+                      <th className="text-center py-3 px-4 font-semibold text-white/70">H1</th>
+                      <th className="text-center py-3 px-4 font-semibold text-white/70">Liens</th>
+                      <th className="text-left py-3 px-4 font-semibold text-white/70">Problèmes</th>
                     </tr>
                   </thead>
                   <tbody>
                     {data.pages.map((page, idx) => (
                       <tr
                         key={idx}
-                        className="border-b border-surface-100 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-700/50 transition-colors"
+                        className="border-b border-white/5 hover:bg-white/[0.03] transition-colors"
                       >
                         <td className="py-3 px-4">
                           <a
                             href={page.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 group text-brand-600 dark:text-brand-400 hover:underline"
+                            className="flex items-center gap-2 group text-brand-400 hover:underline"
                           >
                             <span className="truncate max-w-[200px]">{page.url.replace(/^https?:\/\//, '')}</span>
                             <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
@@ -423,18 +423,18 @@ export default function CrawlPage() {
                             {page.statusCode}
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-surface-700 dark:text-surface-300 max-w-[200px] truncate">
+                        <td className="py-3 px-4 text-white/70 max-w-[200px] truncate">
                           {page.title || <span className="text-red-500 italic">Manquant</span>}
                         </td>
-                        <td className="py-3 px-4 text-right text-surface-700 dark:text-surface-300">
+                        <td className="py-3 px-4 text-right text-white/70">
                           {formatNumber(page.contentLength)}
                         </td>
                         <td className="py-3 px-4 text-right">
                           <span className={cn(
                             'font-medium',
-                            page.responseTime < 500 ? 'text-emerald-600 dark:text-emerald-400' :
-                            page.responseTime < 1500 ? 'text-amber-600 dark:text-amber-400' :
-                            'text-red-600 dark:text-red-400'
+                            page.responseTime < 500 ? 'text-emerald-400' :
+                            page.responseTime < 1500 ? 'text-amber-400' :
+                            'text-rose-400'
                           )}>
                             {page.responseTime}ms
                           </span>
@@ -442,14 +442,14 @@ export default function CrawlPage() {
                         <td className="py-3 px-4 text-center">
                           <span className={cn(
                             'font-medium',
-                            page.h1Count === 1 ? 'text-emerald-600 dark:text-emerald-400' :
-                            page.h1Count === 0 ? 'text-red-600 dark:text-red-400' :
-                            'text-amber-600 dark:text-amber-400'
+                            page.h1Count === 1 ? 'text-emerald-400' :
+                            page.h1Count === 0 ? 'text-rose-400' :
+                            'text-amber-400'
                           )}>
                             {page.h1Count}
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-center text-surface-700 dark:text-surface-300">
+                        <td className="py-3 px-4 text-center text-white/70">
                           {page.internalLinks + page.externalLinks}
                         </td>
                         <td className="py-3 px-4">
@@ -458,7 +458,7 @@ export default function CrawlPage() {
                               {page.issues.map((issue, i) => (
                                 <span
                                   key={i}
-                                  className="inline-flex items-center gap-1 px-2 py-0.5 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 text-yellow-800 dark:text-yellow-300 rounded text-xs font-medium mr-1"
+                                  className="inline-flex items-center gap-1 px-2 py-0.5 bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 rounded text-xs font-medium mr-1"
                                 >
                                   <AlertTriangle className="w-3 h-3" />
                                   {issue}
@@ -466,7 +466,7 @@ export default function CrawlPage() {
                               ))}
                             </div>
                           ) : (
-                            <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-xs">
+                            <span className="inline-flex items-center gap-1 text-emerald-400 text-xs">
                               <CheckCircle2 className="w-3 h-3" /> OK
                             </span>
                           )}
@@ -482,12 +482,12 @@ export default function CrawlPage() {
 
         {/* Empty State */}
         {!data && !loading && !error && (
-          <div className="border border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-800 rounded-xl p-12 text-center">
-            <Globe className="w-16 h-16 text-surface-400 dark:text-surface-600 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-surface-900 dark:text-surface-50 mb-2">
+          <div className="border border-white/5 bg-white/[0.03] rounded-xl p-12 text-center">
+            <Globe className="w-16 h-16 text-white/30 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-white mb-2">
               Prêt à crawler
             </h3>
-            <p className="text-surface-500 dark:text-surface-400 max-w-md mx-auto">
+            <p className="text-white/50 max-w-md mx-auto">
               Entrez une URL ci-dessus pour lancer l'exploration de votre site. Le crawler analysera chaque page, les liens, les images et détectera les problèmes techniques.
             </p>
           </div>

@@ -68,7 +68,7 @@ export default function LinkBuyingPage() {
           <ShoppingCart className="h-6 w-6 text-white" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-surface-950 dark:text-surface-50">Opportunites de Liens</h1>
+          <h1 className="text-2xl font-bold text-white">Opportunites de Liens</h1>
           <p className="text-sm text-surface-500">Trouvez des opportunites de backlinks gratuits et de qualite</p>
         </div>
       </div>
@@ -92,7 +92,7 @@ export default function LinkBuyingPage() {
         ].map(stat => {
           const Icon = stat.icon
           return (
-            <div key={stat.label} className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-4">
+            <div key={stat.label} className="bg-white/[0.03] rounded-xl border border-white/5 p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs font-medium text-surface-500 uppercase tracking-wider">{stat.label}</span>
                 <Icon className={cn('w-4 h-4', stat.color)} />
@@ -104,19 +104,19 @@ export default function LinkBuyingPage() {
       </div>
 
       {/* Filters */}
-      <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-4 flex flex-col sm:flex-row gap-3">
-        <div className="flex items-center gap-2 flex-1 px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800">
+      <div className="bg-white/[0.03] rounded-xl border border-white/5 p-4 flex flex-col sm:flex-row gap-3">
+        <div className="flex items-center gap-2 flex-1 px-3 py-2 rounded-lg border border-white/5 bg-white/[0.02]">
           <Search className="w-4 h-4 text-surface-400" />
           <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Rechercher un domaine..." className="flex-1 bg-transparent outline-none text-sm" />
         </div>
-        <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} className="px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 text-sm">
+        <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} className="px-3 py-2 rounded-lg border border-white/5 bg-white/[0.02] text-sm">
           <option value="all">Tous les types</option>
           <option value="guest-post">Guest Post</option>
           <option value="editorial">Editorial</option>
           <option value="niche-edit">Niche Edit</option>
           <option value="directory">Annuaire</option>
         </select>
-        <select value={minDA} onChange={e => setMinDA(Number(e.target.value))} className="px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800 text-sm">
+        <select value={minDA} onChange={e => setMinDA(Number(e.target.value))} className="px-3 py-2 rounded-lg border border-white/5 bg-white/[0.02] text-sm">
           <option value={0}>DA minimum: 0+</option>
           <option value={30}>DA 30+</option>
           <option value={40}>DA 40+</option>
@@ -127,12 +127,12 @@ export default function LinkBuyingPage() {
       {/* Opportunities list */}
       <div className="space-y-3">
         {filtered.map(opp => (
-          <div key={opp.id} className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-5 hover:border-brand-300 dark:hover:border-brand-700 transition-all">
+          <div key={opp.id} className="bg-white/[0.03] rounded-xl border border-white/5 p-5 hover:border-brand-300 dark:hover:border-brand-700 transition-all">
             <div className="flex flex-col sm:flex-row sm:items-center gap-4">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <Globe className="w-4 h-4 text-surface-400" />
-                  <span className="font-bold text-surface-900 dark:text-white">{opp.domain}</span>
+                  <span className="font-bold text-white">{opp.domain}</span>
                   <span className={cn('px-2 py-0.5 text-[10px] font-bold rounded-full', typeColors[opp.type])}>
                     {typeLabels[opp.type]}
                   </span>

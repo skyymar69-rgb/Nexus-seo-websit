@@ -121,17 +121,17 @@ export default function PromptTesterPage() {
       </div>
 
       {/* Input */}
-      <div className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 p-6 space-y-4">
+      <div className="bg-white/[0.03] rounded-xl border border-white/5 p-6 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Votre marque / domaine</label>
+            <label className="block text-sm font-medium text-white/70 mb-1">Votre marque / domaine</label>
             <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800">
               <Globe className="w-4 h-4 text-surface-400" />
               <input type="text" value={brand} onChange={e => setBrand(e.target.value)} placeholder="kayzen" className="flex-1 bg-transparent outline-none text-sm" />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">LLMs a tester</label>
+            <label className="block text-sm font-medium text-white/70 mb-1">LLMs a tester</label>
             <div className="flex gap-2">
               {LLMS.map(llm => (
                 <button
@@ -153,7 +153,7 @@ export default function PromptTesterPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Prompt a tester</label>
+          <label className="block text-sm font-medium text-white/70 mb-1">Prompt a tester</label>
           <textarea
             value={prompt}
             onChange={e => setPrompt(e.target.value)}
@@ -169,7 +169,7 @@ export default function PromptTesterPage() {
             <button
               key={i}
               onClick={() => setPrompt(sp)}
-              className="px-3 py-1.5 text-xs rounded-full border border-surface-200 dark:border-surface-700 text-surface-600 dark:text-surface-400 hover:border-brand-400 hover:text-brand-600 transition-colors"
+              className="px-3 py-1.5 text-xs rounded-full border border-surface-200 dark:border-surface-700 text-white/50 hover:border-brand-400 hover:text-brand-600 transition-colors"
             >
               {sp}
             </button>
@@ -189,7 +189,7 @@ export default function PromptTesterPage() {
       {/* Results */}
       {results.length > 0 && (
         <div className="space-y-4">
-          <h2 className="text-lg font-bold text-surface-900 dark:text-white">Resultats</h2>
+          <h2 className="text-lg font-bold text-white">Resultats</h2>
 
           {/* Summary */}
           <div className="grid grid-cols-3 gap-4">
@@ -225,11 +225,11 @@ export default function PromptTesterPage() {
           {results.filter(r => !r.loading).map(r => {
             const llmInfo = LLMS.find(l => l.id === r.llm)
             return (
-              <div key={r.llm} className="bg-white dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-800 overflow-hidden">
+              <div key={r.llm} className="bg-white/[0.03] rounded-xl border border-white/5 overflow-hidden">
                 <div className="flex items-center justify-between px-4 py-3 border-b border-surface-100 dark:border-surface-800 bg-surface-50 dark:bg-surface-800/50">
                   <div className="flex items-center gap-2">
                     <span className={cn('w-2.5 h-2.5 rounded-full', llmInfo?.color)} />
-                    <span className="font-semibold text-sm text-surface-900 dark:text-white">{llmInfo?.name}</span>
+                    <span className="font-semibold text-sm text-white">{llmInfo?.name}</span>
                     {r.mentioned && <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400">MENTIONNE</span>}
                     {!r.mentioned && !r.error && <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400">ABSENT</span>}
                   </div>
@@ -245,7 +245,7 @@ export default function PromptTesterPage() {
                   {r.error ? (
                     <p className="text-sm text-red-500">{r.error}</p>
                   ) : (
-                    <p className="text-sm text-surface-700 dark:text-surface-300 leading-relaxed whitespace-pre-wrap">
+                    <p className="text-sm text-white/70 leading-relaxed whitespace-pre-wrap">
                       {r.response}
                     </p>
                   )}

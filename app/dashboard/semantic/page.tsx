@@ -223,7 +223,7 @@ export default function SemanticAnalysisPage() {
                     placeholder="Collez votre contenu ici..."
                     className={cn(
                       'w-full px-4 py-3 rounded-lg border-2 border-surface-300 dark:border-surface-700',
-                      'bg-white dark:bg-surface-800 text-surface-900 dark:text-surface-50',
+                      'bg-white/[0.03] text-white',
                       'focus:outline-none focus:border-brand-500 dark:focus:border-brand-400',
                       'min-h-28 resize-none font-mono'
                     )}
@@ -242,7 +242,7 @@ export default function SemanticAnalysisPage() {
                   placeholder="Ex: marketing digital"
                   className={cn(
                     'w-full px-4 py-3 rounded-lg border-2 border-surface-300 dark:border-surface-700',
-                    'bg-white dark:bg-surface-800 text-surface-900 dark:text-surface-50',
+                    'bg-white/[0.03] text-white',
                     'focus:outline-none focus:border-brand-500 dark:focus:border-brand-400'
                   )}
                 />
