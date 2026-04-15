@@ -67,7 +67,7 @@ export default function OnPageCheckerPage() {
         <h1 className="text-2xl font-bold text-white">Vérificateur On-Page</h1>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white border border-white/5 rounded-lg p-6 space-y-4">
+      <form onSubmit={handleSubmit} className="bg-white/[0.03] border border-white/5 rounded-lg p-6 space-y-4">
         <div>
           <label className="block text-sm font-medium text-white/70 mb-1">URL de la page</label>
           <input type="url" value={url} onChange={e => setUrl(e.target.value)} placeholder="https://exemple.com/page" className="w-full border border-white/10 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" required />
@@ -87,7 +87,7 @@ export default function OnPageCheckerPage() {
       {result && (
         <div className="space-y-4">
           {/* Score */}
-          <div className="bg-white border border-white/5 rounded-lg p-6 flex items-center gap-6">
+          <div className="bg-white/[0.03] border border-white/5 rounded-lg p-6 flex items-center gap-6">
             <div className={`text-5xl font-bold ${result.score >= 70 ? 'text-green-600' : result.score >= 40 ? 'text-yellow-600' : 'text-red-600'}`}>
               {result.score}<span className="text-lg text-white/30">/100</span>
             </div>
@@ -98,7 +98,7 @@ export default function OnPageCheckerPage() {
           </div>
 
           {/* Checklist */}
-          <div className="bg-white border border-white/5 rounded-lg divide-y divide-white/5">
+          <div className="bg-white/[0.03] border border-white/5 rounded-lg divide-y divide-white/5">
             {result.checks.map(check => (
               <div key={check.key} className="flex items-start gap-3 px-5 py-4">
                 {check.passed ? (

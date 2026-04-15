@@ -201,7 +201,7 @@ export default function RankTrackerPage() {
   return (
     <div className="min-h-screen bg-white/[0.02]">
       {/* Header */}
-      <div className="border-b border-white/5 bg-white px-8 py-6">
+      <div className="border-b border-white/5 bg-white/[0.03] px-8 py-6">
         <h1 className="text-2xl font-bold text-white">
           Suivi des positions
         </h1>
@@ -216,7 +216,7 @@ export default function RankTrackerPage() {
       <div className="p-8">
         {/* Position history chart */}
         {selectedKeyword && history.length > 0 && (
-          <div className="mb-8 rounded-lg border border-white/5 bg-white p-6 shadow-sm">
+          <div className="mb-8 rounded-lg border border-white/5 bg-white/[0.03] p-6 shadow-sm">
             <h2 className="mb-4 text-base font-semibold text-white">
               Historique de position :{' '}
               <span className="text-blue-600">{selectedKeyword.term}</span>
@@ -247,7 +247,7 @@ export default function RankTrackerPage() {
         )}
 
         {/* Keywords table */}
-        <div className="rounded-lg border border-white/5 bg-white shadow-sm">
+        <div className="rounded-lg border border-white/5 bg-white/[0.03] shadow-sm">
           <div className="border-b border-white/5 px-6 py-4">
             <h2 className="text-base font-semibold text-white">
               {keywords.length} mot{keywords.length > 1 ? 's' : ''}-cle

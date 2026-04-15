@@ -89,7 +89,7 @@ export default function KeywordMagicPage() {
       </div>
 
       {/* Search input */}
-      <div className="bg-white border border-white/5 rounded-xl p-5">
+      <div className="bg-white/[0.03] border border-white/5 rounded-xl p-5">
         <div className="flex gap-2">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
@@ -100,7 +100,7 @@ export default function KeywordMagicPage() {
               onKeyDown={(e) => e.key === 'Enter' && !loading && handleSearch()}
               placeholder="Entrez un mot-cle (ex: referencement naturel)"
               aria-label="Mot-cle a rechercher"
-              className="w-full pl-10 pr-4 py-3 rounded-xl border border-white/5 bg-white text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 text-sm"
+              className="w-full pl-10 pr-4 py-3 rounded-xl border border-white/5 bg-white/[0.03] text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 text-sm"
             />
           </div>
           <button
@@ -160,7 +160,7 @@ export default function KeywordMagicPage() {
           </div>
 
           {/* Results table */}
-          <div className="bg-white border border-white/5 rounded-xl overflow-hidden">
+          <div className="bg-white/[0.03] border border-white/5 rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>

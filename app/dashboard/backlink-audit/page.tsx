@@ -82,7 +82,7 @@ export default function BacklinkAuditPage() {
       {error && <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">{error}</div>}
 
       {!loading && !error && scored.length === 0 && (
-        <div className="bg-white border border-white/5 rounded-lg p-12 text-center">
+        <div className="bg-white/[0.03] border border-white/5 rounded-lg p-12 text-center">
           <Link2 className="w-12 h-12 text-white/30 mx-auto mb-4" />
           <p className="text-white/40 text-lg">Aucun backlink trouvé pour ce site.</p>
           <p className="text-white/30 mt-1">Les backlinks apparaîtront ici une fois détectés.</p>
@@ -93,28 +93,28 @@ export default function BacklinkAuditPage() {
         <>
           {/* Summary cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-white border border-white/5 rounded-lg p-5">
+            <div className="bg-white/[0.03] border border-white/5 rounded-lg p-5">
               <p className="text-sm text-white/40">Score global</p>
               <p className="text-3xl font-bold text-white">{stats.overallScore}<span className="text-lg text-white/30">/100</span></p>
             </div>
-            <div className="bg-white border border-white/5 rounded-lg p-5">
+            <div className="bg-white/[0.03] border border-white/5 rounded-lg p-5">
               <p className="text-sm text-white/40">Ratio Dofollow / Nofollow</p>
               <div className="mt-2 flex items-center gap-2">
                 <div className="flex-1 h-3 bg-white/[0.03] rounded-full overflow-hidden flex">
                   <div className="bg-blue-500 h-full" style={{ width: `${stats.dofollowPct}%` }} />
-                  <div className="bg-gray-300 h-full" style={{ width: `${stats.nofollowPct}%` }} />
+                  <div className="bg-white/10 h-full" style={{ width: `${stats.nofollowPct}%` }} />
                 </div>
               </div>
               <p className="text-xs text-white/40 mt-1">{stats.dofollowPct}% dofollow / {stats.nofollowPct}% nofollow</p>
             </div>
-            <div className="bg-white border border-white/5 rounded-lg p-5">
+            <div className="bg-white/[0.03] border border-white/5 rounded-lg p-5">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-green-500" />
                 <p className="text-sm text-white/40">Bons liens</p>
               </div>
               <p className="text-3xl font-bold text-green-600">{stats.good}</p>
             </div>
-            <div className="bg-white border border-white/5 rounded-lg p-5">
+            <div className="bg-white/[0.03] border border-white/5 rounded-lg p-5">
               <div className="flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4 text-red-500" />
                 <p className="text-sm text-white/40">Liens toxiques</p>
@@ -124,7 +124,7 @@ export default function BacklinkAuditPage() {
           </div>
 
           {/* Table */}
-          <div className="bg-white border border-white/5 rounded-lg overflow-hidden">
+          <div className="bg-white/[0.03] border border-white/5 rounded-lg overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead className="bg-white/[0.02] border-b border-white/5">

@@ -127,7 +127,7 @@ export default function KeywordGapPage() {
       </div>
 
       {/* Input forms */}
-      <div className="bg-white border border-white/5 rounded-xl p-5 space-y-4">
+      <div className="bg-white/[0.03] border border-white/5 rounded-xl p-5 space-y-4">
         <div>
           <label className="block text-sm font-medium text-white/70 mb-1.5">Votre domaine</label>
           <UrlInput
@@ -157,7 +157,7 @@ export default function KeywordGapPage() {
                 onChange={(e) => setUrl2(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && !loading && handleAnalyze()}
                 placeholder="https://concurrent.com"
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-white/5 bg-white text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 text-sm"
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-white/5 bg-white/[0.03] text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 text-sm"
               />
             </div>
           </div>
@@ -199,7 +199,7 @@ export default function KeywordGapPage() {
       {data && !loading && (
         <div className="space-y-4">
           {/* Venn Diagram */}
-          <div className="bg-white border border-white/5 rounded-xl p-4">
+          <div className="bg-white/[0.03] border border-white/5 rounded-xl p-4">
             <VennDiagram data={data} />
             <div className="flex items-center justify-center gap-6 text-xs text-white/40 mt-2">
               <span className="flex items-center gap-1.5">
@@ -212,7 +212,7 @@ export default function KeywordGapPage() {
           </div>
 
           {/* Tabs */}
-          <div className="bg-white border border-white/5 rounded-xl overflow-hidden">
+          <div className="bg-white/[0.03] border border-white/5 rounded-xl overflow-hidden">
             <div className="flex border-b border-white/5">
               {TABS.map((tab) => (
                 <button

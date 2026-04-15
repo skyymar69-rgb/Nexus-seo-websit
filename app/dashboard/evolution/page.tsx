@@ -127,7 +127,7 @@ export default function EvolutionPage() {
                 'px-4 py-2 rounded-lg font-medium transition-colors',
                 dateRange === range
                   ? 'bg-blue-600 text-white'
-                  : 'bg-white/[0.03] text-white/40 hover:text-gray-700'
+                  : 'bg-white/[0.03] text-white/40 hover:text-white/70'
               )}
             >
               {range === '7d' ? '7 jours' : range === '30d' ? '30 jours' : '90 jours'}
@@ -161,7 +161,7 @@ export default function EvolutionPage() {
         <>
           {/* Score Evolution Chart */}
           {audits.length > 0 && (
-            <div className="rounded-xl border border-white/5 bg-white p-6 shadow-sm">
+            <div className="rounded-xl border border-white/5 bg-white/[0.03] p-6 shadow-sm">
               <div className="mb-6">
                 <h2 className="text-lg font-bold text-white flex items-center gap-2">
                   <Award className="h-5 w-5 text-blue-600" />
@@ -208,7 +208,7 @@ export default function EvolutionPage() {
 
           {/* Keyword Position Evolution */}
           {keywords.length > 0 && (
-            <div className="rounded-xl border border-white/5 bg-white p-6 shadow-sm">
+            <div className="rounded-xl border border-white/5 bg-white/[0.03] p-6 shadow-sm">
               <div className="mb-6">
                 <h2 className="text-lg font-bold text-white flex items-center gap-2">
                   <Target className="h-5 w-5 text-blue-600" />
@@ -254,7 +254,7 @@ export default function EvolutionPage() {
 
           {/* Backlink Growth */}
           {backlinks.length > 0 && (
-            <div className="rounded-xl border border-white/5 bg-white p-6 shadow-sm">
+            <div className="rounded-xl border border-white/5 bg-white/[0.03] p-6 shadow-sm">
               <div className="mb-6">
                 <h2 className="text-lg font-bold text-white flex items-center gap-2">
                   <Link2 className="h-5 w-5 text-blue-600" />

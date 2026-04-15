@@ -118,7 +118,7 @@ export default function TopPagesPage() {
       )}
 
       {!error && pages.length === 0 && (
-        <div className="bg-white border border-white/5 rounded-xl p-10 text-center">
+        <div className="bg-white/[0.03] border border-white/5 rounded-xl p-10 text-center">
           <FileText className="w-12 h-12 text-white/30 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-white mb-2">Aucune donnee de crawl</h3>
           <p className="text-white/40 mb-4">Lancez un crawl pour voir vos top pages</p>
@@ -133,7 +133,7 @@ export default function TopPagesPage() {
       )}
 
       {pages.length > 0 && (
-        <div className="bg-white border border-white/5 rounded-xl overflow-hidden">
+        <div className="bg-white/[0.03] border border-white/5 rounded-xl overflow-hidden">
           <div className="px-5 py-3 border-b border-white/5 flex items-center justify-between">
             <span className="text-sm text-white/40">{pages.length} pages analysees</span>
           </div>

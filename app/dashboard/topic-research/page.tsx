@@ -25,7 +25,7 @@ const difficultyConfig = {
 function TopicCard({ item }: { item: TopicItem }) {
   const d = difficultyConfig[item.difficulty]
   return (
-    <div className="bg-white border border-white/5 rounded-lg p-4 hover:shadow-sm transition-shadow">
+    <div className="bg-white/[0.03] border border-white/5 rounded-lg p-4 hover:shadow-sm transition-shadow">
       <div className="flex items-start justify-between gap-2">
         <h3 className="text-sm font-semibold text-white">{item.title}</h3>
         <span className={`text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0 ${d.bg} ${d.color}`}>{d.label}</span>
@@ -69,7 +69,7 @@ export default function TopicResearchPage() {
         <h1 className="text-2xl font-bold text-white">Recherche de Sujets</h1>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white border border-white/5 rounded-lg p-6">
+      <form onSubmit={handleSubmit} className="bg-white/[0.03] border border-white/5 rounded-lg p-6">
         <label className="block text-sm font-medium text-white/70 mb-1">Sujet ou thématique</label>
         <div className="flex gap-3">
           <input type="text" value={topic} onChange={e => setTopic(e.target.value)} placeholder="Ex: SEO, marketing digital, e-commerce..." className="flex-1 border border-white/10 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" required />

@@ -69,7 +69,7 @@ function ScoreGauge({ score }: { score: number }) {
 
 function Card({ title, icon: Icon, children }: { title: string; icon: React.ElementType; children: React.ReactNode }) {
   return (
-    <div className="bg-white border border-white/5 rounded-xl p-5">
+    <div className="bg-white/[0.03] border border-white/5 rounded-xl p-5">
       <div className="flex items-center gap-2 mb-4">
         <Icon className="w-5 h-5 text-blue-600" />
         <h3 className="font-semibold text-white">{title}</h3>
@@ -146,7 +146,7 @@ export default function DomainOverviewPage() {
         <p className="text-white/40 mt-1">Analyse compl&egrave;te de votre site en une page</p>
       </div>
 
-      <div className="bg-white border border-white/5 rounded-xl p-5">
+      <div className="bg-white/[0.03] border border-white/5 rounded-xl p-5">
         <UrlInput
           value={url}
           onChange={setUrl}
@@ -175,7 +175,7 @@ export default function DomainOverviewPage() {
       {data && !loading && (
         <div className="space-y-6">
           {/* Score */}
-          <div className="bg-white border border-white/5 rounded-xl p-6 flex flex-col items-center">
+          <div className="bg-white/[0.03] border border-white/5 rounded-xl p-6 flex flex-col items-center">
             <ScoreGauge score={data.score} />
           </div>
 

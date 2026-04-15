@@ -113,7 +113,7 @@ export default function ReportsPage() {
   return (
     <div className="min-h-screen bg-white/[0.02]">
       {/* Header */}
-      <div className="border-b border-white/5 bg-white px-8 py-6">
+      <div className="border-b border-white/5 bg-white/[0.03] px-8 py-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-white">Rapports</h1>
@@ -180,7 +180,7 @@ export default function ReportsPage() {
               return (
                 <div
                   key={report.id}
-                  className="rounded-lg border border-white/5 bg-white shadow-sm"
+                  className="rounded-lg border border-white/5 bg-white/[0.03] shadow-sm"
                 >
                   {/* Report header */}
                   <button
