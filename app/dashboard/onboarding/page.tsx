@@ -4,9 +4,7 @@ import { useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useWebsite } from '@/contexts/WebsiteContext'
-import { User, Globe, ArrowRight, Check, Loader2, AlertCircle } from 'lucide-react'
-
-type Step = 'profile' | 'website' | 'done'
+import { Globe, ArrowRight, Check, Loader2, AlertCircle, Sparkles, Shield, Search } from 'lucide-react'
 
 const DOMAIN_REGEX = /^([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/
 
@@ -15,7 +13,7 @@ function cleanDomain(input: string): string {
     .replace(/^https?:\/\//, '')
     .replace(/^www\./, '')
     .replace(/\/.*$/, '')
-    .replace(/^.*@/, '') // Remove email prefix if present
+    .replace(/^.*@/, '')
 }
 
 function isValidDomain(domain: string): boolean {
@@ -24,20 +22,19 @@ function isValidDomain(domain: string): boolean {
   return DOMAIN_REGEX.test(domain)
 }
 
+const SCAN_FEATURES = [
+  { icon: Shield, label: 'Audit technique SEO', desc: '25+ vérifications' },
+  { icon: Sparkles, label: 'Score AEO & GEO', desc: 'Visibilité IA complète' },
+  { icon: Search, label: 'Crawl du site', desc: 'Analyse de toutes vos pages' },
+]
+
 export default function OnboardingPage() {
-  const { data: session, update: updateSession } = useSession()
+  const { data: session } = useSession()
   const { refreshWebsites } = useWebsite()
   const router = useRouter()
 
-  const [step, setStep] = useState<Step>('profile')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-
-  // Profile form
-  const [name, setName] = useState(session?.user?.name || '')
-  const [company, setCompany] = useState('')
-
-  // Website form
   const [domain, setDomain] = useState('')
   const [siteName, setSiteName] = useState('')
   const [domainTouched, setDomainTouched] = useState(false)
@@ -46,44 +43,22 @@ export default function OnboardingPage() {
   const domainValid = isValidDomain(cleaned)
   const domainHasError = domainTouched && domain.trim().length > 0 && !domainValid
 
-  const handleProfileSubmit = async () => {
-    if (!name.trim()) {
-      setError('Veuillez renseigner votre nom.')
-      return
-    }
-    setError('')
-    setStep('website')
-  }
-
-  const handleWebsiteSubmit = async () => {
+  const handleSubmit = async () => {
     setDomainTouched(true)
 
-    if (!domain.trim()) {
-      setError('Veuillez renseigner le domaine de votre site.')
-      return
-    }
-
-    if (domain.includes('@')) {
-      setError('Entrez un domaine (ex: monsite.fr), pas une adresse email.')
-      return
-    }
-
-    if (!domainValid) {
-      setError('Format de domaine invalide. Exemple : monsite.fr')
-      return
-    }
+    if (!domain.trim()) { setError('Veuillez entrer le domaine de votre site.'); return }
+    if (domain.includes('@')) { setError('Entrez un domaine (ex: monsite.fr), pas une adresse email.'); return }
+    if (!domainValid) { setError('Format invalide. Exemple : monsite.fr'); return }
 
     setLoading(true)
     setError('')
 
     try {
+      // 1. Create website
       const res = await fetch('/api/websites', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          domain: cleaned,
-          name: siteName || cleaned,
-        }),
+        body: JSON.stringify({ domain: cleaned, name: siteName || cleaned }),
       })
 
       if (!res.ok) {
@@ -94,7 +69,7 @@ export default function OnboardingPage() {
       const websiteData = await res.json()
       await refreshWebsites()
 
-      // Launch full scan automatically
+      // 2. Launch full scan
       const scanRes = await fetch('/api/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -112,11 +87,8 @@ export default function OnboardingPage() {
         }
       }
 
-      // Fallback if scan fails to start
-      setStep('done')
-      setTimeout(() => {
-        router.push('/dashboard')
-      }, 2000)
+      // Fallback
+      router.push('/dashboard')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur inconnue')
     } finally {
@@ -125,194 +97,122 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-surface-950">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-surface-950">
       <div className="w-full max-w-lg">
-        {/* Progress */}
-        <div className="flex items-center justify-center gap-2 mb-8">
-          {(['profile', 'website', 'done'] as Step[]).map((s, i) => (
-            <div key={s} className="flex items-center gap-2">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
-                step === s ? 'bg-brand-600 text-white' :
-                (['profile', 'website', 'done'].indexOf(step) > i) ? 'bg-green-500 text-white' :
-                'bg-gray-200 dark:bg-surface-700 text-gray-500'
-              }`}>
-                {(['profile', 'website', 'done'].indexOf(step) > i) ? <Check className="w-4 h-4" /> : i + 1}
-              </div>
-              {i < 2 && <div className={`w-12 h-0.5 ${(['profile', 'website', 'done'].indexOf(step) > i) ? 'bg-green-500' : 'bg-gray-200 dark:bg-surface-700'}`} />}
-            </div>
-          ))}
+        {/* Welcome */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-400 text-sm font-medium mb-4">
+            <Sparkles className="w-4 h-4" />
+            Bienvenue {session?.user?.name ? `, ${session.user.name}` : ''} !
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+            Analysons votre site
+          </h1>
+          <p className="text-white/50 text-sm">
+            Entrez votre domaine et on lance un scan complet automatiquement.
+          </p>
         </div>
 
-        <div className="bg-white dark:bg-surface-900 border border-gray-200 dark:border-surface-700 rounded-2xl p-8 shadow-sm">
-
-          {/* Step 1: Profile */}
-          {step === 'profile' && (
-            <>
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-brand-50 dark:bg-brand-950/30 flex items-center justify-center">
-                  <User className="w-6 h-6 text-brand-600" />
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold text-gray-900 dark:text-white">Bienvenue sur Nexus</h1>
-                  <p className="text-sm text-gray-500">Commençons par faire connaissance</p>
-                </div>
+        {/* Form card */}
+        <div className="rounded-2xl bg-white/[0.03] border border-white/5 p-8">
+          <div className="space-y-4">
+            {/* Domain input */}
+            <div>
+              <label className="block text-sm font-medium text-white/70 mb-1.5">
+                Domaine de votre site *
+              </label>
+              <div className="relative">
+                <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
+                <input
+                  type="text"
+                  value={domain}
+                  onChange={(e) => { setDomain(e.target.value); setDomainTouched(true) }}
+                  onBlur={() => setDomainTouched(true)}
+                  placeholder="monsite.fr"
+                  autoFocus
+                  className={`w-full pl-10 pr-4 py-3 rounded-xl border bg-white/[0.03] text-white placeholder-white/30 focus:outline-none focus:ring-2 transition-colors ${
+                    domainHasError
+                      ? 'border-rose-500/50 focus:ring-rose-500/50'
+                      : domainTouched && domainValid
+                      ? 'border-emerald-500/50 focus:ring-emerald-500/50'
+                      : 'border-white/10 focus:ring-brand-500/50'
+                  }`}
+                />
               </div>
+              {domainHasError ? (
+                <p className="mt-1.5 text-xs text-rose-400 flex items-center gap-1">
+                  <AlertCircle className="w-3 h-3" />
+                  {domain.includes('@') ? 'Entrez un domaine, pas un email.' : 'Format invalide. Ex: monsite.fr'}
+                </p>
+              ) : domainTouched && domainValid ? (
+                <p className="mt-1.5 text-xs text-emerald-400 flex items-center gap-1">
+                  <Check className="w-3 h-3" /> {cleaned}
+                </p>
+              ) : (
+                <p className="mt-1 text-xs text-white/30">Sans https:// — ex: monsite.fr</p>
+              )}
+            </div>
 
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-surface-300 mb-1.5">
-                    Votre nom *
-                  </label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Jean Dupont"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-surface-700 bg-white dark:bg-surface-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500/50"
-                  />
-                </div>
+            {/* Site name (optional) */}
+            <div>
+              <label className="block text-sm font-medium text-white/70 mb-1.5">
+                Nom du site <span className="text-white/30">(optionnel)</span>
+              </label>
+              <input
+                type="text"
+                value={siteName}
+                onChange={(e) => setSiteName(e.target.value)}
+                placeholder="Mon Site"
+                className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/[0.03] text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-brand-500/50 transition-colors"
+              />
+            </div>
+          </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-surface-300 mb-1.5">
-                    Entreprise <span className="text-gray-400">(optionnel)</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={company}
-                    onChange={(e) => setCompany(e.target.value)}
-                    placeholder="Mon Entreprise"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-surface-700 bg-white dark:bg-surface-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500/50"
-                  />
-                </div>
-              </div>
-
-              {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
-
-              <button
-                onClick={handleProfileSubmit}
-                className="w-full mt-6 py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm flex items-center justify-center gap-2 transition-colors"
-              >
-                Continuer <ArrowRight className="w-4 h-4" />
-              </button>
-            </>
-          )}
-
-          {/* Step 2: Website */}
-          {step === 'website' && (
-            <>
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-green-50 dark:bg-green-950/30 flex items-center justify-center">
-                  <Globe className="w-6 h-6 text-green-600" />
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold text-gray-900 dark:text-white">Ajoutez votre site</h1>
-                  <p className="text-sm text-gray-500">Quel site souhaitez-vous analyser ?</p>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-surface-300 mb-1.5">
-                    Domaine du site *
-                  </label>
-                  <div className="relative">
-                    <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="text"
-                      value={domain}
-                      onChange={(e) => { setDomain(e.target.value); setDomainTouched(true) }}
-                      onBlur={() => setDomainTouched(true)}
-                      placeholder="monsite.fr"
-                      className={`w-full pl-10 pr-4 py-3 rounded-xl border bg-white dark:bg-surface-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 transition-colors ${
-                        domainHasError
-                          ? 'border-red-400 focus:ring-red-500/50'
-                          : domainTouched && domainValid
-                          ? 'border-green-400 focus:ring-green-500/50'
-                          : 'border-gray-200 dark:border-surface-700 focus:ring-brand-500/50'
-                      }`}
-                    />
-                  </div>
-                  {domainHasError ? (
-                    <p className="mt-1.5 text-xs text-red-500 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
-                      {domain.includes('@')
-                        ? 'Entrez un domaine, pas une adresse email. Exemple : monsite.fr'
-                        : 'Format invalide. Exemple : monsite.fr ou mon-site.com'}
-                    </p>
-                  ) : domainTouched && domainValid ? (
-                    <p className="mt-1.5 text-xs text-green-600 flex items-center gap-1">
-                      <Check className="w-3 h-3" /> {cleaned}
-                    </p>
-                  ) : (
-                    <p className="mt-1 text-xs text-gray-400">Entrez votre domaine sans https:// — ex: monsite.fr</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-surface-300 mb-1.5">
-                    Nom du site <span className="text-gray-400">(optionnel)</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={siteName}
-                    onChange={(e) => setSiteName(e.target.value)}
-                    placeholder="Mon Site"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-surface-700 bg-white dark:bg-surface-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500/50"
-                  />
-                </div>
-              </div>
-
-              {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
-
-              <button
-                onClick={handleWebsiteSubmit}
-                disabled={loading}
-                className="w-full mt-6 py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
-              >
-                {loading ? (
-                  <><Loader2 className="w-4 h-4 animate-spin" /> Ajout en cours...</>
-                ) : (
-                  <>Ajouter et lancer le premier audit <ArrowRight className="w-4 h-4" /></>
-                )}
-              </button>
-
-              <button
-                onClick={() => { setStep('profile'); setError('') }}
-                className="w-full mt-2 py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
-              >
-                Retour
-              </button>
-            </>
-          )}
-
-          {/* Step 3: Done */}
-          {step === 'done' && (
-            <div className="text-center py-4">
-              <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-950/30 flex items-center justify-center mx-auto mb-4">
-                <Check className="w-8 h-8 text-green-600" />
-              </div>
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Tout est pret !</h1>
-              <p className="text-gray-500 mb-6">
-                Votre site a ete ajoute. Lancement de votre premier audit...
-              </p>
-              <div className="flex items-center justify-center">
-                <Loader2 className="w-5 h-5 animate-spin text-brand-600" />
-              </div>
+          {error && (
+            <div className="mt-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20">
+              <p className="text-sm text-rose-400">{error}</p>
             </div>
           )}
+
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            className="w-full mt-6 py-3.5 rounded-xl bg-brand-500 hover:bg-brand-400 text-white font-semibold text-sm flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
+          >
+            {loading ? (
+              <><Loader2 className="w-4 h-4 animate-spin" /> Lancement du scan...</>
+            ) : (
+              <>Lancer le scan complet <ArrowRight className="w-4 h-4" /></>
+            )}
+          </button>
+        </div>
+
+        {/* What will be analyzed */}
+        <div className="mt-6 space-y-3">
+          <p className="text-xs text-white/30 text-center mb-3">Le scan va analyser :</p>
+          {SCAN_FEATURES.map((feature, i) => {
+            const Icon = feature.icon
+            return (
+              <div key={i} className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white/[0.02] border border-white/5">
+                <Icon className="w-4 h-4 text-brand-400" />
+                <div className="flex-1">
+                  <span className="text-sm text-white/70">{feature.label}</span>
+                  <span className="text-xs text-white/30 ml-2">{feature.desc}</span>
+                </div>
+              </div>
+            )
+          })}
         </div>
 
         {/* Skip */}
-        {step !== 'done' && (
-          <p className="text-center mt-4">
-            <button
-              onClick={() => router.push('/dashboard')}
-              className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
-            >
-              Passer cette etape
-            </button>
-          </p>
-        )}
+        <p className="text-center mt-6">
+          <button
+            onClick={() => router.push('/dashboard')}
+            className="text-xs text-white/20 hover:text-white/40 transition-colors"
+          >
+            Passer cette étape
+          </button>
+        </p>
       </div>
     </div>
   )
