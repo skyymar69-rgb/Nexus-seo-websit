@@ -71,6 +71,8 @@ export default function EvolutionPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const [scanHistory, setScanHistory] = useState<any[]>([])
+
   useEffect(() => {
     if (!selectedWebsite?.id) return
 
@@ -78,6 +80,7 @@ export default function EvolutionPage() {
       setLoading(true)
       setError(null)
       try {
+        // Fetch evolution data
         const res = await fetch(`/api/evolution?websiteId=${selectedWebsite.id}`)
         if (!res.ok) {
           const err = await res.json().catch(() => ({ error: 'Erreur inconnue' }))
@@ -85,6 +88,15 @@ export default function EvolutionPage() {
         }
         const json = await res.json()
         setData(json)
+
+        // Also fetch scan history for AEO/GEO/Performance trends
+        try {
+          const histRes = await fetch(`/api/dashboard/scan-history?websiteId=${selectedWebsite.id}&limit=20`)
+          if (histRes.ok) {
+            const histJson = await histRes.json()
+            if (histJson.success) setScanHistory(histJson.data?.reverse() || [])
+          }
+        } catch { /* optional */ }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Erreur inconnue')
       } finally {
@@ -107,8 +119,8 @@ export default function EvolutionPage() {
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 rounded-lg bg-blue-100">
-              <TrendingUp className="h-6 w-6 text-blue-600" />
+            <div className="p-2 rounded-lg bg-blue-500/10">
+              <TrendingUp className="h-6 w-6 text-blue-400" />
             </div>
             <h1 className="text-3xl font-bold text-white">
               Suivi d&apos;Evolution
