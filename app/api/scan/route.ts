@@ -5,6 +5,9 @@ import { prisma } from '@/lib/prisma'
 import { runFullScan } from '@/lib/scan-orchestrator'
 import { corsHeaders, corsOptionsResponse } from '@/lib/cors'
 
+// Vercel serverless max duration (seconds)
+export const maxDuration = 60
+
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
@@ -47,21 +50,45 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // Launch scan in background (fire and forget)
-    runFullScan(scan.id, websiteId, normalizedUrl).catch(async (err) => {
-      console.error('[Scan] Fatal error:', err)
+    // Run scan SYNCHRONOUSLY — Vercel kills background tasks
+    try {
+      const result = await runFullScan(scan.id, websiteId, normalizedUrl)
+
+      return NextResponse.json(
+        {
+          success: true,
+          scanId: scan.id,
+          status: 'completed',
+          scores: {
+            audit: result.audit?.score ?? null,
+            aeo: result.aeo?.overallScore ?? null,
+            geo: result.geo?.overallScore ?? null,
+            performance: result.performance?.score ?? null,
+          },
+        },
+        { headers: corsHeaders() }
+      )
+    } catch (err) {
+      console.error('[Scan] Error:', err)
+
+      // Update scan as failed
       try {
         await (prisma as any).scanSession.update({
           where: { id: scan.id },
           data: { status: 'failed', error: String(err) },
         })
       } catch { /* ignore */ }
-    })
 
-    return NextResponse.json(
-      { success: true, scanId: scan.id },
-      { headers: corsHeaders() }
-    )
+      return NextResponse.json(
+        {
+          success: true,
+          scanId: scan.id,
+          status: 'failed',
+          error: err instanceof Error ? err.message : 'Erreur inconnue',
+        },
+        { headers: corsHeaders() }
+      )
+    }
   } catch (error) {
     console.error('[Scan] Error:', error)
     return NextResponse.json(

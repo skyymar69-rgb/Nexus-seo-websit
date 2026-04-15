@@ -146,7 +146,12 @@
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr list --repo skyymar69-rgb/Nexus-seo-websit --state open)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge --repo skyymar69-rgb/Nexus-seo-websit 9 --merge)",
       "Bash(DATABASE_URL=\"postgresql://neondb_owner:npg_6doekIMjw2rO@ep-purple-dream-anjeb191.c-6.us-east-1.aws.neon.tech/neondb?sslmode=require\" npx prisma db execute --stdin <<< \"DELETE FROM \\\\\"ScanSession\\\\\" WHERE \\\\\"websiteId\\\\\" IN \\(SELECT id FROM \\\\\"Website\\\\\" WHERE domain = 'kayzen-web.fr'\\); DELETE FROM \\\\\"Website\\\\\" WHERE domain = 'kayzen-web.fr';\")",
-      "Bash(curl -sI -m 10 \"https://internet.kayzen-lyon.fr\")"
+      "Bash(curl -sI -m 10 \"https://internet.kayzen-lyon.fr\")",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr create --repo skyymar69-rgb/Nexus-seo-websit --title \"feat: Google OAuth réactivé\" --body \"Bouton Google sur login/signup, GitHub supprimé\" --base main --head claude/elastic-maxwell)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 10 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
+      "Bash(curl -sL -o /dev/null -w \"%{http_code} %{size_download} %{time_total}s\" \"https://internet.kayzen-lyon.fr\")",
+      "Bash(DATABASE_URL=\"postgresql://neondb_owner:npg_6doekIMjw2rO@ep-purple-dream-anjeb191.c-6.us-east-1.aws.neon.tech/neondb?sslmode=require\" npx prisma db execute --stdin <<< \"SELECT id, url, status, error, progress FROM \\\\\"ScanSession\\\\\" ORDER BY \\\\\"startedAt\\\\\" DESC LIMIT 3;\")",
+      "Bash(node -e ':*)"
     ]
   }
 }
