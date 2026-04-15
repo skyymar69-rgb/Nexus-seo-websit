@@ -103,7 +103,7 @@ export default function PricingPage() {
                 <span className="gradient-text">Zero euro.</span>
               </h1>
               <p className="text-xl text-surface-500 dark:text-surface-400 max-w-2xl mx-auto">
-                Nexus SEO est entierement gratuit. 30+ outils SEO & IA sans aucune limitation. Aucune carte bancaire requise.
+                Nexus SEO est entierement gratuit. 50+ outils SEO & IA sans aucune limitation. Aucune carte bancaire requise.
               </p>
             </div>
           </div>
@@ -216,7 +216,7 @@ export default function PricingPage() {
               Pret a booster votre visibilite ?
             </h2>
             <p className="text-surface-500 dark:text-surface-400 mb-6">
-              30+ outils SEO & IA gratuits. Commencez en 30 secondes.
+              50+ outils SEO & IA gratuits. Commencez en 30 secondes.
             </p>
             <Link
               href="/signup"

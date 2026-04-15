@@ -14,26 +14,44 @@ function Counter({ target, suffix }: { target: number; suffix: string }) {
   const ref = useRef<HTMLSpanElement>(null)
   const animated = useRef(false)
 
+  const runAnimation = () => {
+    if (animated.current) return
+    animated.current = true
+    const duration = 1200
+    let start: number | null = null
+    const animate = (ts: number) => {
+      if (!start) start = ts
+      const progress = Math.min((ts - start) / duration, 1)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setCurrent(Math.round(target * eased))
+      if (progress < 1) requestAnimationFrame(animate)
+    }
+    requestAnimationFrame(animate)
+  }
+
   useEffect(() => {
     const el = ref.current
     if (!el) return
     const obs = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !animated.current) {
-        animated.current = true
-        const duration = 1200
-        let start: number | null = null
-        const animate = (ts: number) => {
-          if (!start) start = ts
-          const progress = Math.min((ts - start) / duration, 1)
-          const eased = 1 - Math.pow(1 - progress, 3)
-          setCurrent(Math.round(target * eased))
-          if (progress < 1) requestAnimationFrame(animate)
-        }
-        requestAnimationFrame(animate)
+      if (entry.isIntersecting) {
+        runAnimation()
+        obs.disconnect()
       }
-    }, { threshold: 0.5 })
+    }, { threshold: 0.2 })
     obs.observe(el)
-    return () => obs.disconnect()
+
+    // Fallback: if animation hasn't fired after 3s, set the final value
+    const fallbackTimer = setTimeout(() => {
+      if (!animated.current) {
+        runAnimation()
+      }
+    }, 3000)
+
+    return () => {
+      obs.disconnect()
+      clearTimeout(fallbackTimer)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [target])
 
   return (

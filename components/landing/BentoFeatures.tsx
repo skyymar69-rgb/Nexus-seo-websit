@@ -9,7 +9,7 @@ const features = [
     icon: Globe,
     title: 'GEO',
     subtitle: 'Generative Engine Optimization',
-    desc: 'Soyez cite par Google SGE, Bing Copilot et Perplexity. Score E-E-A-T, schema markup et monitoring quotidien.',
+    desc: 'Soyez cité par Google SGE, Bing Copilot et Perplexity. Score E-E-A-T, schéma markup et monitoring quotidien.',
     gradient: 'from-brand-500/20 to-brand-500/5',
     border: 'border-brand-500/20 hover:border-brand-500/40',
     iconColor: 'text-brand-400',
@@ -20,7 +20,7 @@ const features = [
     icon: MessageCircle,
     title: 'AEO',
     subtitle: 'Answer Engine Optimization',
-    desc: 'Capturez les featured snippets, People Also Ask et reponses vocales. Analysez votre pret pour la position zero.',
+    desc: 'Capturez les featured snippets, People Also Ask et réponses vocales. Analysez votre prêt pour la position zéro.',
     gradient: 'from-violet-500/20 to-violet-500/5',
     border: 'border-violet-500/20 hover:border-violet-500/40',
     iconColor: 'text-violet-400',
@@ -31,7 +31,7 @@ const features = [
     icon: Cpu,
     title: 'LLMO',
     subtitle: 'LLM Optimization',
-    desc: 'Trackez vos mentions dans ChatGPT, Claude, Gemini et Perplexity en temps reel.',
+    desc: 'Trackez vos mentions dans ChatGPT, Claude, Gemini et Perplexity en temps réel.',
     gradient: 'from-cyan-500/20 to-cyan-500/5',
     border: 'border-cyan-500/20 hover:border-cyan-500/40',
     iconColor: 'text-cyan-400',
@@ -41,8 +41,8 @@ const features = [
     id: 'technique',
     icon: Wrench,
     title: 'SEO Technique',
-    subtitle: '25+ verifications',
-    desc: 'Audit complet, Core Web Vitals, crawl, securite, mobile et plus encore.',
+    subtitle: '25+ vérifications',
+    desc: 'Audit complet, Core Web Vitals, crawl, sécurité, mobile et plus encore.',
     gradient: 'from-amber-500/20 to-amber-500/5',
     border: 'border-amber-500/20 hover:border-amber-500/40',
     iconColor: 'text-amber-400',
@@ -51,9 +51,9 @@ const features = [
   {
     id: 'contenu',
     icon: FileText,
-    title: 'Contenu & Mots-cles',
+    title: 'Contenu & Mots-clés',
     subtitle: 'Optimisation IA',
-    desc: 'Generation de contenu, recherche semantique, keyword gap et analyse de lisibilite.',
+    desc: 'Génération de contenu, recherche sémantique, keyword gap et analyse de lisibilité.',
     gradient: 'from-emerald-500/20 to-emerald-500/5',
     border: 'border-emerald-500/20 hover:border-emerald-500/40',
     iconColor: 'text-emerald-400',
@@ -69,13 +69,13 @@ export function BentoFeatures() {
     <section id="features" className="py-24 px-4 sm:px-6 lg:px-8 bg-white dark:bg-surface-950">
       <div className="max-w-7xl mx-auto">
         <div className="max-w-3xl mx-auto text-center mb-14">
-          <div className="section-badge mx-auto mb-4">Fonctionnalites</div>
+          <div className="section-badge mx-auto mb-4">Fonctionnalités</div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-surface-900 dark:text-white mb-4">
-            Tout ce qu'il faut pour{' '}
-            <span className="gradient-text">dominer l'ere IA</span>
+            Tout ce qu&apos;il faut pour{' '}
+            <span className="gradient-text">dominer l&apos;ère IA</span>
           </h2>
           <p className="text-lg text-surface-500 dark:text-surface-400">
-            GEO, AEO, LLMO — les trois piliers du referencement nouvelle generation, reunis dans une seule plateforme.
+            GEO, AEO, LLMO — les trois piliers du référencement nouvelle génération, réunis dans une seule plateforme.
           </p>
         </div>
 

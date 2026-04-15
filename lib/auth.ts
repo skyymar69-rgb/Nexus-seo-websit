@@ -1,7 +1,7 @@
 import { type NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import GoogleProvider from 'next-auth/providers/google'
-import GithubProvider from 'next-auth/providers/github'
+// import GoogleProvider from 'next-auth/providers/google'
+// import GithubProvider from 'next-auth/providers/github'
 import bcryptjs from 'bcryptjs'
 
 // Demo user — fonctionne sans base de données
@@ -76,25 +76,18 @@ const providers: NextAuthOptions['providers'] = [
   }),
 ]
 
-// Google OAuth — activé uniquement si les clés sont configurées
-if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
-  providers.push(
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    })
-  )
-}
+// Google OAuth — Activer quand GOOGLE_CLIENT_ID sera configure
+// if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+//   providers.push(
+//     GoogleProvider({
+//       clientId: process.env.GOOGLE_CLIENT_ID,
+//       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+//     })
+//   )
+// }
 
-// GitHub OAuth — activé uniquement si les clés sont configurées
-if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
-  providers.push(
-    GithubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    })
-  )
-}
+// GitHub OAuth — supprime (non configure)
+
 
 export const authOptions: NextAuthOptions = {
   providers,
@@ -104,49 +97,47 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user, account }) {
       // Persist OAuth users to DB on first sign-in
-      if (account?.provider === 'google' || account?.provider === 'github') {
-        try {
-          const { prisma } = await import('@/lib/prisma')
-          await prisma.user.upsert({
-            where: { email: user.email! },
-            update: {
-              name: user.name,
-              image: user.image,
-            },
-            create: {
-              email: user.email!,
-              name: user.name,
-              image: user.image,
-              plan: 'free',
-              role: 'user',
-            },
-          })
-        } catch {
-          // DB error — still allow sign-in
-        }
-      }
+      // OAuth user persistence — Activer quand Google OAuth sera configure
+      // if (account?.provider === 'google') {
+      //   try {
+      //     const { prisma } = await import('@/lib/prisma')
+      //     await prisma.user.upsert({
+      //       where: { email: user.email! },
+      //       update: { name: user.name, image: user.image },
+      //       create: {
+      //         email: user.email!,
+      //         name: user.name,
+      //         image: user.image,
+      //         plan: 'free',
+      //         role: 'user',
+      //       },
+      //     })
+      //   } catch {
+      //     // DB error — still allow sign-in
+      //   }
+      // }
       return true
     },
     async jwt({ token, user, account }) {
       if (user) {
-        // For OAuth users, get the DB user ID
-        if (account?.provider === 'google' || account?.provider === 'github') {
-          try {
-            const { prisma } = await import('@/lib/prisma')
-            const dbUser = await prisma.user.findUnique({
-              where: { email: user.email! },
-              select: { id: true, plan: true, role: true },
-            })
-            if (dbUser) {
-              token.id = dbUser.id
-              token.plan = dbUser.plan
-              token.role = dbUser.role
-              return token
-            }
-          } catch {
-            // Fallback
-          }
-        }
+        // OAuth user ID lookup — Activer quand Google OAuth sera configure
+        // if (account?.provider === 'google') {
+        //   try {
+        //     const { prisma } = await import('@/lib/prisma')
+        //     const dbUser = await prisma.user.findUnique({
+        //       where: { email: user.email! },
+        //       select: { id: true, plan: true, role: true },
+        //     })
+        //     if (dbUser) {
+        //       token.id = dbUser.id
+        //       token.plan = dbUser.plan
+        //       token.role = dbUser.role
+        //       return token
+        //     }
+        //   } catch {
+        //     // Fallback
+        //   }
+        // }
         token.id = user.id
         token.plan = (user as any).plan ?? 'free'
         token.role = (user as any).role ?? 'user'

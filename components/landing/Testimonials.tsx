@@ -11,7 +11,7 @@ const reasons = [
   },
   {
     icon: Zap,
-    title: '30+ outils SEO gratuits',
+    title: '50+ outils SEO gratuits',
     desc: 'Audit technique, suivi de positions, analyse de backlinks, generateur de contenu, keyword research — tout est inclus sans limitation et sans carte bancaire.',
     color: 'from-violet-500 to-cyan-500',
   },

@@ -59,7 +59,7 @@ export function ToolsGrid() {
     <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white dark:bg-surface-950" id="outils">
       <div className="max-w-7xl mx-auto">
         <div className="max-w-3xl mx-auto text-center mb-14">
-          <div className="section-badge mx-auto mb-4">Boite a outils</div>
+          <div className="section-badge mx-auto mb-4">Boîte à outils</div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-surface-900 dark:text-white mb-4">
             <span className="gradient-text">50+ outils</span> en une seule plateforme
           </h2>
