@@ -10,7 +10,7 @@
 @layer base {
   :root {
     /* Typography */
-    --font-heading: var(--font-playfair), Georgia, serif;
+    --font-heading: var(--font-outfit), system-ui, sans-serif;
     --font-body: var(--font-inter), system-ui, sans-serif;
 
     /* Surfaces (light) */
@@ -74,9 +74,9 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Headings — Playfair Display for prestige */
+  /* Headings — Outfit for modern look */
   h1, h2, h3, h4 {
-    font-family: var(--font-playfair), Georgia, serif;
+    font-family: var(--font-outfit), system-ui, sans-serif;
     font-weight: 700;
     letter-spacing: -0.01em;
     line-height: 1.2;
@@ -393,6 +393,15 @@ html:not(.dark) .rounded-full.bg-gradient-to-br { color: white !important; }
 html:not(.dark) .rounded-full.bg-gradient-to-br .text-white { color: white !important; }
 
 html:not(.dark) .placeholder-white\/30::placeholder { color: rgb(161 161 170) !important; }
+
+/* ============================================================
+   WCAG CONTRAST FIXES (RGAA 3.x / WCAG 1.4.3)
+   Minimum 4.5:1 for normal text, 3:1 for large text
+   ============================================================ */
+/* Dark mode: bump low-opacity text to meet WCAG AA */
+.dark .placeholder-white\/30::placeholder { color: rgb(161 161 170) !important; }
+.dark .text-white\/20 { color: rgb(161 161 170) !important; }
+.dark .text-white\/30 { color: rgb(161 161 170) !important; }
 
 /* ============================================================
    PRINT STYLES — Audit report

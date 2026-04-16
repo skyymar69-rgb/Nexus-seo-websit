@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter, Playfair_Display } from 'next/font/google'
+import { Inter, Outfit } from 'next/font/google'
 import { Providers } from '@/app/providers'
 import dynamic from 'next/dynamic'
 import { ErrorBoundary } from '@/components/shared/ErrorBoundary'
@@ -11,11 +11,11 @@ const inter = Inter({
   variable: '--font-inter',
 })
 
-const playfair = Playfair_Display({
+const outfit = Outfit({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700', '800', '900'],
   display: 'swap',
-  variable: '--font-playfair',
+  variable: '--font-outfit',
 })
 
 const CookieBanner = dynamic(() => import('@/components/shared/CookieBanner'), { ssr: false })
@@ -179,7 +179,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`${inter.variable} ${playfair.variable} min-h-screen bg-zinc-50 dark:bg-surface-950 text-surface-900 dark:text-surface-100 antialiased`}>
+      <body className={`${inter.variable} ${outfit.variable} min-h-screen bg-zinc-50 dark:bg-surface-950 text-surface-900 dark:text-surface-100 antialiased`}>
         <a href="#main-content" className="skip-to-main">
           Aller au contenu principal
         </a>

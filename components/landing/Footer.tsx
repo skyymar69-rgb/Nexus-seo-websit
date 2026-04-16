@@ -27,6 +27,7 @@ const footerLinks = {
     { label: 'Mentions légales', href: '/mentions-legales' },
     { label: 'Politique de confidentialité', href: '/privacy' },
     { label: 'CGU', href: '/cgu' },
+    { label: 'Accessibilite', href: '/accessibilite' },
   ],
 }
 
@@ -49,7 +50,7 @@ export function Footer() {
             <div className="flex gap-2">
               <a
                 href="mailto:contact@nexus-seo.com"
-                aria-label="Email"
+                aria-label="Nous contacter par email"
                 className="w-9 h-9 rounded-xl flex items-center justify-center text-white/50 hover:text-white hover:bg-white/[0.05] transition-colors border border-white/10"
               >
                 <Mail className="w-4 h-4" />
@@ -61,13 +62,15 @@ export function Footer() {
           <div className="max-w-sm w-full lg:w-auto">
             <p className="text-sm font-bold text-surface-900 dark:text-white mb-1">Newsletter SEO IA</p>
             <p className="text-xs text-white/50 mb-4">Les dernières tendances GEO, AEO et LLMO chaque semaine.</p>
-            <form onSubmit={(e) => e.preventDefault()} className="flex gap-2">
+            <form onSubmit={(e) => e.preventDefault()} aria-label="Inscription a la newsletter" className="flex gap-2">
               <div className="flex-1 relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-500" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-500" aria-hidden="true" />
                 <input
                   type="email"
                   placeholder="votre@email.fr"
                   aria-label="Adresse email pour la newsletter"
+                  aria-required="true"
+                  autoComplete="email"
                   className="w-full pl-9 pr-3 py-2.5 rounded-xl text-sm bg-white dark:bg-surface-800 border border-white/10 text-surface-900 dark:text-white placeholder-surface-400 focus:outline-none focus:ring-2 focus:ring-brand-500/50"
                 />
               </div>
@@ -83,13 +86,13 @@ export function Footer() {
         </div>
 
         {/* Links grid */}
-        <div className="py-12 grid grid-cols-2 sm:grid-cols-4 gap-8 border-b border-white/5">
+        <nav aria-label="Liens du pied de page" className="py-12 grid grid-cols-2 sm:grid-cols-4 gap-8 border-b border-white/5">
           {Object.entries(footerLinks).map(([title, links]) => (
             <div key={title}>
-              <p className="text-xs font-bold tracking-widest text-white/50 uppercase mb-4">
+              <p id={`footer-${title.toLowerCase()}`} className="text-xs font-bold tracking-widest text-white/50 uppercase mb-4">
                 {title}
               </p>
-              <ul className="space-y-2.5">
+              <ul className="space-y-2.5" aria-labelledby={`footer-${title.toLowerCase()}`}>
                 {links.map((link) => (
                   <li key={link.label}>
                     <Link
@@ -103,7 +106,7 @@ export function Footer() {
               </ul>
             </div>
           ))}
-        </div>
+        </nav>
 
         {/* Bottom bar */}
         <div className="py-6 flex flex-col sm:flex-row items-center justify-between gap-4">

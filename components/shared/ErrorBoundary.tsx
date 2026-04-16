@@ -36,9 +36,9 @@ export class ErrorBoundary extends React.Component<Props, State> {
       if (this.props.fallback) return this.props.fallback
 
       return (
-        <div className="flex flex-col items-center justify-center gap-4 p-8 rounded-2xl border border-red-200/20 dark:border-red-800/20 bg-red-50/50 dark:bg-red-950/10 text-center" role="alert">
+        <div className="flex flex-col items-center justify-center gap-4 p-8 rounded-2xl border border-red-200/20 dark:border-red-800/20 bg-red-50/50 dark:bg-red-950/10 text-center" role="alert" aria-live="assertive">
           <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
-            <AlertTriangle className="w-6 h-6 text-red-500" />
+            <AlertTriangle className="w-6 h-6 text-red-500" aria-hidden="true" />
           </div>
           <div>
             <h3 className="text-sm font-semibold text-surface-900 dark:text-white mb-1">

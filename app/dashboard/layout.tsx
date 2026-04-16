@@ -196,6 +196,7 @@ function SidebarContent() {
 
       {/* Sidebar */}
       <aside
+        aria-label="Navigation principale du tableau de bord"
         className={cn(
           'fixed lg:relative inset-y-0 left-0 z-40 border-r border-zinc-200 dark:border-white/5 bg-white dark:bg-zinc-950/95 backdrop-blur-xl transition-all duration-300 flex flex-col',
           sidebarOpen ? 'w-64' : 'w-20',
@@ -211,7 +212,7 @@ function SidebarContent() {
               title="Retour a l'accueil"
             >
               {/* Colored dots logo */}
-              <div className="flex items-center gap-[3px] shrink-0">
+              <div className="flex items-center gap-[3px] shrink-0" aria-hidden="true">
                 <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
                 <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
                 <span className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
@@ -263,6 +264,8 @@ function SidebarContent() {
                 {sidebarOpen ? (
                   <button
                     onClick={() => toggleCategory(cat.id)}
+                    aria-expanded={isExpanded}
+                    aria-controls={`nav-${cat.id}`}
                     className="flex items-center justify-between w-full rounded-lg px-3 py-2 text-sm font-medium text-zinc-500 dark:text-white/50 hover:bg-zinc-100 dark:hover:bg-white/[0.05] transition-all"
                   >
                     <div className="flex items-center gap-3">
@@ -292,7 +295,7 @@ function SidebarContent() {
 
                 {/* Sub-items */}
                 {isExpanded && sidebarOpen && (
-                  <div className="mt-1 space-y-0.5 ml-2 border-l border-zinc-200 dark:border-white/5 pl-3">
+                  <div id={`nav-${cat.id}`} className="mt-1 space-y-0.5 ml-2 border-l border-zinc-200 dark:border-white/5 pl-3">
                     {cat.items?.map((item) => {
                       const ItemIcon = item.icon
                       const active = isActive(item.href)
@@ -301,6 +304,7 @@ function SidebarContent() {
                           key={item.href}
                           href={item.href}
                           onClick={() => setMobileMenuOpen(false)}
+                          aria-current={active ? 'page' : undefined}
                           className={cn(
                             'flex items-center justify-between gap-2 rounded-lg px-3 py-1.5 text-xs font-medium transition-all',
                             active
@@ -374,18 +378,26 @@ function Breadcrumb() {
   const breadcrumbs = getBreadcrumbs()
 
   return (
-    <nav className="flex items-center gap-2 text-sm">
-      <Link href="/dashboard" className="text-zinc-400 dark:text-white/40 hover:text-zinc-600 dark:hover:text-white/70">
-        Dashboard
-      </Link>
-      {breadcrumbs.slice(1).map((crumb, idx) => (
-        <div key={idx} className="flex items-center gap-2">
-          <ChevronRight className="h-4 w-4 text-zinc-300 dark:text-white/30" />
-          <Link href={crumb.path} className="text-zinc-400 dark:text-white/40 hover:text-zinc-600 dark:hover:text-white/70">
-            {crumb.label}
+    <nav aria-label="Fil d'Ariane" className="text-sm">
+      <ol className="flex items-center gap-2">
+        <li>
+          <Link href="/dashboard" className="text-zinc-400 dark:text-white/40 hover:text-zinc-600 dark:hover:text-white/70">
+            Dashboard
           </Link>
-        </div>
-      ))}
+        </li>
+        {breadcrumbs.slice(1).map((crumb, idx) => (
+          <li key={idx} className="flex items-center gap-2">
+            <ChevronRight className="h-4 w-4 text-zinc-300 dark:text-white/30" aria-hidden="true" />
+            <Link
+              href={crumb.path}
+              aria-current={idx === breadcrumbs.length - 2 ? 'page' : undefined}
+              className="text-zinc-400 dark:text-white/40 hover:text-zinc-600 dark:hover:text-white/70"
+            >
+              {crumb.label}
+            </Link>
+          </li>
+        ))}
+      </ol>
     </nav>
   )
 }
@@ -413,7 +425,7 @@ function DashboardLayoutContent({
     return (
       <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex items-center justify-center">
         <div className="text-center">
-          <svg className="animate-spin h-8 w-8 mx-auto text-brand-600 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <svg className="animate-spin h-8 w-8 mx-auto text-brand-600 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
@@ -437,7 +449,7 @@ function DashboardLayoutContent({
         <SidebarContent />
 
         {/* Main Content */}
-        <main className="flex-1 flex flex-col overflow-hidden lg:ml-0">
+        <main id="main-content" className="flex-1 flex flex-col overflow-hidden lg:ml-0">
           {/* Header */}
           <header className="border-b border-zinc-200 dark:border-white/5 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl px-4 lg:px-6 py-3 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             {/* Top row: Breadcrumb + Theme + User */}
@@ -447,7 +459,7 @@ function DashboardLayoutContent({
                 <button
                   onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                   className="rounded-lg p-2 hover:bg-zinc-100 dark:hover:bg-white/[0.05] transition-colors"
-                  aria-label="Toggle theme"
+                  aria-label={theme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre'}
                 >
                   {theme === 'dark' ? (
                     <Sun className="h-5 w-5 text-zinc-400 dark:text-white/50" />
@@ -484,19 +496,20 @@ function DashboardLayoutContent({
                   onClick={() => setNotificationMenuOpen(!notificationMenuOpen)}
                   className="relative rounded-lg p-2 hover:bg-zinc-100 dark:hover:bg-white/[0.05] transition-colors"
                   aria-label="Notifications"
+                  aria-expanded={notificationMenuOpen}
+                  aria-haspopup="true"
                 >
                   <Bell className="h-5 w-5 text-zinc-400 dark:text-white/50" />
-                  {/* Badge count - shown when there are unread notifications */}
                 </button>
 
                 {notificationMenuOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-80 rounded-lg border border-zinc-200 dark:border-white/10 bg-white dark:bg-zinc-900/95 backdrop-blur-xl shadow-2xl shadow-black/10 dark:shadow-black/50 z-50">
+                  <div role="dialog" aria-label="Notifications" className="absolute right-0 top-full mt-2 w-80 rounded-lg border border-zinc-200 dark:border-white/10 bg-white dark:bg-zinc-900/95 backdrop-blur-xl shadow-2xl shadow-black/10 dark:shadow-black/50 z-50">
                     <div className="border-b border-zinc-200 dark:border-white/5 px-4 py-3">
                       <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">Notifications</h3>
                     </div>
                     <div className="py-2 max-h-96 overflow-y-auto">
                       <div className="px-4 py-6 text-center">
-                        <Bell className="w-8 h-8 text-zinc-200 dark:text-white/10 mx-auto mb-2" />
+                        <Bell className="w-8 h-8 text-zinc-200 dark:text-white/10 mx-auto mb-2" aria-hidden="true" />
                         <p className="text-xs text-zinc-400 dark:text-white/30">Aucune notification</p>
                         <p className="text-[10px] text-zinc-300 dark:text-white/20 mt-1">Les alertes de scan et de monitoring apparaitront ici</p>
                       </div>
@@ -509,7 +522,7 @@ function DashboardLayoutContent({
               <button
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                 className="hidden lg:flex rounded-lg p-2 hover:bg-zinc-100 dark:hover:bg-white/[0.05] transition-colors"
-                aria-label="Toggle theme"
+                aria-label={theme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre'}
               >
                 {theme === 'dark' ? (
                   <Sun className="h-5 w-5 text-zinc-400 dark:text-white/50" />
@@ -523,7 +536,9 @@ function DashboardLayoutContent({
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
                   className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-zinc-100 dark:hover:bg-white/[0.05] transition-colors"
-                  aria-label="User menu"
+                  aria-label="Menu utilisateur"
+                  aria-expanded={userMenuOpen}
+                  aria-haspopup="menu"
                 >
                   <div className="h-8 w-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-white text-xs font-semibold">
                     {userInitials}
@@ -532,7 +547,7 @@ function DashboardLayoutContent({
                 </button>
 
                 {userMenuOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-56 rounded-lg border border-zinc-200 dark:border-white/10 bg-white dark:bg-zinc-900/95 backdrop-blur-xl shadow-2xl shadow-black/10 dark:shadow-black/50 z-50">
+                  <div role="menu" aria-label="Menu utilisateur" className="absolute right-0 top-full mt-2 w-56 rounded-lg border border-zinc-200 dark:border-white/10 bg-white dark:bg-zinc-900/95 backdrop-blur-xl shadow-2xl shadow-black/10 dark:shadow-black/50 z-50">
                     <div className="border-b border-zinc-200 dark:border-white/5 px-4 py-3">
                       <p className="text-sm font-semibold text-zinc-900 dark:text-white">{userName}</p>
                       <p className="text-xs text-zinc-500 dark:text-white/40">{userEmail}</p>
@@ -541,6 +556,7 @@ function DashboardLayoutContent({
                     <nav className="py-1">
                       <Link
                         href="/dashboard/settings"
+                        role="menuitem"
                         className="flex items-center gap-3 px-4 py-2 text-sm text-zinc-600 dark:text-white/70 hover:bg-zinc-100 dark:hover:bg-white/[0.05]"
                       >
                         <User className="h-4 w-4" />
@@ -548,6 +564,7 @@ function DashboardLayoutContent({
                       </Link>
                       <Link
                         href="/dashboard/settings"
+                        role="menuitem"
                         className="flex items-center gap-3 px-4 py-2 text-sm text-zinc-600 dark:text-white/70 hover:bg-zinc-100 dark:hover:bg-white/[0.05]"
                       >
                         <Settings className="h-4 w-4" />

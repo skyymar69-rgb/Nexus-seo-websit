@@ -35,12 +35,12 @@ export function ScoreRing({
 }: ScoreRingProps) {
   if (score === null) {
     return (
-      <div className={`flex flex-col items-center gap-2 ${className}`}>
+      <div className={`flex flex-col items-center gap-2 ${className}`} role="img" aria-label={`${label ? label + ' : ' : ''}Score non disponible`}>
         <div
           style={{ width: size, height: size }}
           className="rounded-full bg-white/5 flex items-center justify-center"
         >
-          <span className="text-white/20 text-sm">—</span>
+          <span className="text-white/20 text-sm" aria-hidden="true">—</span>
         </div>
         {label && <span className="text-xs text-white/40">{label}</span>}
       </div>
@@ -52,10 +52,13 @@ export function ScoreRing({
   const offset = circumference - (score / 100) * circumference
   const { text, stroke } = colorFromScore(score)
 
+  const grade = gradeFromScore(score)
+  const ariaLabel = `${label ? label + ' : ' : ''}Score ${score} sur 100${showGrade ? ', grade ' + grade : ''}`
+
   return (
-    <div className={`flex flex-col items-center gap-2 ${className}`}>
+    <div className={`flex flex-col items-center gap-2 ${className}`} role="img" aria-label={ariaLabel}>
       <div className="relative" style={{ width: size, height: size }}>
-        <svg width={size} height={size} className="-rotate-90">
+        <svg width={size} height={size} className="-rotate-90" aria-hidden="true">
           <circle
             cx={size / 2}
             cy={size / 2}

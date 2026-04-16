@@ -75,7 +75,7 @@ export default function ContactPage() {
               {/* Form */}
               <div className="lg:col-span-3">
                 {sent ? (
-                  <div className="card p-12 text-center">
+                  <div className="card p-12 text-center" role="status" aria-live="polite">
                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-brand-500 to-violet-600 flex items-center justify-center mx-auto mb-5">
                       <Check className="w-8 h-8 text-white" />
                     </div>
@@ -83,12 +83,15 @@ export default function ContactPage() {
                     <p className="text-surface-500 dark:text-surface-400">Notre équipe vous répondra dans les 4 heures.</p>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="card p-8 space-y-5">
+                  <form onSubmit={handleSubmit} aria-label="Formulaire de contact" className="card p-8 space-y-5">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div>
-                        <label className="block text-xs font-semibold text-surface-500 uppercase tracking-wide mb-2">Nom *</label>
+                        <label htmlFor="contact-name" className="block text-xs font-semibold text-surface-500 uppercase tracking-wide mb-2">Nom <span aria-hidden="true">*</span></label>
                         <input
+                          id="contact-name"
                           required
+                          aria-required="true"
+                          autoComplete="name"
                           value={form.name}
                           onChange={(e) => setForm({ ...form, name: e.target.value })}
                           placeholder="Jean Dupont"
@@ -96,10 +99,13 @@ export default function ContactPage() {
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-semibold text-surface-500 uppercase tracking-wide mb-2">Email *</label>
+                        <label htmlFor="contact-email" className="block text-xs font-semibold text-surface-500 uppercase tracking-wide mb-2">Email <span aria-hidden="true">*</span></label>
                         <input
+                          id="contact-email"
                           required
+                          aria-required="true"
                           type="email"
+                          autoComplete="email"
                           value={form.email}
                           onChange={(e) => setForm({ ...form, email: e.target.value })}
                           placeholder="jean@entreprise.fr"
@@ -109,8 +115,10 @@ export default function ContactPage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-surface-500 uppercase tracking-wide mb-2">Entreprise</label>
+                      <label htmlFor="contact-company" className="block text-xs font-semibold text-surface-500 uppercase tracking-wide mb-2">Entreprise</label>
                       <input
+                        id="contact-company"
+                        autoComplete="organization"
                         value={form.company}
                         onChange={(e) => setForm({ ...form, company: e.target.value })}
                         placeholder="Ma Société"
@@ -119,8 +127,9 @@ export default function ContactPage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-surface-500 uppercase tracking-wide mb-2">Sujet</label>
+                      <label htmlFor="contact-subject" className="block text-xs font-semibold text-surface-500 uppercase tracking-wide mb-2">Sujet</label>
                       <select
+                        id="contact-subject"
                         value={form.subject}
                         onChange={(e) => setForm({ ...form, subject: e.target.value })}
                         className="w-full px-4 py-2.5 rounded-xl text-sm bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 text-surface-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500/50"
@@ -134,9 +143,11 @@ export default function ContactPage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-surface-500 uppercase tracking-wide mb-2">Message *</label>
+                      <label htmlFor="contact-message" className="block text-xs font-semibold text-surface-500 uppercase tracking-wide mb-2">Message <span aria-hidden="true">*</span></label>
                       <textarea
+                        id="contact-message"
                         required
+                        aria-required="true"
                         rows={5}
                         value={form.message}
                         onChange={(e) => setForm({ ...form, message: e.target.value })}
