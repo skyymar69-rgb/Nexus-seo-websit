@@ -231,7 +231,7 @@ export default function DomainOverviewPage() {
               <div className="space-y-0.5">
                 <Stat label="Title" value={data.meta.title || '(absent)'} />
                 <Stat label="Description" value={data.meta.description ? `${data.meta.description.length} car.` : '(absente)'} />
-                <Stat label="Langue" value={data.meta.lang || '(non definie)'} />
+                <Stat label="Langue" value={data.meta.lang || '(non définie)'} />
                 <Stat label="Robots" value={data.meta.robots || 'index, follow'} />
                 <StatusBadge ok={!!data.meta.canonical} label="Canonical" />
                 <StatusBadge ok={data.meta.ogImage} label="Image OG" />
@@ -256,15 +256,15 @@ export default function DomainOverviewPage() {
             {/* Performance */}
             <Card title="Performance" icon={Zap}>
               <div className="space-y-0.5">
-                <Stat label="Temps de reponse" value={`${data.performance.responseTime} ms`} />
+                <Stat label="Temps de réponse" value={`${data.performance.responseTime} ms`} />
                 <Stat label="Taille du contenu" value={`${(data.performance.contentLength / 1024).toFixed(1)} Ko`} />
                 <StatusBadge ok={data.performance.gzip} label="Compression Gzip" />
                 <StatusBadge ok={data.performance.https} label="HTTPS actif" />
               </div>
             </Card>
 
-            {/* Donnees structurees */}
-            <Card title="Donnees structurees" icon={Database}>
+            {/* Données structurées */}
+            <Card title="Données structurées" icon={Database}>
               <div className="space-y-0.5">
                 <StatusBadge ok={data.structuredData.hasJsonLd} label="JSON-LD" />
                 <StatusBadge ok={data.structuredData.hasOpenGraph} label="Open Graph" />

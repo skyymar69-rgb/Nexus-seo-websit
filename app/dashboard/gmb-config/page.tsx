@@ -38,7 +38,7 @@ export default function GMBConfigPage() {
       const data = await res.json()
       if (data.success) setResult(data.config)
       else setError(data.error)
-    } catch { setError('Erreur reseau') }
+    } catch { setError('Erreur réseau') }
     finally { setLoading(false) }
   }
 

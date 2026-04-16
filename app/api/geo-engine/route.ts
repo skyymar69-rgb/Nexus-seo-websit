@@ -62,21 +62,21 @@ export async function POST(request: NextRequest) {
     // Generate GEO-specific recommendations
     const geoRecommendations: string[] = []
 
-    if (eeat.total < 50) geoRecommendations.push('Votre score E-E-A-T est faible. Les LLMs privilegient les sources fiables et expertes.')
-    if (schema.missing.length > 0) geoRecommendations.push(`${schema.missing.length} schemas recommandes manquants : ${schema.missing.join(', ')}`)
-    if (!faq.detected) geoRecommendations.push('Ajoutez une FAQ structuree — les LLMs extraient massivement les reponses des FAQ.')
+    if (eeat.total < 50) geoRecommendations.push('Votre score E-E-A-T est faible. Les LLMs privilégient les sources fiables et expertes.')
+    if (schema.missing.length > 0) geoRecommendations.push(`${schema.missing.length} schémas recommandés manquants : ${schema.missing.join(', ')}`)
+    if (!faq.detected) geoRecommendations.push('Ajoutez une FAQ structurée — les LLMs extraient massivement les réponses des FAQ.')
     if (faq.detected && !faq.hasSchema) geoRecommendations.push('Votre FAQ n\'a pas de schema FAQPage. Google et les LLMs ne peuvent pas l\'exploiter pleinement.')
 
     // Content citability check
     const $ = cheerio.load(html)
     const wordCount = $('body').text().split(/\s+/).filter(w => w.length > 1).length
-    if (wordCount < 500) geoRecommendations.push('Contenu trop court pour etre cite par les LLMs. Visez 1500+ mots avec des donnees uniques.')
+    if (wordCount < 500) geoRecommendations.push('Contenu trop court pour être cité par les LLMs. Visez 1500+ mots avec des données uniques.')
 
     const hasStats = /\d+\s*%|\d+\s*(millions?|milliards?|euros?|dollars?)/.test($('body').text())
-    if (!hasStats) geoRecommendations.push('Ajoutez des statistiques et chiffres precis — les LLMs adorent citer des donnees chiffrees.')
+    if (!hasStats) geoRecommendations.push('Ajoutez des statistiques et chiffres précis — les LLMs adorent citer des données chiffrées.')
 
     const hasLists = $('ul li, ol li').length
-    if (hasLists < 3) geoRecommendations.push('Ajoutez des listes a puces structurees — elles sont extraites prioritairement par les LLMs.')
+    if (hasLists < 3) geoRecommendations.push('Ajoutez des listes à puces structurées — elles sont extraites prioritairement par les LLMs.')
 
     return NextResponse.json({
       success: true,

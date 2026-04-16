@@ -132,7 +132,7 @@ export default function AIContentPage() {
 
       // Handle SSE stream
       if (!res.body) {
-        setError('Pas de reponse du serveur');
+        setError('Pas de réponse du serveur');
         setIsGenerating(false);
         return;
       }

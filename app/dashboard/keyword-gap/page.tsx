@@ -104,7 +104,7 @@ export default function KeywordGapPage() {
       setData(await res.json())
       setActiveTab('exclusive1')
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur reseau')
+      setError(err instanceof Error ? err.message : 'Erreur réseau')
     } finally {
       setLoading(false)
     }

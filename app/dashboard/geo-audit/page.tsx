@@ -61,9 +61,9 @@ interface GeoResult {
 type CategoryKey = keyof GeoResult['categories']
 
 const categoryConfig: Record<CategoryKey, { label: string; icon: any; color: string; bgColor: string }> = {
-  structuredData:   { label: 'Donnees structurees',    icon: Database,    color: 'text-blue-500',   bgColor: 'bg-blue-500/10' },
-  entityClarity:    { label: 'Clarte des entites',     icon: Users,       color: 'text-purple-500', bgColor: 'bg-purple-500/10' },
-  citationReadiness:{ label: 'Pret pour la citation',  icon: Quote,       color: 'text-amber-500',  bgColor: 'bg-amber-500/10' },
+  structuredData:   { label: 'Données structurées',    icon: Database,    color: 'text-blue-500',   bgColor: 'bg-blue-500/10' },
+  entityClarity:    { label: 'Clarté des entités',     icon: Users,       color: 'text-purple-500', bgColor: 'bg-purple-500/10' },
+  citationReadiness:{ label: 'Prêt pour la citation',  icon: Quote,       color: 'text-amber-500',  bgColor: 'bg-amber-500/10' },
   eeat:             { label: 'E-E-A-T',                icon: ShieldCheck, color: 'text-green-500',  bgColor: 'bg-green-500/10' },
   technicalAI:      { label: 'Technique IA',           icon: Bot,         color: 'text-cyan-500',   bgColor: 'bg-cyan-500/10' },
 }
@@ -84,7 +84,7 @@ function getGradeColor(grade: string) {
 
 function getStatusConfig(status: string) {
   switch (status) {
-    case 'passed':  return { label: 'Reussi',         icon: CheckCircle,  color: 'text-green-500',  border: 'border-green-200 bg-green-50 dark:bg-green-950/20 dark:border-green-900',   badge: 'bg-green-200/50' }
+    case 'passed':  return { label: 'Réussi',         icon: CheckCircle,  color: 'text-green-500',  border: 'border-green-200 bg-green-50 dark:bg-green-950/20 dark:border-green-900',   badge: 'bg-green-200/50' }
     case 'warning': return { label: 'Avertissement',  icon: AlertTriangle,color: 'text-orange-500', border: 'border-orange-200 bg-orange-50 dark:bg-orange-950/20 dark:border-orange-900', badge: 'bg-orange-200/50' }
     case 'error':   return { label: 'Critique',       icon: AlertCircle,  color: 'text-red-500',    border: 'border-red-200 bg-red-50 dark:bg-red-950/20 dark:border-red-900',           badge: 'bg-red-200/50' }
     default:        return { label: 'Info',            icon: CheckCircle,  color: 'text-blue-500',   border: 'border-blue-200 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-900',       badge: 'bg-blue-200/50' }

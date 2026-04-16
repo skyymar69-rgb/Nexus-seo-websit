@@ -10,24 +10,24 @@ interface UpgradePromptProps {
 }
 
 const featureDescriptions: Record<string, string> = {
-  aiVisibility: 'Voir votre visibilite dans les reponses IA',
-  competitorAnalysis: 'Analyser vos concurrents en detail',
+  aiVisibility: 'Voir votre visibilité dans les réponses IA',
+  competitorAnalysis: 'Analyser vos concurrents en détail',
   exportPDF: 'Exporter vos audits en PDF',
-  apiAccess: "Acceder a l'API complete",
+  apiAccess: "Accéder à l'API complète",
   whiteLabel: 'Personnaliser la plateforme avec votre marque',
-  auditsPerMonth: 'Effectuer des audits illimites',
-  keywordsTracked: 'Suivre plus de mots-cles',
+  auditsPerMonth: 'Effectuer des audits illimités',
+  keywordsTracked: 'Suivre plus de mots-clés',
   backlinkChecks: 'Analyser vos backlinks en profondeur',
-  maxWebsites: 'Gerer plusieurs sites web',
+  maxWebsites: 'Gérer plusieurs sites web',
   aeoReports: 'Analyser le score AEO de vos pages',
-  llmoReports: 'Mesurer votre visibilite dans les reponses LLM',
+  llmoReports: 'Mesurer votre visibilité dans les réponses LLM',
   customDashboard: 'Personnaliser votre dashboard',
-  agencyAccess: "Beneficier de l'acces prioritaire a l'Agence Kayzen",
+  agencyAccess: "Bénéficier de l'accès prioritaire à l'Agence Kayzen",
 }
 
 export function UpgradePrompt({ feature, requiredPlan }: UpgradePromptProps) {
   const plan = getPlan('free')
-  const description = featureDescriptions[feature] || 'Acceder a cette fonctionnalite'
+  const description = featureDescriptions[feature] || 'Accéder à cette fonctionnalité'
   const isAgencyFeature = feature === 'agencyAccess'
 
   return (
@@ -62,7 +62,7 @@ export function UpgradePrompt({ feature, requiredPlan }: UpgradePromptProps) {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 transition-all duration-200 shadow-lg hover:shadow-xl"
             >
-              Decouvrir l&apos;Agence Kayzen
+              Découvrir l&apos;Agence Kayzen
               <ExternalLink className="w-4 h-4" />
             </a>
           ) : (

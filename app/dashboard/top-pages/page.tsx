@@ -55,7 +55,7 @@ export default function TopPagesPage() {
         const data = await res.json()
         setPages(data.pages || [])
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Erreur reseau')
+        setError(err instanceof Error ? err.message : 'Erreur réseau')
       } finally {
         setLoading(false)
       }

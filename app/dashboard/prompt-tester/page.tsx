@@ -78,14 +78,14 @@ export default function PromptTesterPage() {
 
         return {
           llm,
-          response: result?.response || 'Pas de reponse',
+          response: result?.response || 'Pas de réponse',
           mentioned: result?.mentioned || false,
           sentiment: result?.sentiment || 'neutral',
           position: result?.position || 0,
           loading: false,
         }
       } catch {
-        return { llm, response: '', mentioned: false, sentiment: 'neutral', position: 0, loading: false, error: 'Erreur reseau' }
+        return { llm, response: '', mentioned: false, sentiment: 'neutral', position: 0, loading: false, error: 'Erreur réseau' }
       }
     })
 

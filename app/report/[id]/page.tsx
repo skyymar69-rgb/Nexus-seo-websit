@@ -7,14 +7,14 @@ import { Check, X, AlertTriangle, ExternalLink, Printer } from 'lucide-react'
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const report = await findReport(params.id)
-  if (!report) return { title: 'Rapport non trouve' }
+  if (!report) return { title: 'Rapport non trouvé' }
 
   return {
     title: `Audit SEO — ${report.domain} | Nexus SEO`,
-    description: `Score SEO: ${report.score}/100 (${report.grade}). Rapport d'audit complet genere par Nexus SEO.`,
+    description: `Score SEO: ${report.score}/100 (${report.grade}). Rapport d'audit complet généré par Nexus SEO.`,
     openGraph: {
       title: `Audit SEO — ${report.domain}: ${report.score}/100`,
-      description: `Rapport d'audit SEO detaille. Score: ${report.score}/100.`,
+      description: `Rapport d'audit SEO détaillé. Score: ${report.score}/100.`,
       images: [`/api/og?title=Audit+SEO+${report.domain}&score=${report.score}`],
     },
   }
@@ -65,7 +65,7 @@ export default async function PublicReportPage({ params }: { params: { id: strin
             <h1 className="text-3xl sm:text-4xl font-black text-surface-900 dark:text-white mb-2">{report.domain}</h1>
             <p className="text-surface-500">{report.url}</p>
             <p className="text-xs text-surface-400 mt-2">
-              Genere le {new Date(report.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+              Généré le {new Date(report.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
             </p>
           </div>
 
@@ -82,7 +82,7 @@ export default async function PublicReportPage({ params }: { params: { id: strin
           <div className="grid grid-cols-3 gap-4 mb-10">
             <div className="text-center p-4 rounded-xl bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800">
               <p className="text-2xl font-black text-green-600">{passed}</p>
-              <p className="text-xs text-green-700">Reussis</p>
+              <p className="text-xs text-green-700">Réussis</p>
             </div>
             <div className="text-center p-4 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
               <p className="text-2xl font-black text-amber-600">{warnings}</p>
@@ -96,7 +96,7 @@ export default async function PublicReportPage({ params }: { params: { id: strin
 
           {/* Checks */}
           <div className="space-y-2 mb-10">
-            <h2 className="text-xl font-bold text-surface-900 dark:text-white mb-4">Detail des controles</h2>
+            <h2 className="text-xl font-bold text-surface-900 dark:text-white mb-4">Détail des contrôles</h2>
             {checks.map((check: any, i: number) => (
               <div key={i} className="flex items-center gap-3 px-4 py-3 rounded-lg border border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-900">
                 {check.status === 'passed' ? (
@@ -122,12 +122,12 @@ export default async function PublicReportPage({ params }: { params: { id: strin
             <h3 className="text-xl font-bold text-white mb-2">Lancez votre propre audit gratuit</h3>
             <p className="text-white/70 mb-4">50+ outils SEO & IA. 100% gratuit.</p>
             <a href="/signup" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-brand-700 font-bold hover:bg-surface-50 transition-colors">
-              Creer mon compte <ExternalLink className="w-4 h-4" />
+              Créer mon compte <ExternalLink className="w-4 h-4" />
             </a>
           </div>
 
           <p className="text-center text-xs text-surface-400 mt-8">
-            Genere par <a href="https://nexus.kayzen-lyon.fr" className="text-brand-500 hover:underline">Nexus SEO</a> — Outil SEO & IA gratuit par Kayzen Web
+            Généré par <a href="https://nexus.kayzen-lyon.fr" className="text-brand-500 hover:underline">Nexus SEO</a> — Outil SEO & IA gratuit par Kayzen Web
           </p>
         </div>
       </main>

@@ -156,9 +156,10 @@
            rounded-2xl shadow-sm;
   }
   .card-hover {
-    @apply card transition-all duration-200
+    @apply card transition-all duration-300 ease-out
            hover:border-brand-300 dark:hover:border-brand-700
-           hover:shadow-md dark:hover:shadow-surface-950/50;
+           hover:shadow-lg hover:shadow-brand-500/5 dark:hover:shadow-brand-500/10
+           hover:-translate-y-0.5;
   }
   .card-gradient {
     @apply bg-white dark:bg-surface-900 rounded-2xl
@@ -216,6 +217,22 @@
   .glass {
     @apply backdrop-blur-xl bg-white/70 dark:bg-surface-900/70
            border border-white/20 dark:border-surface-700/50;
+  }
+
+  /* #19 Backdrop blur on modals/overlays */
+  .modal-overlay {
+    @apply fixed inset-0 z-50 bg-black/40 backdrop-blur-sm
+           flex items-center justify-center
+           animate-fade-in;
+  }
+
+  /* #26 Button loading state */
+  .btn-loading {
+    @apply relative pointer-events-none opacity-80;
+  }
+  .btn-loading::after {
+    content: '';
+    @apply absolute inset-0 rounded-xl bg-white/10 animate-pulse;
   }
 }
 
@@ -306,11 +323,28 @@
   outline: 3px solid rgb(255 255 255);
 }
 
-/* Focus visible — enhanced for keyboard navigation */
+/* #15 Focus visible — enhanced for keyboard navigation */
 :focus-visible {
   outline: 2px solid rgb(99 102 241);
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+/* Improve focus ring on buttons */
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid rgb(99 102 241);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+}
+
+/* #18 Dark mode smooth transition */
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+html.disable-transitions * {
+  transition: none !important;
 }
 
 /* ============================================================
@@ -324,11 +358,18 @@
     line-height: 1.4;
   }
 
-  /* Hide sidebar, header, navigation */
+  /* #27 Hide sidebar, header, navigation, widgets */
   aside,
   header,
   nav,
-  .print\:hidden {
+  footer,
+  [role="navigation"],
+  .print\:hidden,
+  .skip-to-main,
+  [data-chat-widget],
+  [data-cookie-banner],
+  [data-accessibility-toggle],
+  [data-scroll-progress] {
     display: none !important;
   }
 

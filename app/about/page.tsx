@@ -4,14 +4,14 @@ import { Zap, Target, Globe, Users, TrendingUp, Award } from 'lucide-react'
 import { Breadcrumb } from '@/components/shared/Breadcrumb'
 
 export const metadata = {
-  title: 'A propos — Notre Mission SEO IA',
-  description: 'Nexus est ne d\'une conviction : les outils SEO du passe ne suffisent plus a l\'ere de l\'IA. Decouvrez notre mission, notre equipe et notre vision du SEO en 2026.',
+  title: 'À propos — Notre Mission SEO IA',
+  description: 'Nexus est né d\'une conviction : les outils SEO du passé ne suffisent plus à l\'ère de l\'IA. Découvrez notre mission, notre équipe et notre vision du SEO en 2026.',
   alternates: {
     canonical: '/about',
   },
   openGraph: {
-    title: 'A propos — Nexus SEO',
-    description: 'Nexus est ne d\'une conviction : les outils SEO du passe ne suffisent plus a l\'ere de l\'IA. Decouvrez notre mission et notre equipe.',
+    title: 'À propos — Nexus SEO',
+    description: 'Nexus est né d\'une conviction : les outils SEO du passé ne suffisent plus à l\'ère de l\'IA. Découvrez notre mission et notre équipe.',
     images: ['/api/og?title=A%20propos&subtitle=Kayzen%20Web%20x%20Nexus'],
   },
 }
@@ -37,7 +37,7 @@ export default function AboutPage() {
         {/* Hero */}
         <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white dark:bg-surface-950">
           <div className="max-w-4xl mx-auto">
-            <Breadcrumb items={[{ label: 'Accueil', href: '/' }, { label: 'A propos' }]} />
+            <Breadcrumb items={[{ label: 'Accueil', href: '/' }, { label: 'À propos' }]} />
             <div className="text-center">
             <div className="section-badge mx-auto mb-6">Notre histoire</div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-surface-900 dark:text-white mb-6 leading-tight">

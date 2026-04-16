@@ -21,13 +21,13 @@ export const metadata: Metadata = {
 }
 
 const allFeatures = [
-  'Audits SEO illimites',
-  'Suivi de mots-cles illimite',
-  'Sites web illimites',
+  'Audits SEO illimités',
+  'Suivi de mots-clés illimité',
+  'Sites web illimités',
   'Analyse concurrents',
   'Score GEO, AEO, LLMO',
-  'Visibilite IA (ChatGPT, Claude, Gemini...)',
-  'Generateur de contenu SEO',
+  'Visibilité IA (ChatGPT, Claude, Gemini...)',
+  'Générateur de contenu SEO',
   'Profil backlinks complet',
   'Crawleur web',
   'Keyword Magic & Gap',
@@ -36,55 +36,55 @@ const allFeatures = [
   'Rapports & Analytics',
   'AI Advisor',
   'Export PDF / JSON',
-  'Chat IA integre',
+  'Chat IA intégré',
   'Domain Overview',
   'On-Page Checker',
-  'Recherche semantique',
+  'Recherche sémantique',
 ]
 
 const categories = [
   {
     icon: Search,
     name: 'SEO Technique',
-    features: ['Audit complet 30+ criteres', 'Core Web Vitals', 'Crawl illimite', 'On-Page Checker'],
+    features: ['Audit complet 30+ critères', 'Core Web Vitals', 'Crawl illimité', 'On-Page Checker'],
   },
   {
     icon: TrendingUp,
     name: 'Mots-cles',
-    features: ['Suivi de positions', 'Keyword Magic', 'Keyword Gap', 'Recherche semantique'],
+    features: ['Suivi de positions', 'Keyword Magic', 'Keyword Gap', 'Recherche sémantique'],
   },
   {
     icon: Sparkles,
     name: 'IA & GEO',
-    features: ['Score GEO / AEO / LLMO', 'Monitoring 10+ LLMs', 'AI Advisor', 'Alertes en temps reel'],
+    features: ['Score GEO / AEO / LLMO', 'Monitoring 10+ LLMs', 'AI Advisor', 'Alertes en temps réel'],
   },
   {
     icon: FileText,
     name: 'Contenu',
-    features: ['Generateur SEO', 'Optimisation contenu', 'Topic Research', 'Content Template'],
+    features: ['Générateur SEO', 'Optimisation contenu', 'Topic Research', 'Content Template'],
   },
 ]
 
 const faqs = [
   {
     q: 'C\'est vraiment 100% gratuit ?',
-    a: 'Oui, tous les outils sont gratuits et sans limitation. Aucune carte bancaire n\'est requise. Nous monetiserons plus tard avec des fonctionnalites premium optionnelles, mais l\'ensemble des outils actuels restera gratuit.',
+    a: 'Oui, tous les outils sont gratuits et sans limitation. Aucune carte bancaire n\'est requise. Nous monétiserons plus tard avec des fonctionnalités premium optionnelles, mais l\'ensemble des outils actuels restera gratuit.',
   },
   {
     q: 'Pourquoi faut-il s\'inscrire ?',
-    a: 'L\'inscription permet de sauvegarder vos sites, suivre l\'evolution de vos positions et conserver l\'historique de vos audits. Les outils ponctuels (audit, generateur de contenu) fonctionnent sans compte.',
+    a: 'L\'inscription permet de sauvegarder vos sites, suivre l\'évolution de vos positions et conserver l\'historique de vos audits. Les outils ponctuels (audit, générateur de contenu) fonctionnent sans compte.',
   },
   {
     q: 'Y a-t-il des limites ?',
-    a: 'Non. Audits illimites, mots-cles illimites, sites illimites. Nous voulons que vous ayez acces a tous les outils pour optimiser votre SEO sans contrainte.',
+    a: 'Non. Audits illimités, mots-clés illimités, sites illimités. Nous voulons que vous ayez accès à tous les outils pour optimiser votre SEO sans contrainte.',
   },
   {
     q: 'Qu\'est-ce que le GEO / AEO / LLMO ?',
-    a: 'Ce sont les nouvelles disciplines du SEO : Generative Engine Optimization (Google SGE), Answer Engine Optimization (featured snippets, voice search) et Large Language Model Optimization (ChatGPT, Claude, Gemini). Nexus est le premier outil a les combiner.',
+    a: 'Ce sont les nouvelles disciplines du SEO : Generative Engine Optimization (Google SGE), Answer Engine Optimization (featured snippets, voice search) et Large Language Model Optimization (ChatGPT, Claude, Gemini). Nexus est le premier outil à les combiner.',
   },
   {
-    q: 'Mes donnees sont-elles securisees ?',
-    a: 'Oui. Toutes les donnees sont chiffrees, hebergees en Europe et conformes au RGPD. Nous ne revendons jamais vos donnees.',
+    q: 'Mes données sont-elles sécurisées ?',
+    a: 'Oui. Toutes les données sont chiffrées, hébergées en Europe et conformes au RGPD. Nous ne revendons jamais vos données.',
   },
 ]
 
@@ -106,7 +106,7 @@ export default function PricingPage() {
                 <span className="gradient-text">Zero euro.</span>
               </h1>
               <p className="text-xl text-surface-500 dark:text-surface-400 max-w-2xl mx-auto">
-                Nexus SEO est entierement gratuit. 50+ outils SEO & IA sans aucune limitation. Aucune carte bancaire requise.
+                Nexus SEO est entièrement gratuit. 50+ outils SEO & IA sans aucune limitation. Aucune carte bancaire requise.
               </p>
             </div>
           </div>
@@ -118,7 +118,7 @@ export default function PricingPage() {
             <div className="relative overflow-hidden rounded-3xl border-2 border-brand-500 bg-white dark:bg-surface-900 shadow-xl">
               {/* Badge */}
               <div className="absolute top-0 right-0 bg-brand-600 text-white text-xs font-bold px-4 py-1.5 rounded-bl-xl">
-                Acces complet
+                Accès complet
               </div>
 
               <div className="p-8 sm:p-10">
@@ -187,7 +187,7 @@ export default function PricingPage() {
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl sm:text-4xl font-bold text-surface-900 dark:text-white mb-4">
-                Questions frequentes
+                Questions fréquentes
               </h2>
             </div>
 
@@ -216,7 +216,7 @@ export default function PricingPage() {
         <section className="py-16 px-4 sm:px-6 lg:px-8 border-t border-surface-200 dark:border-surface-800">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-2xl font-bold text-surface-900 dark:text-white mb-4">
-              Pret a booster votre visibilite ?
+              Prêt à booster votre visibilité ?
             </h2>
             <p className="text-surface-500 dark:text-surface-400 mb-6">
               50+ outils SEO & IA gratuits. Commencez en 30 secondes.
@@ -225,7 +225,7 @@ export default function PricingPage() {
               href="/signup"
               className="btn-primary px-8 py-3 rounded-xl inline-flex items-center gap-2"
             >
-              Demarrer gratuitement
+              Démarrer gratuitement
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

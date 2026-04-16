@@ -129,7 +129,7 @@ export async function GET(request: NextRequest) {
     <div class="header">
       <div class="logo">● ● ● Nexus SEO</div>
       <div class="site-name">${scan.website.name || scan.website.domain}</div>
-      <div class="date">Rapport genere le ${new Date(scan.completedAt || scan.startedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+      <div class="date">Rapport généré le ${new Date(scan.completedAt || scan.startedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
     </div>
 
     <div class="scores">
@@ -271,8 +271,8 @@ export async function GET(request: NextRequest) {
 
     <div class="footer">
       <div class="logo" style="font-size: 16px; margin-bottom: 4px;">● ● ● Nexus SEO</div>
-      <p>Rapport genere automatiquement par Nexus SEO — nexus.kayzen-lyon.fr</p>
-      <p>Developpe par Kayzen Web — Agence web Lyon</p>
+      <p>Rapport généré automatiquement par Nexus SEO — nexus.kayzen-lyon.fr</p>
+      <p>Développé par Kayzen Web — Agence web Lyon</p>
     </div>
   </div>
 </body>

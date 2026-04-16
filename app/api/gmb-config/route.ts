@@ -106,44 +106,44 @@ export async function POST(request: NextRequest) {
     // Generate GMB posts suggestions
     const posts = [
       {
-        type: 'Nouveaute',
-        title: `Decouvrez ${businessName}`,
-        content: `${businessName} vous accueille a ${city || 'votre ville'}. ${shortDesc}`,
+        type: 'Nouveauté',
+        title: `Découvrez ${businessName}`,
+        content: `${businessName} vous accueille à ${city || 'votre ville'}. ${shortDesc}`,
         cta: 'En savoir plus',
       },
       {
         type: 'Offre',
-        title: 'Offre speciale nouveau client',
-        content: `Beneficiez d'une offre de bienvenue chez ${businessName}. ${catConfig.services[0] ? `${catConfig.services[0]} inclus.` : 'Contactez-nous.'}`,
+        title: 'Offre spéciale nouveau client',
+        content: `Bénéficiez d'une offre de bienvenue chez ${businessName}. ${catConfig.services[0] ? `${catConfig.services[0]} inclus.` : 'Contactez-nous.'}`,
         cta: 'Profiter de l\'offre',
       },
       {
-        type: 'Evenement',
+        type: 'Événement',
         title: `${businessName} — Portes ouvertes`,
-        content: `Venez decouvrir nos services lors de nos portes ouvertes. ${catConfig.services.slice(0, 2).join(' et ')} en demonstration.`,
+        content: `Venez découvrir nos services lors de nos portes ouvertes. ${catConfig.services.slice(0, 2).join(' et ')} en démonstration.`,
         cta: 'S\'inscrire',
       },
     ]
 
     // SEO Local recommendations
     const seoRecommendations = [
-      `Utilisez le nom exact "${businessName}" partout (site web, reseaux sociaux, annuaires)`,
-      `Ajoutez des photos de qualite: facade, interieur, equipe, produits (minimum 10 photos)`,
-      `Repondez a TOUS les avis Google (positifs et negatifs) dans les 24h`,
+      `Utilisez le nom exact "${businessName}" partout (site web, réseaux sociaux, annuaires)`,
+      `Ajoutez des photos de qualité : façade, intérieur, équipe, produits (minimum 10 photos)`,
+      `Répondez à TOUS les avis Google (positifs et négatifs) dans les 24h`,
       `Publiez un Google Post au minimum chaque semaine`,
-      `Completez 100% des informations de votre fiche (description, horaires, services, attributs)`,
+      `Complétez 100% des informations de votre fiche (description, horaires, services, attributs)`,
       `Ajoutez votre adresse exacte dans le footer de votre site web`,
-      `Creez une page "Avis" sur votre site avec un lien vers votre fiche Google`,
+      `Créez une page "Avis" sur votre site avec un lien vers votre fiche Google`,
       `Inscrivez-vous dans les annuaires locaux (PagesJaunes, Yelp, TripAdvisor si pertinent)`,
     ]
 
     // GEO recommendations
     const geoRecommendations = [
-      `Creez un fichier llms.txt sur votre site (utilisez le generateur Nexus)`,
-      `Ajoutez le schema LocalBusiness JSON-LD sur votre site`,
-      `Les LLMs citent les entreprises avec des avis positifs — visez 4.5+ etoiles`,
+      `Créez un fichier llms.txt sur votre site (utilisez le générateur Nexus)`,
+      `Ajoutez le schéma LocalBusiness JSON-LD sur votre site`,
+      `Les LLMs citent les entreprises avec des avis positifs — visez 4.5+ étoiles`,
       `Mentionnez votre ville dans le title de votre page d'accueil`,
-      `Creez du contenu "local" : articles sur votre ville, votre quartier, vos evenements`,
+      `Créez du contenu "local" : articles sur votre ville, votre quartier, vos événements`,
     ]
 
     // Generate LocalBusiness schema

@@ -111,6 +111,7 @@
       "Bash(npm uninstall:*)",
       "Bash(git mv:*)",
       "Bash(mv \"app/outils/audit-seo-[ville]\" \"app/outils/[ville]\")",
+<<<<<<< Updated upstream
       "Bash(cat vercel.json)",
       "Bash(cat .vercel/project.json)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 2 --squash --delete-branch)",
@@ -200,6 +201,14 @@
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 32 --repo skyymar69-rgb/Nexus-seo-websit --merge)",
       "Bash(grep -rn \"legere\\\\|referencee\\\\|experience\\\\|numerique\\\\|Gerez\\\\|Selectionnez\\\\|donnees\\\\|Generer\\\\|Generez\\\\|genere\\\\b\\\\|Analysez\\\\|Evaluez\\\\|detecte\\\\b\\\\|Ameliorez\\\\|Integrez\\\\|Ajoutez\\\\|Optimisez\\\\|Decouvrir\\\\|Creez\\\\|creez\\\\|Lancez\\\\|Entrez\\\\|Verifiez\\\\|Activez\\\\|securite\\\\b\\\\|visibilite\\\\b\\\\|qualite\\\\b\\\\|referencement\\\\b\\\\|activite\\\\b\\\\|fonctionnalite\\\\b\\\\|opportunite\\\\b\\\\|lisibilite\\\\b\\\\|autorite\\\\b\\\\|fiabilite\\\\b\\\\|accessibilite\\\\b\\\\|disponibilite\\\\b\" components/landing/*.tsx app/dashboard/*/page.tsx app/page.tsx)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" pr merge 33 --repo skyymar69-rgb/Nexus-seo-websit --merge)"
+=======
+      "mcp__4ce49431-28e2-43ec-9333-64a59dbd14a4__deploy_to_vercel",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://nexus.kayzen-lyon.fr/\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://nexus-clean-git-main-skyymar69-9413s-projects.vercel.app/\")",
+      "Bash(curl -s \"https://nexus.kayzen-lyon.fr/\")",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)"
+>>>>>>> Stashed changes
     ]
   }
 }

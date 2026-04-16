@@ -56,7 +56,7 @@ export default function KeywordMagicPage() {
       const data = await res.json()
       setResults(data.keywords || data)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur reseau')
+      setError(err instanceof Error ? err.message : 'Erreur réseau')
     } finally {
       setLoading(false)
     }

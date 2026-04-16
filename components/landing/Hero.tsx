@@ -1,10 +1,12 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
-import { ArrowRight, Play, TrendingUp, Globe, Zap, Search } from 'lucide-react'
+import { ArrowRight, Play, TrendingUp, Globe, Zap, Search, Loader2 } from 'lucide-react'
 
 
 export function Hero() {
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
   return (
     <section className="relative min-h-screen flex items-center pt-28 pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-gradient-hero">
 
@@ -90,11 +92,13 @@ export function Hero() {
           {/* Audit form directly in hero */}
           <div className="w-full max-w-xl mx-auto lg:mx-0 mb-4">
             <form
+              aria-label="Lancer un audit SEO gratuit"
               onSubmit={(e) => {
                 e.preventDefault()
                 const input = (e.target as HTMLFormElement).querySelector('input') as HTMLInputElement
                 const url = input?.value?.trim()
                 if (url) {
+                  setIsAnalyzing(true)
                   window.location.href = `/dashboard/audit?url=${encodeURIComponent(url)}`
                 }
               }}
@@ -112,10 +116,15 @@ export function Hero() {
               </div>
               <button
                 type="submit"
-                className="px-8 py-4 rounded-xl bg-gold-400 text-brand-950 font-bold text-base hover:bg-gold-300 transition-all duration-300 shadow-gold hover:shadow-[0_0_40px_rgba(254,205,77,0.4)] hover:scale-[1.02] flex items-center justify-center gap-2 whitespace-nowrap"
+                disabled={isAnalyzing}
+                className="px-8 py-4 rounded-xl bg-gold-400 text-brand-950 font-bold text-base hover:bg-gold-300 transition-all duration-300 shadow-gold hover:shadow-[0_0_40px_rgba(254,205,77,0.4)] hover:scale-[1.02] flex items-center justify-center gap-2 whitespace-nowrap disabled:opacity-70 disabled:cursor-wait disabled:hover:scale-100"
               >
-                <Search className="w-5 h-5" />
-                Analyser mon site
+                {isAnalyzing ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <Search className="w-5 h-5" />
+                )}
+                {isAnalyzing ? 'Analyse en cours...' : 'Analyser mon site'}
               </button>
             </form>
           </div>

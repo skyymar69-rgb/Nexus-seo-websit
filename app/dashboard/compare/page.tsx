@@ -144,7 +144,7 @@ export default function ComparePage() {
                 <MetricRow label="Feuilles CSS" v1={result.site1.stylesheets} v2={result.site2.stylesheets} better="lower" />
                 <MetricRow label="HTTPS" v1={b(result.site1.hasSSL)} v2={b(result.site2.hasSSL)} better="boolean" />
                 <MetricRow label="Viewport mobile" v1={b(result.site1.hasViewport)} v2={b(result.site2.hasViewport)} better="boolean" />
-                <MetricRow label="Donnees structurees" v1={b(result.site1.hasStructuredData)} v2={b(result.site2.hasStructuredData)} better="boolean" />
+                <MetricRow label="Données structurées" v1={b(result.site1.hasStructuredData)} v2={b(result.site2.hasStructuredData)} better="boolean" />
                 <MetricRow label="Open Graph" v1={b(result.site1.hasOpenGraph)} v2={b(result.site2.hasOpenGraph)} better="boolean" />
                 <MetricRow label="Titre" v1={`${result.site1.titleLength} car.`} v2={`${result.site2.titleLength} car.`} />
                 <MetricRow label="Meta description" v1={`${result.site1.metaDescLength} car.`} v2={`${result.site2.metaDescLength} car.`} />

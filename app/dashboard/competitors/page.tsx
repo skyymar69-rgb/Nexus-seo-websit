@@ -324,7 +324,7 @@ export default function CompetitorsPage() {
         dir: 'higher-better',
       },
       {
-        label: 'Temps de reponse moyen',
+        label: 'Temps de réponse moyen',
         icon: <Clock className="h-4 w-4" />,
         ownValue: ownCrawl?.stats.avgResponseTime ?? null,
         competitors: crawledCompetitors.map((c) => ({
@@ -825,7 +825,7 @@ export default function CompetitorsPage() {
             Comparaison du Temps de Reponse Moyen
           </h2>
           <p className="text-sm text-surface-400 mb-6">
-            Temps de reponse moyen en millisecondes (plus bas = mieux)
+            Temps de réponse moyen en millisecondes (plus bas = mieux)
           </p>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={responseTimeChartData}>

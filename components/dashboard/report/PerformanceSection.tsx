@@ -22,7 +22,7 @@ function MetricCard({ label, value, unit, thresholds }: {
 
   const status = value <= thresholds[0] ? 'good' : value <= thresholds[1] ? 'needs-improvement' : 'poor'
   const color = status === 'good' ? 'text-emerald-400 bg-emerald-500/10' : status === 'needs-improvement' ? 'text-amber-400 bg-amber-500/10' : 'text-rose-400 bg-rose-500/10'
-  const statusLabel = status === 'good' ? 'Bon' : status === 'needs-improvement' ? 'A ameliorer' : 'Insuffisant'
+  const statusLabel = status === 'good' ? 'Bon' : status === 'needs-improvement' ? 'À améliorer' : 'Insuffisant'
 
   const displayValue = unit === 'ms' ? (value > 1000 ? `${(value / 1000).toFixed(1)}s` : `${Math.round(value)}ms`) : value.toFixed(3)
 
@@ -61,7 +61,7 @@ export function PerformanceSection({ score, grade, lcp, fid, cls, ttfb }: Perfor
           </div>
         )}
         <Link href="/dashboard/performance" className="hidden sm:flex items-center gap-1 text-xs text-brand-400 hover:text-brand-300 transition-colors">
-          Detail <ArrowRight className="w-3 h-3" />
+          Détail <ArrowRight className="w-3 h-3" />
         </Link>
       </div>
 
@@ -75,7 +75,7 @@ export function PerformanceSection({ score, grade, lcp, fid, cls, ttfb }: Perfor
 
         {score === null && (
           <p className="text-xs text-white/30 mt-4 text-center">
-            Configurez PAGESPEED_API_KEY pour des metriques detaillees
+            Configurez PAGESPEED_API_KEY pour des métriques détaillées
           </p>
         )}
       </div>

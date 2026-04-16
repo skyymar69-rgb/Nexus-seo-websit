@@ -37,7 +37,7 @@ export default function ContentAnalyzerPage() {
       const data = await res.json()
       if (data.success) setResult(data)
       else setError(data.error || 'Erreur')
-    } catch { setError('Erreur reseau') }
+    } catch { setError('Erreur réseau') }
     finally { setLoading(false) }
   }
 

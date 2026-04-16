@@ -84,7 +84,7 @@ export function GEOSection({ score, grade, categories, eeat, recommendations }: 
           <div className="text-xs text-white/40">Note {grade}</div>
         </div>
         <Link href="/dashboard/geo-audit" className="hidden sm:flex items-center gap-1 text-xs text-brand-400 hover:text-brand-300 transition-colors">
-          Detail <ArrowRight className="w-3 h-3" />
+          Détail <ArrowRight className="w-3 h-3" />
         </Link>
       </div>
 
@@ -108,9 +108,9 @@ export function GEOSection({ score, grade, categories, eeat, recommendations }: 
             {Object.entries(categories).filter(([_, cat]) => cat !== null).map(([key, cat]) => {
               if (!cat) return null
               const labels: Record<string, string> = {
-                structuredData: 'Donnees structurees',
-                entityClarity: 'Clarte des entites',
-                citationReadiness: 'Pret pour citations',
+                structuredData: 'Données structurées',
+                entityClarity: 'Clarté des entités',
+                citationReadiness: 'Prêt pour citations',
                 eeat: 'E-E-A-T',
                 technicalAI: 'Technique IA',
               }

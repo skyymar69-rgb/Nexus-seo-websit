@@ -80,7 +80,7 @@ export function ActionsSection({ auditChecks, aeoRecommendations, geoRecommendat
         </div>
         <div>
           <h2 className="text-lg font-bold text-white">Actions prioritaires</h2>
-          <p className="text-xs text-white/40">{actions.length} ameliorations recommandees</p>
+          <p className="text-xs text-white/40">{actions.length} améliorations recommandées</p>
         </div>
       </div>
 

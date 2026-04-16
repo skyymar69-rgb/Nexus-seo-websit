@@ -219,7 +219,7 @@ export default function CrawlPage() {
         }
       }
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Erreur reseau';
+      const message = err instanceof Error ? err.message : 'Erreur réseau';
       setError(message);
     } finally {
       setLoading(false);

@@ -28,11 +28,11 @@ export function CrawlSection({ pagesFound, pagesCrawled, statusCodes, issues }: 
           </div>
           <div>
             <h2 className="text-lg font-bold text-white">Crawl du site</h2>
-            <p className="text-xs text-white/40">{pagesCrawled} pages analysees sur {pagesFound} trouvees</p>
+            <p className="text-xs text-white/40">{pagesCrawled} pages analysées sur {pagesFound} trouvées</p>
           </div>
         </div>
         <Link href="/dashboard/crawl" className="hidden sm:flex items-center gap-1 text-xs text-brand-400 hover:text-brand-300 transition-colors">
-          Detail <ArrowRight className="w-3 h-3" />
+          Détail <ArrowRight className="w-3 h-3" />
         </Link>
       </div>
 
@@ -56,7 +56,7 @@ export function CrawlSection({ pagesFound, pagesCrawled, statusCodes, issues }: 
         {/* Issues list */}
         {issues && issues.length > 0 ? (
           <div>
-            <h3 className="text-sm font-medium text-white/70 mb-2">Problemes detectes</h3>
+            <h3 className="text-sm font-medium text-white/70 mb-2">Problèmes détectés</h3>
             <div className="space-y-1.5 max-h-48 overflow-y-auto">
               {issues.slice(0, 20).map((issue, i) => (
                 <div key={i} className="flex items-start gap-2 text-xs">
@@ -72,7 +72,7 @@ export function CrawlSection({ pagesFound, pagesCrawled, statusCodes, issues }: 
         ) : (
           <div className="flex items-center gap-2 text-xs text-emerald-400">
             <CheckCircle2 className="w-4 h-4" />
-            Aucun probleme majeur detecte
+            Aucun problème majeur détecté
           </div>
         )}
       </div>

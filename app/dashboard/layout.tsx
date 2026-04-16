@@ -226,7 +226,7 @@ function SidebarContent() {
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
               className="hidden lg:flex rounded-md p-1.5 hover:bg-white/[0.05] transition-colors"
-              aria-label="Toggle sidebar"
+              aria-label={sidebarOpen ? 'Réduire la barre latérale' : 'Ouvrir la barre latérale'}
             >
               {sidebarOpen ? (
                 <ChevronLeft className="h-5 w-5 text-white/50" />
@@ -237,7 +237,7 @@ function SidebarContent() {
             <button
               onClick={() => setMobileMenuOpen(false)}
               className="lg:hidden rounded-md p-1.5 hover:bg-white/[0.05]"
-              aria-label="Close menu"
+              aria-label="Fermer le menu"
             >
               <X className="h-5 w-5 text-white/50" />
             </button>
@@ -341,7 +341,7 @@ function SidebarContent() {
       <button
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         className="lg:hidden fixed left-4 top-4 z-50 rounded-lg p-2 bg-zinc-950/90 backdrop-blur-xl border border-white/5 text-white"
-        aria-label="Toggle menu"
+        aria-label={mobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
       >
         {mobileMenuOpen ? (
           <X className="h-5 w-5" />

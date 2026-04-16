@@ -250,7 +250,7 @@ function generateTextReport(data: ApiAuditData): string {
   txt += `Date     : ${date}\n`
   txt += `Score    : ${data.score}/100 (Grade ${grade})\n\n`
   txt += `RESUME\n${'-'.repeat(40)}\n`
-  txt += `Reussis         : ${data.summary.passed}\n`
+  txt += `Réussis         : ${data.summary.passed}\n`
   txt += `Avertissements  : ${data.summary.warnings}\n`
   txt += `Erreurs         : ${data.summary.errors}\n\n`
 
@@ -658,7 +658,7 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
       html += `</table>`
     }
 
-    html += `<p style="margin-top:2rem;color:#888;font-size:.75rem">Genere par Nexus SEO — nexus.kayzen-lyon.fr</p></body></html>`
+    html += `<p style="margin-top:2rem;color:#888;font-size:.75rem">Généré par Nexus SEO — nexus.kayzen-lyon.fr</p></body></html>`
     const domain = new URL(result.url).hostname.replace(/\./g, '-')
     downloadFile(html, `audit-seo-${domain}.html`, 'text/html')
   }
@@ -794,7 +794,7 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
               <div className="mt-4 grid grid-cols-3 gap-3 w-full">
                 <div className="text-center rounded-lg bg-green-50 dark:bg-green-950/30 p-2">
                   <p className="text-lg font-bold text-green-600">{summary.passed}</p>
-                  <p className="text-[10px] text-green-700 dark:text-green-400 font-medium">Reussis</p>
+                  <p className="text-[10px] text-green-700 dark:text-green-400 font-medium">Réussis</p>
                 </div>
                 <div className="text-center rounded-lg bg-amber-50 dark:bg-amber-950/30 p-2">
                   <p className="text-lg font-bold text-amber-600">{summary.warnings}</p>
@@ -949,7 +949,7 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
 
           {/* ── Technical Summary ────────────────────────────── */}
           <div className="rounded-lg border border-white/5 bg-white/[0.03] p-6">
-            <h3 className="text-sm font-bold text-white mb-4 uppercase tracking-wider">Resume technique</h3>
+            <h3 className="text-sm font-bold text-white mb-4 uppercase tracking-wider">Résumé technique</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <div className="rounded-lg bg-white/[0.02] p-3">
                 <p className="text-xs text-surface-500 mb-1">HTTPS</p>
@@ -958,7 +958,7 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
                 </p>
               </div>
               <div className="rounded-lg bg-white/[0.02] p-3">
-                <p className="text-xs text-surface-500 mb-1">Temps de reponse</p>
+                <p className="text-xs text-surface-500 mb-1">Temps de réponse</p>
                 <p className="text-lg font-bold text-white">{result.loadTime}ms</p>
               </div>
               <div className="rounded-lg bg-white/[0.02] p-3">
@@ -966,7 +966,7 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
                 <p className="text-lg font-bold text-white">{(result.htmlSize / 1024).toFixed(1)} KB</p>
               </div>
               <div className="rounded-lg bg-white/[0.02] p-3">
-                <p className="text-xs text-surface-500 mb-1">Verifications</p>
+                <p className="text-xs text-surface-500 mb-1">Vérifications</p>
                 <p className="text-lg font-bold text-white">
                   {summary.totalChecks}
                   <span className="text-xs font-normal text-surface-500 ml-1">({summary.passed} OK)</span>

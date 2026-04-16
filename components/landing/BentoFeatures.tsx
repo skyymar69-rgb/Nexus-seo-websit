@@ -86,7 +86,7 @@ export function BentoFeatures() {
             return (
               <div
                 key={f.id}
-                className={`group relative rounded-2xl p-8 border bg-gradient-to-br ${f.gradient} ${f.border} transition-all duration-300 hover:shadow-glow`}
+                className={`group relative rounded-2xl p-8 border bg-gradient-to-br ${f.gradient} ${f.border} transition-all duration-300 hover:shadow-glow hover:-translate-y-1`}
               >
                 <div className={`w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-5`}>
                   <Icon className={`w-6 h-6 ${f.iconColor}`} />
@@ -107,7 +107,7 @@ export function BentoFeatures() {
             return (
               <div
                 key={f.id}
-                className={`group relative rounded-2xl p-6 border bg-gradient-to-br ${f.gradient} ${f.border} transition-all duration-300 hover:shadow-glow`}
+                className={`group relative rounded-2xl p-6 border bg-gradient-to-br ${f.gradient} ${f.border} transition-all duration-300 hover:shadow-glow hover:-translate-y-0.5`}
               >
                 <div className={`w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4`}>
                   <Icon className={`w-5 h-5 ${f.iconColor}`} />

@@ -117,8 +117,8 @@ export async function POST(request: NextRequest) {
 
     if (site1.wordCount > site2.wordCount * 1.5) insights.push(`${new URL(site1.url).hostname} a un contenu beaucoup plus riche (${site1.wordCount} vs ${site2.wordCount} mots)`)
 
-    if (site1.hasStructuredData && !site2.hasStructuredData) insights.push(`${new URL(site1.url).hostname} a des donnees structurees, pas ${new URL(site2.url).hostname}`)
-    else if (site2.hasStructuredData && !site1.hasStructuredData) insights.push(`${new URL(site2.url).hostname} a des donnees structurees, pas ${new URL(site1.url).hostname}`)
+    if (site1.hasStructuredData && !site2.hasStructuredData) insights.push(`${new URL(site1.url).hostname} a des données structurées, pas ${new URL(site2.url).hostname}`)
+    else if (site2.hasStructuredData && !site1.hasStructuredData) insights.push(`${new URL(site2.url).hostname} a des données structurées, pas ${new URL(site1.url).hostname}`)
 
     return NextResponse.json({
       success: true,

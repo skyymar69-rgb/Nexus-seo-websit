@@ -321,7 +321,7 @@ export default function AEOScorePage() {
           <h1 className="text-3xl font-bold text-surface-950 dark:text-surface-50">Score AEO</h1>
         </div>
         <p className="text-surface-600 dark:text-surface-400">
-          Analysez la preparation de vos pages pour les moteurs de reponses IA (Answer Engine Optimization)
+          Analysez la préparation de vos pages pour les moteurs de réponses IA (Answer Engine Optimization)
         </p>
       </div>
 

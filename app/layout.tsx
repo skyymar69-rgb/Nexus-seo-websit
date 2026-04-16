@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     title: 'Nexus SEO — La référence mondiale du SEO IA en 2026',
     description:
       'Dominez Google, ChatGPT et tous les moteurs IA avec la seule plateforme SEO qui couvre GEO, AEO et LLMO.',
-    images: [{ url: `${BASE_URL}/og-image.png`, width: 1200, height: 630, alt: 'Nexus SEO by Kayzen — Plateforme SEO et visibilite IA gratuite' }],
+    images: [{ url: `${BASE_URL}/og-image.png`, width: 1200, height: 630, alt: 'Nexus SEO by Kayzen — Plateforme SEO et visibilité IA gratuite' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -157,10 +157,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr" suppressHydrationWarning>
       <head>
+        {/* #1 Theme color + color scheme */}
+        <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)" />
+        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+        <meta name="color-scheme" content="light dark" />
+        {/* #2 PWA manifest */}
+        <link rel="manifest" href="/manifest.json" />
+        {/* #5 Apple mobile web app */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Nexus SEO" />
+        {/* #28 DNS prefetch for external APIs */}
+        <link rel="dns-prefetch" href="https://api.openai.com" />
+        <link rel="dns-prefetch" href="https://api.anthropic.com" />
+        {/* Favicons */}
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        {/* Fonts self-hosted via next/font for maximum PageSpeed */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

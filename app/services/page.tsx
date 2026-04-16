@@ -17,14 +17,14 @@ import { Breadcrumb } from '@/components/shared/Breadcrumb'
 export const metadata: Metadata = {
   title: 'Services — GEO, AEO, LLMO, SEO Technique',
   description:
-    'Decouvrez toutes les fonctionnalites de Nexus : GEO pour Google SGE, AEO pour les featured snippets, LLMO pour ChatGPT et Claude, et audit SEO technique complet.',
+    'Découvrez toutes les fonctionnalités de Nexus : GEO pour Google SGE, AEO pour les featured snippets, LLMO pour ChatGPT et Claude, et audit SEO technique complet.',
   alternates: {
     canonical: '/services',
   },
   openGraph: {
     title: 'Services — GEO, AEO, LLMO | Nexus SEO',
     description:
-      'Decouvrez toutes les fonctionnalites de Nexus : GEO pour Google SGE, AEO pour les featured snippets, LLMO pour ChatGPT et Claude, et audit SEO technique complet.',
+      'Découvrez toutes les fonctionnalités de Nexus : GEO pour Google SGE, AEO pour les featured snippets, LLMO pour ChatGPT et Claude, et audit SEO technique complet.',
     images: ['/api/og?title=Services&subtitle=SEO%2C%20GEO%2C%20AEO%2C%20LLMO'],
   },
 }
@@ -36,14 +36,14 @@ const services = [
     color: 'brand',
     title: 'GEO — Generative Engine Optimization',
     description:
-      'Optimisez votre visibilite dans les reponses generees par Google SGE, Bing Copilot et les moteurs de recherche IA. Nexus analyse comment les LLMs interpretent votre contenu et vous donne des recommandations actionnables.',
+      'Optimisez votre visibilité dans les réponses générées par Google SGE, Bing Copilot et les moteurs de recherche IA. Nexus analyse comment les LLMs interprètent votre contenu et vous donne des recommandations actionnables.',
     features: [
-      'Score de visibilite GEO en temps reel',
+      'Score de visibilité GEO en temps réel',
       'Analyse des citations dans Google SGE',
-      'Recommandations de contenu pour les reponses generatives',
-      'Suivi de position dans les resultats IA',
+      'Recommandations de contenu pour les réponses génératives',
+      'Suivi de position dans les résultats IA',
       'Benchmarking concurrentiel GEO',
-      'Alertes de changement de visibilite',
+      'Alertes de changement de visibilité',
     ],
   },
   {
@@ -52,14 +52,14 @@ const services = [
     color: 'violet',
     title: 'AEO — Answer Engine Optimization',
     description:
-      'Dominez les featured snippets, les People Also Ask et les reponses vocales. Nexus identifie les opportunites de position zero et optimise votre contenu pour repondre directement aux questions des utilisateurs.',
+      'Dominez les featured snippets, les People Also Ask et les réponses vocales. Nexus identifie les opportunités de position zéro et optimise votre contenu pour répondre directement aux questions des utilisateurs.',
     features: [
-      'Detection des opportunites de featured snippets',
+      'Détection des opportunités de featured snippets',
       'Optimisation People Also Ask (PAA)',
-      'Score de reponse vocale (Voice Search)',
+      'Score de réponse vocale (Voice Search)',
       'Analyse de la structure FAQ de vos pages',
-      'Suggestions de schema markup',
-      'Tracking des positions zero',
+      'Suggestions de schéma markup',
+      'Tracking des positions zéro',
     ],
   },
   {
@@ -68,14 +68,14 @@ const services = [
     color: 'emerald',
     title: 'LLMO — LLM Optimization',
     description:
-      'Mesurez et ameliorez la probabilite que ChatGPT, Claude, Gemini et Perplexity recommandent votre marque. Nexus interroge les principaux LLMs et analyse leur perception de votre site.',
+      'Mesurez et améliorez la probabilité que ChatGPT, Claude, Gemini et Perplexity recommandent votre marque. Nexus interroge les principaux LLMs et analyse leur perception de votre site.',
     features: [
       'Monitoring multi-LLM (ChatGPT, Claude, Gemini, Perplexity)',
       'Score de recommandation par LLM',
       'Analyse du sentiment et de la perception de marque',
       'Identification des lacunes de contenu',
       'Rapports comparatifs concurrents vs LLMs',
-      'Strategies d\'amelioration par modele',
+      'Stratégies d\'amélioration par modèle',
     ],
   },
   {
@@ -84,14 +84,14 @@ const services = [
     color: 'amber',
     title: 'SEO Technique',
     description:
-      'Audit technique complet de votre site : Core Web Vitals, indexation, structure, securite, accessibilite. Nexus detecte les erreurs critiques et vous guide pas a pas pour les corriger.',
+      'Audit technique complet de votre site : Core Web Vitals, indexation, structure, sécurité, accessibilité. Nexus détecte les erreurs critiques et vous guide pas à pas pour les corriger.',
     features: [
       'Audit Core Web Vitals (LCP, FID, CLS)',
       'Analyse de l\'indexation et du crawl',
-      'Detection des erreurs 404, redirections, boucles',
-      'Verification des balises meta et Open Graph',
+      'Détection des erreurs 404, redirections, boucles',
+      'Vérification des balises meta et Open Graph',
       'Audit de la structure Hn et du maillage interne',
-      'Score d\'accessibilite WCAG 2.1',
+      'Score d\'accessibilité WCAG 2.1',
     ],
   },
   {
@@ -100,14 +100,14 @@ const services = [
     color: 'sky',
     title: 'Analytics & Rapports',
     description:
-      'Tableaux de bord clairs, rapports exportables et suivi de progression. Visualisez l\'evolution de vos metriques SEO et IA en un coup d\'oeil, et partagez les resultats avec vos clients ou equipes.',
+      'Tableaux de bord clairs, rapports exportables et suivi de progression. Visualisez l\'évolution de vos métriques SEO et IA en un coup d\'œil, et partagez les résultats avec vos clients ou équipes.',
     features: [
       'Dashboard personnalisable',
       'Rapports PDF, Markdown et JSON',
       'Suivi de progression hebdomadaire',
       'Historique complet des audits',
-      'Comparaison avant/apres optimisations',
-      'Partage d\'equipe et white label (Expert)',
+      'Comparaison avant/après optimisations',
+      'Partage d\'équipe et white label (Expert)',
     ],
   },
 ]
@@ -158,7 +158,7 @@ export default function ServicesPage() {
             <div className="section-badge mx-auto mb-4">Nos services</div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-surface-900 dark:text-white mb-6">
               La plateforme SEO{' '}
-              <span className="gradient-text">complete pour 2026</span>
+              <span className="gradient-text">complète pour 2026</span>
             </h1>
             <p className="text-xl text-surface-500 dark:text-surface-400 mb-8 max-w-2xl mx-auto">
               GEO, AEO, LLMO, SEO Technique, Analytics — tout ce dont vous avez besoin pour dominer la recherche IA et classique.
@@ -167,7 +167,7 @@ export default function ServicesPage() {
               href="/audit-gratuit"
               className="btn-primary px-10 py-4 text-base rounded-2xl inline-flex items-center gap-2"
             >
-              Demarrer mon audit gratuit
+              Démarrer mon audit gratuit
               <ArrowRight className="w-5 h-5" />
             </Link>
             </div>
@@ -218,7 +218,7 @@ export default function ServicesPage() {
                   <div className={index % 2 === 1 ? 'lg:order-1' : ''}>
                     <div className="card rounded-2xl p-6">
                       <h3 className="text-sm font-bold uppercase tracking-wider text-surface-400 dark:text-surface-500 mb-5">
-                        Fonctionnalites incluses
+                        Fonctionnalités incluses
                       </h3>
                       <ul className="space-y-3">
                         {service.features.map((feat) => (
@@ -246,7 +246,7 @@ export default function ServicesPage() {
         <section className="py-16 px-4 sm:px-6 lg:px-8 bg-surface-50 dark:bg-surface-900/50 border-t border-surface-200 dark:border-surface-800">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-2xl font-bold text-surface-900 dark:text-white mb-4">
-              Pret a decouvrir votre score de visibilite IA ?
+              Prêt à découvrir votre score de visibilité IA ?
             </h2>
             <p className="text-surface-500 dark:text-surface-400 mb-6">
               Audit gratuit en 5 minutes. Sans carte bancaire.
@@ -269,7 +269,7 @@ export default function ServicesPage() {
                 Besoin d&apos;un accompagnement sur mesure ?
               </p>
               <p className="text-surface-600 dark:text-surface-400 mb-5 max-w-xl mx-auto">
-                L&apos;Agence Kayzen Lyon concoit des sites web optimises SEO et vous accompagne dans votre strategie digitale complete.
+                L&apos;Agence Kayzen Lyon conçoit des sites web optimisés SEO et vous accompagne dans votre stratégie digitale complète.
               </p>
               <a
                 href="https://internet.kayzen-lyon.fr"
@@ -277,7 +277,7 @@ export default function ServicesPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 transition-all duration-200 shadow-lg hover:shadow-xl"
               >
-                Decouvrir l&apos;Agence Kayzen
+                Découvrir l&apos;Agence Kayzen
                 <ExternalLink className="w-4 h-4" />
               </a>
             </div>

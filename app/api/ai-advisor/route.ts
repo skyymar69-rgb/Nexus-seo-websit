@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
     if (!latestAudit) {
       return NextResponse.json({
         empty: true,
-        message: 'Aucun audit disponible. Lancez un audit pour obtenir des recommandations personnalisees.',
+        message: 'Aucun audit disponible. Lancez un audit pour obtenir des recommandations personnalisées.',
       })
     }
 
@@ -230,9 +230,9 @@ Site: ${website.domain}
 Score SEO: ${latestAudit.score}/100 (${latestAudit.grade})
 Performance: LCP=${auditData.performance.lcp}ms, CLS=${auditData.performance.cls}, TTFB=${auditData.performance.ttfb}ms
 Contenu: ${auditData.content.wordCount} mots, ${auditData.content.h1Count} H1, ${auditData.content.imagesWithoutAlt} images sans alt
-Backlinks: ${backlinkCount} total, ${qualityBacklinks} de qualite (DA>40), ${toxicBacklinks} toxiques
-Visibilite IA: ${mentionRate}% de mentions dans les LLMs
-Problemes detectes: ${checks.filter((c: any) => c.status === 'error').map((c: any) => c.name).join(', ') || 'aucun critique'}
+Backlinks: ${backlinkCount} total, ${qualityBacklinks} de qualité (DA>40), ${toxicBacklinks} toxiques
+Visibilité IA: ${mentionRate}% de mentions dans les LLMs
+Problèmes détectés: ${checks.filter((c: any) => c.status === 'error').map((c: any) => c.name).join(', ') || 'aucun critique'}
 Avertissements: ${checks.filter((c: any) => c.status === 'warning').map((c: any) => c.name).join(', ') || 'aucun'}
 `.trim()
 

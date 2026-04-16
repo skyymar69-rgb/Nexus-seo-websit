@@ -63,9 +63,9 @@ function analyzeContent(html: string, url: string): ContentAnalysis {
   const descLen = metaDesc.length
 
   if (!metaDesc) {
-    suggestions.push({ category: 'seo', priority: 'critical', title: 'Meta description manquante', description: 'Ajoutez une meta description pour ameliorer votre CTR dans les SERP.', impact: '~15 points', recommendedValue: '120-155 caracteres avec CTA' })
+    suggestions.push({ category: 'seo', priority: 'critical', title: 'Meta description manquante', description: 'Ajoutez une meta description pour améliorer votre CTR dans les SERP.', impact: '~15 points', recommendedValue: '120-155 caractères avec CTA' })
   } else if (descLen < 120) {
-    suggestions.push({ category: 'seo', priority: 'medium', title: 'Meta description trop courte', description: `Votre meta description fait ${descLen} caracteres.`, currentValue: `${descLen} car.`, recommendedValue: '120-155 caracteres', impact: '~3 points' })
+    suggestions.push({ category: 'seo', priority: 'medium', title: 'Meta description trop courte', description: `Votre meta description fait ${descLen} caractères.`, currentValue: `${descLen} car.`, recommendedValue: '120-155 caractères', impact: '~3 points' })
   }
 
   // Headings analysis
@@ -81,18 +81,18 @@ function analyzeContent(html: string, url: string): ContentAnalysis {
   if (h1Count === 0) {
     suggestions.push({ category: 'structure', priority: 'critical', title: 'H1 manquant', description: 'Chaque page doit avoir exactement un H1 contenant le sujet principal.', impact: '~10 points' })
   } else if (h1Count > 1) {
-    suggestions.push({ category: 'structure', priority: 'high', title: 'Plusieurs H1 detectes', description: `${h1Count} balises H1 trouvees. Il ne devrait y en avoir qu'une seule.`, currentValue: `${h1Count} H1`, recommendedValue: '1 H1 unique', impact: '~5 points' })
+    suggestions.push({ category: 'structure', priority: 'high', title: 'Plusieurs H1 détectés', description: `${h1Count} balises H1 trouvées. Il ne devrait y en avoir qu'une seule.`, currentValue: `${h1Count} H1`, recommendedValue: '1 H1 unique', impact: '~5 points' })
   }
 
   if (h2Count === 0) {
-    suggestions.push({ category: 'structure', priority: 'high', title: 'Aucun H2 detecte', description: 'Ajoutez des sous-titres H2 pour structurer votre contenu et aider Google a comprendre vos sections.', impact: '~5 points' })
+    suggestions.push({ category: 'structure', priority: 'high', title: 'Aucun H2 détecté', description: 'Ajoutez des sous-titres H2 pour structurer votre contenu et aider Google à comprendre vos sections.', impact: '~5 points' })
   }
 
   // Word count analysis
   if (wordCount < 300) {
-    suggestions.push({ category: 'readability', priority: 'critical', title: 'Contenu trop court', description: `Seulement ${wordCount} mots. Les pages bien referencees contiennent generalement 1000+ mots.`, currentValue: `${wordCount} mots`, recommendedValue: '1000-2000 mots', impact: '~15 points' })
+    suggestions.push({ category: 'readability', priority: 'critical', title: 'Contenu trop court', description: `Seulement ${wordCount} mots. Les pages bien référencées contiennent généralement 1000+ mots.`, currentValue: `${wordCount} mots`, recommendedValue: '1000-2000 mots', impact: '~15 points' })
   } else if (wordCount < 800) {
-    suggestions.push({ category: 'readability', priority: 'medium', title: 'Contenu un peu court', description: `${wordCount} mots detectes. Enrichissez votre contenu pour couvrir le sujet en profondeur.`, currentValue: `${wordCount} mots`, recommendedValue: '1000-2000 mots', impact: '~5 points' })
+    suggestions.push({ category: 'readability', priority: 'medium', title: 'Contenu un peu court', description: `${wordCount} mots détectés. Enrichissez votre contenu pour couvrir le sujet en profondeur.`, currentValue: `${wordCount} mots`, recommendedValue: '1000-2000 mots', impact: '~5 points' })
   }
 
   // Images analysis
@@ -103,10 +103,10 @@ function analyzeContent(html: string, url: string): ContentAnalysis {
   })
 
   if (imgTotal === 0 && wordCount > 500) {
-    suggestions.push({ category: 'engagement', priority: 'medium', title: 'Aucune image detectee', description: 'Ajoutez des images pour ameliorer l\'engagement et le temps passe sur la page.', impact: '~3 points' })
+    suggestions.push({ category: 'engagement', priority: 'medium', title: 'Aucune image détectée', description: 'Ajoutez des images pour améliorer l\'engagement et le temps passé sur la page.', impact: '~3 points' })
   }
   if (imgWithoutAlt > 0) {
-    suggestions.push({ category: 'seo', priority: 'high', title: `${imgWithoutAlt} image(s) sans attribut alt`, description: 'Ajoutez des descriptions alt a toutes vos images pour l\'accessibilite et le SEO.', currentValue: `${imgWithoutAlt}/${imgTotal} sans alt`, recommendedValue: '100% avec alt', impact: '~5 points' })
+    suggestions.push({ category: 'seo', priority: 'high', title: `${imgWithoutAlt} image(s) sans attribut alt`, description: 'Ajoutez des descriptions alt à toutes vos images pour l\'accessibilité et le SEO.', currentValue: `${imgWithoutAlt}/${imgTotal} sans alt`, recommendedValue: '100% avec alt', impact: '~5 points' })
   }
 
   // Links analysis
@@ -126,7 +126,7 @@ function analyzeContent(html: string, url: string): ContentAnalysis {
   }
 
   if (externalLinks === 0 && wordCount > 500) {
-    suggestions.push({ category: 'engagement', priority: 'low', title: 'Aucun lien externe', description: 'Ajoutez des liens vers des sources autoritaires pour renforcer la credibilite de votre contenu.', impact: '~2 points' })
+    suggestions.push({ category: 'engagement', priority: 'low', title: 'Aucun lien externe', description: 'Ajoutez des liens vers des sources autoritaires pour renforcer la crédibilité de votre contenu.', impact: '~2 points' })
   }
 
   // Keyword density (top words)
@@ -148,13 +148,13 @@ function analyzeContent(html: string, url: string): ContentAnalysis {
   // Structured data check
   const structuredDataCount = $('script[type="application/ld+json"]').length
   if (structuredDataCount === 0) {
-    suggestions.push({ category: 'technical', priority: 'high', title: 'Aucune donnee structuree', description: 'Ajoutez du JSON-LD pour ameliorer vos rich snippets dans Google. Utilisez notre generateur de schemas.', impact: '~8 points' })
+    suggestions.push({ category: 'technical', priority: 'high', title: 'Aucune donnée structurée', description: 'Ajoutez du JSON-LD pour améliorer vos rich snippets dans Google. Utilisez notre générateur de schémas.', impact: '~8 points' })
   }
 
   // Open Graph check
   const ogTitle = $('meta[property="og:title"]').attr('content')
   if (!ogTitle) {
-    suggestions.push({ category: 'technical', priority: 'medium', title: 'Open Graph manquant', description: 'Ajoutez les meta Open Graph pour un meilleur partage sur les reseaux sociaux.', impact: '~3 points' })
+    suggestions.push({ category: 'technical', priority: 'medium', title: 'Open Graph manquant', description: 'Ajoutez les meta Open Graph pour un meilleur partage sur les réseaux sociaux.', impact: '~3 points' })
   }
 
   // Readability score (simplified Flesch-Kincaid for French)

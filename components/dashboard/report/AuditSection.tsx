@@ -27,7 +27,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   content: 'Contenu',
   technical: 'Technique',
   performance: 'Performance',
-  security: 'Securite',
+  security: 'Sécurité',
   mobile: 'Mobile',
 }
 
@@ -82,7 +82,7 @@ export function AuditSection({ score, grade, checks, summary }: AuditSectionProp
             </div>
           )}
           <Link href="/dashboard/audit" className="hidden sm:flex items-center gap-1 text-xs text-brand-400 hover:text-brand-300 transition-colors">
-            Detail <ArrowRight className="w-3 h-3" />
+            Détail <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
       </div>

@@ -159,14 +159,33 @@ export function Features() {
           </p>
         </div>
 
-        {/* Tab bar */}
-        <div className="flex flex-wrap justify-center gap-2 mb-12">
+        {/* Tab bar — #30 Keyboard accessible */}
+        <div
+          className="flex flex-wrap justify-center gap-2 mb-12"
+          role="tablist"
+          aria-label="Fonctionnalités Nexus"
+          onKeyDown={(e) => {
+            const tabIds = tabs.map(t => t.id)
+            const idx = tabIds.indexOf(active)
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+              e.preventDefault()
+              setActive(tabIds[(idx + 1) % tabIds.length])
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+              e.preventDefault()
+              setActive(tabIds[(idx - 1 + tabIds.length) % tabIds.length])
+            }
+          }}
+        >
           {tabs.map((t) => {
             const Icon = t.icon
             const isActive = t.id === active
             return (
               <button
                 key={t.id}
+                role="tab"
+                aria-selected={isActive}
+                aria-controls={`tabpanel-${t.id}`}
+                tabIndex={isActive ? 0 : -1}
                 onClick={() => setActive(t.id)}
                 className={cn(
                   'flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200',
@@ -183,7 +202,7 @@ export function Features() {
         </div>
 
         {/* Tab content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div id={`tabpanel-${tab.id}`} role="tabpanel" aria-labelledby={tab.id} className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
           {/* Left: text */}
           <div className="animate-fade-in">

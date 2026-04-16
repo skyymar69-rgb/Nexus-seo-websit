@@ -25,28 +25,28 @@ const tools: Tool[] = [
   { label: 'Domain Overview', href: '/dashboard/domain-overview', icon: Globe, category: 'SEO', keywords: ['domaine'] },
   { label: 'Top Pages', href: '/dashboard/top-pages', icon: FileSearch, category: 'SEO', keywords: ['pages'] },
   { label: 'Comparaison', href: '/dashboard/compare', icon: Eye, category: 'SEO', keywords: ['comparer', 'vs'] },
-  { label: 'Suivi Positions', href: '/dashboard/rank-tracker', icon: TrendingUp, category: 'Mots-cles', keywords: ['positions'] },
-  { label: 'Keyword Magic', href: '/dashboard/keyword-magic', icon: Wand2, category: 'Mots-cles', keywords: ['mots cles'] },
-  { label: 'Keyword Gap', href: '/dashboard/keyword-gap', icon: Eye, category: 'Mots-cles', keywords: ['concurrent'] },
-  { label: 'Semantique', href: '/dashboard/semantic', icon: BookOpen, category: 'Mots-cles', keywords: ['semantique'] },
+  { label: 'Suivi Positions', href: '/dashboard/rank-tracker', icon: TrendingUp, category: 'Mots-clés', keywords: ['positions'] },
+  { label: 'Keyword Magic', href: '/dashboard/keyword-magic', icon: Wand2, category: 'Mots-clés', keywords: ['mots clés'] },
+  { label: 'Keyword Gap', href: '/dashboard/keyword-gap', icon: Eye, category: 'Mots-clés', keywords: ['concurrent'] },
+  { label: 'Sémantique', href: '/dashboard/semantic', icon: BookOpen, category: 'Mots-clés', keywords: ['sémantique'] },
   { label: 'Profil Backlinks', href: '/dashboard/backlinks', icon: LinkIcon, category: 'Backlinks', keywords: ['liens'] },
-  { label: 'Backlink Audit', href: '/dashboard/backlink-audit', icon: ShieldCheck, category: 'Backlinks', keywords: ['qualite'] },
+  { label: 'Backlink Audit', href: '/dashboard/backlink-audit', icon: ShieldCheck, category: 'Backlinks', keywords: ['qualité'] },
   { label: 'Concurrents', href: '/dashboard/competitors', icon: Users, category: 'Backlinks', keywords: ['concurrence'] },
   { label: 'Content Optimizer', href: '/dashboard/content-optimizer', icon: Wand2, category: 'Contenu', keywords: ['contenu'] },
-  { label: 'Generation IA', href: '/dashboard/ai-content', icon: Sparkles, category: 'Contenu', keywords: ['ia', 'generer'] },
+  { label: 'Génération IA', href: '/dashboard/ai-content', icon: Sparkles, category: 'Contenu', keywords: ['ia', 'générer'] },
   { label: 'Content Analyzer', href: '/dashboard/content-analyzer', icon: FileSearch, category: 'Contenu', keywords: ['analyser'] },
   { label: 'Crawleur Web', href: '/dashboard/crawl', icon: Globe, category: 'Contenu', keywords: ['crawl'] },
-  { label: 'Visibilite IA', href: '/dashboard/ai-visibility', icon: Sparkles, category: 'IA & GEO', keywords: ['chatgpt', 'claude'] },
+  { label: 'Visibilité IA', href: '/dashboard/ai-visibility', icon: Sparkles, category: 'IA & GEO', keywords: ['chatgpt', 'claude'] },
   { label: 'Audit GEO', href: '/dashboard/geo-audit', icon: Globe, category: 'IA & GEO', keywords: ['geo'] },
   { label: 'Score AEO', href: '/dashboard/aeo-score', icon: Zap, category: 'IA & GEO', keywords: ['aeo'] },
   { label: 'Score LLMO', href: '/dashboard/llmo-score', icon: TrendingUp, category: 'IA & GEO', keywords: ['llmo'] },
   { label: 'AI Advisor', href: '/dashboard/ai-advisor', icon: Lightbulb, category: 'IA & GEO', keywords: ['conseils'] },
   { label: 'Prompt Tester', href: '/dashboard/prompt-tester', icon: Sparkles, category: 'IA & GEO', keywords: ['prompt'] },
-  { label: 'Generateur llms.txt', href: '/dashboard/llms-txt', icon: FileText, category: 'IA & GEO', keywords: ['llms.txt'] },
+  { label: 'Générateur llms.txt', href: '/dashboard/llms-txt', icon: FileText, category: 'IA & GEO', keywords: ['llms.txt'] },
   { label: 'Google My Business', href: '/dashboard/gmb-config', icon: MapPin, category: 'IA & GEO', keywords: ['gmb', 'google'] },
   { label: 'Analytics', href: '/dashboard/analytics', icon: LineChart, category: 'Rapports', keywords: ['statistiques'] },
   { label: 'Rapports', href: '/dashboard/reports', icon: BarChart3, category: 'Rapports', keywords: ['rapport'] },
-  { label: 'Parametres', href: '/dashboard/settings', icon: Settings, category: 'Config', keywords: ['config'] },
+  { label: 'Paramètres', href: '/dashboard/settings', icon: Settings, category: 'Config', keywords: ['config'] },
   { label: 'Mes Sites', href: '/dashboard/projects', icon: FolderOpen, category: 'Config', keywords: ['sites'] },
   { label: 'Parrainage', href: '/dashboard/referral', icon: Users, category: 'Config', keywords: ['referral'] },
 ]
@@ -125,7 +125,7 @@ export function CommandPalette() {
           {/* Results */}
           <div className="max-h-80 overflow-y-auto py-2 px-2">
             {filtered.length === 0 && (
-              <div className="py-6 text-center text-sm text-surface-500">Aucun outil trouve.</div>
+              <div className="py-6 text-center text-sm text-surface-500">Aucun outil trouvé.</div>
             )}
             {filtered.map((tool, i) => {
               const Icon = tool.icon

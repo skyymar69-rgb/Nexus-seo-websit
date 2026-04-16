@@ -1,5 +1,5 @@
-// Systeme AI Advisor pour SEO - Moteur d'optimisation complet et intelligent
-// Genere des recommandations, plans d'action et suivi de progres bases sur les donnees d'audit reelles
+// Système AI Advisor pour SEO - Moteur d'optimisation complet et intelligent
+// Génère des recommandations, plans d'action et suivi de progrès basés sur les données d'audit réelles
 
 // ============= INTERFACES =============
 
@@ -14,7 +14,7 @@ export interface ChecklistItem {
   effort: 'faible' | 'moyen' | 'eleve'
   status: 'a_faire' | 'en_cours' | 'termine' | 'ignore'
   estimatedTime: string
-  estimatedMinutes: number // pour calculs plus precis
+  estimatedMinutes: number // pour calculs plus précis
   howTo?: string
   expectedGain?: number // points de score attendus
 }
@@ -67,7 +67,7 @@ export interface SEOScoreBreakdown {
   categoryScores: Record<string, number>
   strengths: string[]
   weaknesses: string[]
-  benchmarkPercentile: number // pourcentage par rapport a la concurrence
+  benchmarkPercentile: number // pourcentage par rapport à la concurrence
 }
 
 export interface ProgressTracking {
@@ -93,17 +93,17 @@ export interface IndustryBenchmarks {
   medianScore: number
 }
 
-// ============= CONSTANTES ET DEFINITIONS =============
+// ============= CONSTANTES ET DÉFINITIONS =============
 
 const categoryLabels: Record<string, string> = {
   technique: 'Technique',
   contenu: 'Contenu',
   performance: 'Performance',
   backlinks: 'Backlinks',
-  'ai-visibility': 'Visibilite IA',
-  securite: 'Securite',
+  'ai-visibility': 'Visibilité IA',
+  securite: 'Sécurité',
   mobile: 'Mobile',
-  ux: 'Experience Utilisateur',
+  ux: 'Expérience Utilisateur',
 }
 
 const priorityOrder = { critique: 0, haute: 1, moyenne: 2, basse: 3 }
@@ -163,24 +163,24 @@ const industryBenchmarks: Record<string, IndustryBenchmarks> = {
   },
 }
 
-// ============= GENERATION DE RECOMMANDATIONS =============
+// ============= GÉNÉRATION DE RECOMMANDATIONS =============
 
 /**
- * Genere des recommandations intelligentes basees sur les donnees d'audit reelles
- * Analyse les scores faibles et identifie les opportunites d'impact maximal
+ * Génère des recommandations intelligentes basées sur les données d'audit réelles
+ * Analyse les scores faibles et identifie les opportunités d'impact maximal
  */
 export function generateRecommendations(auditData: any, websiteData: any = {}): Recommendation[] {
   const recommendations: Recommendation[] = []
   let id = 0
 
-  // Analyser les scores par categorie
+  // Analyser les scores par catégorie
   const categoryScores = calculateCategoryScores(auditData)
   const weakestCategories = Object.entries(categoryScores)
     .sort(([, a], [, b]) => a - b)
     .slice(0, 3)
     .map(([cat]) => cat)
 
-  // TECHNIQUE - Priorite maximale si score faible
+  // TECHNIQUE - Priorité maximale si score faible
   if (categoryScores['technique'] < 75) {
     const techIssues = findTechnicalIssues(auditData)
 
@@ -220,7 +220,7 @@ export function generateRecommendations(auditData: any, websiteData: any = {}): 
     })
   }
 
-  // PERFORMANCE - Tres important pour le classement et UX
+  // PERFORMANCE - Très important pour le classement et UX
   if (categoryScores['performance'] < 70) {
     const perfIssues = findPerformanceIssues(auditData)
 
@@ -246,19 +246,20 @@ export function generateRecommendations(auditData: any, websiteData: any = {}): 
       id: `rec-${++id}`,
       category: 'backlinks',
       priority: 'haute',
-      title: 'Developper une strategie de backlinking active',
+      title: 'Développer une stratégie de backlinking active',
       description: 'Votre profil de backlinks est faible pour votre secteur. Les liens de sites autoritaires sont le facteur de classement #1.',
       actionSteps: [
-        'Identifier les 20 sites de plus haute autorite dans votre niche',
-        'Creez du contenu hautement linkable (guides complets, donnees originales)',
+        'Identifier les 20 sites de plus haute autorité dans votre niche',
+        'Créez du contenu hautement linkable (guides complets, données originales)',
         'Lancez une campagne de PR digitale et guest posting',
-        'Etablissez des partenariats avec des influenceurs du secteur',
-        'Participez a des roundups et articles cites',
+        'Établissez des partenariats avec des influenceurs du secteur',
+        'Participez à des roundups et articles cités',
       ],
-      expectedImpact: '+15-30 points de score avec 50-100 liens de qualite',
+      expectedImpact: '+15-30 points de score avec 50-100 liens de qualité',
+
       timelineWeeks: 12,
       effort: 'eleve',
-      relatedKeywords: ['backlinks qualite', 'autorite domaine', 'guest posting'],
+      relatedKeywords: ['backlinks qualité', 'autorité domaine', 'guest posting'],
     })
   }
 
@@ -268,14 +269,14 @@ export function generateRecommendations(auditData: any, websiteData: any = {}): 
       id: `rec-${++id}`,
       category: 'ai-visibility',
       priority: 'haute',
-      title: 'Optimiser pour la visibilite LLM et Generative Engines',
-      description: 'L\'optimisation GEO (Generative Engine Optimization) est devenue critique. Les LLM citent les sources structurees et autoritaires.',
+      title: 'Optimiser pour la visibilité LLM et Generative Engines',
+      description: 'L\'optimisation GEO (Generative Engine Optimization) est devenue critique. Les LLM citent les sources structurées et autoritaires.',
       actionSteps: [
-        'Structurez le contenu avec des FAQ, definitions et listes',
-        'Implementez schema.org complet (Article, FAQPage, Organization)',
-        'Enrichissez le contenu avec des donnees primaires et recherche originale',
-        'Demontrez l\'E-E-A-T (Expertise, Experience, Autorite, Fiabilite)',
-        'Creer du contenu factuel avec sources verifiables',
+        'Structurez le contenu avec des FAQ, définitions et listes',
+        'Implémentez schema.org complet (Article, FAQPage, Organization)',
+        'Enrichissez le contenu avec des données primaires et recherche originale',
+        'Démontrez l\'E-E-A-T (Expertise, Expérience, Autorité, Fiabilité)',
+        'Créez du contenu factuel avec sources vérifiables',
       ],
       expectedImpact: '+8-12 points de score + mentions dans ChatGPT/Perplexity',
       timelineWeeks: 8,
@@ -284,7 +285,7 @@ export function generateRecommendations(auditData: any, websiteData: any = {}): 
     })
   }
 
-  // Trier par priorite et impact
+  // Trier par priorité et impact
   return recommendations.sort((a, b) => {
     const priorityDiff = priorityOrder[a.priority] - priorityOrder[b.priority]
     return priorityDiff !== 0 ? priorityDiff : 0
@@ -292,7 +293,7 @@ export function generateRecommendations(auditData: any, websiteData: any = {}): 
 }
 
 /**
- * Genere une checklist structuree d'amelioration par categorie
+ * Génère une checklist structurée d'amélioration par catégorie
  */
 export function generateChecklist(auditData: any, category?: string): ChecklistItem[] {
   const items: ChecklistItem[] = []
@@ -335,30 +336,30 @@ export function generateChecklist(auditData: any, category?: string): ChecklistI
     addItem('technique', 'critique', 'Ajouter une balise title',
       'La page n\'a pas de balise title. C\'est le facteur on-page le plus important pour le SEO.',
       'Impact majeur sur le classement et le CTR', 85, 'faible', 5,
-      'Ajoutez <title>Votre titre (50-60 caracteres)</title>', 8)
+      'Ajoutez <title>Votre titre (50-60 caractères)</title>', 8)
   } else if (auditData?.meta?.title?.length > 60) {
     addItem('technique', 'haute', 'Optimiser la longueur du title',
-      `Le title fait ${auditData.meta.title.length} caracteres. Google tronque apres 55-60.`,
-      'Meilleure visibilite dans les SERP', 70, 'faible', 5,
-      'Reducez a 50-60 caracteres max', 4)
+      `Le title fait ${auditData.meta.title.length} caractères. Google tronque après 55-60.`,
+      'Meilleure visibilité dans les SERP', 70, 'faible', 5,
+      'Réduisez à 50-60 caractères max', 4)
   }
 
   if (!auditData?.meta?.description || auditData?.meta?.description?.length === 0) {
     addItem('technique', 'critique', 'Ajouter une meta description',
       'Aucune meta description. Google affichera un extrait automatique.',
-      'Controle du CTR (augmente de 15-25%)', 80, 'faible', 10,
-      'Meta description 150-160 caracteres, persuasive', 7)
+      'Contrôle du CTR (augmente de 15-25%)', 80, 'faible', 10,
+      'Meta description 150-160 caractères, persuasive', 7)
   } else if (auditData?.meta?.description?.length > 160) {
     addItem('technique', 'moyenne', 'Optimiser la meta description',
-      `${auditData.meta.description.length} caracteres. Google tronque apres 155-160.`,
+      `${auditData.meta.description.length} caractères. Google tronque après 155-160.`,
       'Meilleure apparence dans les SERP', 50, 'faible', 5,
-      'Reducez a 150-160 caracteres', 2)
+      'Réduisez à 150-160 caractères', 2)
   }
 
   if (!auditData?.meta?.canonical) {
-    addItem('technique', 'haute', 'Implementer une URL canonique',
-      'Pas de balise canonical. Risque de contenu duplique.',
-      'Evite les penalites, consolide le PageRank', 65, 'faible', 5,
+    addItem('technique', 'haute', 'Implémenter une URL canonique',
+      'Pas de balise canonical. Risque de contenu dupliqué.',
+      'Évite les pénalités, consolide le PageRank', 65, 'faible', 5,
       'Ajoutez <link rel="canonical" href="URL">', 5)
   }
 
@@ -366,17 +367,17 @@ export function generateChecklist(auditData: any, category?: string): ChecklistI
     addItem('technique', 'moyenne', 'Ajouter les balises Open Graph',
       'Pas de balises OG. Partage social sous-optimal.',
       'Meilleure apparence sur Facebook, LinkedIn, etc.', 45, 'faible', 15,
-      'Implementez og:title, og:description, og:image', 2)
+      'Implémentez og:title, og:description, og:image', 2)
   }
 
   if (!auditData?.meta?.robotsMeta) {
     addItem('technique', 'moyenne', 'Ajouter la balise meta robots',
-      'Pas de directive robots meta. Les moteurs peuvent mal interpretar votre intention.',
-      'Controle precis de l\'indexation', 40, 'faible', 5,
+      'Pas de directive robots meta. Les moteurs peuvent mal interpréter votre intention.',
+      'Contrôle précis de l\'indexation', 40, 'faible', 5,
       '<meta name="robots" content="index, follow">', 1)
   }
 
-  // Securite
+  // Sécurité
   if (!auditData?.technical?.https) {
     addItem('securite', 'critique', 'Passer en HTTPS',
       'Le site n\'utilise pas HTTPS. Google classe les sites non-SSL moins bien.',
@@ -384,35 +385,35 @@ export function generateChecklist(auditData: any, category?: string): ChecklistI
       'Achetez un certificat SSL et redirigez HTTP vers HTTPS', 15)
   }
 
-  // Donnees structurees
+  // Données structurées
   if (!auditData?.technical?.structuredData) {
-    addItem('technique', 'haute', 'Ajouter des donnees structurees Schema.org',
-      'Aucune donnee structuree. Vous perdez les rich snippets (CTR +20-30%).',
-      'Rich snippets + meilleure visibilite IA', 75, 'moyen', 90,
-      'Implementez JSON-LD pour Article, Organization, Product, FAQ', 10)
+    addItem('technique', 'haute', 'Ajouter des données structurées Schema.org',
+      'Aucune donnée structurée. Vous perdez les rich snippets (CTR +20-30%).',
+      'Rich snippets + meilleure visibilité IA', 75, 'moyen', 90,
+      'Implémentez JSON-LD pour Article, Organization, Product, FAQ', 10)
   }
 
   // Fichiers techniques
   if (!auditData?.technical?.robotsTxt) {
-    addItem('technique', 'haute', 'Creer un fichier robots.txt',
+    addItem('technique', 'haute', 'Créer un fichier robots.txt',
       'Aucun robots.txt. Les moteurs ne savent pas exactement quoi crawler.',
-      'Controle precis de l\'indexation', 50, 'faible', 15,
-      'Creer /robots.txt avec User-agent et Disallow', 3)
+      'Contrôle précis de l\'indexation', 50, 'faible', 15,
+      'Créer /robots.txt avec User-agent et Disallow', 3)
   }
 
   if (!auditData?.technical?.sitemap) {
-    addItem('technique', 'haute', 'Creer un sitemap XML',
-      'Pas de sitemap. Les pages importantes peuvent ne pas etre decouverts.',
-      'Indexation plus rapide et complete', 60, 'moyen', 30,
-      'Generez sitemap.xml et submitez dans Google Search Console', 5)
+    addItem('technique', 'haute', 'Créer un sitemap XML',
+      'Pas de sitemap. Les pages importantes peuvent ne pas être découverts.',
+      'Indexation plus rapide et complète', 60, 'moyen', 30,
+      'Générez sitemap.xml et submitez dans Google Search Console', 5)
   }
 
   // Actualisation de contenu
   if (auditData?.technical?.contentFresh === false) {
-    addItem('technique', 'moyenne', 'Rafraichir le contenu ancien',
-      'Le contenu n\'a pas ete mis a jour depuis longtemps.',
-      'Signale de fraicheur (freshness) a Google', 55, 'moyen', 120,
-      'Revisitez et mettez a jour les articles majeurs', 4)
+    addItem('technique', 'moyenne', 'Rafraîchir le contenu ancien',
+      'Le contenu n\'a pas été mis à jour depuis longtemps.',
+      'Signal de fraîcheur (freshness) à Google', 55, 'moyen', 120,
+      'Revisitez et mettez à jour les articles majeurs', 4)
   }
 
   // ===== CONTENU (ON-PAGE SEO) =====
@@ -420,30 +421,30 @@ export function generateChecklist(auditData: any, category?: string): ChecklistI
 
   if (wordCount < 300) {
     addItem('contenu', 'critique', 'Enrichir le contenu',
-      `Seulement ${wordCount} mots. Le contenu court est rarement competitif.`,
-      'Contenu long = meilleur classement (etudes confirment)', 90, 'eleve', 240,
+      `Seulement ${wordCount} mots. Le contenu court est rarement compétitif.`,
+      'Contenu long = meilleur classement (études confirment)', 90, 'eleve', 240,
       'Visez 800-1200 mots min, 1500+ pour articles', 12)
   } else if (wordCount < 800) {
-    addItem('contenu', 'haute', 'Developper le contenu',
+    addItem('contenu', 'haute', 'Développer le contenu',
       `${wordCount} mots. En dessous de la moyenne des top 10 (1200+ mots).`,
-      'Meilleure couverture semantique du sujet', 70, 'moyen', 120,
+      'Meilleure couverture sémantique du sujet', 70, 'moyen', 120,
       'Ajoutez des sections manquantes, plus de profondeur', 8)
   } else if (wordCount < 1500) {
-    addItem('contenu', 'moyenne', 'Etendre le contenu pour dominance',
+    addItem('contenu', 'moyenne', 'Étendre le contenu pour dominance',
       `${wordCount} mots. Bon mais les meilleurs concurrents en ont 1500+.`,
-      'Position plus haute pour des mots-cles lies', 55, 'moyen', 90,
-      'Completez avec des sous-sections et donnees originales', 5)
+      'Position plus haute pour des mots-clés liés', 55, 'moyen', 90,
+      'Complétez avec des sous-sections et données originales', 5)
   }
 
   // Structure de contenu
   if (!auditData?.content?.h1 || auditData?.content?.h1Count === 0) {
     addItem('contenu', 'critique', 'Ajouter un titre H1',
-      'Aucun H1 detecte. Impossible pour les moteurs de comprendre le sujet.',
-      'Structure cruciale pour SEO et accessibilite', 85, 'faible', 5,
+      'Aucun H1 détecté. Impossible pour les moteurs de comprendre le sujet.',
+      'Structure cruciale pour SEO et accessibilité', 85, 'faible', 5,
       'Chaque page doit avoir exactement UN H1', 8)
   } else if (auditData?.content?.h1Count > 1) {
     addItem('contenu', 'moyenne', 'Utiliser un seul H1 par page',
-      `${auditData.content.h1Count} H1 detectes. Trop de hierarchies confuses.`,
+      `${auditData.content.h1Count} H1 détectés. Trop de hiérarchies confuses.`,
       'Structure claire pour les moteurs et lecteurs', 50, 'faible', 10,
       'Gardez 1 H1, convertissez les autres en H2/H3', 3)
   }
@@ -451,7 +452,7 @@ export function generateChecklist(auditData: any, category?: string): ChecklistI
   if (!auditData?.content?.h2 || auditData?.content?.h2Count === 0) {
     addItem('contenu', 'haute', 'Ajouter des sous-titres H2/H3',
       'Aucun H2 ou H3. Le contenu manque de structure.',
-      'Meilleure scannabilite pour l\'utilisateur et SEO', 70, 'moyen', 30,
+      'Meilleure scannabilité pour l\'utilisateur et SEO', 70, 'moyen', 30,
       'Divisez le contenu avec des H2/H3 logiques toutes les 200-300 mots', 6)
   }
 
@@ -459,49 +460,49 @@ export function generateChecklist(auditData: any, category?: string): ChecklistI
   if (auditData?.content?.imagesWithoutAlt > 0) {
     addItem('contenu', 'haute', 'Ajouter des attributs alt aux images',
       `${auditData.content.imagesWithoutAlt} images sans alt. Manquez le trafic Google Images.`,
-      'SEO images (trafic additionnel) + accessibilite', 65, 'moyen', 45,
-      'Decrivez chaque image avec du texte pertinent dans alt=""', 6)
+      'SEO images (trafic additionnel) + accessibilité', 65, 'moyen', 45,
+      'Décrivez chaque image avec du texte pertinent dans alt=""', 6)
   }
 
   if (auditData?.content?.imagesTotal > 0 && !auditData?.content?.imageTitles) {
     addItem('contenu', 'moyenne', 'Ajouter des titres aux images',
-      'Pas de titres d\'images. Opportunite de SEO images manquee.',
-      'Contexte supplementaire pour le classement images', 35, 'faible', 30,
-      'Utilisez title="" avec mots-cles pertinents', 2)
+      'Pas de titres d\'images. Opportunité de SEO images manquée.',
+      'Contexte supplémentaire pour le classement images', 35, 'faible', 30,
+      'Utilisez title="" avec mots-clés pertinents', 2)
   }
 
-  // Mots-cles
+  // Mots-clés
   if (!auditData?.content?.keywordDensity || auditData?.content?.keywordDensity < 0.5) {
-    addItem('contenu', 'moyenne', 'Optimiser la densite de mots-cles',
-      'Densite de mots-cles insuffisante.',
-      'Meilleur signal pour le classement sur votre mot-cle cible', 55, 'moyen', 60,
-      'Repetez votre mot-cle principal 3-5 fois (1-2% densite)', 4)
+    addItem('contenu', 'moyenne', 'Optimiser la densité de mots-clés',
+      'Densité de mots-clés insuffisante.',
+      'Meilleur signal pour le classement sur votre mot-clé cible', 55, 'moyen', 60,
+      'Répétez votre mot-clé principal 3-5 fois (1-2% densité)', 4)
   }
 
-  // Fraicheur de contenu
+  // Fraîcheur de contenu
   if (auditData?.content?.lastUpdated) {
     const daysOld = Math.floor((Date.now() - new Date(auditData.content.lastUpdated).getTime()) / (1000 * 60 * 60 * 24))
     if (daysOld > 365) {
-      addItem('contenu', 'moyenne', 'Mettre a jour le contenu',
-        `Contenu non mis a jour depuis ${Math.floor(daysOld / 30)} mois.`,
-        'Signal de fraicheur (important pour certains topics)', 50, 'moyen', 90,
+      addItem('contenu', 'moyenne', 'Mettre à jour le contenu',
+        `Contenu non mis à jour depuis ${Math.floor(daysOld / 30)} mois.`,
+        'Signal de fraîcheur (important pour certains topics)', 50, 'moyen', 90,
         'Revoyez, actualisez et republier avec nouvelle date', 4)
     }
   }
 
-  // Lisibilite et formatage
-  addItem('contenu', 'moyenne', 'Ameliorer la lisibilite du contenu',
+  // Lisibilité et formatage
+  addItem('contenu', 'moyenne', 'Améliorer la lisibilité du contenu',
     'Utilisez du formatage: listes, gras, italique.',
-    'Meilleure experience utilisateur et temps sur page', 45, 'moyen', 45,
-    'Ajoutez des listes a puces, gras pour les idees cles, paragraphes courts', 3)
+    'Meilleure expérience utilisateur et temps sur page', 45, 'moyen', 45,
+    'Ajoutez des listes à puces, gras pour les idées clés, paragraphes courts', 3)
 
   // ===== PERFORMANCE =====
   const loadTime = auditData?.performance?.loadTime || auditData?.performance?.ttfb || 0
 
   if (loadTime > 3000) {
-    addItem('performance', 'critique', 'Reduire le temps de chargement',
+    addItem('performance', 'critique', 'Réduire le temps de chargement',
       `Chargement: ${(loadTime / 1000).toFixed(1)}s. Google recommande < 2.5s.`,
-      '53% des utilisateurs quittent apres 3s (CRO majeur)', 90, 'eleve', 480,
+      '53% des utilisateurs quittent après 3s (CRO majeur)', 90, 'eleve', 480,
       'Compressez images, minifiez CSS/JS, utiliser CDN, caching', 12)
   } else if (loadTime > 1500) {
     addItem('performance', 'haute', 'Optimiser la vitesse de chargement',
@@ -519,22 +520,22 @@ export function generateChecklist(auditData: any, category?: string): ChecklistI
   }
 
   if (auditData?.performance?.fid > 100) {
-    addItem('performance', 'moyenne', 'Reduire le First Input Delay (FID)',
-      `FID: ${auditData.performance.fid}ms. Devrait etre < 100ms.`,
-      'Meilleure interactivite et Core Web Vital', 55, 'moyen', 120,
-      'Reduire JavaScript blocking, utiliser Web Workers', 5)
+    addItem('performance', 'moyenne', 'Réduire le First Input Delay (FID)',
+      `FID: ${auditData.performance.fid}ms. Devrait être < 100ms.`,
+      'Meilleure interactivité et Core Web Vital', 55, 'moyen', 120,
+      'Réduire JavaScript blocking, utiliser Web Workers', 5)
   }
 
   if (auditData?.performance?.cls > 0.1) {
-    addItem('performance', 'moyenne', 'Reduire le Cumulative Layout Shift (CLS)',
-      `CLS: ${auditData.performance.cls}. Devrait etre < 0.1.`,
-      'Stabilite visuelle et experience utilisateur', 50, 'moyen', 90,
-      'Ajouter dimensions aux images, eviter les insertions DOM', 4)
+    addItem('performance', 'moyenne', 'Réduire le Cumulative Layout Shift (CLS)',
+      `CLS: ${auditData.performance.cls}. Devrait être < 0.1.`,
+      'Stabilité visuelle et expérience utilisateur', 50, 'moyen', 90,
+      'Ajouter dimensions aux images, éviter les insertions DOM', 4)
   }
 
   // Taille de page
   if (auditData?.performance?.pageSize > 3000000) {
-    addItem('performance', 'haute', 'Reduire la taille de la page',
+    addItem('performance', 'haute', 'Réduire la taille de la page',
       `${(auditData.performance.pageSize / 1024 / 1024).toFixed(1)} MB. Excessif.`,
       'Chargement plus rapide, moins de bande passante', 65, 'moyen', 120,
       'Compressez images (WebP), minifiez, supprimez ressources inutiles', 7)
@@ -544,13 +545,13 @@ export function generateChecklist(auditData: any, category?: string): ChecklistI
   if (auditData?.performance?.imagesWithoutDimensions > 0) {
     addItem('performance', 'moyenne', 'Ajouter width/height aux images',
       `${auditData.performance.imagesWithoutDimensions} images sans dimensions.`,
-      'Elimine le Cumulative Layout Shift', 50, 'faible', 45,
-      'Specifient width et height pour chaque <img>', 4)
+      'Élimine le Cumulative Layout Shift', 50, 'faible', 45,
+      'Spécifiez width et height pour chaque <img>', 4)
   }
 
   // JavaScript
   if (auditData?.performance?.renderBlockingJS > 0) {
-    addItem('performance', 'moyenne', 'Eliminer le JavaScript bloquant',
+    addItem('performance', 'moyenne', 'Éliminer le JavaScript bloquant',
       `${auditData.performance.renderBlockingJS} fichiers JS bloquent le rendering.`,
       'Chargement plus rapide de la page', 55, 'moyen', 120,
       'Defer ou async sur les scripts non-critiques', 5)
@@ -558,9 +559,9 @@ export function generateChecklist(auditData: any, category?: string): ChecklistI
 
   // CSS
   if (auditData?.performance?.unusedCSS > 50) {
-    addItem('performance', 'basse', 'Eliminer le CSS inutilise',
-      `${auditData.performance.unusedCSS}% de CSS inutilise.`,
-      'Reduction de la taille de page', 30, 'moyen', 90,
+    addItem('performance', 'basse', 'Éliminer le CSS inutilisé',
+      `${auditData.performance.unusedCSS}% de CSS inutilisé.`,
+      'Réduction de la taille de page', 30, 'moyen', 90,
       'Utilisez PurgeCSS ou PurgeCSS pour supprimer CSS inutile', 2)
   }
 
@@ -569,52 +570,52 @@ export function generateChecklist(auditData: any, category?: string): ChecklistI
   const qualityBacklinks = auditData?.backlinks?.quality || 0
 
   if (backlinksCount < 20) {
-    addItem('backlinks', 'critique', 'Developper votre profil de backlinks',
-      `${backlinksCount} backlinks seulement. Insuffisant pour la competitivite.`,
+    addItem('backlinks', 'critique', 'Développer votre profil de backlinks',
+      `${backlinksCount} backlinks seulement. Insuffisant pour la compétitivité.`,
       'Backlinks = #1 facteur de classement hors-page', 95, 'eleve', 600,
-      'Strategies: contenu linkable, guest posting, PR, partenariats', 20)
+      'Stratégies: contenu linkable, guest posting, PR, partenariats', 20)
   } else if (backlinksCount < 100) {
-    addItem('backlinks', 'haute', 'Accroitre la qualite et quantite des backlinks',
-      `${backlinksCount} backlinks. Bon debut mais potentiel enorme.`,
+    addItem('backlinks', 'haute', 'Accroître la qualité et quantité des backlinks',
+      `${backlinksCount} backlinks. Bon début mais potentiel énorme.`,
       'Plus de liens = plus haut classement', 80, 'eleve', 480,
       'Prospectez sites de DA > 40 dans votre secteur', 15)
   }
 
   if (qualityBacklinks < backlinksCount * 0.3) {
-    addItem('backlinks', 'haute', 'Ameliorer la qualite des backlinks',
-      'Beaucoup de liens de faible qualite. Qualite > quantite.',
-      'Evite les penalites, maximise l\'impact SEO', 70, 'moyen', 240,
+    addItem('backlinks', 'haute', 'Améliorer la qualité des backlinks',
+      'Beaucoup de liens de faible qualité. Qualité > quantité.',
+      'Évite les pénalités, maximise l\'impact SEO', 70, 'moyen', 240,
       'Visez des liens de domaines avec DA > 40', 10)
   }
 
   if (auditData?.backlinks?.toxicCount > 0) {
     addItem('backlinks', 'haute', 'Disavow les liens toxiques',
       `${auditData.backlinks.toxicCount} liens potentiellement toxiques.`,
-      'Protege contre les penalites Google', 65, 'moyen', 60,
+      'Protège contre les pénalités Google', 65, 'moyen', 60,
       'Utilisez Google Search Console > Disavow Links', 6)
   }
 
-  addItem('backlinks', 'moyenne', 'Creer du contenu hautement linkable',
+  addItem('backlinks', 'moyenne', 'Créer du contenu hautement linkable',
     'Produisez des actifs que les autres veulent linkuer.',
     'Attirez les links naturellement sans outreach', 60, 'eleve', 240,
-    'Donnees originales, guides complets, recherche unique', 8)
+    'Données originales, guides complets, recherche unique', 8)
 
   // ===== AI VISIBILITY =====
   if (auditData?.aiVisibility?.mentionRate < 30) {
     addItem('ai-visibility', 'haute', 'Optimiser pour les LLM et AI Engines',
-      'Peu de citations dans les reponses LLM actuelles.',
-      'Les LLM citent les sources structurees et autoritaires', 75, 'moyen', 180,
-      'FAQ structurees, schema.org, contenu facuel avec sources', 9)
+      'Peu de citations dans les réponses LLM actuelles.',
+      'Les LLM citent les sources structurées et autoritaires', 75, 'moyen', 180,
+      'FAQ structurées, schema.org, contenu factuel avec sources', 9)
   }
 
-  addItem('ai-visibility', 'moyenne', 'Creer du contenu E-E-A-T',
-    'Demontrez Expertise, Experience, Autorite, Fiabilite.',
-    'Les LLM privilegient les sources autoritaires', 65, 'eleve', 240,
-    'Biographies d\'auteur, certifications, temoignages, donnees primaires', 8)
+  addItem('ai-visibility', 'moyenne', 'Créer du contenu E-E-A-T',
+    'Démontrez Expertise, Expérience, Autorité, Fiabilité.',
+    'Les LLM privilégient les sources autoritaires', 65, 'eleve', 240,
+    'Biographies d\'auteur, certifications, témoignages, données primaires', 8)
 
   addItem('ai-visibility', 'basse', 'Soumettre au web de l\'IA',
     'Enregistrez-vous dans les annuaires d\'IA.',
-    'Augmente la visibilite dans les agregateurs d\'IA', 30, 'faible', 30,
+    'Augmente la visibilité dans les agrégateurs d\'IA', 30, 'faible', 30,
     'Perplexity Pages, OpenAI directory, etc.', 1)
 
   // ===== MOBILE =====
@@ -640,7 +641,7 @@ export function generateChecklist(auditData: any, category?: string): ChecklistI
   }
 
   // ===== UX =====
-  addItem('ux', 'moyenne', 'Ameliorer le maillage interne',
+  addItem('ux', 'moyenne', 'Améliorer le maillage interne',
     'Liez intelligemment vos pages importantes entre elles.',
     'Distribution du PageRank + navigation + temps sur site', 60, 'moyen', 120,
     'Ancres descriptives, 3-5 liens internes par page', 6)
@@ -650,23 +651,23 @@ export function generateChecklist(auditData: any, category?: string): ChecklistI
     'UX + rich snippets dans Google', 35, 'faible', 30,
     'Schema.org BreadcrumbList avec liens cliquables', 2)
 
-  // Filtre par categorie si demande
+  // Filtre par catégorie si demandé
   let filtered = items
   if (category) {
     filtered = items.filter(item => item.category === category)
   }
 
-  // Trier par priorite
+  // Trier par priorité
   return filtered.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority])
 }
 
 /**
- * Calcule le score SEO global avec analyse de categories
+ * Calcule le score SEO global avec analyse de catégories
  */
 export function calculateSEOScore(auditData: any): SEOScoreBreakdown {
   const categoryScores = calculateCategoryScores(auditData)
 
-  // Calcul pondere du score global
+  // Calcul pondéré du score global
   let totalScore = 0
   Object.entries(categoryWeights).forEach(([category, weight]) => {
     totalScore += (categoryScores[category] || 50) * weight
@@ -674,14 +675,14 @@ export function calculateSEOScore(auditData: any): SEOScoreBreakdown {
 
   totalScore = Math.round(totalScore)
 
-  // Determination de la grade
+  // Détermination de la grade
   const grade = totalScore >= 90 ? 'A+' :
                 totalScore >= 80 ? 'A' :
                 totalScore >= 70 ? 'B' :
                 totalScore >= 60 ? 'C' :
                 totalScore >= 40 ? 'D' : 'F'
 
-  // Detection de la tendance
+  // Détection de la tendance
   const trend = auditData?.trend === 'improving' ? 'improving' :
                 auditData?.trend === 'declining' ? 'declining' : 'stable'
 
@@ -716,12 +717,12 @@ export function calculateSEOScore(auditData: any): SEOScoreBreakdown {
 }
 
 /**
- * Genere un plan d'action structure et prioritaire
+ * Génère un plan d'action structuré et prioritaire
  */
 export function generateActionPlan(auditData: any, goals: SEOGoal[] = []): ActionPlan {
   const checklist = generateChecklist(auditData)
 
-  // Separer les actions par timeline
+  // Séparer les actions par timeline
   const quickWins = checklist.filter(
     item => item.effort === 'faible' && item.impactScore >= 60
   ).slice(0, 5)
@@ -758,7 +759,7 @@ export function generateActionPlan(auditData: any, goals: SEOGoal[] = []): Actio
 }
 
 /**
- * Defini des objectifs SEO intelligents et mesurables
+ * Définit des objectifs SEO intelligents et mesurables
  */
 export function setGoals(currentData: any, targets?: any): SEOGoal[] {
   const goals: SEOGoal[] = []
@@ -769,7 +770,7 @@ export function setGoals(currentData: any, targets?: any): SEOGoal[] {
 
   // Objectif score global
   const scoreGap = targetScore - score
-  const weeksToTarget = Math.ceil(scoreGap / 2) // ~2 points par semaine est realiste
+  const weeksToTarget = Math.ceil(scoreGap / 2) // ~2 points par semaine est réaliste
 
   goals.push({
     id: `goal-${++id}`,
@@ -787,7 +788,7 @@ export function setGoals(currentData: any, targets?: any): SEOGoal[] {
   // Objectif performance (LCP)
   if (currentData?.performance?.lcp || currentData?.performance?.loadTime) {
     const currentLCP = currentData?.performance?.lcp || currentData?.performance?.loadTime || 3000
-    const targetLCP = Math.max(1200, currentLCP * 0.6) // Reduction de 40%
+    const targetLCP = Math.max(1200, currentLCP * 0.6) // Réduction de 40%
     const lcpWeeks = Math.ceil((currentLCP - targetLCP) / 200) // 200ms par semaine
 
     goals.push({
@@ -809,10 +810,10 @@ export function setGoals(currentData: any, targets?: any): SEOGoal[] {
 
   goals.push({
     id: `goal-${++id}`,
-    title: 'Mots-cles en position top 10',
+    title: 'Mots-clés en position top 10',
     current: top10Keywords,
     target: targetTop10,
-    unit: 'mots-cles',
+    unit: 'mots-clés',
     category: 'keywords',
     progress: (top10Keywords / targetTop10) * 100,
     estimatedWeeks: 12, // Ranking typically takes 8-12 weeks
@@ -825,7 +826,7 @@ export function setGoals(currentData: any, targets?: any): SEOGoal[] {
 
   goals.push({
     id: `goal-${++id}`,
-    title: 'Backlinks qualite (DA > 40)',
+    title: 'Backlinks qualité (DA > 40)',
     current: qualityBacklinks,
     target: targetQualityBacklinks,
     unit: 'liens',
@@ -835,7 +836,7 @@ export function setGoals(currentData: any, targets?: any): SEOGoal[] {
     deadline: new Date(Date.now() + 16 * 7 * 24 * 60 * 60 * 1000).toISOString(),
   })
 
-  // Objectif visibilite IA
+  // Objectif visibilité IA
   const aiMentionRate = currentData?.aiVisibility?.mentionRate || 20
   const targetAIMentionRate = Math.min(100, aiMentionRate + 30)
   const aiWeeks = Math.ceil((targetAIMentionRate - aiMentionRate) / 3)
@@ -872,7 +873,7 @@ export function trackProgress(historicalData: any[], goals: SEOGoal[]): Progress
     const timeElapsed = historicalData.length * 7 // Assuming weekly data
     const timeRemaining = (goal.estimatedWeeks || 12) - (timeElapsed / 7)
 
-    // Calculer la velocity (progression par semaine)
+    // Calculer la vélocité (progression par semaine)
     let velocityPerWeek = 0
     if (historicalData.length > 1) {
       const valueGain = (latest?.[goal.category]?.current || goal.current) -
@@ -883,7 +884,7 @@ export function trackProgress(historicalData: any[], goals: SEOGoal[]): Progress
     const progress = Math.min(100, (currentValue / goal.target) * 100)
     const expectedDate = new Date(Date.now() + timeRemaining * 7 * 24 * 60 * 60 * 1000)
 
-    // Verifier si on est en bonne voie
+    // Vérifier si on est en bonne voie
     const expectedProgress = (timeElapsed / ((goal.estimatedWeeks || 12) * 7)) * 100
     const onTrack = progress >= expectedProgress * 0.8 // 80% de la progression attendue
 
@@ -954,7 +955,7 @@ export function getBenchmarks(industry?: string): IndustryBenchmarks | Record<st
   return industryBenchmarks
 }
 
-// ============= FONCTION HELPERS PRIVEES =============
+// ============= FONCTIONS HELPERS PRIVÉES =============
 
 function calculateCategoryScores(auditData: any): Record<string, number> {
   const scores: Record<string, number> = {}
@@ -1031,11 +1032,11 @@ function findTechnicalIssues(auditData: any): any[] {
     issues.push({
       priority: 'critique',
       title: 'Balise title manquante',
-      description: 'Aucune balise title detectee.',
+      description: 'Aucune balise title détectée.',
       steps: [
-        'Acces au <head> de votre page',
-        'Ajouter <title>Votre titre de 50-60 caracteres</title>',
-        'Incluez votre mot-cle principal',
+        'Accès au <head> de votre page',
+        'Ajouter <title>Votre titre de 50-60 caractères</title>',
+        'Incluez votre mot-clé principal',
         'Validez avec un outil SEO',
       ],
       timelineWeeks: 1,
@@ -1054,8 +1055,8 @@ function findTechnicalIssues(auditData: any): any[] {
         'Achetez un certificat SSL (souvent ~15$/an)',
         'Installez le certificat sur votre serveur',
         'Configurez les redirections HTTP -> HTTPS',
-        'Mettez a jour les URL internes',
-        'Submitez la propriete HTTPS dans GSC',
+        'Mettez à jour les URL internes',
+        'Submitez la propriété HTTPS dans GSC',
       ],
       timelineWeeks: 2,
       effort: 'eleve',
@@ -1067,11 +1068,11 @@ function findTechnicalIssues(auditData: any): any[] {
   if (!auditData?.technical?.structuredData) {
     issues.push({
       priority: 'haute',
-      title: 'Donnees structurees Schema.org manquantes',
-      description: 'Aucune donnees structurees JSON-LD detectees.',
+      title: 'Données structurées Schema.org manquantes',
+      description: 'Aucune données structurées JSON-LD détectées.',
       steps: [
         'Identifiez le type de page (Article, Product, Organization, etc.)',
-        'Generez JSON-LD structure avec schema.org',
+        'Générez JSON-LD structuré avec schema.org',
         'Incluez dans le <head> avec <script type="application/ld+json">',
         'Validez avec Google Rich Result Tester',
         'Testez les rich snippets',
@@ -1094,13 +1095,13 @@ function findContentIssues(auditData: any): any[] {
     issues.push({
       priority: 'critique',
       title: 'Contenu trop court',
-      description: `Seulement ${wordCount} mots. Les resultats top 10 ont en moyenne 1400+ mots.`,
+      description: `Seulement ${wordCount} mots. Les résultats top 10 ont en moyenne 1400+ mots.`,
       steps: [
         'Expandez les sections existantes',
         'Ajoutez des sous-sections abordant des sujets connexes',
-        'Incluez des donnees, citations, exemples',
-        'Visez minimum 800 mots, idealement 1200-1500',
-        'Maintenez la qualite plutot que de remplir',
+        'Incluez des données, citations, exemples',
+        'Visez minimum 800 mots, idéalement 1200-1500',
+        'Maintenez la qualité plutôt que de remplir',
       ],
       timelineWeeks: 2,
       effort: 'eleve',
@@ -1113,12 +1114,12 @@ function findContentIssues(auditData: any): any[] {
     issues.push({
       priority: 'critique',
       title: 'Titre H1 manquant',
-      description: 'Aucun H1 detecte. Structure critique pour le SEO.',
+      description: 'Aucun H1 détecté. Structure critique pour le SEO.',
       steps: [
         'Identifiez le titre principal de la page',
         'Encapsulez avec <h1>Votre titre principal</h1>',
         'Un seul H1 par page',
-        'Incluez votre mot-cle principal',
+        'Incluez votre mot-clé principal',
         'Assurez-vous qu\'il a du sens pour les utilisateurs',
       ],
       timelineWeeks: 1,
@@ -1139,14 +1140,14 @@ function findPerformanceIssues(auditData: any): any[] {
     issues.push({
       priority: 'critique',
       title: 'Temps de chargement critique',
-      description: `Le site met ${(loadTime / 1000).toFixed(1)}s a charger. Cible: < 2.5s.`,
+      description: `Le site met ${(loadTime / 1000).toFixed(1)}s à charger. Cible: < 2.5s.`,
       steps: [
         'Compressez les images (WebP, tinypng)',
         'Minifiez CSS et JavaScript',
         'Utilisez un CDN pour les fichiers statiques',
         'Activez la compression gzip/brotli',
         'Utilisez la mise en cache du navigateur',
-        'Diferez les scripts non-critiques',
+        'Différez les scripts non-critiques',
       ],
       timelineWeeks: 4,
       effort: 'eleve',
@@ -1168,7 +1169,7 @@ function generateMilestones(currentScore: number, targetScore: number, weeks: nu
       milestones.push({
         week: w,
         target: Math.round(currentScore + (scoreGap * w / weeks)),
-        description: `Semaine ${w}: Continuer avec les actions programmees`,
+        description: `Semaine ${w}: Continuer avec les actions programmées`,
       })
     }
   }

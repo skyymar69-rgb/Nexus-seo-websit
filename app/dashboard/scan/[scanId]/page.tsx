@@ -37,10 +37,10 @@ interface ScanData {
 // ── Steps Config ─────────────────────────────────────────────
 
 const SCAN_STEPS = [
-  { id: 1, name: 'Audit technique SEO', description: '25+ verifications techniques', icon: Shield, color: 'text-blue-400' },
-  { id: 2, name: 'Score AEO', description: 'Optimisation moteurs de reponses', icon: MessageSquare, color: 'text-violet-400' },
-  { id: 3, name: 'Audit GEO', description: 'Optimisation moteurs generatifs', icon: Globe, color: 'text-emerald-400' },
-  { id: 4, name: 'Analyse E-E-A-T', description: 'Experience, Expertise, Autorite, Fiabilite', icon: Sparkles, color: 'text-amber-400' },
+  { id: 1, name: 'Audit technique SEO', description: '25+ vérifications techniques', icon: Shield, color: 'text-blue-400' },
+  { id: 2, name: 'Score AEO', description: 'Optimisation moteurs de réponses', icon: MessageSquare, color: 'text-violet-400' },
+  { id: 3, name: 'Audit GEO', description: 'Optimisation moteurs génératifs', icon: Globe, color: 'text-emerald-400' },
+  { id: 4, name: 'Analyse E-E-A-T', description: 'Expérience, Expertise, Autorité, Fiabilité', icon: Sparkles, color: 'text-amber-400' },
   { id: 5, name: 'Performance web', description: 'Core Web Vitals & PageSpeed', icon: Gauge, color: 'text-cyan-400' },
   { id: 6, name: 'Crawl du site', description: 'Exploration des pages du site', icon: Search, color: 'text-rose-400' },
 ]
@@ -85,7 +85,7 @@ export default function ScanProgressPage() {
         setError(json.error || 'Erreur inconnue')
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur reseau')
+      setError(err instanceof Error ? err.message : 'Erreur réseau')
     }
   }, [scanId])
 

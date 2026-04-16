@@ -23,7 +23,7 @@ function extractPageData(html: string, url: string) {
   const h1 = $('h1').first().text().trim() || title
 
   // Detect page type
-  const hasFAQ = $('h2, h3').filter((_, el) => /faq|question|reponse/i.test($(el).text())).length > 0
+  const hasFAQ = $('h2, h3').filter((_, el) => /faq|question|reponse|réponse/i.test($(el).text())).length > 0
   const hasArticle = $('article').length > 0 || $('meta[property="article:published_time"]').length > 0
   const hasProduct = $('[itemtype*="Product"]').length > 0 || $('meta[property="product:price"]').length > 0
   const hasLocalBusiness = $('address').length > 0 || /adresse|horaires|telephone/i.test($.text())
