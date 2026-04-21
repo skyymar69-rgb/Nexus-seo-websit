@@ -564,3 +564,68 @@ html:not(.dark) .placeholder-white\/30::placeholder { color: rgb(161 161 170) !i
     padding-bottom: env(safe-area-inset-bottom);
   }
 }
+
+/* ============================================================
+   PREMIUM VISUAL POLISH — Adobe-grade asset treatment
+   ============================================================ */
+
+/* --- SVG: drop-shadow & harmonised stroke --- */
+svg { stroke-linecap: round; stroke-linejoin: round; }
+
+.svg-depth { filter: drop-shadow(0 1px 2px rgba(15, 23, 42, 0.08)) drop-shadow(0 0 1px rgba(15, 23, 42, 0.05)); }
+.dark .svg-depth { filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 1px rgba(0, 0, 0, 0.3)); }
+
+/* --- Bitmap: Photoshop-like rendering --- */
+.img-premium {
+  filter: saturate(1.05) contrast(1.02);
+  transition: filter 0.4s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+.img-premium:hover { filter: saturate(1.1) contrast(1.04); transform: scale(1.015); }
+
+/* --- Blur-up placeholder (lazy-load transition) --- */
+.img-blur-up {
+  filter: blur(20px);
+  transform: scale(1.03);
+  transition: filter 0.5s ease-out, transform 0.5s ease-out;
+}
+.img-blur-up.loaded { filter: blur(0); transform: scale(1); }
+
+/* --- Golden ratio aspect containers (φ ≈ 1.618) --- */
+.aspect-golden     { aspect-ratio: 1.618 / 1; }
+.aspect-golden-v   { aspect-ratio: 1 / 1.618; }
+.aspect-golden-sq  { aspect-ratio: 1 / 1; }
+
+/* --- Card image container: breathing whitespace + hover lift --- */
+.card-img-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, rgba(59,130,246,0.04), rgba(139,92,246,0.04));
+}
+.card-img-frame > img { transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+.card-img-frame:hover > img { transform: scale(1.04); }
+
+/* --- Backdrop saturation for glass panels --- */
+.glass-premium {
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background-color: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+.dark .glass-premium {
+  background-color: rgba(24, 24, 27, 0.72);
+  border-color: rgba(63, 63, 70, 0.5);
+}
+
+/* --- QR clean render (force crisp edges) --- */
+.qr-crisp img, .qr-crisp svg {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  shape-rendering: crispEdges;
+}
+
+/* Prefers-reduced-motion respect (already declared globally but guard new transitions) */
+@media (prefers-reduced-motion: reduce) {
+  .img-premium, .card-img-frame > img, .img-blur-up { transition: none !important; transform: none !important; }
+}

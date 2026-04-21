@@ -5,8 +5,14 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import { Menu, X, Sun, Moon, Zap, ChevronDown } from 'lucide-react'
+import dynamicImport from 'next/dynamic'
 import { cn } from '@/lib/utils'
 import { AnimatedLogo } from '@/components/shared/AnimatedLogo'
+
+const DigitalContactCard = dynamicImport(
+  () => import('@/components/shared/DigitalContactCard'),
+  { ssr: false }
+)
 
 const navItems = [
   { label: 'Produit', href: '#', children: [
@@ -195,6 +201,9 @@ export function Header() {
 
           {/* Right actions */}
           <div className="flex items-center gap-2">
+            {/* Digital contact card — QR codes + vCard */}
+            {mounted && <DigitalContactCard />}
+
             {/* Theme toggle */}
             {mounted && (
               <button

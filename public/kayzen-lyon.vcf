@@ -1,0 +1,15 @@
+BEGIN:VCARD
+VERSION:3.0
+PRODID:-//Kayzen Lyon//Nexus SEO//FR
+N:Kayzen;Lyon;;;
+FN:Kayzen Lyon — Nexus SEO
+ORG:Kayzen Lyon
+TITLE:Agence SEO · GEO · AEO · LLMO
+TEL;TYPE=WORK,VOICE:+33487776861
+EMAIL;TYPE=WORK:contact@kayzen-lyon.fr
+ADR;TYPE=WORK:;;6 rue Pierre Termier;Lyon;;69009;France
+URL:https://nexus-seo.app
+URL;TYPE=site:https://kayzen-lyon.fr
+GEO:45.7787;4.8069
+NOTE:Plateforme SEO IA — GEO, AEO, LLMO. Démo gratuite : https://nexus-seo.app
+END:VCARD
