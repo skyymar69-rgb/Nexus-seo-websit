@@ -144,24 +144,16 @@ export function EcoImpact() {
             Nexus diagnostique. Kayzen Web construit.
           </h3>
           <p className="text-white/70 max-w-2xl mx-auto mb-6 leading-relaxed">
-            Nexus identifie les problèmes. Pour aller plus loin, <strong className="text-white">Kayzen Web</strong> crée des sites React/Next.js ultra-légers, optimisés SEO dès la conception — avec un bilan carbone minimal. Et avec <strong className="text-white">Kayzen Reconditionné</strong>, l&apos;engagement va jusqu&apos;au matériel.
+            Nexus identifie les problèmes. Pour aller plus loin, <strong className="text-white">Kayzen Web</strong> crée des sites React/Next.js ultra-légers, optimisés SEO dès la conception.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href="https://internet.kayzen-lyon.fr"
+              href="https://www.kayzen-lyon.com"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-brand-950 font-bold text-sm hover:bg-white/90 transition-all"
             >
               Découvrir Kayzen Web <ArrowRight className="w-4 h-4" />
-            </a>
-            <a
-              href="https://www.kayzen-lyon.fr"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-green-500/20 text-green-300 font-bold text-sm border border-green-500/30 hover:bg-green-500/30 transition-all"
-            >
-              <Leaf className="w-4 h-4" /> Kayzen Reconditionné
             </a>
           </div>
         </div>

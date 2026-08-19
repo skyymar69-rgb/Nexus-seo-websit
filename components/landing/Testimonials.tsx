@@ -1,6 +1,6 @@
 'use client'
 
-import { Leaf, Zap, Globe, Shield, Sparkles, ArrowRight } from 'lucide-react'
+import { Gauge, Zap, Globe, Shield, Sparkles, ArrowRight } from 'lucide-react'
 
 const reasons = [
   {
@@ -16,9 +16,9 @@ const reasons = [
     color: 'from-violet-500 to-cyan-500',
   },
   {
-    icon: Leaf,
-    title: 'SEO éco-responsable',
-    desc: 'Un site rapide et bien référencé consomme moins d\'énergie. Nexus vous aide à réduire le poids de vos pages et à adopter les bonnes pratiques du web durable.',
+    icon: Gauge,
+    title: 'Pages légères et rapides',
+    desc: 'Nexus mesure le poids de vos pages et vous montre quoi alléger : ressources bloquantes, images non optimisées, scripts inutiles. Moins de kilo-octets, de meilleurs Core Web Vitals.',
     color: 'from-green-500 to-emerald-500',
   },
   {

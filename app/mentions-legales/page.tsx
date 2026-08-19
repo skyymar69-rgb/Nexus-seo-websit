@@ -31,8 +31,7 @@ export default function MentionsLegalesPage() {
                   <p><strong className="text-surface-900 dark:text-white">Siège social :</strong> 6, rue Pierre Termier, 69009 LYON, France</p>
                   <p><strong className="text-surface-900 dark:text-white">Téléphone :</strong> <a href="tel:+33487776861" className="text-brand-600 dark:text-brand-400 hover:underline">+33 (0)4 87 77 68 61</a></p>
                   <p><strong className="text-surface-900 dark:text-white">Email :</strong> <a href="mailto:contact@kayzen-lyon.fr" className="text-brand-600 dark:text-brand-400 hover:underline">contact@kayzen-lyon.fr</a></p>
-                  <p><strong className="text-surface-900 dark:text-white">Site principal :</strong> <a href="https://www.kayzen-lyon.fr" target="_blank" rel="noopener noreferrer" className="text-brand-600 dark:text-brand-400 hover:underline">www.kayzen-lyon.fr</a></p>
-                  <p><strong className="text-surface-900 dark:text-white">Agence Web :</strong> <a href="https://internet.kayzen-lyon.fr" target="_blank" rel="noopener noreferrer" className="text-brand-600 dark:text-brand-400 hover:underline">internet.kayzen-lyon.fr</a></p>
+<p><strong className="text-surface-900 dark:text-white">Site :</strong> <a href="https://www.kayzen-lyon.com" target="_blank" rel="noopener noreferrer" className="text-brand-600 dark:text-brand-400 hover:underline">www.kayzen-lyon.com</a></p>
                 </div>
               </div>
 
@@ -47,7 +46,6 @@ export default function MentionsLegalesPage() {
                   <p><strong className="text-surface-900 dark:text-white">Hébergeur principal :</strong> Vercel Inc.</p>
                   <p><strong className="text-surface-900 dark:text-white">Adresse :</strong> 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis</p>
                   <p><strong className="text-surface-900 dark:text-white">Site :</strong> <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" className="text-brand-600 dark:text-brand-400 hover:underline">vercel.com</a></p>
-                  <p className="text-surface-500 italic text-xs mt-2">🌱 Nexus SEO s&apos;engage dans une démarche d&apos;éco-responsabilité numérique. Nos services privilégient les infrastructures à bilan carbone réduit.</p>
                 </div>
               </div>
 

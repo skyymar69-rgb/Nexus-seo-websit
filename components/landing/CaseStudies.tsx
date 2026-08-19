@@ -12,7 +12,7 @@ const cases = [
   {
     category: 'Commerce de proximité',
     company: 'Boucherie de l\'Avenue',
-    desc: 'Site vitrine rapide et éco-responsable pour un commerce local lyonnais, optimisé pour le SEO local.',
+    desc: 'Site vitrine rapide et léger pour un commerce local lyonnais, optimisé pour le SEO local.',
     tags: ['SEO Local', 'Eco-web'],
   },
   {

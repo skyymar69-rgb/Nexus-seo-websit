@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight, Zap, Leaf } from 'lucide-react'
+import { ArrowRight, Zap, Gauge } from 'lucide-react'
 
 export function CTA() {
   return (
@@ -41,7 +41,7 @@ export function CTA() {
                   Créer mon compte gratuit
                   <ArrowRight className="w-5 h-5" />
                 </Link>
-                <a href="https://internet.kayzen-lyon.fr" target="_blank" rel="noopener noreferrer" className="btn-outline px-8 py-4 text-base rounded-2xl">
+                <a href="https://www.kayzen-lyon.com" target="_blank" rel="noopener noreferrer" className="btn-outline px-8 py-4 text-base rounded-2xl">
                   Faire créer mon site par Kayzen
                 </a>
               </div>
@@ -49,8 +49,8 @@ export function CTA() {
               {/* Real info */}
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-surface-600 dark:text-surface-400">
                 <span className="flex items-center gap-1.5">
-                  <Leaf className="w-4 h-4 text-green-500" />
-                  Web éco-responsable
+                  <Gauge className="w-4 h-4 text-green-500" />
+                  Pages légères et rapides
                 </span>
                 <div className="hidden sm:block w-px h-4 bg-surface-200 dark:bg-surface-700" />
                 <span>Sans carte bancaire</span>

@@ -35,7 +35,7 @@ const faqs = [
   },
   {
     question: "Quel est le lien entre Nexus et Kayzen Web ?",
-    answer: "Nexus est un outil gratuit développé par Kayzen Web (internet.kayzen-lyon.fr), agence web lyonnaise spécialisée dans la création de sites performants et éco-responsables en React/Next.js. Nexus diagnostique les problèmes, Kayzen Web les résout avec des sites optimisés dès la conception.",
+    answer: "Nexus est un outil gratuit développé par Kayzen Web (www.kayzen-lyon.com), agence web lyonnaise spécialisée dans la création de sites performants en React/Next.js. Nexus diagnostique les problèmes, Kayzen Web les résout avec des sites optimisés dès la conception.",
   },
 ]
 
