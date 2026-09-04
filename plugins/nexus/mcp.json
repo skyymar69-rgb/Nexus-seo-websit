@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "nexus": {
+      "type": "http",
+      "url": "https://nexus.kayzen-lyon.com/api/mcp",
+      "headers": {
+        "Authorization": "Bearer ${NEXUS_API_KEY}"
+      }
+    }
+  }
+}

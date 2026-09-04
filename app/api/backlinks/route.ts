@@ -37,6 +37,11 @@ export async function GET(request: NextRequest) {
 
     const skip = (page - 1) * limit
 
+    // Portage OpenSEO : dernier instantané DataForSEO (POST /api/backlinks/refresh).
+    const snapshot = await prisma.backlinkSnapshot
+      .findFirst({ where: { websiteId }, orderBy: { createdAt: 'desc' } })
+      .catch(() => null)
+
     const [backlinks, total] = await Promise.all([
       prisma.backlink.findMany({
         where: { websiteId },
@@ -65,6 +70,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       backlinks,
+      summary: snapshot,
       pagination: {
         page,
         limit,

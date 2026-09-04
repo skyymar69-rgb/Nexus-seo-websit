@@ -6,6 +6,7 @@ import { usePlan } from '@/hooks/usePlan'
 import { useTheme } from 'next-themes'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
+import { ApiKeyPanel } from '@/components/dashboard/ApiKeyPanel'
 import {
   Save,
   Key,
@@ -297,23 +298,8 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* API Keys Section */}
-      <div className="rounded-xl border border-white/5 bg-white/[0.03] backdrop-blur-sm p-6">
-        <h2 className="text-lg font-bold mb-6 flex items-center gap-2 text-white">
-          <Key className="h-5 w-5 text-cyan-400" />
-          Clé API
-        </h2>
-
-        <p className="text-sm text-white/50 mb-4">
-          Utilisez une clé API pour intégrer Nexus dans vos outils.
-        </p>
-
-        <button
-          className="w-full px-4 py-3 rounded-lg border font-medium transition-colors border-white/10 bg-white/[0.03] hover:bg-white/[0.06] text-white/70"
-        >
-          Générez votre clé API pour intégrer Nexus
-        </button>
-      </div>
+      {/* API Keys Section — clé MCP (portage OpenSEO) */}
+      <ApiKeyPanel />
 
       {/* Danger Zone */}
       <div className="rounded-xl border border-red-500/20 bg-red-500/[0.05] backdrop-blur-sm p-6">

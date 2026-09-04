@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 // ==================== AUTH ====================
@@ -29,8 +29,8 @@ model User {
   reports       Report[]
   notifications Notification[]
   subscription  Subscription?
-  auditCredits  Int       @default(5)
-  apiKey        String?   @unique
+  auditCredits  Int            @default(5)
+  apiKey        String?        @unique
 
   @@index([email])
   @@index([plan])
@@ -86,15 +86,17 @@ model Website {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user            User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  audits          Audit[]
-  crawlSessions   CrawlSession[]
-  keywordTracking KeywordTracking[]
-  backlinks       Backlink[]
-  aiQueries       AIVisibilityQuery[]
-  contentPages    ContentPage[]
-  performanceData PerformanceData[]
-  scanSessions    ScanSession[]
+  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  audits            Audit[]
+  crawlSessions     CrawlSession[]
+  keywordTracking   KeywordTracking[]
+  backlinks         Backlink[]
+  aiQueries         AIVisibilityQuery[]
+  contentPages      ContentPage[]
+  performanceData   PerformanceData[]
+  scanSessions      ScanSession[]
+  rankTrackers      RankTrackerConfig[]
+  backlinkSnapshots BacklinkSnapshot[]
 
   @@unique([domain, userId])
   @@index([userId])
@@ -104,18 +106,18 @@ model Website {
 // ==================== AUDIT ====================
 
 model Audit {
-  id        String   @id @default(cuid())
-  websiteId String
-  url       String
-  score     Int
-  grade     String
-  status    String   @default("completed")
-  metaData     String?
-  contentData  String?
+  id            String   @id @default(cuid())
+  websiteId     String
+  url           String
+  score         Int
+  grade         String
+  status        String   @default("completed")
+  metaData      String?
+  contentData   String?
   technicalData String?
-  categories   String?
-  checks       String?
-  createdAt DateTime @default(now())
+  categories    String?
+  checks        String?
+  createdAt     DateTime @default(now())
 
   website Website @relation(fields: [websiteId], references: [id], onDelete: Cascade)
 
@@ -126,44 +128,86 @@ model Audit {
 // ==================== CRAWL ====================
 
 model CrawlSession {
-  id        String   @id @default(cuid())
-  websiteId String
-  status    String   @default("running")
-  pagesFound Int     @default(0)
-  pagesCrawled Int   @default(0)
-  startedAt DateTime @default(now())
-  completedAt DateTime?
-  config    String?
+  id           String    @id @default(cuid())
+  websiteId    String
+  status       String    @default("running")
+  pagesFound   Int       @default(0)
+  pagesCrawled Int       @default(0)
+  startedAt    DateTime  @default(now())
+  completedAt  DateTime?
+  config       String?
+  // Portage OpenSEO (lot crawl) : URL de départ résolue, erreur de fin, et
+  // nombre d'URL découvertes via sitemap.
+  startUrl     String?
+  error        String?
+  sitemapUrls  Int       @default(0)
 
-  website   Website     @relation(fields: [websiteId], references: [id], onDelete: Cascade)
-  pages     CrawledPage[]
+  website     Website       @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+  pages       CrawledPage[]
+  crawlIssues CrawlIssue[]
 
   @@index([websiteId])
 }
 
 model CrawledPage {
-  id            String   @id @default(cuid())
-  crawlSessionId String
-  url           String
-  statusCode    Int
-  contentType   String?
-  contentLength Int      @default(0)
-  responseTime  Int      @default(0)
-  title         String?
-  metaDescription String?
-  h1Count       Int      @default(0)
-  h2Count       Int      @default(0)
-  internalLinks Int      @default(0)
-  externalLinks Int      @default(0)
-  images        Int      @default(0)
-  imagesNoAlt   Int      @default(0)
-  issues        String?
-  crawledAt     DateTime @default(now())
+  id                 String   @id @default(cuid())
+  crawlSessionId     String
+  url                String
+  statusCode         Int
+  contentType        String?
+  contentLength      Int      @default(0)
+  responseTime       Int      @default(0)
+  title              String?
+  metaDescription    String?
+  h1Count            Int      @default(0)
+  h2Count            Int      @default(0)
+  internalLinks      Int      @default(0)
+  externalLinks      Int      @default(0)
+  images             Int      @default(0)
+  imagesNoAlt        Int      @default(0)
+  issues             String?
+  crawledAt          DateTime @default(now())
+  // Portage OpenSEO : signaux d'indexabilité et de structure par page.
+  fetchClass         String   @default("ok") // ok | blocked | error
+  redirectUrl        String?
+  canonicalUrl       String?
+  headerCanonicalUrl String?
+  robotsMeta         String?
+  xRobotsTag         String?
+  isIndexable        Boolean  @default(true)
+  wordCount          Int      @default(0)
+  contentHash        String?
+  headingOrder       String? // JSON: [1,2,2,3]
+  crawlDepth         Int?
+  inSitemap          Boolean  @default(false)
+  hasStructuredData  Boolean  @default(false)
 
   crawlSession CrawlSession @relation(fields: [crawlSessionId], references: [id], onDelete: Cascade)
+  crawlIssues  CrawlIssue[]
 
   @@index([crawlSessionId])
   @@index([url])
+}
+
+// Constats d'audit multipage (portage OpenSEO). Un constat par (session, type,
+// page, clé de dédoublonnage) ; le catalogue des types vit dans lib/audit/issues.ts.
+model CrawlIssue {
+  id             String   @id @default(cuid())
+  crawlSessionId String
+  pageId         String?
+  pageUrl        String
+  issueType      String
+  severity       String // critical | warning | info
+  details        String? // JSON
+  dedupeKey      String   @default("")
+  createdAt      DateTime @default(now())
+
+  crawlSession CrawlSession @relation(fields: [crawlSessionId], references: [id], onDelete: Cascade)
+  page         CrawledPage? @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@unique([crawlSessionId, issueType, pageUrl, dedupeKey])
+  @@index([crawlSessionId, severity])
+  @@index([issueType])
 }
 
 // ==================== KEYWORDS ====================
@@ -188,22 +232,72 @@ model Keyword {
 }
 
 model KeywordTracking {
-  id              String   @id @default(cuid())
-  keywordId       String
-  websiteId       String
-  position        Int?
+  id               String   @id @default(cuid())
+  keywordId        String
+  websiteId        String
+  position         Int?
   previousPosition Int?
-  url             String?
-  serpFeatures    String?
-  date            DateTime @default(now())
+  url              String?
+  serpFeatures     String?
+  date             DateTime @default(now())
+  // Portage OpenSEO : provenance de l'instantané (run, appareil, localisation).
+  runId            String?
+  device           String   @default("desktop")
+  locationName     String   @default("")
 
-  keyword Keyword @relation(fields: [keywordId], references: [id], onDelete: Cascade)
-  website Website @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+  keyword Keyword       @relation(fields: [keywordId], references: [id], onDelete: Cascade)
+  website Website       @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+  run     RankCheckRun? @relation(fields: [runId], references: [id], onDelete: SetNull)
 
   @@unique([keywordId, websiteId, date])
   @@index([keywordId])
   @@index([websiteId])
   @@index([date])
+  @@index([runId])
+}
+
+// ==================== RANK TRACKING (portage OpenSEO) ====================
+
+// Configuration de suivi par site : marché (pays, langue), localisation locale
+// optionnelle (chaîne canonique DataForSEO, ex. "Lyon,Auvergne-Rhone-Alpes,France"),
+// appareil et profondeur SERP. locationName vide = suivi national.
+model RankTrackerConfig {
+  id           String   @id @default(cuid())
+  websiteId    String
+  locationCode Int      @default(2250)
+  locationName String   @default("")
+  languageCode String   @default("fr")
+  device       String   @default("desktop") // desktop | mobile
+  depth        Int      @default(20)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  website Website        @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+  runs    RankCheckRun[]
+
+  @@unique([websiteId, locationName, device])
+  @@index([websiteId])
+  @@index([active])
+}
+
+model RankCheckRun {
+  id              String    @id @default(cuid())
+  configId        String
+  status          String    @default("running") // running | completed | failed
+  trigger         String    @default("manual") // manual | cron | mcp
+  keywordsTotal   Int       @default(0)
+  keywordsChecked Int       @default(0)
+  costMicros      Int       @default(0) // micro-dollars réellement facturés par DataForSEO
+  error           String?
+  startedAt       DateTime  @default(now())
+  completedAt     DateTime?
+
+  config    RankTrackerConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
+  snapshots KeywordTracking[]
+
+  @@index([configId, startedAt])
+  @@index([status])
 }
 
 // ==================== BACKLINKS ====================
@@ -225,9 +319,52 @@ model Backlink {
 
   website Website @relation(fields: [websiteId], references: [id], onDelete: Cascade)
 
+  @@unique([websiteId, sourceUrl, targetUrl])
   @@index([websiteId])
   @@index([sourceDomain])
   @@index([status])
+}
+
+// Instantané daté du profil de liens (portage OpenSEO) : ce que DataForSEO
+// renvoie au moment du rafraîchissement, pour tracer l'évolution.
+model BacklinkSnapshot {
+  id                   String   @id @default(cuid())
+  websiteId            String
+  backlinks            Int      @default(0)
+  referringDomains     Int      @default(0)
+  referringPages       Int?
+  rank                 Int?
+  newBacklinks         Int?
+  lostBacklinks        Int?
+  newReferringDomains  Int?
+  lostReferringDomains Int?
+  spamScore            Int?
+  createdAt            DateTime @default(now())
+
+  website Website @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+
+  @@index([websiteId, createdAt])
+}
+
+// ==================== FOURNISSEURS DE DONNEES (portage OpenSEO) ====================
+
+// Journal append-only des appels payants à un fournisseur externe (DataForSEO).
+// Une ligne par appel, coût réel renvoyé par le fournisseur en micro-dollars
+// (1 $ = 1 000 000). Le solde mensuel est une somme ; aucune ligne n'est mise à jour.
+model DataProviderUsage {
+  id         String   @id @default(cuid())
+  provider   String   @default("dataforseo")
+  userId     String?
+  websiteId  String?
+  feature    String // keyword_research | rank_tracking | backlinks | serp | local_seo | domain | mcp
+  path       String // chemin DataForSEO, ex. v3/serp/google/organic/live/advanced
+  costMicros Int      @default(0)
+  status     String   @default("ok") // ok | failed
+  createdAt  DateTime @default(now())
+
+  @@index([provider, createdAt])
+  @@index([userId, createdAt])
+  @@index([websiteId, createdAt])
 }
 
 // ==================== AI VISIBILITY ====================
@@ -256,18 +393,18 @@ model AIVisibilityQuery {
 // ==================== CONTENT ====================
 
 model ContentPage {
-  id            String   @id @default(cuid())
-  websiteId     String
-  url           String
-  title         String?
-  score         Int?
-  wordCount     Int?
-  readability   Float?
+  id             String   @id @default(cuid())
+  websiteId      String
+  url            String
+  title          String?
+  score          Int?
+  wordCount      Int?
+  readability    Float?
   keywordDensity Float?
-  targetKeyword String?
-  suggestions   String?
-  content       String?
-  lastAnalyzed  DateTime @default(now())
+  targetKeyword  String?
+  suggestions    String?
+  content        String?
+  lastAnalyzed   DateTime @default(now())
 
   website Website @relation(fields: [websiteId], references: [id], onDelete: Cascade)
 
@@ -278,25 +415,25 @@ model ContentPage {
 // ==================== PERFORMANCE ====================
 
 model PerformanceData {
-  id          String   @id @default(cuid())
-  websiteId   String
-  url         String
-  score       Int
-  grade       String
-  lcp         Float?
-  fid         Float?
-  cls         Float?
-  ttfb        Float?
-  fcp         Float?
-  tti         Float?
-  tbt         Float?
-  speedIndex  Float?
-  pageSize    Int?
-  requests    Int?
-  resources   String?
+  id            String   @id @default(cuid())
+  websiteId     String
+  url           String
+  score         Int
+  grade         String
+  lcp           Float?
+  fid           Float?
+  cls           Float?
+  ttfb          Float?
+  fcp           Float?
+  tti           Float?
+  tbt           Float?
+  speedIndex    Float?
+  pageSize      Int?
+  requests      Int?
+  resources     String?
   opportunities String?
-  device      String   @default("desktop")
-  testedAt    DateTime @default(now())
+  device        String   @default("desktop")
+  testedAt      DateTime @default(now())
 
   website Website @relation(fields: [websiteId], references: [id], onDelete: Cascade)
 
@@ -343,23 +480,23 @@ model Notification {
 // ==================== SCAN ====================
 
 model ScanSession {
-  id             String   @id @default(cuid())
-  websiteId      String
-  url            String
-  status         String   @default("pending") // pending | running | completed | failed
-  progress       Int      @default(0)
-  totalSteps     Int      @default(6)
-  currentStep    String?  // nom de l'etape en cours
-  results        String?  // JSON — AEO, GEO, GEO engine scores
-  auditScore     Int?
-  auditGrade     String?
-  aeoScore       Int?
-  geoScore       Int?
-  perfScore      Int?
-  crawlPages     Int?
-  error          String?
-  startedAt      DateTime @default(now())
-  completedAt    DateTime?
+  id          String    @id @default(cuid())
+  websiteId   String
+  url         String
+  status      String    @default("pending") // pending | running | completed | failed
+  progress    Int       @default(0)
+  totalSteps  Int       @default(6)
+  currentStep String? // nom de l'etape en cours
+  results     String? // JSON — AEO, GEO, GEO engine scores
+  auditScore  Int?
+  auditGrade  String?
+  aeoScore    Int?
+  geoScore    Int?
+  perfScore   Int?
+  crawlPages  Int?
+  error       String?
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
 
   website Website @relation(fields: [websiteId], references: [id], onDelete: Cascade)
 
@@ -371,15 +508,15 @@ model ScanSession {
 // ==================== SUBSCRIPTION ====================
 
 model Subscription {
-  id                 String   @id @default(cuid())
-  userId             String   @unique
-  plan               String   @default("free")
-  status             String   @default("active")
-  stripeCustomerId   String?  @unique
-  stripeSubscriptionId String? @unique
-  currentPeriodEnd   DateTime?
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  id                   String    @id @default(cuid())
+  userId               String    @unique
+  plan                 String    @default("free")
+  status               String    @default("active")
+  stripeCustomerId     String?   @unique
+  stripeSubscriptionId String?   @unique
+  currentPeriodEnd     DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

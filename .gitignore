@@ -84,3 +84,6 @@ prisma/dev.db-journal
 .AppleDB
 .DS_Store
 .vercel
+
+# Worktrees Claude locaux (jamais versionnes)
+.claude/worktrees/

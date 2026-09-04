@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { cn, formatNumber } from '@/lib/utils'
 import { useWebsite } from '@/contexts/WebsiteContext'
+import { BacklinksRefreshButton } from '@/components/dashboard/BacklinksRefreshButton'
 import {
   LineChart,
   Line,
@@ -127,6 +128,8 @@ export default function BacklinksPage() {
   const [filterDARange, setFilterDARange] = useState<[number, number]>([0, 100])
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<'da' | 'date' | 'spam'>('da')
+  // Incrémenté après un rafraîchissement DataForSEO pour recharger la liste.
+  const [reloadKey, setReloadKey] = useState(0)
 
   // Fetch backlinks from API
   useEffect(() => {
@@ -153,7 +156,7 @@ export default function BacklinksPage() {
       }
     }
     fetchBacklinks()
-  }, [selectedWebsite])
+  }, [selectedWebsite, reloadKey])
 
   // Derived chart data from real backlinks
   const growthData = useMemo(() => computeGrowthData(backlinks), [backlinks])
@@ -379,10 +382,8 @@ export default function BacklinksPage() {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <button className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors flex items-center gap-2">
-                <RefreshCw className="w-4 h-4" />
-                Analyser les backlinks
-              </button>
+              {/* Rafraîchissement DataForSEO (portage OpenSEO) */}
+              <BacklinksRefreshButton websiteId={selectedWebsite.id} onRefreshed={() => setReloadKey((k) => k + 1)} />
               <button className="p-2 hover:bg-slate-700 rounded-lg transition-colors">
                 <Download className="w-5 h-5 text-slate-300" />
               </button>

@@ -83,13 +83,25 @@ types/
 ## Fonctionnalites
 
 - **Audit SEO** : Analyse technique complete de vos sites
+- **Crawl multipage** : robots.txt, sitemaps, 27 types de constats avec correctifs (portage OpenSEO)
 - **Recherche de mots-cles** : Volume, difficulte, tendances, intentions
-- **Analyse de backlinks** : Profil de liens, autorite, liens toxiques
-- **Suivi de positionnement** : Positions quotidiennes sur Google
+- **Analyse de backlinks** : Profil de liens, domaines referents, instantanes dates
+- **Suivi de positionnement** : Positions quotidiennes sur Google, national ou local (par ville)
 - **AI Visibility Score** : Suivez votre presence dans les reponses IA (ChatGPT, Perplexity, Claude, Gemini)
 - **Optimisation de contenu** : Score SEO, suggestions, readabilite
 - **Analyse concurrentielle** : Comparez-vous a vos concurrents
+- **Serveur MCP** : 26 outils pour Claude Code, Cursor et tout agent compatible, avec un plugin de skills (`plugins/nexus`)
 - **Theme personnalisable** : Mode clair, sombre, ou systeme
+
+## Donnees SEO (DataForSEO) et serveur MCP
+
+Les donnees de mots-cles, SERP, backlinks et SEO local viennent de DataForSEO,
+facture a l'usage. Chaque appel passe par un compteur avec plafond mensuel
+(`DATAFORSEO_MONTHLY_BUDGET_USD`) et journal des couts reels. Le serveur MCP
+(`/api/mcp`) s'authentifie par cle API generee dans Reglages.
+
+Details, outils et limites : [`docs/PORTAGE_OPENSEO.md`](docs/PORTAGE_OPENSEO.md).
+Code derive d'OpenSEO (MIT) : [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
 
 ## Deploiement
 

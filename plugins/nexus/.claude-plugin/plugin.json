@@ -1,0 +1,19 @@
+{
+  "name": "nexus-seo",
+  "displayName": "Nexus SEO",
+  "version": "0.1.0",
+  "description": "Données SEO réelles pour votre agent : mots-clés, SERP, concurrents, backlinks, audit de site, suivi de positions national et local, SEO local. Serveur MCP Nexus (KAYZEN LYON).",
+  "author": {
+    "name": "KAYZEN LYON",
+    "url": "https://nexus.kayzen-lyon.com"
+  },
+  "homepage": "https://nexus.kayzen-lyon.com",
+  "license": "MIT",
+  "keywords": ["seo", "keyword-research", "serp", "site-audit", "backlinks", "rank-tracking", "local-seo", "france"],
+  "mcpServers": {
+    "nexus": {
+      "type": "http",
+      "url": "https://nexus.kayzen-lyon.com/api/mcp"
+    }
+  }
+}

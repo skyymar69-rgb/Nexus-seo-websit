@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useWebsite } from '@/contexts/WebsiteContext'
+import { RankTrackerControls } from '@/components/dashboard/RankTrackerControls'
 import {
   LineChart,
   Line,
@@ -52,6 +53,8 @@ export default function RankTrackerPage() {
   const [selectedKeywordId, setSelectedKeywordId] = useState<string | null>(null)
   const [history, setHistory] = useState<HistoryEntry[]>([])
   const [historyLoading, setHistoryLoading] = useState(false)
+  // Incrémenté après un run de vérification pour recharger les positions.
+  const [reloadKey, setReloadKey] = useState(0)
 
   useEffect(() => {
     if (!selectedWebsite) {
@@ -82,7 +85,7 @@ export default function RankTrackerPage() {
     }
 
     fetchKeywords()
-  }, [selectedWebsite])
+  }, [selectedWebsite, reloadKey])
 
   // Fetch history for selected keyword
   useEffect(() => {
@@ -214,6 +217,9 @@ export default function RankTrackerPage() {
       </div>
 
       <div className="p-8">
+        {/* Suivi national / local, estimation et lancement (portage OpenSEO) */}
+        <RankTrackerControls websiteId={selectedWebsite.id} onRunCompleted={() => setReloadKey((k) => k + 1)} />
+
         {/* Position history chart */}
         {selectedKeyword && history.length > 0 && (
           <div className="mb-8 rounded-lg border border-white/5 bg-white/[0.03] p-6 shadow-sm">
