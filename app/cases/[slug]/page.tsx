@@ -171,7 +171,7 @@ export default function CaseDetailPage({ params }: { params: { slug: string } })
                 <ul className="space-y-3">
                   {c.solution.map((s) => (
                     <li key={s} className="flex items-start gap-3">
-                      <div className="w-5 h-5 rounded-full bg-brand-50 dark:bg-brand-950/40 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <div className="w-5 h-5 rounded-full bg-brand-50 dark:bg-navy-800/40 flex items-center justify-center flex-shrink-0 mt-0.5">
                         <Check className="w-3 h-3 text-brand-600 dark:text-brand-400" />
                       </div>
                       <span className="text-sm text-surface-600 dark:text-surface-400">{s}</span>

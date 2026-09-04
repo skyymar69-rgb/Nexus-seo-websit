@@ -2,83 +2,74 @@
 
 import { AlertTriangle, TrendingDown, BrainCircuit, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import { SpotlightCard, FadeContent, BlurText } from '@/components/bits'
 
 const problems = [
   {
     icon: TrendingDown,
-    color: 'text-red-500',
-    bg: 'bg-red-50 dark:bg-red-950/20',
-    border: 'border-red-200 dark:border-red-900/40',
+    chip: 'bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-300',
     title: 'Google SGE vole vos clics',
-    stat: '−40%',
+    stat: '−40 %',
     statLabel: 'de clics organiques en 2025',
-    desc: 'Les AI Overviews de Google absorbent jusqu\'à 40 % du trafic sur les requêtes informationnelles. Votre contenu actuel n\'est pas optimisé pour y apparaître.',
+    desc: 'Les AI Overviews de Google absorbent jusqu’à 40 % du trafic sur les requêtes informationnelles. Votre contenu actuel n’est pas optimisé pour y apparaître.',
   },
   {
     icon: BrainCircuit,
-    color: 'text-amber-500',
-    bg: 'bg-amber-50 dark:bg-amber-950/20',
-    border: 'border-amber-200 dark:border-amber-900/40',
+    chip: 'bg-navy-100 text-navy-700 dark:bg-navy-900/60 dark:text-navy-100',
     title: 'ChatGPT répond à votre place',
-    stat: '1Md',
-    statLabel: 'requêtes/jour sur ChatGPT',
-    desc: 'ChatGPT, Perplexity et Claude reçoivent des milliards de questions par jour. Si votre marque n\'est pas mentionnée dans leurs réponses, vous êtes invisible pour une génération entière.',
+    stat: '1 Md',
+    statLabel: 'requêtes par jour sur ChatGPT',
+    desc: 'ChatGPT, Perplexity et Claude reçoivent des milliards de questions par jour. Si votre marque n’est pas mentionnée dans leurs réponses, vous êtes invisible pour une génération entière.',
   },
   {
     icon: AlertTriangle,
-    color: 'text-violet-500',
-    bg: 'bg-violet-50 dark:bg-violet-950/20',
-    border: 'border-violet-200 dark:border-violet-900/40',
-    title: 'Vos concurrents s\'adaptent déjà',
-    stat: '23%',
-    statLabel: 'des leaders optimisent pour l\'IA',
-    desc: 'Les entreprises qui investissent maintenant dans le GEO, AEO et LLMO creusent un fossé difficile à rattraper. Chaque semaine d\'attente est un retard stratégique.',
+    chip: 'bg-brand-100 text-brand-700 dark:bg-brand-900/40 dark:text-brand-200',
+    title: 'Vos concurrents s’adaptent déjà',
+    stat: '23 %',
+    statLabel: 'des leaders optimisent pour l’IA',
+    desc: 'Les entreprises qui investissent maintenant dans le GEO, l’AEO et le LLMO creusent un fossé difficile à rattraper. Chaque semaine d’attente est un retard stratégique.',
   },
 ]
 
 export function Problem() {
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8 bg-surface-950 border-y border-white/5">
-      <div className="max-w-7xl mx-auto">
+    <section className="bg-surface-100 py-20 dark:bg-surface-900/50 lg:py-24" aria-labelledby="problem-title">
+      <div className="mx-auto max-w-container px-6">
 
-        {/* Header */}
-        <div className="max-w-3xl mx-auto text-center mb-14">
-          <div className="section-badge mx-auto mb-4">Le problème</div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-surface-900 dark:text-white mb-4">
-            Le SEO traditionnel ne suffit{' '}
-            <span className="gradient-text">plus en 2026</span>
-          </h2>
-          <p className="text-lg text-surface-500 dark:text-surface-400">
+        <div className="mx-auto mb-12 max-w-3xl text-center">
+          <span className="section-badge-primary mb-4">Le problème</span>
+          <BlurText as="h2" id="problem-title" text="Le SEO traditionnel ne suffit plus en 2026" className="justify-center text-headline-md text-navy-600 dark:text-white sm:text-headline-lg" delay={60} />
+          <p className="mt-4 text-body-lg text-ink-muted dark:text-surface-400">
             Les règles du référencement ont changé. Les moteurs de recherche génératifs redistribuent le trafic. Êtes-vous prêt ?
           </p>
         </div>
 
-        {/* Problem cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14">
+        <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-3">
           {problems.map((p, i) => {
             const Icon = p.icon
             return (
-              <div key={i} className="group rounded-2xl p-8 border border-white/10 dark:border-white/5 bg-white/60 dark:bg-white/[0.03] backdrop-blur-xl hover:border-white/20 dark:hover:border-white/10 transition-all duration-300 hover:shadow-glow">
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-5 ${p.bg} border ${p.border}`}>
-                  <Icon className={`w-6 h-6 ${p.color}`} />
-                </div>
-                <div className="mb-4">
-                  <span className={`text-5xl sm:text-6xl font-black ${p.color}`}>{p.stat}</span>
-                  <span className="block text-xs text-surface-500 dark:text-surface-400 mt-1">{p.statLabel}</span>
-                </div>
-                <h3 className="text-lg font-bold text-surface-900 dark:text-white mb-2">{p.title}</h3>
-                <p className="text-sm text-surface-600 dark:text-surface-400 leading-relaxed">{p.desc}</p>
-              </div>
+              <FadeContent key={p.title} delay={i * 0.08}>
+                <SpotlightCard as="article" className="h-full p-8">
+                  <div className={`mb-5 flex h-12 w-12 items-center justify-center rounded-2xl ${p.chip}`}>
+                    <Icon className="h-6 w-6" aria-hidden="true" />
+                  </div>
+                  <p className="mb-4">
+                    <span className="font-display text-5xl font-extrabold tracking-tight text-navy-600 dark:text-white">{p.stat}</span>
+                    <span className="mt-1 block text-xs text-ink-muted dark:text-surface-400">{p.statLabel}</span>
+                  </p>
+                  <h3 className="mb-2 text-title-lg text-ink dark:text-white">{p.title}</h3>
+                  <p className="text-sm leading-relaxed text-ink-muted dark:text-surface-400">{p.desc}</p>
+                </SpotlightCard>
+              </FadeContent>
             )
           })}
         </div>
 
-        {/* Bridge to solution */}
         <div className="text-center">
-          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 shadow-sm">
-            <span className="text-sm font-semibold text-surface-900 dark:text-white">Nexus résout exactement ces 3 problèmes</span>
-            <Link href="#features" className="flex items-center gap-1 text-sm font-bold text-brand-600 dark:text-brand-400 hover:gap-2 transition-all">
-              Voir comment <ArrowRight className="w-4 h-4" />
+          <div className="card inline-flex flex-wrap items-center justify-center gap-3 px-6 py-3">
+            <span className="text-sm font-semibold text-ink dark:text-white">Nexus résout exactement ces trois problèmes</span>
+            <Link href="#features" className="inline-flex items-center gap-1 text-sm font-bold text-brand-500 transition-[gap] duration-200 hover:gap-2">
+              Voir comment <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
         </div>

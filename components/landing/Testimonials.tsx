@@ -1,101 +1,93 @@
 'use client'
 
 import { Leaf, Zap, Globe, Shield, Sparkles, ArrowRight } from 'lucide-react'
+import { FadeContent } from '@/components/bits'
 
 const reasons = [
   {
     icon: Sparkles,
-    title: 'Premier outil GEO + AEO + LLMO',
-    desc: 'Nexus est le seul outil qui combine l\'optimisation pour Google SGE, les featured snippets et les réponses des LLMs (ChatGPT, Claude, Gemini) en une seule plateforme.',
-    color: 'from-brand-500 to-violet-500',
+    title: 'GEO, AEO et LLMO réunis',
+    desc: 'Nexus combine l’optimisation pour Google SGE, les featured snippets et les réponses des LLM (ChatGPT, Claude, Gemini) en une seule plateforme.',
   },
   {
     icon: Zap,
-    title: '50+ outils SEO gratuits',
-    desc: 'Audit technique, suivi de positions, analyse de backlinks, générateur de contenu, keyword research — tout est inclus sans limitation et sans carte bancaire.',
-    color: 'from-violet-500 to-cyan-500',
+    title: '50 outils SEO gratuits',
+    desc: 'Audit technique, suivi de positions, analyse de backlinks, générateur de contenu, recherche de mots-clés : tout est inclus sans limitation et sans carte bancaire.',
   },
   {
     icon: Leaf,
     title: 'SEO éco-responsable',
-    desc: 'Un site rapide et bien référencé consomme moins d\'énergie. Nexus vous aide à réduire le poids de vos pages et à adopter les bonnes pratiques du web durable.',
-    color: 'from-green-500 to-emerald-500',
+    desc: 'Un site rapide et bien référencé consomme moins d’énergie. Nexus vous aide à alléger vos pages et à adopter les pratiques du web durable.',
   },
   {
     icon: Globe,
     title: 'Conçu par une agence web',
-    desc: 'Nexus est développé par Kayzen Web, agence lyonnaise de création de sites React/Next.js performants. L\'outil est né de l\'expérience terrain avec de vrais clients.',
-    color: 'from-cyan-500 to-brand-500',
+    desc: 'Nexus est développé par Kayzen Web, agence lyonnaise de création de sites React et Next.js performants. L’outil est né de l’expérience terrain avec de vrais clients.',
   },
   {
     icon: Shield,
     title: 'Données hébergées en Europe',
-    desc: 'Vos données sont hébergées en Europe via Vercel et Railway, dans le respect du RGPD. Aucune revente de données, aucune utilisation pour entraîner des modèles IA.',
-    color: 'from-brand-500 to-cyan-500',
+    desc: 'Vos données sont hébergées en Europe, dans le respect du RGPD. Aucune revente, aucune utilisation pour entraîner des modèles IA.',
   },
 ]
 
 export function Testimonials() {
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8 bg-surface-50 dark:bg-surface-900/50 border-y border-surface-200 dark:border-surface-800/60">
-      <div className="max-w-7xl mx-auto">
+    <section className="bg-surface-100 py-20 dark:bg-surface-900/50 lg:py-24" aria-labelledby="why-title">
+      <div className="mx-auto max-w-container px-6">
 
-        <div className="text-center mb-14">
-          <div className="section-badge mx-auto mb-4">Pourquoi Nexus</div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-surface-900 dark:text-white mb-4">
-            Ce qui rend Nexus{' '}
-            <span className="gradient-text">différent.</span>
+        <div className="mb-12 text-center">
+          <span className="section-badge mb-4">Pourquoi Nexus</span>
+          <h2 id="why-title" className="text-headline-md text-navy-600 dark:text-white sm:text-headline-lg">
+            Ce qui rend Nexus <span className="gradient-text">différent.</span>
           </h2>
-          <p className="text-lg text-surface-700 dark:text-surface-400">
+          <p className="mt-4 text-body-lg text-ink-muted dark:text-surface-400">
             Un outil gratuit, honnête et conçu pour le SEO de demain.
           </p>
         </div>
 
-        {/* Reasons grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          {reasons.slice(0, 3).map((r) => {
+        <ul className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">
+          {reasons.slice(0, 3).map((r, i) => {
             const Icon = r.icon
             return (
-              <div key={r.title} className="card-hover p-7 flex flex-col gap-4">
-                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${r.color} flex items-center justify-center`}>
-                  <Icon className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-lg font-bold text-surface-900 dark:text-white">{r.title}</h3>
-                <p className="text-sm text-surface-600 dark:text-surface-400 leading-relaxed">{r.desc}</p>
-              </div>
+              <FadeContent key={r.title} delay={i * 0.08}>
+                <li className="card-hover flex h-full flex-col gap-4 p-7">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-navy-100 text-navy-700 dark:bg-navy-900/60 dark:text-navy-100">
+                    <Icon className="h-6 w-6" aria-hidden="true" />
+                  </div>
+                  <h3 className="text-title-lg text-ink dark:text-white">{r.title}</h3>
+                  <p className="text-sm leading-relaxed text-ink-muted dark:text-surface-400">{r.desc}</p>
+                </li>
+              </FadeContent>
             )
           })}
-        </div>
+        </ul>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {reasons.slice(3).map((r) => {
+        <ul className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          {reasons.slice(3).map((r, i) => {
             const Icon = r.icon
             return (
-              <div key={r.title} className="card p-6 flex items-start gap-5">
-                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${r.color} flex items-center justify-center flex-shrink-0`}>
-                  <Icon className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-base font-bold text-surface-900 dark:text-white mb-2">{r.title}</h3>
-                  <p className="text-sm text-surface-600 dark:text-surface-400 leading-relaxed">{r.desc}</p>
-                </div>
-              </div>
+              <FadeContent key={r.title} delay={0.24 + i * 0.08}>
+                <li className="card flex h-full items-start gap-5 p-6">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-200 text-accent-900 dark:bg-accent-900/40 dark:text-accent-200">
+                    <Icon className="h-6 w-6" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <h3 className="mb-2 text-base font-bold text-ink dark:text-white">{r.title}</h3>
+                    <p className="text-sm leading-relaxed text-ink-muted dark:text-surface-400">{r.desc}</p>
+                  </div>
+                </li>
+              </FadeContent>
             )
           })}
-        </div>
+        </ul>
 
-        {/* Kayzen CTA */}
-        <div className="text-center mt-12 pt-10 border-t border-surface-200 dark:border-surface-800">
-          <p className="text-surface-700 dark:text-surface-400 mb-4">
-            Besoin d&apos;aller plus loin ? Kayzen Web crée des sites optimisés dès la conception.
+        <div className="mt-12 border-t border-surface-300 pt-10 text-center dark:border-surface-800">
+          <p className="mb-4 text-ink-muted dark:text-surface-400">
+            Besoin d’aller plus loin ? Kayzen Web crée des sites optimisés dès la conception.
           </p>
-          <a
-            href="https://internet.kayzen-lyon.fr"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 dark:text-brand-400 hover:gap-3 transition-all"
-          >
-            Découvrir Kayzen Web <ArrowRight className="w-4 h-4" />
+          <a href="https://kayzen-lyon.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-bold text-brand-500 transition-[gap] duration-200 hover:gap-3">
+            Découvrir Kayzen Web <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </a>
         </div>
       </div>

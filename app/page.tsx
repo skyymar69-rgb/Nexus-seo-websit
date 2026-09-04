@@ -20,16 +20,16 @@ const CTA = dynamic(() => import('@/components/landing/CTA').then(m => m.CTA), {
 const ExitIntent = dynamic(() => import('@/components/shared/ExitIntent'), { ssr: false })
 
 export const metadata = {
-  title: 'Nexus SEO — GEO · AEO · LLMO | La référence SEO de l\'ère IA',
+  title: 'Audit SEO gratuit et visibilité IA — Nexus SEO by Kayzen',
   description:
-    "Nexus est le premier outil SEO conçu pour 2026 : optimisez votre présence dans ChatGPT, Perplexity, Google SGE et tous les LLMs. GEO, AEO, LLMO — une seule plateforme.",
-  keywords: 'SEO IA, GEO, AEO, LLMO, ChatGPT SEO, Google SGE, optimisation LLM, visibilité IA',
+    'Analysez votre site en 30 secondes : audit technique, mots-clés, backlinks et présence dans ChatGPT, Perplexity et Google SGE. 50 outils SEO gratuits, sans carte bancaire.',
+  keywords: 'audit SEO gratuit, SEO IA, GEO, AEO, LLMO, ChatGPT SEO, Google SGE, visibilité IA, outil SEO gratuit',
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: 'Nexus SEO — La référence SEO de l\'ère IA',
-    description: 'GEO · AEO · LLMO : dominez ChatGPT, Google SGE, Perplexity et tous les moteurs IA.',
+    title: 'Audit SEO gratuit et visibilité IA — Nexus SEO',
+    description: 'Audit technique, mots-clés, backlinks et présence dans les moteurs IA. 50 outils gratuits, sans carte bancaire.',
     type: 'website',
     images: ['/og-image.png'],
   },

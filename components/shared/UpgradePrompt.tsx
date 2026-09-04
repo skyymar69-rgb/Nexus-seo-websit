@@ -31,7 +31,7 @@ export function UpgradePrompt({ feature, requiredPlan }: UpgradePromptProps) {
   const isAgencyFeature = feature === 'agencyAccess'
 
   return (
-    <div className="relative rounded-2xl border border-brand-200/20 dark:border-brand-800/20 bg-gradient-to-br from-brand-50/50 to-brand-100/30 dark:from-brand-950/20 dark:to-brand-900/10 p-8 text-center overflow-hidden">
+    <div className="relative rounded-2xl border border-brand-200/20 dark:border-brand-800/20 bg-gradient-to-br from-brand-50/50 to-brand-100/30 dark:from-navy-800/20 dark:to-brand-900/10 p-8 text-center overflow-hidden">
       {/* Subtle gradient border effect */}
       <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-brand-400/10 to-transparent pointer-events-none" />
 

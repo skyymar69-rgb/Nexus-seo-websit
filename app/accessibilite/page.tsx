@@ -42,7 +42,7 @@ export default function AccessibilityStatementPage() {
                 Etat de conformite
               </h2>
               <p>
-                Le site <strong>nexus-seo.com</strong> est en <strong>conformite partielle</strong> avec
+                Le site <strong>nexus.kayzen-lyon.com</strong> est en <strong>conformite partielle</strong> avec
                 le RGAA 4.1 et les WCAG 2.1 AA. Les non-conformites et derogations sont
                 listees ci-dessous.
               </p>

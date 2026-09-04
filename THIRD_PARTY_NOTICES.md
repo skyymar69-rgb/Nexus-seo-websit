@@ -43,3 +43,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+## React Bits — DavidHDev/react-bits
+
+Dépôt : https://github.com/DavidHDev/react-bits
+Licence : MIT + Commons Clause License Condition v1.0 (utilisation autorisée
+dans une application, un site ou un produit ; revente du logiciel lui-même interdite)
+
+Fichiers dérivés (adaptés à Framer Motion, au design Kayzen Web et à
+`prefers-reduced-motion`) : `components/bits/**` — BlurText, CountUp,
+ShinyText, SpotlightCard, Magnet, ClickSpark, LogoLoop, Waves, TiltedCard.
+FadeContent est une réécriture Framer Motion du composant GSAP d'origine.
+
+Copyright (c) 2026 David Haz

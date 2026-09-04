@@ -162,7 +162,7 @@ export default function ContentAnalyzerPage() {
 
           {/* Recommendations */}
           {result.recommendations.length > 0 && (
-            <div className="bg-brand-50 dark:bg-brand-950/20 rounded-xl border border-brand-200 dark:border-brand-800 p-6">
+            <div className="bg-brand-50 dark:bg-navy-800/20 rounded-xl border border-brand-200 dark:border-brand-800 p-6">
               <h3 className="font-bold text-brand-800 dark:text-brand-300 mb-3 flex items-center gap-2">
                 <Sparkles className="w-5 h-5" /> Recommandations pour etre cite par les LLMs
               </h3>

@@ -83,7 +83,7 @@ const cases = [
 ]
 
 const tagColors: Record<string, string> = {
-  'GEO': 'bg-brand-50 text-brand-600 dark:bg-brand-950/40 dark:text-brand-400 border-brand-200 dark:border-brand-800/50',
+  'GEO': 'bg-brand-50 text-brand-600 dark:bg-navy-800/40 dark:text-brand-400 border-brand-200 dark:border-brand-800/50',
   'AEO': 'bg-violet-50 text-violet-600 dark:bg-violet-950/40 dark:text-violet-400 border-violet-200 dark:border-violet-800/50',
   'LLMO': 'bg-cyan-50 text-cyan-600 dark:bg-cyan-950/40 dark:text-cyan-400 border-cyan-200 dark:border-cyan-800/50',
   'SEO Technique': 'bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400 border-amber-200 dark:border-amber-800/50',
@@ -123,7 +123,7 @@ export default function CasesPage() {
                     <p className="text-xs text-surface-400 mb-1">{c.category}</p>
                     <p className="text-base font-bold text-surface-900 dark:text-white">{c.company}</p>
                   </div>
-                  <div className="w-9 h-9 rounded-xl bg-brand-50 dark:bg-brand-950/30 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-100 dark:group-hover:bg-brand-950/60 transition-colors">
+                  <div className="w-9 h-9 rounded-xl bg-brand-50 dark:bg-navy-800/30 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-100 dark:group-hover:bg-navy-800/60 transition-colors">
                     <TrendingUp className="w-4 h-4 text-brand-500" />
                   </div>
                 </div>

@@ -140,7 +140,7 @@ export default function PromptTesterPage() {
                   className={cn(
                     'px-4 py-2.5 rounded-xl text-sm font-medium transition-all border',
                     selectedLLMs.includes(llm.id)
-                      ? 'bg-brand-50 dark:bg-brand-950 border-brand-300 dark:border-brand-700 text-brand-700 dark:text-brand-300'
+                      ? 'bg-brand-50 dark:bg-navy-800 border-brand-300 dark:border-brand-700 text-brand-700 dark:text-brand-300'
                       : 'border-surface-200 dark:border-surface-700 text-surface-500 hover:border-surface-300'
                   )}
                 >

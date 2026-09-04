@@ -1,167 +1,112 @@
 'use client'
 
 import { Leaf, Zap, Globe, Server, ArrowRight, TrendingDown, Gauge } from 'lucide-react'
-import Link from 'next/link'
+import { FadeContent } from '@/components/bits'
 
 const stats = [
-  {
-    value: '1,76 g',
-    unit: 'CO2 / page vue',
-    desc: 'Émission moyenne d\'une page web standard. Les pages mal optimisées peuvent atteindre 5 à 10 g.',
-    source: 'Website Carbon Calculator',
-  },
-  {
-    value: '2 %',
-    unit: 'des émissions mondiales',
-    desc: 'Le numérique représente autant d\'émissions que le transport aérien. Chaque page lourde y contribue.',
-    source: 'The Shift Project',
-  },
-  {
-    value: '×3',
-    unit: 'poids moyen depuis 2010',
-    desc: 'Le poids moyen d\'une page web est passé de 700 Ko à 2,2 Mo. Plus lourd = plus de serveurs = plus d\'énergie.',
-    source: 'HTTP Archive',
-  },
+  { value: '1,76 g', unit: 'CO₂ par page vue', desc: 'Émission moyenne d’une page web standard. Les pages mal optimisées peuvent atteindre 5 à 10 g.', source: 'Website Carbon Calculator' },
+  { value: '2 %', unit: 'des émissions mondiales', desc: 'Le numérique pèse autant que le transport aérien. Chaque page lourde y contribue.', source: 'The Shift Project' },
+  { value: '×3', unit: 'poids moyen depuis 2010', desc: 'Le poids moyen d’une page est passé de 700 Ko à 2,2 Mo. Plus lourd, c’est plus de serveurs et plus d’énergie.', source: 'HTTP Archive' },
 ]
 
 const optimizations = [
-  {
-    icon: Gauge,
-    title: 'Core Web Vitals',
-    problem: 'Un LCP > 4s = 3x plus de rebond + surconsommation serveur',
-    solution: 'Nexus identifie les éléments bloquants et recommande des corrections concrètes',
-  },
-  {
-    icon: Zap,
-    title: 'CSS & JS non différés',
-    problem: 'Charger 500 Ko de CSS/JS inutiles = ~0,5 g CO2 par visite',
-    solution: 'Détectez le code mort et le render-blocking pour réduire le poids de 60%',
-  },
-  {
-    icon: Globe,
-    title: 'Images non optimisées',
-    problem: 'Une image PNG de 2 Mo au lieu de WebP = 10x le transfert réseau',
-    solution: 'Auditez toutes vos images : format, compression, lazy loading, dimensions',
-  },
-  {
-    icon: Server,
-    title: 'Pages mal indexées',
-    problem: 'Les crawlers revisitent des pages inutiles : erreurs 404, redirections en chaîne',
-    solution: 'Nexus détecte les pages orphelines, les boucles de redirect et le crawl budget gaspillé',
-  },
+  { icon: Gauge, title: 'Core Web Vitals', problem: 'Un LCP supérieur à 4 s triple le rebond et surconsomme côté serveur', solution: 'Nexus identifie les éléments bloquants et recommande des corrections concrètes' },
+  { icon: Zap, title: 'CSS et JS non différés', problem: '500 Ko de CSS et JS inutiles, c’est environ 0,5 g de CO₂ par visite', solution: 'Détectez le code mort et les ressources bloquantes pour alléger de 60 %' },
+  { icon: Globe, title: 'Images non optimisées', problem: 'Un PNG de 2 Mo au lieu d’un WebP, c’est dix fois le transfert réseau', solution: 'Auditez toutes vos images : format, compression, chargement différé, dimensions' },
+  { icon: Server, title: 'Pages mal indexées', problem: 'Les robots revisitent des pages inutiles : erreurs 404, redirections en chaîne', solution: 'Le crawl détecte les pages orphelines, les boucles de redirection et le budget d’exploration gaspillé' },
 ]
 
 export function EcoImpact() {
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-green-950 to-surface-950 text-white overflow-hidden relative" id="eco">
-      {/* Background texture */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-green-400 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-emerald-400 rounded-full blur-3xl" />
-      </div>
+    <section className="relative overflow-hidden bg-navy-700 py-20 text-white lg:py-24" id="eco" aria-labelledby="eco-title">
+      <div className="mx-auto max-w-container px-6">
 
-      <div className="max-w-7xl mx-auto relative z-10">
-
-        {/* Header */}
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-full mb-6">
-            <Leaf className="w-4 h-4 text-green-400" />
-            <span className="text-green-300 text-sm font-semibold">Notre raison d&apos;être</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
-            Optimiser le SEO,{' '}
-            <span className="text-green-400">c&apos;est réduire l&apos;empreinte carbone</span>
+        <div className="mx-auto mb-14 max-w-3xl text-center">
+          <span className="section-badge mb-6">
+            <Leaf className="h-3.5 w-3.5" aria-hidden="true" />
+            Notre raison d’être
+          </span>
+          <h2 id="eco-title" className="mb-6 text-headline-md sm:text-headline-lg">
+            Optimiser le SEO, <span className="text-accent-300">c’est réduire l’empreinte carbone</span>
           </h2>
-          <p className="text-lg text-white/70 leading-relaxed">
-            Une page rapide, légère et bien référencée consomme moins d&apos;énergie, sollicite moins les serveurs et offre une meilleure expérience utilisateur. Le SEO technique et la performance web ne sont pas que des leviers de croissance — ce sont des actes concrets pour un numérique plus responsable.
+          <p className="text-body-lg text-white/80">
+            Une page rapide, légère et bien référencée consomme moins d’énergie, sollicite moins les serveurs et offre une
+            meilleure expérience. Le SEO technique et la performance ne sont pas que des leviers de croissance : ce sont
+            des actes concrets pour un numérique plus sobre.
           </p>
         </div>
 
-        {/* Impact stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+        <ul className="mb-14 grid grid-cols-1 gap-6 md:grid-cols-3">
           {stats.map((s, i) => (
-            <div key={i} className="rounded-2xl p-8 bg-white/5 border border-white/10 backdrop-blur-sm">
-              <div className="mb-4">
-                <span className="text-4xl font-black text-green-400">{s.value}</span>
-                <span className="block text-sm text-green-300/80 mt-1">{s.unit}</span>
-              </div>
-              <p className="text-sm text-white/70 leading-relaxed mb-3">{s.desc}</p>
-              <p className="text-xs text-white/40">Source : {s.source}</p>
-            </div>
+            <FadeContent key={s.unit} delay={i * 0.08}>
+              <li className="h-full rounded-3xl border border-white/15 bg-white/10 p-8">
+                <p className="mb-4">
+                  <span className="font-display text-4xl font-extrabold text-accent-300">{s.value}</span>
+                  <span className="mt-1 block text-sm text-white/70">{s.unit}</span>
+                </p>
+                <p className="mb-3 text-sm leading-relaxed text-white/80">{s.desc}</p>
+                <p className="text-xs text-white/50">Source : {s.source}</p>
+              </li>
+            </FadeContent>
           ))}
-        </div>
+        </ul>
 
-        {/* How Nexus helps */}
-        <div className="mb-16">
-          <h3 className="text-2xl font-bold text-center mb-10">
-            Comment Nexus réduit concrètement votre impact
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {optimizations.map((opt, i) => {
+        <div className="mb-14">
+          <h3 className="mb-8 text-center text-headline-md">Comment Nexus réduit concrètement votre impact</h3>
+          <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            {optimizations.map((opt) => {
               const Icon = opt.icon
               return (
-                <div key={i} className="rounded-2xl p-6 bg-white/5 border border-white/10">
+                <li key={opt.title} className="rounded-3xl border border-white/15 bg-white/10 p-6">
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center flex-shrink-0">
-                      <Icon className="w-5 h-5 text-green-400" />
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-500/20 text-accent-300">
+                      <Icon className="h-5 w-5" aria-hidden="true" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-white mb-2">{opt.title}</h4>
-                      <p className="text-sm text-red-300/80 mb-2 flex items-start gap-1.5">
-                        <TrendingDown className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
+                      <h4 className="mb-2 font-bold">{opt.title}</h4>
+                      <p className="mb-2 flex items-start gap-1.5 text-sm text-red-200">
+                        <TrendingDown className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                         {opt.problem}
                       </p>
-                      <p className="text-sm text-green-300/80 flex items-start gap-1.5">
-                        <Leaf className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
+                      <p className="flex items-start gap-1.5 text-sm text-accent-200">
+                        <Leaf className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                         {opt.solution}
                       </p>
                     </div>
                   </div>
-                </div>
+                </li>
               )
             })}
-          </div>
+          </ul>
         </div>
 
-        {/* Equation */}
-        <div className="rounded-2xl p-8 sm:p-10 bg-white/5 border border-green-500/20 text-center mb-16">
-          <p className="text-lg sm:text-xl font-semibold text-white mb-4">
-            Site rapide + SEO optimisé = Moins de requêtes serveur, moins de transfert, moins d&apos;énergie
+        <div className="mb-14 rounded-3xl border border-accent-400/30 bg-white/10 p-8 text-center sm:p-10">
+          <p className="mb-4 text-title-lg">
+            Site rapide + SEO optimisé = moins de requêtes serveur, moins de transfert, moins d’énergie
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-white/60">
-            <span className="px-3 py-1.5 rounded-lg bg-red-500/10 text-red-300 border border-red-500/20">Page 3 Mo, LCP 6s → ~4,5 g CO2/visite</span>
-            <ArrowRight className="w-4 h-4 text-green-400" />
-            <span className="px-3 py-1.5 rounded-lg bg-green-500/10 text-green-300 border border-green-500/20">Page 400 Ko, LCP 1,2s → ~0,3 g CO2/visite</span>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
+            <span className="rounded-full border border-red-300/30 bg-red-500/10 px-3 py-1.5 text-red-100">Page 3 Mo, LCP 6 s → ~4,5 g CO₂ par visite</span>
+            <ArrowRight className="h-4 w-4 text-accent-300" aria-hidden="true" />
+            <span className="rounded-full border border-accent-400/30 bg-accent-500/10 px-3 py-1.5 text-accent-100">Page 400 Ko, LCP 1,2 s → ~0,3 g CO₂ par visite</span>
           </div>
-          <p className="text-sm text-white/50 mt-4">
-            Sur 100 000 pages vues/mois, c&apos;est l&apos;équivalent de 500 km en voiture économisés chaque mois.
+          <p className="mt-4 text-sm text-white/60">
+            Sur 100 000 pages vues par mois, c’est l’équivalent de 500 km en voiture économisés chaque mois.
           </p>
         </div>
 
-        {/* Kayzen bridge */}
-        <div className="rounded-2xl p-8 sm:p-10 bg-gradient-to-r from-brand-600/20 to-green-600/20 border border-brand-500/20 text-center">
-          <h3 className="text-2xl font-bold text-white mb-4">
-            Nexus diagnostique. Kayzen Web construit.
-          </h3>
-          <p className="text-white/70 max-w-2xl mx-auto mb-6 leading-relaxed">
-            Nexus identifie les problèmes. Pour aller plus loin, <strong className="text-white">Kayzen Web</strong> crée des sites React/Next.js ultra-légers, optimisés SEO dès la conception — avec un bilan carbone minimal. Et avec <strong className="text-white">Kayzen Reconditionné</strong>, l&apos;engagement va jusqu&apos;au matériel.
+        <div className="rounded-3xl bg-white p-8 text-center text-ink shadow-elevation-lg sm:p-10 dark:bg-surface-900 dark:text-white">
+          <h3 className="mb-4 text-headline-md text-navy-600 dark:text-white">Nexus diagnostique. Kayzen Web construit.</h3>
+          <p className="mx-auto mb-6 max-w-2xl leading-relaxed text-ink-muted dark:text-surface-400">
+            Nexus identifie les problèmes. Pour aller plus loin, <strong className="text-ink dark:text-white">Kayzen Web</strong> crée des sites React et Next.js
+            ultra-légers, optimisés SEO dès la conception, avec un bilan carbone minimal. Et avec <strong className="text-ink dark:text-white">Kayzen Reconditionné</strong>,
+            l’engagement va jusqu’au matériel.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a
-              href="https://internet.kayzen-lyon.fr"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-brand-950 font-bold text-sm hover:bg-white/90 transition-all"
-            >
-              Découvrir Kayzen Web <ArrowRight className="w-4 h-4" />
+          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <a href="https://kayzen-lyon.com" target="_blank" rel="noopener noreferrer" className="btn-primary">
+              Découvrir Kayzen Web <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </a>
-            <a
-              href="https://www.kayzen-lyon.fr"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-green-500/20 text-green-300 font-bold text-sm border border-green-500/30 hover:bg-green-500/30 transition-all"
-            >
-              <Leaf className="w-4 h-4" /> Kayzen Reconditionné
+            <a href="https://www.kayzen-lyon.fr" target="_blank" rel="noopener noreferrer" className="btn-secondary">
+              <Leaf className="h-4 w-4" aria-hidden="true" /> Kayzen Reconditionné
             </a>
           </div>
         </div>

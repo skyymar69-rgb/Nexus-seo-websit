@@ -6,36 +6,36 @@ import { cn } from '@/lib/utils'
 
 const faqs = [
   {
-    question: "Qu'est-ce que le GEO, l'AEO et le LLMO ?",
-    answer: "Le GEO (Generative Engine Optimization) optimise votre contenu pour apparaître dans les réponses générées par IA de Google SGE et Bing Copilot. L'AEO (Answer Engine Optimization) vous positionne sur les featured snippets et la voice search. Le LLMO (Large Language Model Optimization) fait en sorte que ChatGPT, Claude, Gemini et Perplexity recommandent naturellement votre marque dans leurs réponses.",
+    question: 'Qu’est-ce que le GEO, l’AEO et le LLMO ?',
+    answer: 'Le GEO (Generative Engine Optimization) optimise votre contenu pour apparaître dans les réponses générées par IA de Google SGE et Bing Copilot. L’AEO (Answer Engine Optimization) vous positionne sur les featured snippets et la recherche vocale. Le LLMO (Large Language Model Optimization) fait en sorte que ChatGPT, Claude, Gemini et Perplexity recommandent naturellement votre marque dans leurs réponses.',
   },
   {
-    question: "Nexus est-il vraiment 100% gratuit ?",
-    answer: "Oui, tous les outils Nexus sont gratuits et sans limitation : audits illimités, suivi de mots-clés, backlinks, générateur de contenu SEO, scores GEO/AEO/LLMO. Aucune carte bancaire n'est requise. L'inscription sert uniquement à sauvegarder vos sites et suivre l'évolution de vos résultats dans le temps.",
+    question: 'Nexus est-il vraiment 100 % gratuit ?',
+    answer: 'Oui. Tous les outils Nexus sont gratuits et sans limitation : audits illimités, suivi de mots-clés, backlinks, générateur de contenu SEO, scores GEO, AEO et LLMO. Aucune carte bancaire n’est demandée. L’inscription sert uniquement à sauvegarder vos sites et à suivre l’évolution de vos résultats.',
   },
   {
-    question: "Pourquoi Nexus est-il gratuit ?",
-    answer: "Nexus est développé par Kayzen Web, agence de création de sites à Lyon. L'outil gratuit permet aux entreprises de diagnostiquer leurs problèmes SEO. Pour ceux qui souhaitent aller plus loin avec une refonte ou création de site optimisé, Kayzen Web propose ses services d'agence.",
+    question: 'Pourquoi Nexus est-il gratuit ?',
+    answer: 'Nexus est développé par Kayzen Web, agence de création de sites à Lyon. L’outil gratuit permet aux entreprises de diagnostiquer leurs problèmes SEO. Pour aller plus loin avec une refonte ou une création de site optimisé, Kayzen Web propose ses services d’agence.',
   },
   {
-    question: "En combien de temps voit-on les premiers résultats ?",
-    answer: "Les premiers insights sont disponibles immédiatement après l'audit initial (quelques minutes). Pour les résultats concrets — amélioration des positions, meilleures pratiques SEO — les changements significatifs arrivent généralement dès la 4ème semaine pour le SEO technique, et après 6 à 12 semaines pour le GEO et le LLMO.",
+    question: 'En combien de temps voit-on les premiers résultats ?',
+    answer: 'Les premiers constats sont disponibles immédiatement après l’audit initial, en quelques minutes. Pour les résultats concrets, amélioration des positions et bonnes pratiques SEO, les changements significatifs arrivent généralement dès la quatrième semaine pour le SEO technique, et après six à douze semaines pour le GEO et le LLMO.',
   },
   {
-    question: "Nexus est-il compatible avec mon CMS (WordPress, Shopify, etc.) ?",
-    answer: "Oui, Nexus analyse n'importe quel site web, quel que soit le CMS : WordPress, Shopify, Webflow, Squarespace, Wix, Prestashop, ou les sites custom en React/Next.js. Il suffit d'entrer votre domaine pour lancer un audit complet.",
+    question: 'Nexus est-il compatible avec mon CMS (WordPress, Shopify, etc.) ?',
+    answer: 'Oui. Nexus analyse n’importe quel site web, quel que soit le CMS : WordPress, Shopify, Webflow, Squarespace, Wix, PrestaShop ou les sites sur mesure en React et Next.js. Il suffit d’entrer votre domaine pour lancer un audit complet.',
   },
   {
-    question: "Comment Nexus surveille-t-il les mentions dans les LLMs ?",
-    answer: "Nexus envoie des requêtes aux APIs de ChatGPT, Claude, Gemini, Perplexity et d'autres LLMs avec les questions-types de votre secteur. Il analyse si votre marque est citée, avec quel sentiment, et comment vous vous comparez à vos concurrents.",
+    question: 'Comment Nexus surveille-t-il les mentions dans les LLM ?',
+    answer: 'Nexus envoie des requêtes aux API officielles de ChatGPT, Claude, Gemini, Perplexity et d’autres LLM avec les questions types de votre secteur, et vérifie si votre marque est citée et comment vous vous comparez à vos concurrents. Pour une mesure répétée avec intervalle de confiance et preuve datée, Kayzen propose Synaptik.',
   },
   {
-    question: "Mes données sont-elles sécurisées ?",
-    answer: "Oui. Nexus est hébergé sur des serveurs en Europe via Vercel et Railway, et respecte le RGPD. Vos données ne sont jamais partagées avec des tiers ni utilisées pour entraîner des modèles IA.",
+    question: 'Mes données sont-elles sécurisées ?',
+    answer: 'Oui. Nexus est hébergé sur des serveurs en Europe et respecte le RGPD. Vos données ne sont jamais partagées avec des tiers ni utilisées pour entraîner des modèles IA.',
   },
   {
-    question: "Quel est le lien entre Nexus et Kayzen Web ?",
-    answer: "Nexus est un outil gratuit développé par Kayzen Web (internet.kayzen-lyon.fr), agence web lyonnaise spécialisée dans la création de sites performants et éco-responsables en React/Next.js. Nexus diagnostique les problèmes, Kayzen Web les résout avec des sites optimisés dès la conception.",
+    question: 'Quel est le lien entre Nexus et Kayzen Web ?',
+    answer: 'Nexus est un outil gratuit développé par Kayzen Web (kayzen-lyon.com), agence web lyonnaise spécialisée dans la création de sites performants et éco-responsables en React et Next.js. Nexus diagnostique les problèmes, Kayzen Web les résout avec des sites optimisés dès la conception.',
   },
 ]
 
@@ -44,23 +44,12 @@ export function FAQ() {
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([])
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent, index: number) => {
-    let targetIndex: number | null = null
-    if (e.key === 'ArrowDown') {
-      e.preventDefault()
-      targetIndex = (index + 1) % faqs.length
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault()
-      targetIndex = (index - 1 + faqs.length) % faqs.length
-    } else if (e.key === 'Home') {
-      e.preventDefault()
-      targetIndex = 0
-    } else if (e.key === 'End') {
-      e.preventDefault()
-      targetIndex = faqs.length - 1
-    }
-    if (targetIndex !== null) {
-      buttonRefs.current[targetIndex]?.focus()
-    }
+    let target: number | null = null
+    if (e.key === 'ArrowDown') { e.preventDefault(); target = (index + 1) % faqs.length }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); target = (index - 1 + faqs.length) % faqs.length }
+    else if (e.key === 'Home') { e.preventDefault(); target = 0 }
+    else if (e.key === 'End') { e.preventDefault(); target = faqs.length - 1 }
+    if (target !== null) buttonRefs.current[target]?.focus()
   }, [])
 
   const jsonLd = {
@@ -69,89 +58,59 @@ export function FAQ() {
     mainEntity: faqs.map((f) => ({
       '@type': 'Question',
       name: f.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: f.answer,
-      },
+      acceptedAnswer: { '@type': 'Answer', text: f.answer },
     })),
   }
 
   return (
-    <section id="faq" className="py-24 px-4 sm:px-6 lg:px-8 bg-surface-950">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+    <section id="faq" className="bg-white py-20 dark:bg-surface-950 lg:py-24" aria-labelledby="faq-title">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <div className="max-w-3xl mx-auto">
-        <div className="text-center mb-14">
-          <div className="section-badge mx-auto mb-4">FAQ</div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-surface-900 dark:text-white mb-4">
-            Questions fréquentes
-          </h2>
-          <p className="text-lg text-surface-700 dark:text-surface-400">
-            Tout ce que vous voulez savoir sur Nexus, le GEO, l&apos;AEO et le LLMO.
+      <div className="mx-auto max-w-3xl px-6">
+        <div className="mb-12 text-center">
+          <span className="section-badge mb-4">FAQ</span>
+          <h2 id="faq-title" className="text-headline-md text-navy-600 dark:text-white sm:text-headline-lg">Questions fréquentes</h2>
+          <p className="mt-4 text-body-lg text-ink-muted dark:text-surface-400">
+            Tout ce que vous voulez savoir sur Nexus, le GEO, l’AEO et le LLMO.
           </p>
         </div>
 
-        <div className="space-y-3" role="list">
+        <div className="space-y-3">
           {faqs.map((faq, i) => {
             const panelId = `faq-panel-${i}`
             const buttonId = `faq-button-${i}`
+            const isOpen = open === i
             return (
-              <div
-                key={i}
-                role="listitem"
-                className={cn(
-                  'card rounded-2xl overflow-hidden transition-all duration-200',
-                  open === i && 'ring-1 ring-brand-500/30 dark:ring-brand-500/20'
-                )}
-              >
-                <button
-                  id={buttonId}
-                  ref={(el) => { buttonRefs.current[i] = el }}
-                  onClick={() => setOpen(open === i ? null : i)}
-                  onKeyDown={(e) => handleKeyDown(e, i)}
-                  aria-expanded={open === i}
-                  aria-controls={panelId}
-                  className="w-full flex items-center justify-between gap-4 p-5 text-left"
-                >
-                  <span className={cn(
-                    'text-sm font-semibold transition-colors',
-                    open === i
-                      ? 'text-brand-600 dark:text-brand-400'
-                      : 'text-surface-900 dark:text-white'
-                  )}>
-                    {faq.question}
-                  </span>
-                  <ChevronDown
-                    className={cn(
-                      'w-4 h-4 flex-shrink-0 transition-transform duration-200',
-                      open === i
-                        ? 'rotate-180 text-brand-500'
-                        : 'text-surface-600'
-                    )}
-                    aria-hidden="true"
-                  />
-                </button>
-
-                {open === i && (
-                  <div id={panelId} role="region" aria-labelledby={buttonId} className="px-5 pb-5">
-                    <p className="text-sm text-surface-600 dark:text-surface-400 leading-relaxed border-t border-surface-100 dark:border-surface-800 pt-4">
-                      {faq.answer}
-                    </p>
-                  </div>
-                )}
+              <div key={faq.question} className={cn('card overflow-hidden transition-[box-shadow] duration-200', isOpen && 'shadow-elevation-lg')}>
+                <h3>
+                  <button
+                    id={buttonId}
+                    ref={(el) => { buttonRefs.current[i] = el }}
+                    onClick={() => setOpen(isOpen ? null : i)}
+                    onKeyDown={(e) => handleKeyDown(e, i)}
+                    aria-expanded={isOpen}
+                    aria-controls={panelId}
+                    className="flex w-full items-center justify-between gap-4 p-5 text-left font-sans"
+                  >
+                    <span className={cn('text-base font-semibold transition-colors duration-200', isOpen ? 'text-brand-500' : 'text-ink dark:text-white')}>
+                      {faq.question}
+                    </span>
+                    <ChevronDown className={cn('h-4 w-4 shrink-0 transition-transform duration-200', isOpen ? 'rotate-180 text-brand-500' : 'text-ink-muted')} aria-hidden="true" />
+                  </button>
+                </h3>
+                <div id={panelId} role="region" aria-labelledby={buttonId} hidden={!isOpen} className="px-5 pb-5">
+                  <p className="border-t border-surface-300 pt-4 text-sm leading-relaxed text-ink-muted dark:border-surface-800 dark:text-surface-400">
+                    {faq.answer}
+                  </p>
+                </div>
               </div>
             )
           })}
         </div>
 
-        <p className="text-center text-sm text-surface-600 dark:text-surface-400 mt-10">
-          Vous n&apos;avez pas trouvé votre réponse ?{' '}
-          <a href="/contact" className="text-brand-600 dark:text-brand-400 font-semibold hover:underline">
-            Contactez-nous
-          </a>
+        <p className="mt-10 text-center text-sm text-ink-muted dark:text-surface-400">
+          Vous n’avez pas trouvé votre réponse ?{' '}
+          <a href="/contact" className="font-semibold text-brand-500 underline-offset-4 hover:underline">Contactez-nous</a>
         </p>
       </div>
     </section>

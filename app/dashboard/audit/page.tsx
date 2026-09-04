@@ -1053,7 +1053,7 @@ th{background:#f8fafc;font-weight:600}.badge{display:inline-block;padding:2px 8p
       {!result && !isAnalyzing && !error && (
         <div className="rounded-lg border border-dashed border-surface-300 dark:border-surface-700 bg-white/50 dark:bg-surface-900/50 p-16 print:hidden">
           <div className="flex flex-col items-center justify-center text-center">
-            <div className="p-4 rounded-full bg-brand-50 dark:bg-brand-950/30 mb-4">
+            <div className="p-4 rounded-full bg-brand-50 dark:bg-navy-800/30 mb-4">
               <Search className="h-8 w-8 text-brand-500" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2">Lancez votre premier audit</h3>

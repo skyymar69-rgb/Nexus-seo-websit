@@ -59,7 +59,7 @@ export default async function PublicReportPage({ params }: { params: { id: strin
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-brand-50 dark:bg-brand-950/30 border border-brand-200 dark:border-brand-800 rounded-full mb-4">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-brand-50 dark:bg-navy-800/30 border border-brand-200 dark:border-brand-800 rounded-full mb-4">
               <span className="text-brand-600 text-sm font-bold">Rapport d&apos;audit SEO</span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-black text-surface-900 dark:text-white mb-2">{report.domain}</h1>

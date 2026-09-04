@@ -9,7 +9,7 @@ export default function NotFound() {
       <Header />
       <main id="main-content" className="bg-white dark:bg-surface-950 min-h-[70vh] flex items-center justify-center px-4">
         <div className="max-w-lg text-center">
-          <div className="w-20 h-20 rounded-2xl bg-brand-50 dark:bg-brand-950/30 flex items-center justify-center mx-auto mb-6">
+          <div className="w-20 h-20 rounded-2xl bg-brand-50 dark:bg-navy-800/30 flex items-center justify-center mx-auto mb-6">
             <FileQuestion className="w-10 h-10 text-brand-500" />
           </div>
 

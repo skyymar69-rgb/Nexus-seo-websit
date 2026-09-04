@@ -34,7 +34,7 @@ const colors = {
   success: 'bg-green-50 dark:bg-green-950/40 border-green-200 dark:border-green-800 text-green-800 dark:text-green-300',
   error: 'bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-800 text-red-800 dark:text-red-300',
   warning: 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300',
-  info: 'bg-brand-50 dark:bg-brand-950/40 border-brand-200 dark:border-brand-800 text-brand-800 dark:text-brand-300',
+  info: 'bg-brand-50 dark:bg-navy-800/40 border-brand-200 dark:border-brand-800 text-brand-800 dark:text-brand-300',
 }
 
 const iconColors = {

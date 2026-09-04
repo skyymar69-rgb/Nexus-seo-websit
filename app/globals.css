@@ -9,31 +9,33 @@
    ============================================================ */
 @layer base {
   :root {
-    /* Typography */
+    /* Typography — Outfit pour les titres, Plus Jakarta Sans pour le texte (DESIGN.md).
+       --font-inter reste un alias pour les écrans du tableau de bord qui l'appellent. */
     --font-heading: var(--font-outfit), system-ui, sans-serif;
-    --font-body: var(--font-inter), system-ui, sans-serif;
+    --font-body: var(--font-jakarta), system-ui, sans-serif;
+    --font-inter: var(--font-jakarta), system-ui, sans-serif;
 
-    /* Surfaces (light) */
-    --bg:        250 250 250;
+    /* Surfaces (light) — pile Kayzen Web : blanc, gris calibrés, encre #1f2937 */
+    --bg:        255 255 255;
     --bg-card:   255 255 255;
-    --bg-hover:  244 244 245;
-    --fg:        9 9 11;
-    --fg-muted:  113 113 122;
-    --fg-subtle: 161 161 170;
-    --border:    228 228 231;
-    --border-strong: 212 212 216;
+    --bg-hover:  233 236 239;
+    --fg:        31 41 55;
+    --fg-muted:  108 117 125;
+    --fg-subtle: 156 163 175;
+    --border:    208 208 208;
+    --border-strong: 156 163 175;
 
     /* Legacy aliases for dashboard compatibility */
-    --background:      250 250 250;
-    --foreground:      9 9 11;
+    --background:      255 255 255;
+    --foreground:      31 41 55;
     --card:            255 255 255;
-    --card-foreground: 9 9 11;
-    --muted:           244 244 245;
-    --muted-foreground: 113 113 122;
-    --sidebar:         248 248 249;
-    --sidebar-foreground: 113 113 122;
-    --sidebar-border:  228 228 231;
-    --sidebar-hover:   244 244 245;
+    --card-foreground: 31 41 55;
+    --muted:           245 245 245;
+    --muted-foreground: 108 117 125;
+    --sidebar:         250 250 250;
+    --sidebar-foreground: 108 117 125;
+    --sidebar-border:  224 224 224;
+    --sidebar-hover:   238 238 238;
   }
 
   .dark {
@@ -67,38 +69,45 @@
   body {
     background-color: rgb(var(--bg));
     color: rgb(var(--fg));
-    font-family: var(--font-inter), system-ui, sans-serif;
+    font-family: var(--font-jakarta), system-ui, sans-serif;
     font-weight: 400;
-    line-height: 1.6;
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Headings — Outfit for modern look */
+  /* Titres — Outfit, géométrique et confiant (DESIGN.md) */
   h1, h2, h3, h4 {
     font-family: var(--font-outfit), system-ui, sans-serif;
     font-weight: 700;
-    letter-spacing: -0.01em;
-    line-height: 1.2;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    text-wrap: balance;
   }
 
-  h1 { font-weight: 900; }
+  h1 { font-weight: 800; letter-spacing: -0.04em; }
   h2 { font-weight: 700; }
-  h3, h4 { font-weight: 700; }
+  h3, h4 { font-weight: 700; letter-spacing: -0.01em; }
 
-  /* Body elements — Inter for clarity */
   p, li, span, td, th, label, textarea {
-    line-height: 1.6;
+    line-height: 1.5;
   }
 
-  input, select, textarea, button {
-    font-family: var(--font-inter), system-ui, sans-serif;
+  input, select, textarea {
+    font-family: var(--font-jakarta), system-ui, sans-serif;
     font-weight: 400;
   }
 
-  /* Interface elements: semibold for UI weight */
-  button, [role="button"], a.btn-primary, a.btn-outline {
-    font-weight: 600;
+  /* Libellés d'action — Outfit 700 (DESIGN.md label-md) */
+  button, [role="button"], a.btn-primary, a.btn-secondary, a.btn-outline, a.btn-ghost {
+    font-family: var(--font-outfit), system-ui, sans-serif;
+    font-weight: 700;
+  }
+
+  :focus-visible {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 3px rgba(183, 72, 49, 0.35);
+    border-radius: 0.5rem;
   }
 }
 
@@ -107,72 +116,88 @@
    ============================================================ */
 @layer components {
 
-  /* ---------- Texte dégradé ---------- */
+  /* ---------- Texte accentué : marine, jamais terracotta (réservé aux actions) ---------- */
   .gradient-text {
-    @apply bg-gradient-to-r from-blue-500 via-brand-600 to-cyan-500 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-navy-700 via-navy-600 to-navy-400 bg-clip-text text-transparent
+           dark:from-navy-100 dark:via-navy-200 dark:to-navy-300;
   }
   .gradient-text-brand {
-    @apply bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-brand-500 to-brand-700 bg-clip-text text-transparent;
   }
 
-  /* ---------- Boutons ---------- */
+  /* ---------- Boutons (DESIGN.md) : pilule, Outfit 700, 48 px, transitions 200 ms ---------- */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl
-           bg-brand-600 hover:bg-brand-700
-           text-white font-semibold text-sm
-           shadow-sm hover:shadow-md
-           active:scale-[0.98]
-           transition-all duration-200;
+    @apply inline-flex items-center justify-center gap-2 h-12 px-8 rounded-full
+           bg-brand-500 hover:bg-brand-600
+           text-white text-base font-bold tracking-[0.01em]
+           shadow-elevation-md
+           transition-colors duration-200 ease-out
+           disabled:opacity-60 disabled:cursor-not-allowed;
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl
-           bg-surface-100 dark:bg-surface-800
-           text-surface-800 dark:text-surface-200
-           border border-surface-200 dark:border-surface-700
-           font-semibold text-sm
-           hover:bg-surface-200 dark:hover:bg-surface-700
-           transition-all duration-200;
+    @apply inline-flex items-center justify-center gap-2 h-12 px-6 rounded-full
+           bg-transparent border-2 border-brand-500
+           text-brand-500 dark:text-brand-300 dark:border-brand-300
+           text-base font-bold tracking-[0.01em]
+           hover:bg-surface-150 dark:hover:bg-surface-800
+           transition-colors duration-200 ease-out;
   }
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg
-           text-surface-600 dark:text-surface-400
-           hover:bg-surface-100 dark:hover:bg-surface-800
-           font-medium text-sm transition-all duration-200;
+    @apply inline-flex items-center justify-center gap-2 h-12 px-6 rounded-full
+           text-ink dark:text-surface-200
+           hover:bg-surface-200 dark:hover:bg-surface-800
+           text-base font-bold tracking-[0.01em]
+           transition-colors duration-200 ease-out;
   }
   .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl
-           border border-surface-300 dark:border-surface-700
-           text-surface-700 dark:text-surface-300
-           font-semibold text-sm
-           hover:border-brand-400 dark:hover:border-brand-500
-           hover:text-brand-600 dark:hover:text-brand-400
-           transition-all duration-200;
+    @apply btn-secondary;
+  }
+  .btn-sm {
+    @apply h-10 px-5 text-sm;
   }
 
-  /* ---------- Cartes ---------- */
+  /* ---------- Cartes : blanc, bordure outline-variant, coins 1,5 rem, ombre md ---------- */
   .card {
     @apply bg-white dark:bg-surface-900
-           border border-surface-200 dark:border-surface-800
-           rounded-2xl shadow-sm;
+           border border-surface-300 dark:border-surface-800
+           rounded-3xl shadow-elevation-md;
   }
   .card-hover {
-    @apply card transition-all duration-300 ease-out
-           hover:border-brand-300 dark:hover:border-brand-700
-           hover:shadow-lg hover:shadow-brand-500/5 dark:hover:shadow-brand-500/10
-           hover:-translate-y-0.5;
+    @apply card
+           hover:bg-surface-50 dark:hover:bg-surface-850
+           hover:shadow-elevation-lg
+           transition-[box-shadow,background-color] duration-200 ease-out;
   }
   .card-gradient {
-    @apply bg-white dark:bg-surface-900 rounded-2xl
-           border border-brand-200 dark:border-brand-800;
+    @apply bg-white dark:bg-surface-900 rounded-3xl
+           border border-surface-300 dark:border-surface-800 shadow-elevation-md;
   }
 
-  /* ---------- Badge de section ---------- */
+  /* ---------- Badges : pilule, émeraude par défaut, terracotta en variante ---------- */
   .section-badge {
-    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold
-           bg-brand-50 dark:bg-brand-950/40
-           text-brand-600 dark:text-brand-400
-           border border-brand-200/50 dark:border-brand-800/50
-           tracking-wide uppercase;
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-label-sm
+           bg-accent-200 text-accent-900
+           dark:bg-accent-900/40 dark:text-accent-200;
+  }
+  .section-badge-primary {
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-label-sm
+           bg-brand-200 text-brand-800
+           dark:bg-brand-900/40 dark:text-brand-200;
+  }
+  .section-badge-navy {
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-label-sm
+           bg-navy-100 text-navy-900
+           dark:bg-navy-900/60 dark:text-navy-100;
+  }
+
+  /* ---------- Champ de saisie (DESIGN.md input-field) ---------- */
+  .field {
+    @apply w-full h-12 rounded-lg px-4 text-body-md
+           bg-surface-100 dark:bg-surface-800
+           text-ink dark:text-white placeholder:text-ink-subtle
+           border border-surface-300 dark:border-surface-700
+           focus:border-brand-500 focus:shadow-focus focus:outline-none
+           transition-[border-color,box-shadow] duration-200 ease-out;
   }
 
   /* ---------- Sidebar dashboard ---------- */

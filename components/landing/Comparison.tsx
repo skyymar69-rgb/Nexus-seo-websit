@@ -4,110 +4,85 @@ import { Check, X, Minus } from 'lucide-react'
 
 const features = [
   { label: 'Audit SEO technique', nexus: true,  semrush: true,  ahrefs: true,  moz: true  },
-  { label: 'Suivi mots-clés',     nexus: true,  semrush: true,  ahrefs: true,  moz: true  },
-  { label: 'Analyse backlinks',   nexus: true,  semrush: true,  ahrefs: true,  moz: true  },
+  { label: 'Suivi de mots-clés, national et local',     nexus: true,  semrush: true,  ahrefs: true,  moz: true  },
+  { label: 'Analyse de backlinks',   nexus: true,  semrush: true,  ahrefs: true,  moz: true  },
   { label: 'GEO (Google SGE)',    nexus: true,  semrush: false, ahrefs: false, moz: false },
-  { label: 'AEO (Featured Snippets IA)', nexus: true, semrush: 'partial', ahrefs: false, moz: false },
-  { label: 'LLMO (ChatGPT/Claude/Gemini)', nexus: true, semrush: false, ahrefs: false, moz: false },
-  { label: 'Monitoring LLMs (10+)', nexus: true, semrush: false, ahrefs: false, moz: false },
-  { label: 'Score de visibilité IA', nexus: true, semrush: false, ahrefs: false, moz: false },
-  { label: 'Alertes mentions LLM', nexus: true, semrush: false, ahrefs: false, moz: false },
+  { label: 'AEO (featured snippets IA)', nexus: true, semrush: 'partial', ahrefs: false, moz: false },
+  { label: 'LLMO (ChatGPT, Claude, Gemini)', nexus: true, semrush: false, ahrefs: false, moz: false },
+  { label: 'Suivi de 10 moteurs IA', nexus: true, semrush: false, ahrefs: false, moz: false },
+  { label: 'Serveur MCP pour les agents', nexus: true, semrush: false, ahrefs: false, moz: false },
   { label: 'Rapports white-label', nexus: true, semrush: true, ahrefs: false, moz: 'partial' },
   { label: 'API complète',         nexus: true, semrush: true,  ahrefs: true,  moz: true  },
-  { label: 'On-premise (plan Enterprise)', nexus: true, semrush: false, ahrefs: false, moz: false },
+  { label: 'Gratuit, sans limitation', nexus: true, semrush: false, ahrefs: false, moz: false },
 ]
 
 const tools = [
   { name: 'Nexus',   price: 'Gratuit', highlight: true  },
-  { name: 'Semrush', price: 'Dès 119€', highlight: false },
-  { name: 'Ahrefs',  price: 'Dès 99€', highlight: false },
-  { name: 'Moz',     price: 'Dès 99€', highlight: false },
+  { name: 'Semrush', price: 'Dès 119 €', highlight: false },
+  { name: 'Ahrefs',  price: 'Dès 99 €', highlight: false },
+  { name: 'Moz',     price: 'Dès 99 €', highlight: false },
 ]
 
 function Cell({ val }: { val: boolean | 'partial' }) {
-  if (val === true)
-    return <Check className="w-5 h-5 text-brand-500 mx-auto" aria-label="Disponible" />
-  if (val === 'partial')
-    return <Minus className="w-5 h-5 text-amber-400 mx-auto" aria-label="Partiel" />
-  return <X className="w-5 h-5 text-surface-300 dark:text-surface-700 mx-auto" aria-label="Non disponible" />
+  if (val === true) return <Check className="mx-auto h-5 w-5 text-accent-600" aria-label="Disponible" />
+  if (val === 'partial') return <Minus className="mx-auto h-5 w-5 text-amber-500" aria-label="Partiel" />
+  return <X className="mx-auto h-5 w-5 text-surface-400" aria-label="Non disponible" />
 }
 
 export function Comparison() {
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8 bg-surface-950">
-      <div className="max-w-5xl mx-auto">
+    <section className="bg-surface-100 py-20 dark:bg-surface-900/50 lg:py-24" aria-labelledby="comparison-title">
+      <div className="mx-auto max-w-5xl px-6">
 
-        <div className="text-center mb-14">
-          <div className="section-badge mx-auto mb-4">Pourquoi Nexus</div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-surface-900 dark:text-white mb-4">
-            La seule plateforme qui couvre{' '}
-            <span className="gradient-text">l&apos;ère de l&apos;IA</span>
+        <div className="mb-12 text-center">
+          <span className="section-badge mb-4">Pourquoi Nexus</span>
+          <h2 id="comparison-title" className="text-headline-md text-navy-600 dark:text-white sm:text-headline-lg">
+            La seule plateforme qui couvre <span className="gradient-text">l’ère de l’IA</span>
           </h2>
-          <p className="text-lg text-surface-700 dark:text-surface-400">
-            Semrush, Ahrefs, Moz — des outils pensés pour 2015. Nexus est conçu pour 2026.
+          <p className="mt-4 text-body-lg text-ink-muted dark:text-surface-400">
+            Semrush, Ahrefs, Moz : des outils pensés pour 2015. Nexus est conçu pour 2026.
           </p>
         </div>
 
-        {/* Table */}
-        <div className="card-gradient rounded-3xl overflow-hidden">
+        <div className="card overflow-hidden">
           <div className="relative">
-            {/* Indicateur de scroll horizontal sur mobile */}
-            <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-surface-900 to-transparent pointer-events-none z-10 md:hidden" aria-hidden="true" />
+            <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-10 w-8 bg-gradient-to-l from-white to-transparent md:hidden dark:from-surface-900" aria-hidden="true" />
             <div className="overflow-x-auto scrollbar-thin">
-            <table className="w-full" role="table" aria-label="Comparaison des fonctionnalites entre Nexus et ses concurrents">
-              <thead>
-                <tr className="border-b border-surface-200 dark:border-surface-700">
-                  <th className="text-left p-5 text-sm font-semibold text-surface-700 dark:text-surface-400 w-1/2">Fonctionnalité</th>
-                  {tools.map((tool) => (
-                    <th key={tool.name} className={`p-5 text-center ${tool.highlight ? 'bg-brand-50/40 dark:bg-brand-950/20 border-l-2 border-brand-400 dark:border-brand-500' : ''}`}>
-                      {tool.highlight ? (
+              <table className="w-full" aria-label="Comparaison des fonctionnalités entre Nexus et ses concurrents">
+                <thead>
+                  <tr className="border-b border-surface-300 dark:border-surface-800">
+                    <th scope="col" className="w-1/2 p-5 text-left text-sm font-semibold text-ink-muted dark:text-surface-400">Fonctionnalité</th>
+                    {tools.map((tool) => (
+                      <th key={tool.name} scope="col" className={`p-5 text-center ${tool.highlight ? 'border-l-2 border-accent-500 bg-accent-50 dark:bg-accent-900/20' : ''}`}>
                         <div className="inline-flex flex-col items-center gap-1">
-                          <span className="text-sm font-black gradient-text">{tool.name}</span>
-                          <span className="text-xs font-semibold text-brand-500">{tool.price}</span>
-                          <span className="px-2 py-0.5 text-xs font-bold bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 rounded-full border border-brand-200 dark:border-brand-800/50">
-                            Recommandé
-                          </span>
+                          <span className={`font-display text-sm font-extrabold ${tool.highlight ? 'text-navy-600 dark:text-white' : 'text-ink dark:text-surface-300'}`}>{tool.name}</span>
+                          <span className={`text-xs ${tool.highlight ? 'font-semibold text-accent-700 dark:text-accent-300' : 'text-ink-muted dark:text-surface-400'}`}>{tool.price}</span>
+                          {tool.highlight && <span className="section-badge">Recommandé</span>}
                         </div>
-                      ) : (
-                        <div className="inline-flex flex-col items-center gap-1">
-                          <span className="text-sm font-bold text-surface-900 dark:text-surface-300">{tool.name}</span>
-                          <span className="text-xs text-surface-600 dark:text-surface-400">{tool.price}</span>
-                        </div>
-                      )}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {features.map((f, i) => (
-                  <tr
-                    key={f.label}
-                    className={`border-b border-surface-100 dark:border-surface-800/60 last:border-0 ${
-                      i % 2 === 0 ? '' : 'bg-surface-50/50 dark:bg-surface-900/20'
-                    }`}
-                  >
-                    <td className="p-4 pl-5">
-                      <span className="text-sm text-surface-700 dark:text-surface-300">{f.label}</span>
-                    </td>
-                    {[f.nexus, f.semrush, f.ahrefs, f.moz].map((val, j) => (
-                      <td
-                        key={j}
-                        className={`p-4 text-center ${j === 0 ? 'bg-brand-50/40 dark:bg-brand-950/20 border-l-2 border-brand-400 dark:border-brand-500' : ''}`}
-                      >
-                        <Cell val={val as boolean | 'partial'} />
-                      </td>
+                      </th>
                     ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {features.map((f, i) => (
+                    <tr key={f.label} className={`border-b border-surface-200 last:border-0 dark:border-surface-800/60 ${i % 2 === 0 ? '' : 'bg-surface-50 dark:bg-surface-850/40'}`}>
+                      <th scope="row" className="p-4 pl-5 text-left text-sm font-normal text-ink dark:text-surface-300">{f.label}</th>
+                      {[f.nexus, f.semrush, f.ahrefs, f.moz].map((val, j) => (
+                        <td key={j} className={`p-4 text-center ${j === 0 ? 'border-l-2 border-accent-500 bg-accent-50 dark:bg-accent-900/20' : ''}`}>
+                          <Cell val={val as boolean | 'partial'} />
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
 
-          <div className="p-5 border-t border-surface-200 dark:border-surface-700 flex flex-wrap items-center gap-4 text-xs text-surface-600 dark:text-surface-400">
-            <div className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-brand-500" /> Disponible</div>
-            <div className="flex items-center gap-1.5"><Minus className="w-3.5 h-3.5 text-amber-400" /> Partiel</div>
-            <div className="flex items-center gap-1.5"><X className="w-3.5 h-3.5 text-surface-500 dark:text-surface-400" /> Non disponible</div>
+          <div className="flex flex-wrap items-center gap-4 border-t border-surface-300 p-5 text-xs text-ink-muted dark:border-surface-800 dark:text-surface-400">
+            <div className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-accent-600" aria-hidden="true" /> Disponible</div>
+            <div className="flex items-center gap-1.5"><Minus className="h-3.5 w-3.5 text-amber-500" aria-hidden="true" /> Partiel</div>
+            <div className="flex items-center gap-1.5"><X className="h-3.5 w-3.5 text-surface-400" aria-hidden="true" /> Non disponible</div>
           </div>
         </div>
       </div>

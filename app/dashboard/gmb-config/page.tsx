@@ -140,7 +140,7 @@ export default function GMBConfigPage() {
             <h3 className="font-bold text-white mb-3">Attributs a activer</h3>
             <div className="flex flex-wrap gap-2">
               {result.attributes.map((attr: string, i: number) => (
-                <span key={i} className="px-3 py-1.5 text-xs font-medium rounded-full bg-brand-50 dark:bg-brand-950/30 text-brand-700 dark:text-brand-400 border border-brand-200 dark:border-brand-800">
+                <span key={i} className="px-3 py-1.5 text-xs font-medium rounded-full bg-brand-50 dark:bg-navy-800/30 text-brand-700 dark:text-brand-400 border border-brand-200 dark:border-brand-800">
                   {attr}
                 </span>
               ))}
@@ -191,7 +191,7 @@ export default function GMBConfigPage() {
 
           {/* Recommendations */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-brand-50 dark:bg-brand-950/20 rounded-xl border border-brand-200 dark:border-brand-800 p-5">
+            <div className="bg-brand-50 dark:bg-navy-800/20 rounded-xl border border-brand-200 dark:border-brand-800 p-5">
               <h3 className="font-bold text-brand-800 dark:text-brand-300 mb-3 flex items-center gap-2"><Star className="w-4 h-4" /> SEO Local</h3>
               <ul className="space-y-2">
                 {result.seoRecommendations.map((rec: string, i: number) => (

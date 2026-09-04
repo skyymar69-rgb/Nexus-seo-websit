@@ -546,7 +546,7 @@ export default function GeoAuditPage() {
 
           {/* GEO Engine Recommendations */}
           {result.geoRecommendations && result.geoRecommendations.length > 0 && (
-            <div className="rounded-lg border border-brand-200 dark:border-brand-800 bg-brand-50 dark:bg-brand-950/20 p-6">
+            <div className="rounded-lg border border-brand-200 dark:border-brand-800 bg-brand-50 dark:bg-navy-800/20 p-6">
               <h2 className="text-lg font-bold text-brand-800 dark:text-brand-300 mb-3">Recommandations GEO avancees</h2>
               <div className="space-y-2">
                 {result.geoRecommendations.map((rec: string, i: number) => (

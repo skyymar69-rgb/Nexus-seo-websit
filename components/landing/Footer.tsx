@@ -18,16 +18,17 @@ const footerLinks = {
     { label: 'FAQ', href: '/faq' },
     { label: 'Services', href: '/services' },
   ],
-  Entreprise: [
-    { label: '\u00C0 propos', href: '/about' },
+  Kayzen: [
+    { label: 'À propos', href: '/about' },
     { label: 'Contact', href: '/contact' },
-    { label: 'Agence Web Kayzen', href: 'https://internet.kayzen-lyon.fr' },
+    { label: 'Agence Kayzen Web', href: 'https://kayzen-lyon.com' },
+    { label: 'Synaptik, mesure de citation IA', href: 'https://synaptik.kayzen-lyon.com' },
   ],
   Légal: [
     { label: 'Mentions légales', href: '/mentions-legales' },
     { label: 'Politique de confidentialité', href: '/privacy' },
     { label: 'CGU', href: '/cgu' },
-    { label: 'Accessibilite', href: '/accessibilite' },
+    { label: 'Accessibilité', href: '/accessibilite' },
   ],
 }
 
@@ -35,70 +36,59 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-surface-950 border-t border-white/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="bg-ink-inverse text-surface-300">
+      <div className="mx-auto max-w-container px-6">
 
-        {/* Top: brand + newsletter */}
-        <div className="py-12 flex flex-col lg:flex-row items-start justify-between gap-10 border-b border-white/5">
+        <div className="flex flex-col items-start justify-between gap-10 border-b border-white/10 py-12 lg:flex-row">
           <div className="max-w-xs">
-            <Link href="/" className="inline-block mb-4">
-              <AnimatedLogo size={36} />
+            <Link href="/" className="mb-4 inline-block rounded-lg" aria-label="Nexus SEO, accueil">
+              <AnimatedLogo size={36} lightText />
             </Link>
-            <p className="text-sm text-surface-700 dark:text-surface-400 leading-relaxed mb-5">
-              La référence mondiale des outils SEO pour l&apos;ère de l&apos;IA. GEO · AEO · LLMO — tout en une plateforme.
+            <p className="mb-5 text-sm leading-relaxed text-surface-400">
+              La plateforme SEO gratuite de Kayzen pour l’ère de l’IA. GEO, AEO, LLMO et 50 outils, en un seul endroit.
             </p>
-            <div className="flex gap-2">
-              <a
-                href="mailto:contact@nexus-seo.com"
-                aria-label="Nous contacter par email"
-                className="w-9 h-9 rounded-xl flex items-center justify-center text-white/50 hover:text-white hover:bg-white/[0.05] transition-colors border border-white/10"
-              >
-                <Mail className="w-4 h-4" />
-              </a>
-            </div>
+            <a
+              href="mailto:contact@kayzen-lyon.fr"
+              aria-label="Nous contacter par e-mail"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-surface-300 transition-colors duration-200 hover:bg-white/10 hover:text-white"
+            >
+              <Mail className="h-4 w-4" aria-hidden="true" />
+            </a>
           </div>
 
-          {/* Newsletter */}
-          <div className="max-w-sm w-full lg:w-auto">
-            <p className="text-sm font-bold text-surface-900 dark:text-white mb-1">Newsletter SEO IA</p>
-            <p className="text-xs text-white/50 mb-4">Les dernières tendances GEO, AEO et LLMO chaque semaine.</p>
-            <form onSubmit={(e) => e.preventDefault()} aria-label="Inscription a la newsletter" className="flex gap-2">
-              <div className="flex-1 relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-500" aria-hidden="true" />
+          <div className="w-full max-w-sm lg:w-auto">
+            <p className="mb-1 text-sm font-bold text-white">Newsletter SEO IA</p>
+            <p className="mb-4 text-xs text-surface-400">Les tendances GEO, AEO et LLMO, chaque semaine.</p>
+            <form onSubmit={(e) => e.preventDefault()} aria-label="Inscription à la newsletter" className="flex gap-2">
+              <label className="relative flex-1">
+                <span className="sr-only">Adresse e-mail</span>
+                <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-surface-500" aria-hidden="true" />
                 <input
                   type="email"
                   placeholder="votre@email.fr"
-                  aria-label="Adresse email pour la newsletter"
-                  aria-required="true"
                   autoComplete="email"
-                  className="w-full pl-9 pr-3 py-2.5 rounded-xl text-sm bg-white dark:bg-surface-800 border border-white/10 text-surface-900 dark:text-white placeholder-surface-400 focus:outline-none focus:ring-2 focus:ring-brand-500/50"
+                  required
+                  className="h-11 w-full rounded-lg border border-white/15 bg-white/5 pl-9 pr-3 text-sm text-white placeholder:text-surface-500 focus:border-brand-400 focus:outline-none focus:shadow-focus"
                 />
-              </div>
-              <button
-                type="submit"
-                className="px-4 py-2.5 rounded-xl text-sm font-semibold btn-primary"
-              >
-                S&apos;abonner
+              </label>
+              <button type="submit" className="btn-primary btn-sm h-11">
+                S’abonner
               </button>
             </form>
-            <p className="text-xs text-white/50 mt-2">Pas de spam. Désabonnement en un clic.</p>
+            <p className="mt-2 text-xs text-surface-500">Pas de spam. Désabonnement en un clic.</p>
           </div>
         </div>
 
-        {/* Links grid */}
-        <nav aria-label="Liens du pied de page" className="py-12 grid grid-cols-2 sm:grid-cols-4 gap-8 border-b border-white/5">
+        <nav aria-label="Liens du pied de page" className="grid grid-cols-2 gap-8 border-b border-white/10 py-12 sm:grid-cols-4">
           {Object.entries(footerLinks).map(([title, links]) => (
             <div key={title}>
-              <p id={`footer-${title.toLowerCase()}`} className="text-xs font-bold tracking-widest text-white/50 uppercase mb-4">
+              <p id={`footer-${title.toLowerCase()}`} className="mb-4 font-display text-xs font-bold uppercase tracking-widest text-surface-500">
                 {title}
               </p>
               <ul className="space-y-2.5" aria-labelledby={`footer-${title.toLowerCase()}`}>
                 {links.map((link) => (
                   <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-surface-700 dark:text-surface-400 hover:text-surface-900 dark:hover:text-white transition-colors"
-                    >
+                    <Link href={link.href} className="text-sm text-surface-400 transition-colors duration-200 hover:text-white">
                       {link.label}
                     </Link>
                   </li>
@@ -108,25 +98,17 @@ export function Footer() {
           ))}
         </nav>
 
-        {/* Bottom bar */}
-        <div className="py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-white/50">
-            © {currentYear} Nexus SEO — un service de <a href="https://kayzen-lyon.fr" className="text-brand-500 hover:underline">Kayzen Lyon</a>. Tous droits réservés.
+        <div className="flex flex-col items-center justify-between gap-4 py-6 sm:flex-row">
+          <p className="text-xs text-surface-500">
+            © {currentYear} Nexus SEO, un service de <a href="https://kayzen-lyon.com" className="text-surface-300 underline-offset-4 hover:underline">KAYZEN LYON</a>. Tous droits réservés.
           </p>
-          <div className="flex items-center gap-1.5">
-            {[
-              { label: 'RGPD', color: 'text-brand-500' },
-              { label: 'Hébergé en Europe', color: 'text-violet-500' },
-              { label: '100% Gratuit', color: 'text-accent-500' },
-            ].map((badge) => (
-              <span
-                key={badge.label}
-                className={`px-2.5 py-1 text-xs font-semibold rounded-lg border border-white/10 bg-white dark:bg-surface-800 ${badge.color}`}
-              >
-                {badge.label}
-              </span>
+          <ul className="flex items-center gap-1.5">
+            {['RGPD', 'Hébergé en Europe', '100 % gratuit'].map((badge) => (
+              <li key={badge} className="rounded-full border border-white/15 px-2.5 py-1 text-xs font-semibold text-surface-300">
+                {badge}
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </div>
     </footer>

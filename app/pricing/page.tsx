@@ -163,7 +163,7 @@ export default function PricingPage() {
                 const Icon = cat.icon
                 return (
                   <div key={cat.name} className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-6">
-                    <div className="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/30 flex items-center justify-center mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-brand-50 dark:bg-navy-800/30 flex items-center justify-center mb-4">
                       <Icon className="w-5 h-5 text-brand-600" />
                     </div>
                     <h3 className="font-bold text-surface-900 dark:text-white mb-3">{cat.name}</h3>

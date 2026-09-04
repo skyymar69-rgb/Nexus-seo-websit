@@ -26,7 +26,7 @@ const posts = [
     readTime: '12 min',
     date: '28 mars 2026',
     featured: true,
-    tag_color: 'text-brand-500 bg-brand-50 dark:bg-brand-950/40',
+    tag_color: 'text-brand-500 bg-brand-50 dark:bg-navy-800/40',
   },
   {
     slug: 'llmo-chatgpt-recommande-votre-marque',
@@ -66,7 +66,7 @@ const posts = [
     readTime: '10 min',
     date: '10 mars 2026',
     featured: false,
-    tag_color: 'text-brand-500 bg-brand-50 dark:bg-brand-950/40',
+    tag_color: 'text-brand-500 bg-brand-50 dark:bg-navy-800/40',
   },
   {
     slug: 'semrush-vs-nexus-comparaison',

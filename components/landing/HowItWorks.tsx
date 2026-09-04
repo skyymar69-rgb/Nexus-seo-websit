@@ -2,94 +2,77 @@
 
 import Link from 'next/link'
 import { ArrowRight, Plus, Search, TrendingUp } from 'lucide-react'
+import { FadeContent } from '@/components/bits'
 
 const steps = [
   {
     number: '01',
     icon: Plus,
     title: 'Connectez votre site en 30 secondes',
-    desc: 'Ajoutez votre domaine, connectez Google Search Console en 1 clic et choisissez vos mots-clés prioritaires. Pas d\'installation technique requise.',
-    detail: 'Compatible avec tous les CMS : WordPress, Shopify, Webflow, custom...',
-    color: 'from-brand-500 to-brand-600',
-    bg: 'bg-brand-50 dark:bg-brand-950/20',
+    desc: 'Ajoutez votre domaine, connectez Google Search Console en un clic et choisissez vos mots-clés prioritaires. Aucune installation technique.',
+    detail: 'Compatible avec tous les CMS : WordPress, Shopify, Webflow, sur mesure.',
   },
   {
     number: '02',
     icon: Search,
     title: 'Analyse complète en 5 minutes',
-    desc: 'Nexus crawle votre site, vérifie votre score GEO/AEO/LLMO, identifie vos opportunités de featured snippets et audite vos 100+ facteurs techniques.',
-    detail: 'Rapport d\'audit disponible immédiatement, comparé à vos 5 principaux concurrents.',
-    color: 'from-violet-500 to-violet-600',
-    bg: 'bg-violet-50 dark:bg-violet-950/20',
+    desc: 'Nexus explore votre site, calcule vos scores GEO, AEO et LLMO, identifie vos opportunités de featured snippets et audite vos facteurs techniques.',
+    detail: 'Rapport disponible immédiatement, comparé à vos cinq principaux concurrents.',
   },
   {
     number: '03',
     icon: TrendingUp,
-    title: 'Implémentez et dominez',
-    desc: 'Suivez les recommandations prioritaires de notre IA, mesurez l\'impact de chaque action et regardez votre trafic organique et votre visibilité IA croître chaque semaine.',
-    detail: 'Rapports automatiques pour vous et vos clients, avec évolution des KPIs.',
-    color: 'from-cyan-500 to-cyan-600',
-    bg: 'bg-cyan-50 dark:bg-cyan-950/20',
+    title: 'Corrigez et suivez',
+    desc: 'Appliquez les recommandations prioritaires, mesurez l’effet de chaque action et suivez votre trafic organique et votre visibilité IA semaine après semaine.',
+    detail: 'Rapports automatiques pour vous et vos clients, avec l’évolution des indicateurs.',
   },
 ]
 
 export function HowItWorks() {
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8 bg-surface-950">
-      <div className="max-w-7xl mx-auto">
+    <section className="bg-surface-100 py-20 dark:bg-surface-900/50 lg:py-24" aria-labelledby="how-title">
+      <div className="mx-auto max-w-container px-6">
 
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <div className="section-badge mx-auto mb-4">Simple et rapide</div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-surface-900 dark:text-white mb-4">
-            Opérationnel en{' '}
-            <span className="gradient-text">moins de 10 minutes</span>
+        <div className="mx-auto mb-14 max-w-3xl text-center">
+          <span className="section-badge mb-4">Simple et rapide</span>
+          <h2 id="how-title" className="text-headline-md text-navy-600 dark:text-white sm:text-headline-lg">
+            Opérationnel en <span className="gradient-text">moins de 10 minutes</span>
           </h2>
-          <p className="text-lg text-surface-700 dark:text-surface-400">
-            Pas d&apos;agence. Pas de consultant. Nexus fait le travail à votre place et vous montre exactement quoi faire.
+          <p className="mt-4 text-body-lg text-ink-muted dark:text-surface-400">
+            Pas d’agence, pas de consultant. Nexus fait le travail et vous montre exactement quoi faire.
           </p>
         </div>
 
-        {/* Steps */}
-        <div className="relative">
-          {/* Connecting line (desktop) */}
-          <div className="hidden lg:block absolute top-16 left-0 right-0 h-0.5 bg-gradient-to-r from-brand-500/0 via-brand-500/40 to-brand-500/0" />
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            {steps.map((step, i) => {
-              const Icon = step.icon
-              return (
-                <div key={i} className="relative flex flex-col items-start">
-                  {/* Step number + icon */}
-                  <div className="relative mb-6 z-10">
-                    <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${step.color} flex items-center justify-center shadow-lg`}>
-                      <Icon className="w-7 h-7 text-white" />
-                    </div>
-                    <span className="absolute -top-2 -right-2 text-xs font-black text-surface-300 dark:text-surface-600">
+        <ol className="relative grid grid-cols-1 gap-10 lg:grid-cols-3">
+          <div className="absolute left-0 right-0 top-8 hidden h-px bg-surface-300 lg:block dark:bg-surface-800" aria-hidden="true" />
+          {steps.map((step, i) => {
+            const Icon = step.icon
+            return (
+              <FadeContent key={step.number} delay={i * 0.1}>
+                <li className="relative flex flex-col items-start">
+                  <div className="relative z-10 mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-navy-600 text-white shadow-elevation-md">
+                    <Icon className="h-7 w-7" aria-hidden="true" />
+                    <span className="absolute -right-2 -top-2 rounded-full bg-white px-1.5 font-display text-xs font-extrabold text-navy-600 shadow-elevation-sm dark:bg-surface-900 dark:text-white">
                       {step.number}
                     </span>
                   </div>
-
-                  <h3 className="text-xl font-bold text-surface-900 dark:text-white mb-3">
-                    {step.title}
-                  </h3>
-                  <p className="text-surface-600 dark:text-surface-400 leading-relaxed mb-4">
-                    {step.desc}
-                  </p>
-                  <p className={`text-xs font-medium px-3 py-2 rounded-xl ${step.bg} text-surface-600 dark:text-surface-400`}>
+                  <h3 className="mb-3 text-title-lg text-ink dark:text-white">{step.title}</h3>
+                  <p className="mb-4 leading-relaxed text-ink-muted dark:text-surface-400">{step.desc}</p>
+                  <p className="rounded-xl bg-white px-3 py-2 text-xs font-medium text-ink-muted shadow-elevation-sm dark:bg-surface-900 dark:text-surface-400">
                     {step.detail}
                   </p>
-                </div>
-              )
-            })}
-          </div>
-        </div>
+                </li>
+              </FadeContent>
+            )
+          })}
+        </ol>
 
-        <div className="text-center mt-14">
-          <Link href="/signup" className="btn-primary px-10 py-4 text-base rounded-2xl">
-            Commencer maintenant — C&apos;est gratuit
-            <ArrowRight className="w-5 h-5" />
+        <div className="mt-14 text-center">
+          <Link href="/signup" className="btn-primary">
+            Commencer maintenant, c’est gratuit
+            <ArrowRight className="h-5 w-5" aria-hidden="true" />
           </Link>
-          <p className="mt-3 text-sm text-surface-600 dark:text-surface-400">Aucune carte bancaire requise · Configuration en 5 min</p>
+          <p className="mt-3 text-sm text-ink-muted dark:text-surface-400">Aucune carte bancaire · Configuration en 5 minutes</p>
         </div>
       </div>
     </section>
