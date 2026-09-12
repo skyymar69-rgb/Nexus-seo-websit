@@ -44,7 +44,7 @@ export function Pricing() {
             <div className="p-8 sm:p-10">
               <div className="flex items-center gap-3 mb-4">
                 <Sparkles className="w-6 h-6 text-brand-500" />
-                <h3 className="text-xl font-bold text-surface-900 dark:text-white">Nexus SEO</h3>
+                <h3 className="text-xl font-bold text-surface-900 dark:text-white">Nexus</h3>
               </div>
 
               <div className="flex items-baseline gap-2 mb-2">
@@ -57,7 +57,7 @@ export function Pricing() {
 
               <Link
                 href="/signup"
-                className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r from-brand-600 to-accent-600 text-white font-bold text-base hover:from-brand-700 hover:to-accent-700 transition-all shadow-lg"
+                className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r from-brand-600 to-brand-800 text-white font-bold text-base hover:from-brand-700 hover:to-brand-900 transition-all shadow-lg"
               >
                 Commencer gratuitement <ArrowRight className="w-5 h-5" />
               </Link>
@@ -66,7 +66,7 @@ export function Pricing() {
                 {features.map((feature) => (
                   <div key={feature} className="flex items-center gap-2">
                     <div className="w-5 h-5 rounded-full bg-green-50 dark:bg-green-950/40 flex items-center justify-center flex-shrink-0">
-                      <Check className="w-3 h-3 text-green-600" />
+                      <Check className="w-3 h-3 text-green-700 dark:text-green-400" />
                     </div>
                     <span className="text-sm text-surface-700 dark:text-surface-300">{feature}</span>
                   </div>

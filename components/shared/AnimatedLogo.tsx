@@ -10,7 +10,7 @@ interface AnimatedLogoProps {
 }
 
 export function AnimatedLogo({ size = 36, className, lightText = false }: AnimatedLogoProps) {
-  const [nexus, setNexus] = useState('Nexus SEO')
+  const [nexus, setNexus] = useState('Nexus')
   const [kayzen, setKayzen] = useState('By Kayzen')
   const [phase, setPhase] = useState<'idle' | 'typing-nexus' | 'typing-kayzen' | 'done'>('idle')
 
@@ -19,7 +19,7 @@ export function AnimatedLogo({ size = 36, className, lightText = false }: Animat
     setKayzen('')
     setPhase('typing-nexus')
 
-    const textN = 'Nexus SEO'
+    const textN = 'Nexus'
     let i = 0
     const t1 = setInterval(() => {
       i++
@@ -72,13 +72,13 @@ export function AnimatedLogo({ size = 36, className, lightText = false }: Animat
         >
           {nexus}
           {phase === 'typing-nexus' && (
-            <span className="inline-block w-[2px] h-[1em] bg-gold-400 ml-px animate-pulse" />
+            <span className="inline-block w-[2px] h-[1em] bg-brand-500 ml-px animate-pulse" />
           )}
         </span>
         <span
           className={cn(
             'text-[10px] font-medium tracking-widest uppercase italic h-3',
-            lightText ? 'text-white/60' : 'text-surface-400 dark:text-surface-500'
+            lightText ? 'text-white/70' : 'text-surface-600 dark:text-surface-400'
           )}
         >
           {kayzen}

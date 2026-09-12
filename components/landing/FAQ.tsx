@@ -31,11 +31,11 @@ const faqs = [
   },
   {
     question: "Mes données sont-elles sécurisées ?",
-    answer: "Oui. Nexus est hébergé sur des serveurs en Europe via Vercel et Railway, et respecte le RGPD. Vos données ne sont jamais partagées avec des tiers ni utilisées pour entraîner des modèles IA.",
+    answer: "Oui. Nexus est hébergé par EX2 Inc. sur des serveurs NVMe situés en France (data center français), avec SSL/TLS inclus, sauvegardes quotidiennes externes et hébergement sans carbone éco-responsable. Vos données restent en Europe et ne sont jamais partagées avec des tiers ni utilisées pour entraîner des modèles IA.",
   },
   {
     question: "Quel est le lien entre Nexus et Kayzen Web ?",
-    answer: "Nexus est un outil gratuit développé par Kayzen Web (www.kayzen-lyon.com), agence web lyonnaise spécialisée dans la création de sites performants en React/Next.js. Nexus diagnostique les problèmes, Kayzen Web les résout avec des sites optimisés dès la conception.",
+    answer: "Nexus est un outil gratuit développé par Kayzen Web (internet.kayzen-lyon.fr), agence web lyonnaise spécialisée dans la création de sites performants et éco-responsables en React/Next.js. Nexus diagnostique les problèmes, Kayzen Web les résout avec des sites optimisés dès la conception.",
   },
 ]
 
@@ -77,7 +77,7 @@ export function FAQ() {
   }
 
   return (
-    <section id="faq" className="py-24 px-4 sm:px-6 lg:px-8 bg-surface-950">
+    <section id="faq" className="py-24 px-4 sm:px-6 lg:px-8 bg-surface-50 dark:bg-surface-950">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

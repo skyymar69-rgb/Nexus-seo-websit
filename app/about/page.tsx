@@ -58,7 +58,7 @@ export default function AboutPage() {
               <div key={s.label} className="text-center">
                 <p className="text-4xl font-black gradient-text mb-1">{s.value}</p>
                 <p className="font-semibold text-surface-900 dark:text-white text-sm">{s.label}</p>
-                <p className="text-xs text-surface-400 mt-0.5">{s.desc}</p>
+                <p className="text-xs text-surface-600 dark:text-surface-400 mt-0.5">{s.desc}</p>
               </div>
             ))}
           </div>
@@ -86,7 +86,7 @@ export default function AboutPage() {
                 const Icon = v.icon
                 return (
                   <div key={v.title} className="card p-8">
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-500 to-violet-600 flex items-center justify-center mb-5">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-500 to-secondary-700 flex items-center justify-center mb-5">
                       <Icon className="w-6 h-6 text-white" />
                     </div>
                     <h3 className="text-lg font-bold text-surface-900 dark:text-white mb-3">{v.title}</h3>

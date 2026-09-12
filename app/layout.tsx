@@ -1,14 +1,14 @@
 import type { Metadata } from 'next'
-import { Inter, Outfit } from 'next/font/google'
+import { Plus_Jakarta_Sans, Outfit } from 'next/font/google'
 import { Providers } from '@/app/providers'
 import dynamic from 'next/dynamic'
 import { ErrorBoundary } from '@/components/shared/ErrorBoundary'
 
-const inter = Inter({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800', '900'],
+  weight: ['400', '500', '600', '700', '800'],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-jakarta',
 })
 
 const outfit = Outfit({
@@ -166,27 +166,28 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* #5 Apple mobile web app */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="Nexus SEO" />
+        <meta name="apple-mobile-web-app-title" content="Nexus" />
         {/* #28 DNS prefetch for external APIs */}
         <link rel="dns-prefetch" href="https://api.openai.com" />
         <link rel="dns-prefetch" href="https://api.anthropic.com" />
         {/* Favicons */}
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        {/* LLMs.txt — spec llmstxt.org */}
+        <link rel="alternate" type="text/plain" title="llms.txt" href="/llms.txt" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`${inter.variable} ${outfit.variable} min-h-screen bg-zinc-50 dark:bg-surface-950 text-surface-900 dark:text-surface-100 antialiased`}>
+      <body className={`${jakarta.variable} ${outfit.variable} min-h-screen bg-zinc-50 dark:bg-surface-950 text-surface-900 dark:text-surface-100 antialiased`}>
         <a href="#main-content" className="skip-to-main">
           Aller au contenu principal
         </a>
         <Providers>
-          <div className="animate-fade-in">
           {children}
-          </div>
           <ErrorBoundary><ScrollProgress /></ErrorBoundary>
           <ErrorBoundary><CookieBanner /></ErrorBoundary>
           <ErrorBoundary><AccessibilityToggle /></ErrorBoundary>

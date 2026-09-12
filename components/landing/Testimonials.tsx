@@ -1,13 +1,13 @@
 'use client'
 
-import { Gauge, Zap, Globe, Shield, Sparkles, ArrowRight } from 'lucide-react'
+import { Leaf, Zap, Globe, Shield, Sparkles, ArrowRight } from 'lucide-react'
 
 const reasons = [
   {
     icon: Sparkles,
     title: 'Premier outil GEO + AEO + LLMO',
     desc: 'Nexus est le seul outil qui combine l\'optimisation pour Google SGE, les featured snippets et les réponses des LLMs (ChatGPT, Claude, Gemini) en une seule plateforme.',
-    color: 'from-brand-500 to-violet-500',
+    color: 'from-brand-500 to-secondary-600',
   },
   {
     icon: Zap,
@@ -16,9 +16,9 @@ const reasons = [
     color: 'from-violet-500 to-cyan-500',
   },
   {
-    icon: Gauge,
-    title: 'Pages légères et rapides',
-    desc: 'Nexus mesure le poids de vos pages et vous montre quoi alléger : ressources bloquantes, images non optimisées, scripts inutiles. Moins de kilo-octets, de meilleurs Core Web Vitals.',
+    icon: Leaf,
+    title: 'SEO éco-responsable',
+    desc: 'Un site rapide et bien référencé consomme moins d\'énergie. Nexus vous aide à réduire le poids de vos pages et à adopter les bonnes pratiques du web durable.',
     color: 'from-green-500 to-emerald-500',
   },
   {
@@ -31,7 +31,7 @@ const reasons = [
     icon: Shield,
     title: 'Données hébergées en Europe',
     desc: 'Vos données sont hébergées en Europe via Vercel et Railway, dans le respect du RGPD. Aucune revente de données, aucune utilisation pour entraîner des modèles IA.',
-    color: 'from-brand-500 to-cyan-500',
+    color: 'from-brand-500 to-secondary-500',
   },
 ]
 

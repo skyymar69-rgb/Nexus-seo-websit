@@ -124,7 +124,7 @@ export default function PricingPage() {
               <div className="p-8 sm:p-10">
                 <div className="flex items-baseline gap-2 mb-2">
                   <span className="text-5xl font-black text-surface-900 dark:text-white">0&euro;</span>
-                  <span className="text-surface-400 text-lg">/mois</span>
+                  <span className="text-surface-600 dark:text-surface-400 text-lg">/mois</span>
                 </div>
                 <p className="text-surface-500 dark:text-surface-400 mb-8">
                   Pour toujours. Aucune carte bancaire requise.
@@ -132,7 +132,7 @@ export default function PricingPage() {
 
                 <Link
                   href="/signup"
-                  className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r from-brand-600 to-accent-600 text-white font-bold text-base hover:from-brand-700 hover:to-accent-700 transition-all shadow-lg"
+                  className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r from-brand-600 to-brand-800 text-white font-bold text-base hover:from-brand-700 hover:to-brand-900 transition-all shadow-lg"
                 >
                   Commencer gratuitement <ArrowRight className="w-5 h-5" />
                 </Link>
@@ -199,7 +199,7 @@ export default function PricingPage() {
                 >
                   <summary className="flex items-center justify-between cursor-pointer px-6 py-5 text-left text-surface-900 dark:text-white font-semibold text-sm hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors list-none [&::-webkit-details-marker]:hidden">
                     {faq.q}
-                    <span className="ml-4 text-surface-400 group-open:rotate-45 transition-transform text-xl leading-none flex-shrink-0">
+                    <span className="ml-4 text-surface-600 dark:text-surface-400 group-open:rotate-45 transition-transform text-xl leading-none flex-shrink-0">
                       +
                     </span>
                   </summary>
